@@ -2,7 +2,7 @@
   <el-menu-item
     :id="routerInfo.name"
     :index="routerInfo.name"
-    :route="{ parameters: routerInfo.parameters }"
+    :route="{ name: routerInfo.name }"
   >
     <i :class="'el-icon-' + routerInfo.meta.icon"></i>
     <span slot="title" class="menufont">{{ routerInfo.meta.title }}</span>

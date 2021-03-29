@@ -23,14 +23,6 @@
             >
               {{ item.meta.title }}
             </el-menu-item>
-            <!-- <el-menu-item index="1">概览</el-menu-item>
-            <el-menu-item index="2">订单管理</el-menu-item>
-            <el-menu-item index="3">财务费用</el-menu-item>
-            <el-menu-item index="4">渠道配置</el-menu-item>
-            <el-menu-item index="5">客户管理</el-menu-item>
-            <el-menu-item index="6">账号管理</el-menu-item>
-            <el-menu-item index="7">配置中心</el-menu-item>
-            <el-menu-item index="8">系统配置</el-menu-item> -->
           </el-menu>
         </el-col>
         <el-col :span="3">
@@ -46,23 +38,6 @@
         <el-scrollbar style="height: calc(100vh - 60px)">
           <!-- 导航栏 -->
           <asides :num="Number(activeIndex)"></asides>
-          <!-- <el-menu
-            background-color="#fff"
-            class="el-menu-vertical"
-            :collapse-transition="false"
-            :collapse="isCollapse"
-            text-color="white"
-            style="height: 100%"
-          >
-            <el-menu-item
-              :index="item.name"
-              v-for="(item, index) in menu[activeIndex].children"
-              :key="index"
-            >
-              <i class="el-icon-menu"></i>
-              <span slot="title" class="font">{{ item.meta.title }}</span>
-            </el-menu-item>
-          </el-menu> -->
         </el-scrollbar>
       </el-aside>
 
@@ -87,6 +62,7 @@
 <script>
 import history from "@/views/layout/aside/historyComponent/history";
 import asides from "@/views/layout/aside/index.vue";
+import { mapActions } from "vuex";
 export default {
   data() {
     return {
@@ -160,6 +136,7 @@ export default {
           ]
         }
       ],
+
       user: "张三",
       activeIndex: "1",
 
@@ -172,24 +149,17 @@ export default {
       loadingFlag: false
     };
   },
-  // created() {
-  //   this.$bus.on("collapse", item => {
-  //     this.isCollapse = item;
-  //   });
-  // },
-  // beforeDestroy() {
-  //   this.$bus.off("collapse");
-  // },
+  created() {
+    this.setRouter();
+  },
   components: {
     history,
     asides
   },
   methods: {
-    totalCollapse() {
-      this.isCollapse = !this.isCollapse;
-      this.isSider = !this.isCollapse;
-      this.isShadowBg = !this.isCollapse;
-      this.$bus.emit("collapse", this.isCollapse);
+    ...mapActions("router", ["setAsyncRouter"]),
+    setRouter() {
+      this.setAsyncRouter(this.menu);
     }
   }
 };

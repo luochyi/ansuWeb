@@ -10,6 +10,7 @@
           :collapse="isCollapse"
           :collapse-transition="true"
           :default-active="active"
+          :router="true"
           @select="select"
           active-text-color="#FE822F"
           class="el-menu-vertical"
@@ -30,7 +31,7 @@
 </template>
 
 <script>
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 import AsideComponent from "@/views/layout/aside/asideComponent/index.vue";
 export default {
   name: "Aside",
@@ -43,30 +44,15 @@ export default {
   props: {
     num: Number
   },
+  created() {
+    console.log(this.asyncRouters);
+  },
   methods: {
-    ...mapMutations("history", ["addHistory"]),
+    // ...mapMutations("router", ["addHistory"]),
     select(key, keypath) {
       console.log(key);
       console.log(keypath);
     }
-    // selectMenuItem(index, _, ele) {
-    //   const query = {};
-    //   const params = {};
-    //   ele.route.parameters &&
-    //     ele.route.parameters.map(item => {
-    //       if (item.type == "query") {
-    //         query[item.key] = item.value;
-    //       } else {
-    //         params[item.key] = item.value;
-    //       }
-    //     });
-    //   if (index === this.$route.name) return;
-    //   if (index.indexOf("http://") > -1 || index.indexOf("https://") > -1) {
-    //     window.open(index);
-    //   } else {
-    //     this.$router.push({ name: index, query, params });
-    //   }
-    // }
   },
   computed: {
     ...mapGetters("router", ["asyncRouters"])
@@ -74,25 +60,11 @@ export default {
   components: {
     AsideComponent
   },
-  // created() {
-  //   this.active = this.$route.name;
-  //   let screenWidth = document.body.clientWidth;
-  //   if (screenWidth < 1000) {
-  //     this.isCollapse = !this.isCollapse;
-  //   }
-
-  //   this.$bus.on("collapse", item => {
-  //     this.isCollapse = item;
-  //   });
-  // },
   watch: {
     $route() {
       this.active = this.$route.name;
     }
   }
-  // beforeDestroy() {
-  //   this.$bus.off("collapse");
-  // }
 };
 </script>
 
