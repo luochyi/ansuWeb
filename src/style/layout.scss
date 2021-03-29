@@ -1,0 +1,102 @@
+@mixin frontsmall($value: rgba(0, 0, 0, 0.65)) {
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: $value;
+}
+@mixin frontbig($value: 18px) {
+font-size: $value;
+font-family: PingFangSC-Medium, PingFang SC;
+font-weight: 500;
+color: rgba(0, 0, 0, 0.85);
+}
+@mixin whitebtn {
+padding: 0px 16px;
+border-radius: 2px;
+height: 32px;
+border: 1px solid #1890ff;
+@include frontsmall(#1890ff);
+}
+@mixin bluebtn {
+padding: 0px 16px;
+height: 32px;
+background: #1890ff;
+border-radius: 2px;
+@include frontsmall(#ffffff);
+}
+
+.head{
+  background: #fff;
+  box-shadow: 0px 2px 4px 0px rgba(224, 224, 224, 0.5);
+  .tilte{
+    height: 100%;
+    .tit-text{
+      @include frontbig(20px);
+    }
+    .user{
+      @include frontsmall(rgba(0,0,0,0.85));
+      margin-right: 10px;
+    }
+  }
+}
+
+.el-container{
+  .aside{
+    .el-scrollbar {
+      .el-scrollbar__view {
+        height: 100%;
+      }
+    }
+  }
+  .el-aside {
+    overflow-x: hidden;
+    box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
+    // .menufont{
+    //   @include frontsmall(rgba(0,0,0,0.65))
+    // }
+    .el-scrollbar__thumb {
+      display: none;
+    }
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
+    }
+    /deep/ .el-menu {
+      border-right-width: 0px;
+      .el-submenu__title {
+        padding-left: 20px;
+        text-align: left;
+      }
+      .el-menu-item {
+        text-align: left;
+        color: #000;
+      }
+      .is-active{
+        background: rgba(248, 182, 44, 0.2);
+        border-left: 6px #FE822F solid;
+        @include frontbig(14px);
+        .el-submenu__title{
+          i{
+            color: #FE822F;
+          }
+          .menufont{
+            color: #FE822F;
+          }
+        }
+      }
+      .el-submenu{
+        background: #fff;
+        border: 0px;
+      }
+    }
+    .el-menu-vertical {
+      height: calc(100vh - 64px) !important;
+      visibility: auto;
+      // &:not(.el-menu--collapse) {
+      //   width: 220px;
+      // }
+    }
+  }
+  .el-main {
+    padding: 0px 20px;
+  }
+}

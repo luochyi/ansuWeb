@@ -1,0 +1,124 @@
+@mixin frontsmall($value: rgba(0, 0, 0, 0.65)) {
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: $value;
+}
+@mixin frontbig($value: 18px) {
+font-size: $value;
+font-family: PingFangSC-Medium, PingFang SC;
+font-weight: 500;
+color: rgba(0, 0, 0, 0.85);
+}
+@mixin whitebtn {
+padding: 0px 16px;
+border-radius: 4px;
+height: 32px;
+border: 1px solid #FB4702;
+@include frontsmall(#FB4702);
+}
+@mixin bluebtn {
+padding: 0px 16px;
+height: 32px;
+background: #1890ff;
+border-radius: 4px;
+@include frontsmall(#ffffff);
+}
+@mixin orangebtn {
+  padding: 0px 16px;
+  height: 32px;
+  line-height: 32px;
+  background: #FB4702;
+  border-radius: 4px;
+  @include frontsmall(#ffffff);
+}
+
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+.red {
+  color: red !important;
+}
+.orangeCricle{
+  display: inline-block;
+  border-radius: 100%;
+  width: 7px;
+  height: 7px;
+  background: #FF9700;
+}
+.redCricle{
+  display: inline-block;
+  border-radius: 100%;
+  width: 7px;
+  height: 7px;
+  background: #FF0000;
+}
+.greenCricle{
+  display: inline-block;
+  border-radius: 100%;
+  width: 7px;
+  height: 7px;
+  background: #3CBB00;
+}
+// 按钮
+body{ 
+  .orangebtn {
+    @include orangebtn();
+  }
+  .wubtn {
+    padding: 0px 16px;
+    height: 32px;
+    line-height: 32px;
+    border-radius: 4px;
+    @include frontsmall(#000);
+  }
+  .whitebtn {
+    @include whitebtn();
+  }
+}
+
+.title{
+  background: #fff;
+  border-bottom: 1px solid #D8D8D8;
+  .text{
+    width: 150px;
+  }
+  .el-tabs{
+    .el-tabs__header{
+      margin: 0px;
+    }
+    .is-active{
+      @include frontbig(14px);
+      color: #FE822F;
+      border-bottom: 2px solid #FE822F !important;
+    }
+  }
+}
+
+.content{
+  padding: 20px 30px;
+  background: #fff;
+}
+
+// 搜索栏样式
+.searchbox1{
+  margin-bottom: 15px;
+  .colbox{
+    display: flex;
+    .text{
+      @include frontsmall();
+      line-height: 32px;
+    }
+    .el-input__inner{
+      height: 32px;
+      line-height: 32px;
+    }
+  }
+}
+
+.tableBtn{
+  display: flex;
+}
