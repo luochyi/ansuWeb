@@ -25,7 +25,7 @@ border-radius: 2px;
 @include frontsmall(#ffffff);
 }
 
-.head{
+/deep/ .head{
   background: #fff;
   box-shadow: 0px 2px 4px 0px rgba(224, 224, 224, 0.5);
   .tilte{
@@ -37,10 +37,15 @@ border-radius: 2px;
       @include frontsmall(rgba(0,0,0,0.85));
       margin-right: 10px;
     }
+    .firstMenu{
+      .is-active {
+        border-bottom: 4px solid #FB4702;
+      }
+    }
   }
 }
 
-.el-container{
+/deep/ .el-container{
   .aside{
     .el-scrollbar {
       .el-scrollbar__view {
@@ -60,13 +65,15 @@ border-radius: 2px;
     .el-scrollbar__wrap {
       overflow-x: hidden;
     }
-    /deep/ .el-menu {
+    .el-menu {
       border-right-width: 0px;
       .el-submenu__title {
         padding-left: 20px;
         text-align: left;
       }
       .el-menu-item {
+        height: 40px;
+        line-height: 40px;
         text-align: left;
         color: #000;
       }
@@ -97,6 +104,6 @@ border-radius: 2px;
     }
   }
   .el-main {
-    padding: 0px 20px;
+    padding: 0px;
   }
 }

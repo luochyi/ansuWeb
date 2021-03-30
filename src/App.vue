@@ -14,11 +14,11 @@ body {
 
 <style lang="scss" scoped>
 @import "@/style/deep.scss";
+@import "@/style/layout.scss";
 </style>
 
 <style lang="scss">
 @import "@/style/public.scss";
-@import "@/style/layout.scss";
 
 #app {
   font-family: "Avenir", Helvetica, Arial, sans-serif;

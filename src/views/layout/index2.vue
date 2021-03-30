@@ -216,9 +216,9 @@ export default {
       this.isCollapse = item;
     });
   },
-  beforeDestroy() {
-    this.$bus.off("collapse");
-  },
+  // beforeDestroy() {
+  //   this.$bus.off("collapse");
+  // },
   components: {
     search,
     history

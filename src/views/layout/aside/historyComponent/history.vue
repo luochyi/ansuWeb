@@ -41,40 +41,22 @@ export default {
       contextMenuVisible: false,
       left: 0,
       top: 0,
-      // isCollapse: false,
-      // isMobile: false,
       rightActive: ""
     };
   },
   created() {
-    // this.$bus.on('mobile', isMobile => {
-    //   this.isMobile = isMobile
-    // })
-    // this.$bus.on('collapse', isCollapse => {
-    //   this.isCollapse = isCollapse
-    // })
     const initHistorys = [
       {
-        name: "dashboard",
+        name: "prediction",
         meta: {
-          title: "仪表盘"
-        }
-      },
-      {
-        name: "swfwqaf",
-        meta: {
-          title: "仪表盘"
+          title: "预报管理",
+          icon: "predictionIcon",
+          hidden: false
         }
       }
     ];
     this.historys =
       JSON.parse(sessionStorage.getItem("historys")) || initHistorys;
-    // this.setTab(this.$route)
-  },
-
-  beforeDestroy() {
-    this.$bus.off("collapse");
-    this.$bus.off("mobile");
   },
   methods: {
     openContextMenu(e) {
@@ -100,13 +82,15 @@ export default {
     closeAll() {
       this.historys = [
         {
-          name: "dashboard",
+          name: "prediction",
           meta: {
-            title: "仪表盘"
+            title: "预报管理",
+            icon: "predictionIcon",
+            hidden: false
           }
         }
       ];
-      this.$router.push({ name: "dashboard" });
+      this.$router.push({ name: "prediction" });
       this.contextMenuVisible = false;
       sessionStorage.setItem("historys", JSON.stringify(this.historys));
     },
@@ -167,9 +151,13 @@ export default {
       this.activeValue = this.$route.name;
     },
     changeTab(component) {
-      console.log(component);
-      // const tab = component.$attrs.tab;
-      // this.$router.push({ name: tab.name,query:tab.query,params:tab.params })
+      const tab = component.$attrs.tab;
+      console.log(tab);
+      this.$router.push({
+        name: tab.name,
+        query: tab.query,
+        params: tab.params
+      });
     },
     removeTab(tab) {
       const index = this.historys.findIndex(item => item.name == tab);

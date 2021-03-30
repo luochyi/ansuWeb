@@ -1,43 +1,33 @@
-// // 商品
-// export default [
-//     // 精品特推
-//     {
-//       path: '/boutique',
-//       name: 'boutiqueLabel',
-//       component: boutiqueLabel,
-//       redirect: '/boutique/inForce',
-//       children: [
-//         {
-//           path: '/boutique/inForce',
-//           name: 'inForce',
-//           component: inForce
-//         },
-//         {
-//           path: '/boutique/waitTakeEffective',
-//           name: 'waitTakeEffective',
-//           component: waitTakeEffective
-//         },
-//         {
-//           path: '/boutique/overdue',
-//           name: 'overdue',
-//           component: overdue
-//         }
-//       ]
-//     },
-//     {
-//       path: '/boutique/activechoose',
-//       name: 'activechoose',
-//       component: activechoose
-//     },
-//     // 活动管理
-//     {
-//       path: '/activemanage',
-//       name: 'activemanage',
-//       component: activemanage
-//     },
-//     {
-//       path: '/activemanage/handleActivity',
-//       name: 'handleActivity',
-//       component: handleActivity
-//     }
-//   ]
+// 订单管理
+export default [
+  {
+    path: "/order",
+    name: "order",
+    meta: {
+      title: "订单管理",
+      icon: "orderIcon",
+      hidden: false
+    },
+    redirect: "/prediction"
+  },
+  {
+    path: "/prediction",
+    name: "prediction",
+    meta: {
+      title: "预报管理",
+      icon: "predictionIcon",
+      hidden: false
+    },
+    component: () => import("@/views/orderManager/prediction/prediction.vue")
+  },
+  {
+    path: "/waybill",
+    name: "waybill",
+    meta: {
+      title: "运单管理",
+      icon: "waybillIcon",
+      hidden: false
+    },
+    component: () => import("@/views/orderManager/waybill/waybill.vue")
+  }
+];

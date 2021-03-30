@@ -44,8 +44,18 @@ export default {
   props: {
     num: Number
   },
-  created() {
-    console.log(this.asyncRouters);
+  watch: {
+    $route(to) {
+      console.log(to);
+      this.active = to.name;
+      console.log(this.active);
+    },
+    num(val) {
+      console.log(val);
+    }
+  },
+  mounted() {
+    this.active = this.$route.name;
   },
   methods: {
     // ...mapMutations("router", ["addHistory"]),
@@ -59,11 +69,6 @@ export default {
   },
   components: {
     AsideComponent
-  },
-  watch: {
-    $route() {
-      this.active = this.$route.name;
-    }
   }
 };
 </script>

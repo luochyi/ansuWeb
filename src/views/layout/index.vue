@@ -10,16 +10,19 @@
           <!-- <img alt class="logoimg" src="@/assets/logo.png" /> -->
           <span class="tit-text">安速货运</span>
         </el-col>
-        <el-col :span="18">
+        <el-col :span="18" class="firstMenu">
           <el-menu
             :default-active="activeIndex"
             class="el-menu-demo"
+            :router="true"
             mode="horizontal"
+            @select="select"
           >
             <el-menu-item
               :index="item.menuId"
               v-for="(item, indexs) in menu"
               :key="indexs"
+              :route="{ name: item.path }"
             >
               {{ item.meta.title }}
             </el-menu-item>
@@ -45,15 +48,17 @@
       <el-main>
         <history></history>
         <!-- 主体内容 -->
-        <transition mode="out-in" name="el-fade-in-linear">
-          <!-- <keep-alive> -->
-          <router-view
-            v-loading="loadingFlag"
-            element-loading-text="正在加载中"
-            class="admin-box"
-          ></router-view>
-          <!-- </keep-alive> -->
-        </transition>
+        <div style="padding: 0px 20px">
+          <transition mode="out-in" name="el-fade-in-linear">
+            <!-- <keep-alive> -->
+            <router-view
+              v-loading="loadingFlag"
+              element-loading-text="正在加载中"
+              class="admin-box"
+            ></router-view>
+            <!-- </keep-alive> -->
+          </transition>
+        </div>
       </el-main>
     </el-container>
   </el-container>
@@ -77,7 +82,6 @@ export default {
           ID: 0,
           menuId: "0",
           path: "summary",
-          sort: 0,
           parentId: "0",
           children: []
         },
@@ -91,7 +95,6 @@ export default {
           ID: 1,
           menuId: "1",
           path: "order",
-          sort: 1,
           parentId: "0",
           children: [
             {
@@ -104,7 +107,6 @@ export default {
               ID: 30,
               menuId: "30",
               path: "prediction",
-              sort: 30,
               parentId: "1"
             },
             {
@@ -117,7 +119,6 @@ export default {
               ID: 31,
               menuId: "31",
               path: "waybill",
-              sort: 31,
               parentId: "1"
             },
             {
@@ -130,7 +131,56 @@ export default {
               ID: 32,
               menuId: "32",
               path: "historyOrder",
-              sort: 32,
+              parentId: "1"
+            }
+          ]
+        },
+        {
+          name: "channel",
+          meta: {
+            title: "渠道代理",
+            icon: "channelIcon",
+            hidden: false
+          },
+          ID: 2,
+          menuId: "2",
+          path: "channel",
+          parentId: "0",
+          children: [
+            {
+              name: "channelAllocation",
+              meta: {
+                title: "渠道配置",
+                icon: "channelAllocation",
+                hidden: false
+              },
+              ID: 30,
+              menuId: "30",
+              path: "channelAllocation",
+              parentId: "1"
+            },
+            {
+              name: "invoiceTemplate",
+              meta: {
+                title: "发票模板",
+                icon: "invoiceTemplate",
+                hidden: false
+              },
+              ID: 31,
+              menuId: "31",
+              path: "invoiceTemplate",
+              parentId: "1"
+            },
+            {
+              name: "historyOrder",
+              meta: {
+                title: "渠道代理",
+                icon: "historyOrder",
+                hidden: false
+              },
+              ID: 32,
+              menuId: "32",
+              path: "historyOrder",
               parentId: "1"
             }
           ]
@@ -152,23 +202,30 @@ export default {
   created() {
     this.setRouter();
   },
+  watch: {
+    $route(to) {
+      this.menu.forEach((item, index) => {
+        item.children.forEach(items => {
+          if (items.name === to.name) {
+            this.activeIndex = String(index);
+          }
+        });
+      });
+    }
+  },
   components: {
     history,
     asides
   },
   methods: {
     ...mapActions("router", ["setAsyncRouter"]),
+    select(val) {
+      this.activeIndex = val;
+      console.log(this.activeIndex);
+    },
     setRouter() {
       this.setAsyncRouter(this.menu);
     }
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.main {
-  background: #f0f0f0;
-  width: 100%;
-  padding: 40px;
-}
-</style>

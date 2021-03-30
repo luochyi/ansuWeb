@@ -276,7 +276,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main {
-  margin: 20px 0px;
-}
+// .main {
+//   margin: 20px 0px;
+// }
 </style>
