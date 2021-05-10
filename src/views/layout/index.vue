@@ -48,7 +48,7 @@
       <el-main>
         <history></history>
         <!-- 主体内容 -->
-        <div style="padding: 0px 20px">
+        <div style="padding: 0px 24px">
           <transition mode="out-in" name="el-fade-in-linear">
             <!-- <keep-alive> -->
             <router-view
@@ -148,15 +148,65 @@ export default {
           parentId: "0",
           children: [
             {
-              name: "channelAllocation",
+              name: "agentManage",
               meta: {
-                title: "渠道配置",
-                icon: "channelAllocation",
+                title: "代理管理",
+                icon: "agentManage",
                 hidden: false
               },
               ID: 30,
               menuId: "30",
+              path: "agentManage",
+              parentId: "1"
+            },
+            {
+              name: "channelAllocation",
+              meta: {
+                title: "渠道管理",
+                icon: "channelAllocation",
+                hidden: false
+              },
+              ID: 31,
+              menuId: "31",
               path: "channelAllocation",
+              parentId: "1",
+              children: [
+                {
+                  name: "channelSetting",
+                  meta: {
+                    title: "渠道设置",
+                    icon: "channelSetting",
+                    hidden: false
+                  },
+                  ID: 120,
+                  menuId: "120",
+                  path: "channelSetting",
+                  parentId: "31"
+                },
+                {
+                  name: "channelBrandAgent",
+                  meta: {
+                    title: "渠道下属代理",
+                    icon: "channelBrandAgent",
+                    hidden: false
+                  },
+                  ID: 121,
+                  menuId: "121",
+                  path: "channelBrandAgent",
+                  parentId: "31"
+                }
+              ]
+            },
+            {
+              name: "subsidiaryChannel",
+              meta: {
+                title: "子公司渠道",
+                icon: "subsidiaryChannel",
+                hidden: false
+              },
+              ID: 32,
+              menuId: "32",
+              path: "subsidiaryChannel",
               parentId: "1"
             },
             {
@@ -166,21 +216,9 @@ export default {
                 icon: "invoiceTemplate",
                 hidden: false
               },
-              ID: 31,
-              menuId: "31",
+              ID: 33,
+              menuId: "33",
               path: "invoiceTemplate",
-              parentId: "1"
-            },
-            {
-              name: "historyOrder",
-              meta: {
-                title: "渠道代理",
-                icon: "historyOrder",
-                hidden: false
-              },
-              ID: 32,
-              menuId: "32",
-              path: "historyOrder",
               parentId: "1"
             }
           ]
@@ -188,7 +226,7 @@ export default {
       ],
 
       user: "张三",
-      activeIndex: "1",
+      activeIndex: "",
 
       active: "",
       show: false,
@@ -199,20 +237,35 @@ export default {
       loadingFlag: false
     };
   },
-  created() {
+  mounted() {
+    console.log(this.$route.name);
+    this.menu.forEach((item, index) => {
+      item.children.forEach(items => {
+        if (items.name === this.$route.name) {
+          this.activeIndex = String(index);
+        }
+        if (items.children) {
+          items.children.forEach(itms => {
+            if (itms.name === this.$route.name) {
+              this.activeIndex = String(index);
+            }
+          });
+        }
+      });
+    });
     this.setRouter();
   },
-  watch: {
-    $route(to) {
-      this.menu.forEach((item, index) => {
-        item.children.forEach(items => {
-          if (items.name === to.name) {
-            this.activeIndex = String(index);
-          }
-        });
-      });
-    }
-  },
+  // watch: {
+  //   $route(to) {
+  //     this.menu.forEach((item, index) => {
+  //       item.children.forEach(items => {
+  //         if (items.name === to.name) {
+  //           this.activeIndex = String(index);
+  //         }
+  //       });
+  //     });
+  //   }
+  // },
   components: {
     history,
     asides

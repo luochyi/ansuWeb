@@ -80,20 +80,20 @@
             </el-col>
           </el-col>
           <el-col :span="6" class="colbox">
-            <el-button class="orangebtn">查 询</el-button>
-            <el-button class="wubtn">重 置</el-button>
-            <el-button class="wubtn">展开全部</el-button>
+            <el-button class="orangeBtn long1">查 询</el-button>
+            <el-button class="wuBtn long1">重 置</el-button>
+            <el-button class="wuBtn long1">展开全部</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
         <div class="table">
           <el-row class="tableBtn">
             <el-col :span="12" class="left">
-              <el-button class="orangebtn">批量导出Excel</el-button>
+              <el-button class="orangeBtn long1">批量导出Excel</el-button>
             </el-col>
             <el-col :span="12" class="right">
-              <el-button class="whitebtn">查询条件设置</el-button>
-              <el-button class="whitebtn">列表显示设置</el-button>
+              <el-button class="whiteBtn ">查询条件设置</el-button>
+              <el-button class="whiteBtn ">列表显示设置</el-button>
             </el-col>
           </el-row>
           <!--  -->

@@ -68,7 +68,7 @@ border-radius: 2px;
     .el-menu {
       border-right-width: 0px;
       .el-submenu__title {
-        padding-left: 20px;
+        padding-left: 20px; 
         text-align: left;
       }
       .el-menu-item {
@@ -77,10 +77,19 @@ border-radius: 2px;
         text-align: left;
         color: #000;
       }
+      li.el-menu-item.is-active {
+        background: rgba(248, 182, 44, 0.2);
+        border-left: 6px #FE822F solid;
+        @include frontbig(14px);
+        padding-left: 14px !important;
+      }
       .is-active{
         background: rgba(248, 182, 44, 0.2);
         border-left: 6px #FE822F solid;
         @include frontbig(14px);
+        li.el-menu-item.is-active{
+          padding-left: 34px !important;
+        }
         .el-submenu__title{
           i{
             color: #FE822F;
@@ -89,7 +98,9 @@ border-radius: 2px;
             color: #FE822F;
           }
         }
+        
       }
+      
       .el-submenu{
         background: #fff;
         border: 0px;

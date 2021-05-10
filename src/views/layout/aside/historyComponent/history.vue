@@ -57,6 +57,11 @@ export default {
     ];
     this.historys =
       JSON.parse(sessionStorage.getItem("historys")) || initHistorys;
+    this.historys.forEach(item => {
+      if (item.name === this.$route.name) {
+        this.activeValue = item.name;
+      }
+    });
   },
   methods: {
     openContextMenu(e) {
@@ -163,7 +168,24 @@ export default {
       const index = this.historys.findIndex(item => item.name == tab);
       if (this.$route.name == tab) {
         if (this.historys.length == 1) {
-          this.$router.push({ name: "dashboard" });
+          console.log(123);
+          this.historys = [
+            {
+              name: "prediction",
+              meta: {
+                title: "预报管理",
+                icon: "predictionIcon",
+                hidden: false
+              }
+            }
+          ];
+          this.contextMenuVisible = false;
+          if (this.$route.name === "prediction") {
+            location.reload();
+          } else {
+            this.$router.push({ name: "prediction" });
+          }
+          sessionStorage.setItem("historys", JSON.stringify(this.historys));
         } else {
           if (index < this.historys.length - 1) {
             this.$router.push({

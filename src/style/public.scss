@@ -39,6 +39,9 @@ border-radius: 4px;
 .right {
   text-align: right;
 }
+.center {
+  text-align: center;
+}
 .red {
   color: red !important;
 }
@@ -65,18 +68,95 @@ border-radius: 4px;
 }
 // 按钮
 body{ 
-  .orangebtn {
+  .long1{
+    width: 82px;
+  }
+  .long2{
+    width: 110px
+  }
+  .orangeBtn {
     @include orangebtn();
   }
-  .wubtn {
+  .wuBtn {
     padding: 0px 16px;
     height: 32px;
     line-height: 32px;
     border-radius: 4px;
     @include frontsmall(#000);
   }
-  .whitebtn {
+  .whiteBtn {
     @include whitebtn();
+  }
+
+
+
+
+  // flex 样式
+  .flex {
+    display: flex;
+  }
+  .flex-direction {
+    justify-content: space-around;
+    flex-direction: column;
+  }
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  
+  .align-start {
+    align-items: flex-start;
+  }
+  
+  .align-end {
+    align-items: flex-end;
+  }
+  
+  .align-center {
+    align-items: center;
+  }
+  
+  .align-stretch {
+    align-items: stretch;
+  }
+  
+  .self-start {
+    align-self: flex-start;
+  }
+  
+  .self-center {
+    align-self: center;
+  }
+  
+  .self-end {
+    align-self: flex-end;
+  }
+  
+  .self-stretch {
+    align-self: stretch;
+  }
+  
+  .align-stretch {
+    align-items: stretch;
+  }
+  
+  .justify-start {
+    justify-content: flex-start;
+  }
+  
+  .justify-end {
+    justify-content: flex-end;
+  }
+  
+  .justify-center {
+    justify-content: center;
+  }
+  
+  .justify-between {
+    justify-content: space-between;
+  }
+  
+  .justify-around {
+    justify-content: space-around;
   }
 }
 
@@ -95,6 +175,7 @@ body{
       @include frontbig(14px);
       color: #FE822F;
       border-bottom: 2px solid #FE822F !important;
+      // padding-left: 34px !important;
     }
   }
 }
@@ -112,6 +193,7 @@ body{
     .text{
       @include frontsmall();
       line-height: 32px;
+      margin-right: 10px;
     }
     .el-input__inner{
       height: 32px;
