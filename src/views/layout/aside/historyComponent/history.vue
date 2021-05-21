@@ -1,75 +1,75 @@
 <template>
-  <div class="routerHistory">
+  <div class='routerHistory'>
     <el-tabs
       :closable="!(historys.length == 1 && this.$route.name == 'dashboard')"
-      @contextmenu.prevent.native="openContextMenu($event)"
-      @tab-click="changeTab"
-      @tab-remove="removeTab"
-      type="card"
-      v-model="activeValue"
+      @contextmenu.prevent.native='openContextMenu($event)'
+      @tab-click='changeTab'
+      @tab-remove='removeTab'
+      type='card'
+      v-model='activeValue'
     >
       <el-tab-pane
-        :key="item.name"
-        :label="item.meta.title"
-        :name="item.name"
-        :tab="item"
-        v-for="item in historys"
+        :key='item.name'
+        :label='item.meta.title'
+        :name='item.name'
+        :tab='item'
+        v-for='item in historys'
       ></el-tab-pane>
     </el-tabs>
 
     <!--自定义右键菜单html代码-->
     <ul
       :style="{ left: left + 'px', top: top + 'px' }"
-      class="contextmenu"
-      v-show="contextMenuVisible"
+      class='contextmenu'
+      v-show='contextMenuVisible'
     >
-      <li @click="closeAll">关闭所有</li>
-      <li @click="closeLeft">关闭左侧</li>
-      <li @click="closeRight">关闭右侧</li>
-      <li @click="closeOther">关闭其他</li>
+      <li @click='closeAll'>关闭所有</li>
+      <li @click='closeLeft'>关闭左侧</li>
+      <li @click='closeRight'>关闭右侧</li>
+      <li @click='closeOther'>关闭其他</li>
     </ul>
   </div>
 </template>
 
 <script>
 export default {
-  name: "HistoryComponent",
-  data() {
+  name: 'HistoryComponent',
+  data () {
     return {
       historys: [],
-      activeValue: "dashboard",
+      activeValue: 'dashboard',
       contextMenuVisible: false,
       left: 0,
       top: 0,
-      rightActive: ""
-    };
+      rightActive: ''
+    }
   },
-  created() {
+  created () {
     const initHistorys = [
       {
-        name: "prediction",
+        name: 'prediction',
         meta: {
-          title: "预报管理",
-          icon: "predictionIcon",
+          title: '预报管理',
+          icon: 'predictionIcon',
           hidden: false
         }
       }
-    ];
+    ]
     this.historys =
-      JSON.parse(sessionStorage.getItem("historys")) || initHistorys;
+      JSON.parse(sessionStorage.getItem('historys')) || initHistorys
     this.historys.forEach(item => {
       if (item.name === this.$route.name) {
-        this.activeValue = item.name;
+        this.activeValue = item.name
       }
-    });
+    })
   },
   methods: {
-    openContextMenu(e) {
-      if (this.historys.length == 1 && this.$route.name == "dashboard") {
-        return false;
+    openContextMenu (e) {
+      if (this.historys.length === 1 && this.$route.name === 'dashboard') {
+        return false
       }
       if (e.srcElement.id) {
-        this.contextMenuVisible = true;
+        this.contextMenuVisible = true
         // let width
         // if (this.isCollapse) {
         //   width = 54
@@ -79,154 +79,154 @@ export default {
         // if (this.isMobile) {
         //   width = 0
         // }
-        this.left = e.clientX;
-        this.top = e.clientY + 10;
-        this.rightActive = e.srcElement.id.split("-")[1];
+        this.left = e.clientX
+        this.top = e.clientY + 10
+        this.rightActive = e.srcElement.id.split('-')[1]
       }
     },
-    closeAll() {
+    closeAll () {
       this.historys = [
         {
-          name: "prediction",
+          name: 'prediction',
           meta: {
-            title: "预报管理",
-            icon: "predictionIcon",
+            title: '预报管理',
+            icon: 'predictionIcon',
             hidden: false
           }
         }
-      ];
-      this.$router.push({ name: "prediction" });
-      this.contextMenuVisible = false;
-      sessionStorage.setItem("historys", JSON.stringify(this.historys));
+      ]
+      this.$router.push({ name: 'prediction' })
+      this.contextMenuVisible = false
+      sessionStorage.setItem('historys', JSON.stringify(this.historys))
     },
-    closeLeft() {
-      let right;
+    closeLeft () {
+      let right
       const rightIndex = this.historys.findIndex(item => {
-        if (item.name == this.rightActive) {
-          right = item;
+        if (item.name === this.rightActive) {
+          right = item
         }
-        return item.name == this.rightActive;
-      });
+        return item.name === this.rightActive
+      })
       const activeIndex = this.historys.findIndex(
-        item => item.name == this.activeValue
-      );
-      this.historys.splice(0, rightIndex);
+        item => item.name === this.activeValue
+      )
+      this.historys.splice(0, rightIndex)
       if (rightIndex > activeIndex) {
-        this.$router.push(right);
+        this.$router.push(right)
       }
-      sessionStorage.setItem("historys", JSON.stringify(this.historys));
+      sessionStorage.setItem('historys', JSON.stringify(this.historys))
     },
-    closeRight() {
-      let right;
+    closeRight () {
+      let right
       const leftIndex = this.historys.findIndex(item => {
-        if (item.name == this.rightActive) {
-          right = item;
+        if (item.name === this.rightActive) {
+          right = item
         }
-        return item.name == this.rightActive;
-      });
+        return item.name === this.rightActive
+      })
       const activeIndex = this.historys.findIndex(
-        item => item.name == this.activeValue
-      );
-      this.historys.splice(leftIndex + 1, this.historys.length);
+        item => item.name === this.activeValue
+      )
+      this.historys.splice(leftIndex + 1, this.historys.length)
       if (leftIndex < activeIndex) {
-        this.$router.push(right);
+        this.$router.push(right)
       }
-      sessionStorage.setItem("historys", JSON.stringify(this.historys));
+      sessionStorage.setItem('historys', JSON.stringify(this.historys))
     },
-    closeOther() {
-      let right;
+    closeOther () {
+      let right
       this.historys = this.historys.filter(item => {
-        if (item.name == this.rightActive) {
-          right = item;
+        if (item.name === this.rightActive) {
+          right = item
         }
-        return item.name == this.rightActive;
-      });
-      this.$router.push(right);
-      sessionStorage.setItem("historys", JSON.stringify(this.historys));
+        return item.name === this.rightActive
+      })
+      this.$router.push(right)
+      sessionStorage.setItem('historys', JSON.stringify(this.historys))
     },
-    setTab(route) {
-      if (!this.historys.some(item => item.name == route.name)) {
-        const obj = {};
-        obj.name = route.name;
-        obj.meta = route.meta;
-        obj.query = route.query;
-        obj.params = route.params;
-        this.historys.push(obj);
+    setTab (route) {
+      if (!this.historys.some(item => item.name === route.name)) {
+        const obj = {}
+        obj.name = route.name
+        obj.meta = route.meta
+        obj.query = route.query
+        obj.params = route.params
+        this.historys.push(obj)
       }
-      this.activeValue = this.$route.name;
+      this.activeValue = this.$route.name
     },
-    changeTab(component) {
-      const tab = component.$attrs.tab;
-      console.log(tab);
+    changeTab (component) {
+      const tab = component.$attrs.tab
+      console.log(tab)
       this.$router.push({
         name: tab.name,
         query: tab.query,
         params: tab.params
-      });
+      })
     },
-    removeTab(tab) {
-      const index = this.historys.findIndex(item => item.name == tab);
-      if (this.$route.name == tab) {
-        if (this.historys.length == 1) {
-          console.log(123);
+    removeTab (tab) {
+      const index = this.historys.findIndex(item => item.name === tab)
+      if (this.$route.name === tab) {
+        if (this.historys.length === 1) {
+          console.log(123)
           this.historys = [
             {
-              name: "prediction",
+              name: 'prediction',
               meta: {
-                title: "预报管理",
-                icon: "predictionIcon",
+                title: '预报管理',
+                icon: 'predictionIcon',
                 hidden: false
               }
             }
-          ];
-          this.contextMenuVisible = false;
-          if (this.$route.name === "prediction") {
-            location.reload();
+          ]
+          this.contextMenuVisible = false
+          if (this.$route.name === 'prediction') {
+            location.reload()
           } else {
-            this.$router.push({ name: "prediction" });
+            this.$router.push({ name: 'prediction' })
           }
-          sessionStorage.setItem("historys", JSON.stringify(this.historys));
+          sessionStorage.setItem('historys', JSON.stringify(this.historys))
         } else {
           if (index < this.historys.length - 1) {
             this.$router.push({
               name: this.historys[index + 1].name,
               query: this.historys[index + 1].query,
               params: this.historys[index + 1].params
-            });
+            })
           } else {
             this.$router.push({
               name: this.historys[index - 1].name,
               query: this.historys[index - 1].query,
               params: this.historys[index - 1].params
-            });
+            })
           }
         }
       }
-      this.historys.splice(index, 1);
+      this.historys.splice(index, 1)
     }
   },
   watch: {
-    contextMenuVisible() {
+    contextMenuVisible () {
       if (this.contextMenuVisible) {
-        document.body.addEventListener("click", () => {
-          this.contextMenuVisible = false;
-        });
+        document.body.addEventListener('click', () => {
+          this.contextMenuVisible = false
+        })
       } else {
-        document.body.removeEventListener("click", () => {
-          this.contextMenuVisible = false;
-        });
+        document.body.removeEventListener('click', () => {
+          this.contextMenuVisible = false
+        })
       }
     },
-    $route(to) {
-      this.historys = this.historys.filter(item => !item.meta.hidden);
-      this.setTab(to);
-      sessionStorage.setItem("historys", JSON.stringify(this.historys));
+    $route (to) {
+      this.historys = this.historys.filter(item => !item.meta.hidden)
+      this.setTab(to)
+      sessionStorage.setItem('historys', JSON.stringify(this.historys))
     }
   }
-};
+}
 </script>
 
-<style lang="scss" scoped>
+<style lang='scss' scoped>
 .routerHistory {
   background: #fff;
   /deep/ .el-tabs {
@@ -234,7 +234,7 @@ export default {
     height: 40px;
     margin-bottom: 20px;
     .el-tabs__item::before {
-      content: "";
+      content: '';
       width: 9px;
       height: 9px;
       margin-right: 8px;

@@ -5,98 +5,98 @@ export const router = {
   state: {
     asyncRouters: [
       // {
-      //   name: "summary",
+      //   name: 'summary',
       //   meta: {
-      //     title: "概述",
-      //     icon: "gaishuIcon",
+      //     title: '概述',
+      //     icon: 'gaishuIcon',
       //     hidden: false
       //   },
       //   ID: 0,
-      //   menuId: "0",
-      //   path: "summary",
+      //   menuId: '0',
+      //   path: 'summary',
       //   sort: 0,
-      //   parentId: "0",
+      //   parentId: '0',
       //   children: []
       // },
       // {
-      //   name: "order",
+      //   name: 'order',
       //   meta: {
-      //     title: "订单管理",
-      //     icon: "orderIcon",
+      //     title: '订单管理',
+      //     icon: 'orderIcon',
       //     hidden: false
       //   },
       //   ID: 1,
-      //   menuId: "1",
-      //   path: "order",
+      //   menuId: '1',
+      //   path: 'order',
       //   sort: 1,
-      //   parentId: "0",
+      //   parentId: '0',
       //   children: [
       //     {
-      //       name: "prediction",
+      //       name: 'prediction',
       //       meta: {
-      //         title: "预报管理",
-      //         icon: "predictionIcon",
+      //         title: '预报管理',
+      //         icon: 'predictionIcon',
       //         hidden: false
       //       },
       //       ID: 30,
-      //       menuId: "30",
-      //       path: "prediction",
+      //       menuId: '30',
+      //       path: 'prediction',
       //       sort: 30,
-      //       parentId: "1"
+      //       parentId: '1'
       //     },
       //     {
-      //       name: "waybill",
+      //       name: 'waybill',
       //       meta: {
-      //         title: "运单管理",
-      //         icon: "waybillIcon",
+      //         title: '运单管理',
+      //         icon: 'waybillIcon',
       //         hidden: false
       //       },
       //       ID: 31,
-      //       menuId: "31",
-      //       path: "waybill",
+      //       menuId: '31',
+      //       path: 'waybill',
       //       sort: 31,
-      //       parentId: "1"
+      //       parentId: '1'
       //     },
       //     {
-      //       name: "historyOrder",
+      //       name: 'historyOrder',
       //       meta: {
-      //         title: "历史订单",
-      //         icon: "historyOrder",
+      //         title: '历史订单',
+      //         icon: 'historyOrder',
       //         hidden: false
       //       },
       //       ID: 32,
-      //       menuId: "32",
-      //       path: "historyOrder",
+      //       menuId: '32',
+      //       path: 'historyOrder',
       //       sort: 32,
-      //       parentId: "1"
+      //       parentId: '1'
       //     },
       //     {
-      //       name: "collection",
+      //       name: 'collection',
       //       meta: {
-      //         title: "收款管理",
-      //         icon: "collection",
+      //         title: '收款管理',
+      //         icon: 'collection',
       //         hidden: false
       //       },
       //       children: [
       //         {
-      //           name: "receivable",
+      //           name: 'receivable',
       //           meta: {
-      //             title: "应收对账",
-      //             icon: "receivable",
+      //             title: '应收对账',
+      //             icon: 'receivable',
       //             hidden: false
       //           },
       //           ID: 40,
-      //           menuId: "40",
-      //           path: "receivable",
+      //           menuId: '40',
+      //           path: 'receivable',
       //           sort: 40,
-      //           parentId: "33"
+      //           parentId: '33'
       //         }
       //       ],
       //       ID: 33,
-      //       menuId: "33",
-      //       path: "collection",
+      //       menuId: '33',
+      //       path: 'collection',
       //       sort: 33,
-      //       parentId: "1"
+      //       parentId: '1'
       //     }
       //   ]
       // }
@@ -104,29 +104,29 @@ export const router = {
     routerList: []
   },
   mutations: {
-    setRouterList(state, routerList) {
-      state.routerList = routerList;
+    setRouterList (state, routerList) {
+      state.routerList = routerList
     },
     // 设置动态路由
-    setAsyncRouter(state, asyncRouters) {
-      state.asyncRouters = asyncRouters;
+    setAsyncRouter (state, asyncRouters) {
+      state.asyncRouters = asyncRouters
     }
   },
   actions: {
-    setRouterList(context) {
-      context.commit("setRouterList");
+    setRouterList (context) {
+      context.commit('setRouterList')
     },
-    setAsyncRouter(context, data) {
-      context.commit("setAsyncRouter", data);
+    setAsyncRouter (context, data) {
+      context.commit('setAsyncRouter', data)
     }
   },
   getters: {
     // 获取动态路由
-    asyncRouters(state) {
-      return state.asyncRouters;
+    asyncRouters (state) {
+      return state.asyncRouters
     },
-    routerList(state) {
-      return state.routerList;
+    routerList (state) {
+      return state.routerList
     }
   }
-};
+}

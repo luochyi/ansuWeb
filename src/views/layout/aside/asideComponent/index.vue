@@ -1,41 +1,41 @@
 <template>
   <component
-    :is="menuComponent"
-    :routerInfo="routerInfo"
-    v-if="!routerInfo.hidden"
+    :is='menuComponent'
+    :routerInfo='routerInfo'
+    v-if='!routerInfo.hidden'
   >
-    <template v-if="routerInfo.children && routerInfo.children.length">
+    <template v-if='routerInfo.children && routerInfo.children.length'>
       <AsideComponent
-        :key="item.name"
-        :routerInfo="item"
-        v-for="item in routerInfo.children"
+        :key='item.name'
+        :routerInfo='item'
+        v-for='item in routerInfo.children'
       />
     </template>
   </component>
 </template>
 
 <script>
-import MenuItem from "./menuItem";
-import AsyncSubmenu from "./asyncSubmenu";
+import MenuItem from './menuItem'
+import AsyncSubmenu from './asyncSubmenu'
 
 export default {
-  name: "AsideComponent",
+  name: 'AsideComponent',
   computed: {
-    menuComponent() {
+    menuComponent () {
       if (
         this.routerInfo.children &&
         this.routerInfo.children.filter(item => !item.hidden).length
       ) {
-        return "AsyncSubmenu";
+        return 'AsyncSubmenu'
       } else {
-        return "MenuItem";
+        return 'MenuItem'
       }
     }
   },
   props: {
     routerInfo: {
-      default: function() {
-        return null;
+      default: function () {
+        return null
       },
       type: Object
     }
@@ -47,6 +47,6 @@ export default {
     MenuItem,
     AsyncSubmenu
   }
-};
+}
 </script>
-<style lang="scss"></style>
+<style lang='scss'></style>

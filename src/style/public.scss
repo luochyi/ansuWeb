@@ -205,3 +205,35 @@ body{
 .tableBtn{
   display: flex;
 }
+/* 消息提示 */
+
+.el-message.message_pass{
+  height: 32px;
+  background: #52C41A;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 9px;
+  border-color: #52C41A;
+}
+.el-message.icons{
+  visibility: hidden;
+}
+.el-message__content{
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+.el-message.message_reject{
+  height: 32px;
+  background: #FF0000;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 9px;
+  border-color: #FF0000;
+}
+.el-message.message_error{
+  height: 32px;
+  background: #FF7D44;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
+  border-radius: 9px;
+  border-color:#FF7D44;
+}

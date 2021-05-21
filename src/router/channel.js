@@ -21,6 +21,16 @@ export default [
     },
     component: () => import('@/views/channel/agentManage/agentManage')
   },
+  {
+    path: '/agentManage/addAgent',
+    name: 'addAgent',
+    meta: {
+      title: '添加代理',
+      icon: 'addAgent',
+      hidden: false
+    },
+    component: () => import('@/views/channel/agentManage/addAgent.vue')
+  },
   // 渠道设置
   {
     path: '/channelSetting',

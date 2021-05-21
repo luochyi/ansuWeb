@@ -1,13 +1,13 @@
 <template>
   <el-submenu
-    :id="routerInfo.name"
-    :popper-append-to-body="false"
-    ref="subMenu"
-    :index="routerInfo.name"
+    :id='routerInfo.name'
+    :popper-append-to-body='false'
+    ref='subMenu'
+    :index='routerInfo.name'
   >
-    <template slot="title">
+    <template slot='title'>
       <i :class="'el-icon-' + routerInfo.meta.icon"></i>
-      <span slot="title" class="menufont">{{ routerInfo.meta.title }}</span>
+      <span slot='title' class='menufont'>{{ routerInfo.meta.title }}</span>
     </template>
     <slot></slot>
   </el-submenu>
@@ -15,15 +15,15 @@
 
 <script>
 export default {
-  name: "AsyncSubmenu",
+  name: 'AsyncSubmenu',
   props: {
     routerInfo: {
-      default: function() {
-        return null;
+      default: function () {
+        return null
       },
       type: Object
     }
   }
-};
+}
 </script>
-<style lang="scss"></style>
+<style lang='scss'></style>

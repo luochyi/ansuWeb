@@ -43,10 +43,10 @@
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button class='stopBtn'>批量停用</el-button>
+            <el-button class='stopBtn' @click="batchStop">批量停用</el-button>
           </el-col>
           <el-col :span='12' class="right">
-            <el-button class='whiteBtn'>新增渠道</el-button>
+            <el-button class='whiteBtn' @click="toAdd">新增渠道</el-button>
             <el-button class='whiteBtn'>列表显示设置</el-button>
           </el-col>
         </el-row>
@@ -64,7 +64,7 @@
                   查看详情
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text">
+                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">
                   停用代理
                 </el-button>
                 <el-button v-if="activeName === '2'" type="text">
@@ -73,21 +73,45 @@
               </template>
             </el-table-column>
           </el-table>
+
+          <!-- 分页 -->
+          <div class='block'>
+            <el-pagination
+              :current-page.sync='currentPage'
+              :pager-count='9'
+              :page-size='pageSize'
+              :page-sizes='[10, 20, 50, 100]'
+              layout='total, prev, pager, next, sizes, jumper'
+              :total='total'
+            ></el-pagination>
+          </div>
         </div>
       </div>
 
     </div>
 
     <el-dialog
-      :visible.sync="dialogVisible"
+      :visible.sync="dialogStop"
       width="30%"
       :before-close="handleClose">
-      <div slot="title">
+      <div slot="title" class="left">
+        {{dialogTitle}}
       </div>
-      <span>这是一段信息</span>
+      <div class="flex align-center">
+        <div class="iconfont" style="font-size: 58px; color: #FB4702;margin-right: 20px">
+          &#xe77d;
+        </div>
+        <div v-if="dialogTitle === '停用代理'" class="left">
+          <el-row>你是否确认停用</el-row>
+          <el-row>代理'{{chooseAgent.agentName}}'</el-row>
+        </div>
+        <div v-else>
+          你是否确认停用这{{chooseArr.length}}个代理
+        </div>
+      </div>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+        <el-button class="wuBtn" @click="dialogStop = false">取 消</el-button>
+        <el-button class="orangeBtn" @click="dialogStop = false">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -98,6 +122,10 @@ export default {
   data () {
     return {
       activeName: '1', // 标签绑定
+
+      pageSize: 10,
+      currentPage: 1,
+      total: 50,
 
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
@@ -123,12 +151,62 @@ export default {
           agentCode: 'BKGJ',
           agentAccount: '月结'
         }
-      ]
+      ],
+
+      dialogTitle: '停用代理',
+      chooseAgent: {}, // 选择停用的 代理
+      chooseArr: [], // 选中的代理
+      dialogStop: false // 停用弹窗
     }
   },
+  created () {
+    this.getData()
+  },
   methods: {
-    handleSelectionChange () {
-      console.log()
+    getData () {
+      let params = {
+        status: Number(this.activeName),
+        page: this.currentPage,
+        limit: this.pageSize,
+        name: this.agentName,
+        code: this.agentCode
+      }
+      this.$api.agent.settingAgentLists(params).then((res) => {
+        console.log(res)
+      })
+    },
+    handleSelectionChange (val) {
+      console.log(val)
+      this.chooseArr = []
+      val && val.forEach((item) => {
+        this.chooseArr.push(item)
+      })
+    },
+    batchStop () {
+      if (this.chooseArr.length < 1) {
+        return this.$message({
+          message: '选中的代理不能为空',
+          customClass: 'message_reject',
+          center: true,
+          iconClass: 'icons'
+        })
+      }
+      this.dialogStop = true
+      this.dialogTitle = '批量停用代理'
+    },
+    stopAgent (val) {
+      this.dialogStop = true
+      this.chooseAgent = val
+      this.dialogTitle = '停用代理'
+    },
+    toAdd () {
+      this.$router.push({ name: 'addAgent' })
+    },
+    toDetail (val) {
+      console.log(val)
+    },
+    handleClose () {
+      this.dialogStop = false
     }
   }
 }
@@ -144,6 +222,33 @@ export default {
     border-radius: 4px;
 
     font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+  }
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+/deep/ .el-dialog{
+  position: absolute;
+  margin: 0px !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .el-dialog__header{
+    font-size: 16px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+  }
+  .el-dialog__body{
+    border-top: 1px solid rgba(0,0,0,0.06);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
