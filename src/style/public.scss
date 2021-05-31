@@ -190,6 +190,7 @@ body{
   margin-bottom: 15px;
   .colbox{
     display: flex;
+    margin-bottom: 15px;
     .text{
       @include frontsmall();
       line-height: 32px;
@@ -202,6 +203,13 @@ body{
   }
 }
 
+// 表格多选颜色
+.table{
+  .el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+    background-color: #FE822F;
+    border-color: #FE822F
+  }
+}
 .tableBtn{
   display: flex;
 }

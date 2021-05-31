@@ -180,6 +180,12 @@
           </el-col>
         </el-row>
       </div>
+      <!-- 按钮 -->
+      <!-- 其他 -->
+      <div class="infoBox">
+        <el-button class="orangeBtn">确 认</el-button>
+        <el-button class="whiteBtn">取 消</el-button>
+      </div>
     </div>
   </div>
 </template>

@@ -56,7 +56,7 @@
             :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column type="selection" width="50"></el-table-column>
             <el-table-column prop="agentName" label="代理名称" min-width="200"></el-table-column>
-            <el-table-column prop="agentCode" label="代理编号" min-width="200"></el-table-column>
+            <el-table-column prop="agentCode" label="代理编码" min-width="200"></el-table-column>
             <el-table-column prop="agentAccount" label="结算账期" min-width="200"></el-table-column>
             <el-table-column fixed="right" label="操作" min-width="150">
               <template slot-scope="scope">

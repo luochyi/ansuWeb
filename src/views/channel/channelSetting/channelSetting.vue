@@ -13,29 +13,57 @@
     <div class='content'>
       <!-- 搜索栏 -->
       <el-row class='searchbox1'>
-        <!-- 代理名称 -->
+        <!-- 渠道名称 -->
         <el-col :span='6' class='colbox'>
-          <span class='text'>代理名称</span>
+          <span class='text'>渠道名称</span>
           <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
+            <el-input v-model='channelName' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
-        <!-- 代理编码 -->
+        <!-- 渠道编码 -->
         <el-col :span='6' class='colbox'>
-          <span class='text'>代理编码</span>
+          <span class='text'>渠道编码</span>
           <el-col :span='16'>
-            <el-input v-model='agentCode' placeholder='请输入'></el-input>
+            <el-input v-model='channelCode' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
-        <!-- 代理账期 -->
+        <!-- 渠道英文 -->
         <el-col :span='6' class='colbox'>
-          <span class='text'>代理账期</span>
+          <span class='text'>渠道英文</span>
           <el-col :span='16'>
-            <el-input v-model='agentAccount' placeholder='请输入'></el-input>
+            <el-input v-model='channelEngLish' placeholder='请输入'></el-input>
+          </el-col>
+        </el-col>
+        <!-- 渠道分类 -->
+        <el-col :span='6' class='colbox'>
+          <span class='text'>渠道分类</span>
+          <el-col :span='16'>
+            <el-select v-model='channelType' placeholder='请选择'>
+              <el-option
+                v-for="item in channelTypeOpts"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
+          </el-col>
+        </el-col>
+         <!-- 派送类型 -->
+        <el-col :span='6' class='colbox'>
+          <span class='text'>派送类型</span>
+          <el-col :span='16'>
+            <el-select v-model='DeliveryType' placeholder='请输入'>
+              <el-option
+                v-for="item in DeliveryTypeOpts"
+                :key="item.id"
+                :label="item.name"
+                :value="item.id">
+              </el-option>
+            </el-select>
           </el-col>
         </el-col>
         <!--  -->
-        <el-col :span='6' class='colbox justify-center'>
+        <el-col :span='6' class='colbox'>
           <el-button class='orangeBtn long1'>查 询</el-button>
           <el-button class='wuBtn long1'>重 置</el-button>
         </el-col>
@@ -55,21 +83,41 @@
         <div class="table">
           <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
             :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type="selection" width="50"></el-table-column>
-            <el-table-column prop="agentName" label="代理名称" min-width="200"></el-table-column>
-            <el-table-column prop="agentCode" label="代理编号" min-width="200"></el-table-column>
-            <el-table-column prop="agentAccount" label="结算账期" min-width="200"></el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="150">
+            <el-table-column type="selection" width="50" key="1"></el-table-column>
+            <el-table-column prop="channelName" label="渠道名称" min-width="150" key="2"></el-table-column>
+            <el-table-column prop="channelCode" label="渠道编码" min-width="100" key="3"></el-table-column>
+            <el-table-column prop="channelEngLish" label="渠道英文" min-width="100" key="4"></el-table-column>
+            <el-table-column prop="channelType" label="渠道分类" min-width="80" key="5"></el-table-column>
+            <el-table-column prop="DeliveryType" label="派送类型" min-width="80" key="6"></el-table-column>
+            <el-table-column prop="isFuel" label="是否含燃料" min-width="100" key="7"></el-table-column>
+            <el-table-column prop="isTax" label="是否含税" min-width="80" key="8"></el-table-column>
+            <el-table-column prop="isClearCustoms" label="是否含清关" min-width="100" key="9"></el-table-column>
+            <el-table-column prop="volume" label="材积除" min-width="100" key="10"></el-table-column>
+            <el-table-column prop="calculationRules" label="计算规则" min-width="100" key="11"></el-table-column>
+            <el-table-column prop="channelScore" label="渠道评分" min-width="100" key="12"></el-table-column>
+            <el-table-column prop="acceptGoods" label="接受货物" min-width="100" key="13"></el-table-column>
+            <el-table-column prop="transportTime" label="运输时间" min-width="150" key="14"></el-table-column>
+            <el-table-column prop="channelInfo" label="渠道简介" min-width="100" key="15"></el-table-column>
+            <el-table-column prop="inputPeople" label="录价人" min-width="100" key="16"></el-table-column>
+            <el-table-column fixed="right" label="操作" min-width="150" key="17">
               <template slot-scope="scope">
-                <el-button type="text" @click="toDetail(scope.row.id)">
-                  查看详情
+                <el-button type="text">
+                  分区价格
+                </el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text">
+                  附加费
+                </el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text">
+                  修改
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">
-                  停用代理
+                  停用渠道
                 </el-button>
                 <el-button v-if="activeName === '2'" type="text">
-                  启用代理
+                  启用渠道
                 </el-button>
               </template>
             </el-table-column>
@@ -90,6 +138,31 @@
       </div>
 
     </div>
+    <!-- 弹窗 -->
+    <el-dialog
+      :visible.sync="dialogStop"
+      width="30%"
+      :before-close="handleClose">
+      <div slot="title" class="left">
+        {{dialogTitle}}
+      </div>
+      <div class="flex align-center">
+        <div class="iconfont" style="font-size: 58px; color: #FB4702;margin-right: 20px">
+          &#xe77d;
+        </div>
+        <div v-if="dialogTitle === '停用渠道'" class="left">
+          <el-row>你是否确认停用</el-row>
+          <el-row>渠道'{{chooseAgent.agentName}}'</el-row>
+        </div>
+        <div v-else>
+          你是否确认停用这{{chooseArr.length}}个渠道
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="wuBtn" @click="dialogStop = false">取 消</el-button>
+        <el-button class="orangeBtn" @click="dialogStop = false">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -103,53 +176,69 @@ export default {
       currentPage: 1,
       total: 50,
 
-      agentName: '', // 代理名称
-      agentCode: '', // 代理编码
-      agentAccount: '', // 代理账期
+      channelName: '', // 渠道名称
+      channelCode: '', // 渠道编码
+      channelEngLish: '', // 渠道英文
+      channelType: '', // 渠道分类
+      channelTypeOpts: [
+        {
+          id: 1,
+          name: '海运'
+        }, {
+          id: 2,
+          name: '空运'
+        }, {
+          id: 3,
+          name: '快递'
+        }, {
+          id: 4,
+          name: '铁路'
+        }, {
+          id: 5,
+          name: '专车'
+        }
+      ],
+      DeliveryType: '', // 派送类型
+      DeliveryTypeOpts: [
+        {
+          id: 1,
+          name: '快递'
+        }, {
+          id: 2,
+          name: '卡派'
+        }
+      ],
       tableData: [
         {
-          agentName: '天图供应链',
-          agentCode: 'TTGYL',
-          agentAccount: '半月结'
-        },
-        {
-          agentName: '安信国际',
-          agentCode: 'AXGJ',
-          agentAccount: '月结'
-        },
-        {
-          agentName: '宝昌国际货运',
-          agentCode: 'BCGJ',
-          agentAccount: '月结'
-        },
-        {
-          agentName: '百科国际',
-          agentCode: 'BKGJ',
-          agentAccount: '月结'
+          channelName: '美国空派-普货',
+          channelCode: 'USAUSP',
+          channelEngLish: 'USAairport',
+          channelType: '海运',
+          DeliveryType: 'UPS',
+          isFuel: '含燃料费',
+          isTax: '含税',
+          isClearCustoms: '含清关费',
+          volume: '除5000',
+          calculationRules: '',
+          channelScore: '4.3',
+          acceptGoods: '带电',
+          transportTime: '9-11个工作日',
+          channelInfo: '',
+          inputPeople: '李小彬'
         }
       ],
 
-      dialogTitle: '停用代理',
-      chooseAgent: {}, // 选择停用的 代理
-      chooseArr: [], // 选中的代理
+      dialogTitle: '停用渠道',
+      chooseAgent: {}, // 选择停用的 渠道
+      chooseArr: [], // 选中的渠道
       dialogStop: false // 停用弹窗
     }
   },
   created () {
-    this.getData()
+    // this.getData()
   },
   methods: {
     getData () {
-      let params = {
-        status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
-      }
-      this.$api.agent.settingAgentLists(params).then((res) => {
-        console.log(res)
-      })
     },
     handleSelectionChange (val) {
       console.log(val)
@@ -161,25 +250,22 @@ export default {
     batchStop () {
       if (this.chooseArr.length < 1) {
         return this.$message({
-          message: '选中的代理不能为空',
+          message: '选中的渠道不能为空',
           customClass: 'message_reject',
           center: true,
           iconClass: 'icons'
         })
       }
       this.dialogStop = true
-      this.dialogTitle = '批量停用代理'
+      this.dialogTitle = '批量停用渠道'
     },
     stopAgent (val) {
       this.dialogStop = true
       this.chooseAgent = val
-      this.dialogTitle = '停用代理'
+      this.dialogTitle = '停用渠道'
     },
     toAdd () {
       this.$router.push({ name: 'addAgent' })
-    },
-    toDetail (val) {
-      console.log(val)
     },
     handleClose () {
       this.dialogStop = false
