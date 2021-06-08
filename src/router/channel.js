@@ -43,6 +43,18 @@ export default [
     component: () =>
       import('@/views/channel/channelSetting/channelSetting')
   },
+  // 渠道设置--新增渠道
+  {
+    path: '/channelSetting/addChannel',
+    name: 'addChannel',
+    meta: {
+      title: '渠道设置',
+      icon: 'addChannel',
+      hidden: false
+    },
+    component: () =>
+      import('@/views/channel/channelSetting/addChannel')
+  },
   // 渠道下属代理
   {
     path: '/channelBrandAgent',
@@ -54,6 +66,17 @@ export default [
     },
     component: () =>
       import('@/views/channel/channelBrandAgent/channelBrandAgent')
+  },
+  // 新建代理
+  {
+    path: '/channelBrandAgent/newlyAddedAgent',
+    name: 'newlyAddedAgent',
+    meta: {
+      title: '添加代理',
+      icon: 'newlyAddedAgent',
+      hidden: false
+    },
+    component: () => import('@/views/channel/channelBrandAgent/newlyAddedAgent.vue')
   },
   // 子公司渠道
   {

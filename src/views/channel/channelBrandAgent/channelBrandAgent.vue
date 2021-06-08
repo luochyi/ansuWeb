@@ -1,14 +1,14 @@
  <template>
   <div>
     <!--  标签页 -->
-    <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:17px 0px">
+    <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:10px 0px">
       <span class='text'>代理配置</span>
     </el-row>
-    <el-row>
-      <el-col :span="6" style="height:100%;border-right: 1px solid #D9D9D9;box-shadow: 8px 0px 6px -5px rgba(0, 0, 0, 0.2);">
+    <el-row class="box-block flex">
+      <el-col :span="6" style="border: 1px solid #D9D9D9;box-shadow: 8px 0px 0px -5px rgba(0, 0, 0, 0.9);border-top:none">
         <div style="height:100%;background:#fff">
           <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
-            <el-col :span="3">
+            <el-col :span="3" style="margin-top:-2px">
             <span style="font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;font-weight: 500;color: #000000;">渠道</span>
             </el-col>
             <el-col :span="14" type="flex">
@@ -23,10 +23,11 @@
             </el-select>
             </el-col>
           </el-row>
-          <el-row style="padding:0px 30px 12px 40px;display:flex;align-items:center;margin-bottom:8px">
-            <span style="width: 67%;height: 36px;background: #FFFFFF;border-top-left-radius: 18px;border-bottom-left-radius: 18px;
+          <el-row  style="padding:0px 30px 12px 40px;display:flex;align-items:center;margin-bottom:8px">
+            <span class="input" style="width: 67%;height: 36px;background: #FFFFFF;border-top-left-radius: 18px;border-bottom-left-radius: 18px;
             border: 1px solid #979797;display:flex;justify-content:flex-start;padding-left:10px;align-items:center">
-            <img alt class='logoimg' src='@/assets/search.png' style="width: 14px;height: 14px;" />
+              <img alt class='logoimg' src='@/assets/search.png' style="width: 14px;height: 14px;" />
+              <el-input class="elin" size="small" placeholder="请输入渠道名或编码" style="border:0" v-model="searchInput"></el-input>
             </span>
             <span style="width: 60px;height: 36px;background: #FB4702;border: 1px solid #979797;border-left: 0;border-bottom-right-radius: 18px;
             border-top-right-radius: 18px;text-align:center;line-height:36px;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;
@@ -40,27 +41,28 @@
             <span>渠道：</span><span>{{delivery}}</span>
           </div>
           <div style="display:flex;align-items:center;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;
-          color: rgba(0, 0, 0, 0.45);">
-            <span>编码：</span><span>{{code}}</span>
+          color: rgba(0, 0, 0, 0.45);justify-content:space-between">
+            <span >编码：<span>{{code}}</span></span>
+            <span class="num">{{num}}家代理</span>
           </div>
           </el-row>
           </el-row>
         </div>
       </el-col>
       <el-col :span="18">
-     <!-- 主要内容 -->
+        <!-- 主要内容 -->
     <div class='content'>
-      <!-- 搜索栏 -->
+        <!-- 搜索栏 -->
       <el-row class='searchbox1'>
-        <!-- 渠道名称 -->
-        <el-col :span='6' class='colbox'>
+        <!-- 代理名称 -->
+        <el-col :span='8' class='colbox'>
           <span class='text'>代理名称</span>
           <el-col :span='16'>
             <el-input v-model='agentName' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
-        <!-- 渠道编码 -->
-        <el-col :span='6' class='colbox'>
+        <!-- 代理编码 -->
+        <el-col :span='8' class='colbox'>
           <span class='text'>代理编码</span>
           <el-col :span='16'>
             <el-input v-model='agentCode' placeholder='请输入'></el-input>
@@ -72,14 +74,14 @@
           <el-button class='wuBtn long1'>重 置</el-button>
         </el-col>
       </el-row>
-      <!-- 表格 -->
+         <!-- 表格 -->
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
             <el-button class='stopBtn' @click="batchStop">批量移除</el-button>
           </el-col>
           <el-col :span='12' class="right">
-            <el-button class='whiteBtn' @click="toAdd">新增代理</el-button>
+            <el-button class='whiteBtn' @click="toAdd">添加代理</el-button>
           </el-col>
         </el-row>
 
@@ -87,24 +89,41 @@
           <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
             :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column type="selection" width="50" key="1"></el-table-column>
-            <el-table-column prop="channelName" label="渠道名称" min-width="150" key="2"></el-table-column>
-            <el-table-column prop="channelCode" label="渠道编码" min-width="100" key="3"></el-table-column>
-            <el-table-column prop="channelEngLish" label="渠道英文" min-width="100" key="4"></el-table-column>
-            <el-table-column prop="channelType" label="渠道分类" min-width="80" key="5"></el-table-column>
+            <el-table-column prop="agentName" label="代理名称" min-width="150" key="2"></el-table-column>
+            <el-table-column prop="agentCode" label="代理编码" min-width="100" key="3"></el-table-column>
+            <el-table-column prop="agentType" label="是否主代理" min-width="80" key="5"></el-table-column>
             <el-table-column prop="DeliveryType" label="派送类型" min-width="80" key="6"></el-table-column>
             <el-table-column prop="isFuel" label="是否含燃料" min-width="100" key="7"></el-table-column>
             <el-table-column prop="isTax" label="是否含税" min-width="80" key="8"></el-table-column>
-            <el-table-column prop="isClearCustoms" label="是否含清关" min-width="100" key="9"></el-table-column>
+            <el-table-column prop="isClearCustoms" label="是否含清关费" min-width="100" key="9"></el-table-column>
             <el-table-column prop="volume" label="材积除" min-width="100" key="10"></el-table-column>
-            <el-table-column prop="calculationRules" label="计算规则" min-width="100" key="11"></el-table-column>
+            <el-table-column prop="calculationRules" label="计算规则" min-width="100" key="11">
+              <template v-stol="scope">
+                <el-button type="text" style="font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #0084FF;">
+                  查看
+                </el-button>
+              </template>
+            </el-table-column>
             <el-table-column prop="channelScore" label="渠道评分" min-width="100" key="12"></el-table-column>
             <el-table-column prop="acceptGoods" label="接受货物" min-width="100" key="13"></el-table-column>
             <el-table-column prop="transportTime" label="运输时间" min-width="150" key="14"></el-table-column>
-            <el-table-column prop="channelInfo" label="渠道简介" min-width="100" key="15"></el-table-column>
-            <el-table-column prop="inputPeople" label="录价人" min-width="100" key="16"></el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="150" key="17">
+            <el-table-column prop="channelInfo" label="渠道简介" min-width="100" key="15">
+              <template v-stol="scope">
+                <el-button type="text" style="font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #0084FF;">
+                  查看
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop="inputPeople" label="录价员" min-width="100" key="16">
+              <template v-stol="scope">
+                <el-button type="text" style="font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #0084FF;">
+                  查看记录
+                </el-button>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" min-width="360" key="17">
               <template slot-scope="scope">
-                <el-button type="text">
+                <el-button type="text" @click="toPartition">
                   分区价格
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
@@ -113,13 +132,18 @@
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text">
+                  停用
+                </el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text">
                   修改
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">
-                  停用渠道
+                <el-button type="text" @click="stopAgent(scope.row)">
+                  主渠道
                 </el-button>
-                <el-button v-if="activeName === '2'" type="text">
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text">
                   启用渠道
                 </el-button>
               </template>
@@ -142,6 +166,112 @@
     </div>
     </el-col>
     </el-row>
+    <!-- 分区价格抽屉 -->
+    <el-drawer
+      title="设置分区"
+      :visible.sync="drawer"
+      size="50%"
+      :direction="rtl">
+      <div style="padding:0px 26px 26px 26px;margin-top:-6px">
+        <el-row style="background:#fff;text-align:left;padding:26px">
+          <el-row style="display:flex;align-items:center">
+            <el-col :span="3" style="display:flex;">
+              <div style="display:flex;flex-direction: column;align-items:center">
+                <div class="circle">1</div>
+                <div>渠道分区</div>
+              </div>
+            </el-col>
+            <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;">
+              <div class="circle1">2</div>
+              <div>重量段设置</div>
+            </el-col>
+             <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;">
+              <div class="circle1">3</div>
+              <div>价格维护</div>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:20px">
+            <el-col>
+              <span class="title-dai">代理</span>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;">
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道：</span>
+                <span class="daili1">{{cannel}}</span>
+            </el-col>
+            <el-col :span="10" class="item-box">
+                <span class="title-item">渠道编码：</span>
+                <span class="daili1">{{cannel}}</span>
+            </el-col>
+            <el-col :span="4" style="margin-top: -6px">
+              <el-button class='whiteBtn' size="small" @click="dialogVisible = true">复制分区</el-button>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;">
+            <el-col :span="10" class="item-box">
+                <span class="title-item">代理：</span>
+                <span class="daili1">{{agent}}</span>
+            </el-col>
+            <el-col :span="10" class="item-box">
+                <span class="title-item">代理编码：</span>
+                <span class="daili1">{{agentCode}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin:26px 0"></el-row>
+          <!-- 抽屉表格 -->
+          <div class="table">
+          <el-table ref="multipleTable" :data="drawerTableData" border  tooltip-effect="dark" style="width: 100%" 
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="aimCountry" label="目的国" min-width="80"></el-table-column>
+            <el-table-column prop="partitionName" label="分区名称" min-width="100"></el-table-column>
+            <el-table-column prop="partitionPostcode" label="分区邮编" min-width="80"></el-table-column>
+            <el-table-column prop="exclude" label="排除地区邮编" min-width="110"></el-table-column>
+            <el-table-column prop="remote" label="偏远地区邮编" min-width="110"></el-table-column>
+            <el-table-column prop="AmazonWarehouse" label="亚马逊仓库" min-width="100"></el-table-column>
+            <el-table-column label="操作" min-width="100">
+              <template slot-scope="scope">
+                <el-button type="text" @click="modify(scope.row)">修改</el-button>
+                <span style="color:#0084FF"> | </span>
+                <el-button type="text">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          </div>
+          <el-row style="margin-top:16px;">
+            <el-button class="orangeBtn long1" icon="el-icon-circle-plus-outline" style="width:110px">新增分区</el-button>
+          </el-row>
+      </el-row>
+      </div>
+    </el-drawer>
+    <!-- 复制分区 -->
+    <el-dialog
+      title="复制分区"
+      :visible.sync="dialogVisible"
+      left
+      width="30%">
+      <span style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: rgba(0, 0, 0, 0.65);">
+        请选择需要复制代理的分区
+      </span>
+      <el-row style="margin-top:16px">
+            <el-col :span="16" class="changebox">
+              <el-input placeholder="请选择" v-model="changeAgent" size="small" style="">
+              </el-input>
+              <img src="@/assets/search.png" alt="" style="width: 13px;height: 13px;opacity: 0.65;margin-right:10px">
+            </el-col>
+        </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false" size="small" style="width:80px;margin-top:-2px" class='wuBtn long1'>取 消</el-button>
+        <el-button class='orangeBtn long1' @click="dialogVisible = false" size="small" style="width:80px;margin-top:10px">确 定</el-button>
+      </span>
+    </el-dialog>
     <!-- 弹窗 -->
     <!-- <el-dialog
       :visible.sync="dialogStop"
@@ -174,44 +304,176 @@
 export default{
   data () {
     return {
+      changeAgent: '', // 请选择需要复制怼代理分区
+      dialogVisible: false, // 复制弹窗
+      agentCode: 'SZTT深圳天图', // 代理编码
+      agent: '深圳天图供应链有限公司', // 代理
+      cannel: '以星特快海派包邮UPS派送', // 渠道
+      cannelCode: 'YXTK以星特快', //渠道编码
+      drawer: false, // 分区价格弹窗
+      searchInput: '', // 搜索输入内容
+      num: 3, // 代理数量
       code: 'JP_hp1',
       delivery: '日本快船-佐川派送', // 送货方式
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
+      total: 50,
       currentPage: 1,
       pageSize: 15,
-      tableData: [], // 表格数据
-      Class: '', // 分类
+      drawerTableData: [
+        {
+          aimCountry: '中国'
+        }
+      ], // 抽屉表格
+      tableData: [
+        {
+          agentName: '天图供应链',
+          agentCode: 'USAUSP',
+          agentType: '主代理',
+          DeliveryType: 'UPS',
+          isFuel: '含燃料费',
+          isTax: '含税',
+          isClearCustoms: '含清关费',
+          volume: '除5000',
+          calculationRules: '',
+          channelScore: '4.3',
+          acceptGoods: '带电',
+          transportTime: '9-11个工作日',
+          channelInfo: '',
+          inputPeople: '李小彬'
+        }
+      ], // 表格数据
+      Class: 1, // 分类
       options: [{
-        value: '1',
+        value: 1,
         label: '全部'
       },
       {
-        value: '2',
+        value: 2,
         label: '海运'
       },
       {
-        value: '3',
+        value: 3,
         label: '空运'
       },
       {
-        value: '4',
+        value: 4,
         label: '快递'
       },
       {
-        value: '5',
+        value: 5,
         label: '铁路'
       },
       {
-        value: '6',
+        value: 6,
         label: '专车'
       }
       ]
+    }
+  },
+  created () {
+  },
+  methods: {
+    // 修改
+  modify () {},
+    toAdd () { 
+      this.$router.push({ name: 'newlyAddedAgent' })
+    },
+    batchStop(){
+    },
+    handleSelectionChange(){},
+    toPartition () {
+      this.drawer = true
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+/deep/ .changebox{
+    display: flex;
+    align-items: center;
+    height: 34px;
+    background: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid #E7E7E7;
+    .el-input__inner{
+        border:none
+    }
+}
+/deep/ .el-dialog{
+  text-align: start;
+}
+.item-box{
+  display: flex;
+  align-items: center;
+}
+.title-item{
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.85);
+}
+.daili1{
+  display: flex;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
+}
+.title-dai{
+  font-size: 16px;
+  font-family: PingFangSC-Semibold, PingFang SC;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+}
+.circle1{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.35);
+}
+.circle{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  background: #FB4702;
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+/deep/ .el-drawer{
+  background: #E8EBF2;
+    .el-drawer__header{
+      padding: 30px 20px;
+      text-align: left;
+      background: #FFFFFF;
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;color: #333333;
+}
+}
+/deep/ .elin  {
+  .el-input__inner{
+    border: none;
+  }
+}
+.num{
+  font-size: 14px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #FFBD32;
+}
 /deep/ .searchbox1{
   .stopBtn{
     height: 32px;

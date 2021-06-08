@@ -242,18 +242,20 @@ export default {
     console.log(this.$route.name)
     this.menu.forEach((item, index) => {
       item.children.forEach(items => {
+        console.log(items.name)
         if (items.name === arr) {
           this.activeIndex = String(index)
         }
         if (items.children) {
           items.children.forEach(itms => {
-            if (itms.name === this.$route.name) {
+            if (itms.name === this.$route.name || itms.name === arr) {
               this.activeIndex = String(index)
             }
           })
         }
       })
     })
+    console.log(this)
     this.setRouter()
   },
   watch: {

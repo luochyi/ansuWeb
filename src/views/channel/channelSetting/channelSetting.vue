@@ -38,7 +38,7 @@
         <el-col :span='6' class='colbox'>
           <span class='text'>渠道分类</span>
           <el-col :span='16'>
-            <el-select v-model='channelType' placeholder='请选择'>
+            <el-select v-model='channelType' placeholder='请选择' style="width:100%">
               <el-option
                 v-for="item in channelTypeOpts"
                 :key="item.id"
@@ -52,7 +52,7 @@
         <el-col :span='6' class='colbox'>
           <span class='text'>派送类型</span>
           <el-col :span='16'>
-            <el-select v-model='DeliveryType' placeholder='请输入'>
+            <el-select v-model='DeliveryType' placeholder='请输入' style="width:100%">
               <el-option
                 v-for="item in DeliveryTypeOpts"
                 :key="item.id"
@@ -93,15 +93,27 @@
             <el-table-column prop="isTax" label="是否含税" min-width="80" key="8"></el-table-column>
             <el-table-column prop="isClearCustoms" label="是否含清关" min-width="100" key="9"></el-table-column>
             <el-table-column prop="volume" label="材积除" min-width="100" key="10"></el-table-column>
-            <el-table-column prop="calculationRules" label="计算规则" min-width="100" key="11"></el-table-column>
+            <el-table-column prop="calculationRules" label="计算规则" min-width="100" key="11">
+              <template slot-scope="scope">
+                <el-button type="text" @click="chcek(scope.row)">查看</el-button>
+              </template>
+            </el-table-column>
             <el-table-column prop="channelScore" label="渠道评分" min-width="100" key="12"></el-table-column>
             <el-table-column prop="acceptGoods" label="接受货物" min-width="100" key="13"></el-table-column>
             <el-table-column prop="transportTime" label="运输时间" min-width="150" key="14"></el-table-column>
-            <el-table-column prop="channelInfo" label="渠道简介" min-width="100" key="15"></el-table-column>
-            <el-table-column prop="inputPeople" label="录价人" min-width="100" key="16"></el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="150" key="17">
+            <el-table-column prop="channelInfo" label="渠道简介" min-width="100" key="15">
               <template slot-scope="scope">
-                <el-button type="text">
+                <el-button type="text" @click="cannelChcek(scope.row)">查看</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop="inputPeople" label="录价人" min-width="100" key="16">
+              <template slot-scope="scope">
+                <el-button type="text" @click="recordsChcek(scope.row)">查看记录</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column fixed="right" label="操作" min-width="250" key="17">
+              <template slot-scope="scope">
+                <el-button type="text" @click="openPartition(scope.row)">
                   分区价格
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
@@ -109,12 +121,12 @@
                   附加费
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text">
-                  修改
-                </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">
-                  停用渠道
+                  停用
+                </el-button>
+                <el-button type="text">
+                  修改
                 </el-button>
                 <el-button v-if="activeName === '2'" type="text">
                   启用渠道
@@ -136,7 +148,242 @@
           </div>
         </div>
       </div>
+      <!-- 渠道简介抽屉 -->
+    <el-drawer
+      title="修改渠道简介"
+      :visible.sync="drawer"
+      size="50%">
+      <div style="padding:0px 26px 26px 26px;margin-top:-6px;">
+        <el-row style="background:#fff;text-align:left;padding:26px;">
+          <el-row>
+            <el-col :span="2" style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);">
+              渠道
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:16px">
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">渠道：</span><span>{{cannel}}</span>
+            </el-col>
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">渠道编码：</span><span>{{cannelCode}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:20px">
+            <el-col>
+              <span style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);">渠道简介</span>
+            </el-col>
+          </el-row>
 
+          <!-- 寄送规则 -->
+          <el-row style="margin-top:16px;font-size: 16px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 600;
+          color: rgba(0, 0, 0, 0.65);">
+            <el-col :span="6">
+              寄送规则
+            </el-col>
+          </el-row>
+          <el-row style="height:200px">
+            <template>
+              <div class="content edit_container">
+                <quill-editor
+                style="height:100px"
+                    v-model="content"
+                    ref="myQuillEditor"
+                    :options="editorOption"
+                    @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
+                    @change="onEditorChange($event)">
+                </quill-editor>
+                <!-- <button v-on:click="saveHtml">保存</button> -->
+              </div>
+            </template>
+          </el-row>
+
+          <!-- 注意事项 -->
+          <el-row style="margin-top:16px;font-size: 16px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 600;
+          color: rgba(0, 0, 0, 0.65);">
+            <el-col :span="6">
+              注意事项
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:12px;">
+            <el-col :span="5" style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;
+            color: rgba(0, 0, 0, 0.65);">是否有注意事项</el-col>
+            <el-col :span="19"></el-col>
+            <template>
+              <el-radio-group v-model="radio">
+                <el-radio :label="1">有注意事项</el-radio>
+                <el-radio :label="2">无注意事项</el-radio>
+              </el-radio-group>
+            </template>
+          </el-row>
+          <el-row style="height:200px">
+            <template>
+              <div class="content edit_container">
+                <quill-editor
+                style="height:100px"
+                    v-model="note"
+                    ref="myQuillEditor"
+                    :options="editorOption"
+                    @blur="onEditorBlur($event)" @focus="onEditorFocus($event)"
+                    @change="onEditorChange($event)">
+                </quill-editor>
+                <!-- <button v-on:click="saveHtml">保存</button> -->
+              </div>
+            </template>
+          </el-row>
+          <el-row style="margin-top:16px;font-size: 16px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 600;
+          color: rgba(0, 0, 0, 0.65);">
+            <el-col :span="6">
+              特殊要求
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:12px">
+            <el-col :span="5" style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 500;
+            color: rgba(0, 0, 0, 0.65);">是否有特殊要求</el-col>
+            <el-col :span="19"></el-col>
+            <template>
+              <el-radio-group v-model="Require">
+                <el-radio :label="1">有特殊要求</el-radio>
+                <el-radio :label="2">无特殊要求</el-radio>
+              </el-radio-group>
+            </template>
+          </el-row>
+          <el-row style="margin-top:16px;font-size: 16px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 600;
+          color: rgba(0, 0, 0, 0.65);">
+            <el-col :span="6">
+              温馨提示
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:12px">
+            <el-col :span="5" style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 500;
+            color: rgba(0, 0, 0, 0.65);">是否有温馨提示</el-col>
+            <el-col :span="19"></el-col>
+            <template>
+              <el-radio-group v-model="tip">
+                <el-radio :label="1">有温馨提示</el-radio>
+                <el-radio :label="2">无温馨提示</el-radio>
+              </el-radio-group>
+            </template>
+          </el-row>
+        </el-row>
+        <div class="drawer_btn">
+          <el-button class='orangeBtn' size="small" style="margin-right:10px">确定</el-button>
+           <!-- icon="el-icon-success" -->
+          <el-button class="wuBtn" size="small">取消</el-button>
+        </div>
+      </div>
+    </el-drawer>
+
+    <!-- 历史价格抽屉 -->
+    <el-drawer
+      title="历史价格"
+      :visible.sync="recordsDrawer"
+      size="50%">
+      <div style="padding:0px 26px 26px 26px;margin-top:-6px;">
+        <el-row style="background:#fff;text-align:left;padding:26px;">
+          <el-row>
+            <el-col :span="2" style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);">
+              渠道
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:16px">
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">渠道：</span><span>{{cannel}}</span>
+            </el-col>
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">渠道编码：</span><span>{{cannelCode}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:16px">
+            <el-col :span="4" style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);">
+              历史价格明细
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:16px">
+            <div class="table">
+          <el-table ref="multipleTable" :data="inputTable" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="date" label="时间" min-width="400" key="1"></el-table-column>
+            <el-table-column prop="inputPeople" label="录价人" min-width="100" key="2"></el-table-column>
+            <el-table-column label="操作" min-width="100" key="3">
+              <template slot-scope="scope">
+                <el-button type="text" @click="price(scope.row)">查看价格</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+            </div>
+          </el-row>
+        </el-row>
+        <div class="drawer_btn">
+          <el-button type="info" plain size="small" @click="recordsDrawer = fasle" style="margin-right:10px">返 回</el-button>
+       </div>
+      </div>
+    </el-drawer>
+    <!-- 维护价格抽屉 -->
+    <el-drawer
+      title="维护价格"
+      :visible.sync="priceDrawer"
+      size="50%">
+      <div style="padding:0px 26px 26px 26px;margin-top:-6px;">
+        <el-row style="background:#fff;text-align:left;padding:26px;">
+          <el-row>
+            <el-col :span="2" style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);">
+              代理
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:16px">
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">渠道：</span><span>{{cannel}}</span>
+            </el-col>
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">渠道编码：</span><span>{{cannelCode}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:16px">
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">代理：</span><span>{{agent}}</span>
+            </el-col>
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">代理编码：</span><span>{{agentCode}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:16px">
+            <el-col :span="4" style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);">
+              渠道价格
+            </el-col>
+            <el-col :span="20" style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);">
+            <span>时间：</span><span style="font-size: 16px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;
+            color: rgba(0, 0, 0, 0.65);">{{date}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #FB6024;margin-top:20px">
+            价格按单价</el-row>
+          <el-row style="margin-top:16px">
+            <div class="table">
+          <el-table ref="multipleTable" :data="priceTable" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="country"  min-width="60" key="1"></el-table-column>
+            <el-table-column prop="quality1" label="0-20 公斤" min-width="60" key="1"></el-table-column>
+            <el-table-column prop="quality2" label="21-50 公斤" min-width="60" key="1"></el-table-column>
+            <el-table-column prop="quality3" label="100-MAX 公斤" min-width="60" key="1"></el-table-column>
+          </el-table>
+            </div>
+          </el-row>
+        </el-row>
+        <div class="drawer_btn">
+          <el-button type="info" plain size="small" @click="priceDrawer = fasle" style="margin-right:10px">返 回</el-button>
+        </div>
+      </div>
+    </el-drawer>
     </div>
     <!-- 弹窗 -->
     <el-dialog
@@ -163,6 +410,424 @@
         <el-button class="orangeBtn" @click="dialogStop = false">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 分区价格抽屉（快递） -->
+    <el-drawer
+      title="设置分区"
+      :visible.sync="drawerPartitionExpress"
+      :wrapperClosable='false'
+      size="50%">
+      <div style="padding:0px 26px 26px 26px;margin-top:-6px;">
+        <el-row style="background:#fff;text-align:left;padding:26px">
+          <el-row style="display:flex;align-items:center">
+            <el-col :span="3" style="display:flex;" v-if="control === 1 || control === 2 || control === 3 || control === 4">
+              <div style="display:flex;flex-direction: column;align-items:center">
+                <div class="circle">1</div>
+                <div>渠道分区</div>
+              </div>
+            </el-col>
+            <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control !== 2 && control !== 3">
+              <div class="circle1">2</div>
+              <div>重量段设置</div>
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control === 2 || control === 3">
+              <div class="circle">2</div>
+              <div>重量段设置</div>
+            </el-col>
+             <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control !== 3">
+              <div class="circle1">3</div>
+              <div>价格维护</div>
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control === 3">
+              <div class="circle">3</div>
+              <div>价格维护</div>
+            </el-col>
+          </el-row>
+          <!-- 快递显示 -->
+          <div v-if="control === 1">
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:20px">
+            <el-col>
+              <span class="title-dai">渠道</span>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;">
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道：</span>
+                <span class="daili1">{{cannel}}</span>
+            </el-col>
+            <el-col :span="10" class="item-box">
+                <span class="title-item">渠道编码：</span>
+                <span class="daili1">{{cannel}}</span>
+            </el-col>
+            <el-col :span="4" style="margin-top: -6px">
+              <el-button class='whiteBtn' size="small" @click="dialogVisible = true">复制分区</el-button>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;">
+            <el-col :span="10" class="item-box">
+                <span class="title-item">代理：</span>
+                <span class="daili1">{{agent}}</span>
+            </el-col>
+            <el-col :span="10" class="item-box">
+                <span class="title-item">代理编码：</span>
+                <span class="daili1">{{agentCode}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin:26px 0"></el-row>
+          <!-- 抽屉表格 -->
+          <div class="table">
+          <el-table ref="multipleTable" :data="drawerTableData" border  tooltip-effect="dark" style="width: 100%" 
+          :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="aimCountry" label="目的国" min-width="80"></el-table-column>
+            <el-table-column prop="partitionName" label="分区名称" min-width="100"></el-table-column>
+            <el-table-column prop="partitionPostcode" label="分区邮编" min-width="130"></el-table-column>
+            <el-table-column prop="exclude" label="排除地区邮编" min-width="130">
+              <template slot-scope="scope">
+                <span>{{scope.row.exclude}}</span>&nbsp;
+                <el-button @click="excludeBtn(scope.row)" type="text">查看</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop="remote" label="偏远地区邮编" min-width="130">
+              <template slot-scope="scope">
+                <span>{{scope.row.remote}}</span>&nbsp;
+                <el-button type="text" @click="remoteBtn(scope.row)">查看</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column prop="AmazonWarehouse" label="亚马逊仓库" min-width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.AmazonWarehouse}}</span>&nbsp;
+                <el-button type="text" @click="AmazonWarehouseBtn(scope.row)">查看</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" min-width="100">
+              <template slot-scope="scope">
+                <el-button type="text" @click="modify(scope.row)">修改</el-button>
+                <span style="color:#0084FF"> | </span>
+                <el-button type="text" @click="Delete(scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          </div>
+          <el-row style="margin-top:16px;">
+            <el-button class="orangeBtn long1" icon="el-icon-circle-plus-outline" @click="addExp" style="width:110px">新增分区</el-button>
+          </el-row>
+          </div>
+          <!-- 新增快递分区 -->
+          <div v-if="control === 4">
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:20px">
+            <el-col>
+              <span class="title-dai">分区信息</span>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;" class="fenqu">
+              <el-col :span="4" style="text-align:right">分区名称&nbsp;&nbsp;</el-col>
+              <el-col :span="8">
+                <el-input size="small" placeholder="请选择" style="width:100%" v-model="name"></el-input>
+              </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;" class="fenqu">
+              <el-col :span="4" style="text-align:right">寄送地区邮编&nbsp;&nbsp;</el-col>
+              <el-col :span="8">
+                <template>
+                  <el-radio-group v-model="post">
+                    <el-radio :label="1">固定邮编</el-radio>
+                    <el-radio :label="2">连号邮编</el-radio>
+                  </el-radio-group>
+                </template>
+              </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;" class="fenqu" v-if="post === 2">
+              <el-col :span="4" style="text-align:right">连号邮编&nbsp;&nbsp;</el-col>
+              <el-col :span="5" style="margin-right:40px">
+                <el-input size="small" placeholder="请输入起始邮编" style="width:100%" v-model="startPost"></el-input>
+              </el-col>
+              <el-col :span="5">
+                <el-input size="small" placeholder="请输入结束邮编" style="width:100%" v-model="endPost"></el-input>
+              </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;" class="fenqu">
+              <el-col :span="4" style="text-align:right">地区邮编&nbsp;&nbsp;</el-col>
+              <el-col :span="16">
+                <el-input type="textarea" rows="4" size="small" placeholder="请输入邮编" style="width:100%" v-model="areaPost"></el-input>
+              </el-col>
+          </el-row>
+          <el-row style="margin-top:6px">
+            <el-col :span="4">&nbsp;</el-col>
+            <el-col :span="12" style="font-size: 12px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #FF4D4F;">
+              注：邮编之间用,（英文逗号）做分割
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;" class="fenqu">
+              <el-col :span="4" style="text-align:right">排除地区邮编&nbsp;&nbsp;</el-col>
+              <el-col :span="16">
+                <el-input type="textarea" rows="4" size="small" placeholder="请输入邮编" style="width:100%" v-model="excludePost"></el-input>
+              </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;margin-bottom:16px">
+            <el-col>
+              <span class="title-dai">该邮编下FBA仓</span>
+            </el-col>
+          </el-row>
+          <!-- 抽屉表格 -->
+          <div class="table">
+          <el-table ref="multipleTable" :data="expressTableData" border  tooltip-effect="dark" style="width: 100%" 
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="FBAwarehouse" label="FBA仓" min-width="80"></el-table-column>
+            <el-table-column prop="FBAaddress" label="FBA仓地址" min-width="400"></el-table-column>
+            <el-table-column prop="FBAmail" label="FBA仓邮编" min-width="130"></el-table-column>
+          </el-table>
+          </div>
+       </div>
+       </el-row>
+       <div class="drawer_btn">
+         <el-button class="orangeBtn long1" plain size="small" @click="lastBtn" style="margin-right:20px" v-if="control > 1 && control !== 4">
+            上一步
+          </el-button>
+          <!-- 新增下一步 -->
+          <el-button class="orangeBtn long1" plain size="small" @click="control = 2" style="margin-right:20px" v-if="control === 4">
+            下一步
+          </el-button>
+          <el-button class="orangeBtn long1" plain size="small" @click="controlBtn" style="margin-right:20px" v-if="control < 3 && control !== 4">
+            下一步
+          </el-button>
+          <el-button type="info long1" plain size="small" @click="PartitionExpressFasle" style="margin-right:20px" v-if="control !== 4">
+            取 消
+          </el-button>
+          <!-- 新增取消 -->
+          <el-button type="info long1" plain size="small" @click="control = 1" style="margin-right:20px" v-if="control === 4">
+            取 消
+          </el-button>
+       </div>
+      </div>
+    </el-drawer>
+    <!-- 分区价格抽屉（卡派） -->
+    <el-drawer
+      title="设置分区"
+      :visible.sync="drawerKapai"
+      size="50%">
+      <div style="padding:0px 26px 26px 26px;margin-top:-6px;">
+        <el-row style="background:#fff;text-align:left;padding:26px">
+          <el-row style="display:flex;align-items:center">
+            <el-col :span="3" style="display:flex;" v-if="controlKP === 1 || controlKP === 2 || controlKP === 3 || controlKP === 4">
+              <div style="display:flex;flex-direction: column;align-items:center">
+                <div class="circle">1</div>
+                <div>渠道分区</div>
+              </div>
+            </el-col>
+            <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="controlKP !== 2 && controlKP !== 3">
+              <div class="circle1">2</div>
+              <div>重量段设置</div>
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="controlKP === 2 || controlKP === 3">
+              <div class="circle">2</div>
+              <div>重量段设置</div>
+            </el-col>
+             <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="controlKP !== 3">
+              <div class="circle1">3</div>
+              <div>价格维护</div>
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="controlKP === 3">
+              <div class="circle">3</div>
+              <div>价格维护</div>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+
+          <!--卡派显示1 -->
+          <div v-if="controlKP === 1">
+          <el-row style="margin-top:20px">
+            <el-col>
+              <span class="title-dai">渠道</span>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;">
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道：</span>
+                <span class="daili1">{{cannel}}</span>
+              </el-col>
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道编码：</span>
+                <span class="daili1">{{cannel}}</span>
+              </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin:26px 0"></el-row>
+          <!-- 抽屉表格 -->
+          <div class="table">
+          <el-table ref="multipleTable" :data="drawerTableData" border  tooltip-effect="dark" style="width: 100%" 
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="aimCountry" label="目的国" min-width="80" key="5"></el-table-column>
+            <el-table-column prop="partitionName" label="分区名称" min-width="100" key="6"></el-table-column>
+            <el-table-column prop="AmazonWarehouse" label="亚马逊仓库" min-width="300" key="7">
+              <template slot-scope="scope">
+                <span>{{scope.row.AmazonWarehouse}}</span>&nbsp;
+                <el-button type="text" @click="kapaiCheck(scope.row)">查看</el-button>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" min-width="100">
+              <template slot-scope="scope">
+                <el-button type="text" @click="kapaiModify(scope.row)">修改</el-button>
+                <span style="color:#0084FF"> | </span>
+                <el-button type="text" @click="kapaiDelete(scope.row)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          </div>
+          <el-row style="margin-top:16px;">
+            <el-button class="orangeBtn long1" icon="el-icon-circle-plus-outline" @click="addKapai" style="width:110px">新增分区</el-button>
+          </el-row>
+          </div>
+          <!-- 卡派显示2 -->
+          <div v-if="controlKP === 2">
+          <el-row style="margin-top:20px">
+            <el-col>
+              <span class="title-dai">渠道</span>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;">
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道：</span>
+                <span class="daili1">{{cannel}}</span>
+              </el-col>
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道编码：</span>
+                <span class="daili1">{{cannel}}</span>
+              </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin:26px 0"></el-row>
+          <el-row style="margin-top:20px;margin-bottom:16px;display:flex;align-items:center">
+            <el-col :span="5">
+              <span class="title-dai">渠道重量段</span>
+              <span><i class="el-icon-warning" style="color:#FB4702;margin-left:16px"></i></span>
+            </el-col>
+              <el-col :span="15" style="display:flex;justify-content:flex-end">
+                  <el-select size="small" v-model="unit">
+                    <el-option
+                    value="1"
+                    label="单价">
+                    </el-option>
+                    <el-option
+                    value="2"
+                    label="金额">
+                    </el-option>
+                    <el-option
+                    value="3"
+                    label="首续重">
+                    </el-option>
+                  </el-select>
+                  <!-- <i class="el-icon-arrow-down"></i> -->
+              </el-col>
+          </el-row>
+          <!-- 抽屉表格 -->
+          <div class="table">
+          <el-table ref="multipleTable" :data="weightTableData" border  tooltip-effect="dark" style="width: 100%" 
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="section" label="区间" min-width="80" key="5">
+            </el-table-column>
+            <el-table-column prop="min" label="最低重量" min-width="100" key="6">
+              <template slot-scope="scope">
+                <el-input size="small" v-model="scope.row.min" placeholder="请输入最低重量"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column prop="max" label="最高重量" min-width="100" key="7">
+              <template slot-scope="scope">
+                <el-input size="small" v-model="scope.row.max" placeholder="请输入最高重量"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column prop="pricingMethod" label="计价方式" min-width="100" key="8">
+              <template slot-scope="scope">
+                <el-input size="small" v-model="scope.row.pricingMethod" placeholder="请选择计价方式"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" min-width="80" key="9">
+              <template slot-scope="scope">
+                <el-button type="text" @click="confirm(scope.row)">确认</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          </div>
+          <el-row style="margin-top:16px;">
+            <el-button class="orangeBtn long1" icon="el-icon-circle-plus-outline" @click="addSection" style="width:110px">新增分区</el-button>
+          </el-row>
+          </div>
+          <!-- 新增分区卡派 -->
+          <div v-if="controlKP === 4">
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:20px">
+            <el-col>
+              <span class="title-dai">分区信息</span>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;" class="fenqu flex">
+              <el-col :span="10">
+                <span>分区名称&nbsp;&nbsp;</span>
+                <el-input size="small" placeholder="请选择" style="width:90%;margin-bottom:16px;" v-model="kapaiName"></el-input>
+              </el-col>
+          </el-row>
+          <el-row style="margin-bottom:16px;font-size: 12px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;
+          color: #FF4D4F;" v-if="kapaiArr.length === 0">注：请勾选卡车派送的FBA仓</el-row>
+          <!-- 抽屉表格 -->
+          <div class="table">
+          <el-table ref="multipleTable" :data="Data" border  tooltip-effect="dark" style="width: 100%" @selection-change="kapaiChange" :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column type="selection" width="50" key="1"></el-table-column>
+            <el-table-column prop="FBAwarehouse" label="FBA仓" min-width="80" key="2"></el-table-column>
+            <el-table-column prop="FBAaddress" label="FBA仓地址" min-width="400" key="3"></el-table-column>
+            <el-table-column prop="FBAmail" label="FBA仓邮编" min-width="130" key="4"></el-table-column>
+          </el-table>
+          </div>
+          </div>
+        </el-row>
+       <div class="drawer_btn">
+          <el-button class="orangeBtn long1" plain size="small" @click="lastKP" style="margin-right:20px"
+            v-if="controlKP > 1 && controlKP !== 4">
+            上一步
+          </el-button>
+          <el-button class="orangeBtn long1" plain size="small" @click="afterKP" style="margin-right:20px" v-if="controlKP < 3 && controlKP !== 4">
+            下一步
+          </el-button>
+          <!-- 新增后卡派下一步 -->
+          <el-button class="orangeBtn long1" plain size="small" @click="controlKP = 2" style="margin-right:20px" v-if="controlKP === 4">
+            下一步
+          </el-button>
+          <el-button type="info long1" plain size="small" @click="drawerKapai = false" style="margin-right:20px" v-if="controlKP !== 4">
+            取 消
+          </el-button>
+          <!-- 新增取消 -->
+          <el-button type="info long1" plain size="small" @click="controlKP = 1" style="margin-right:20px" v-if="controlKP === 4">
+            取 消
+          </el-button>
+       </div>
+      </div>
+    </el-drawer>
+    <!-- 删除分区 -->
+    <el-dialog
+      title="删除分区"
+      :visible.sync="dialogDelete"
+      center
+      width="30%">
+      <el-row style="width:100%;text-align:center;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;color: rgba(0, 0, 0, 0.65);">
+        确定删除该分区吗？
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogDelete = false" size="small" style="width:80px;margin-top:-2px;margin-right:20px" class='wuBtn'>
+          取 消
+        </el-button>
+        <el-button class='orangeBtn' @click="dialogDelete = false" size="small" style="width:80px;margin-top:10px">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -170,6 +835,80 @@
 export default {
   data () {
     return {
+      dialogDelete: false, // 删除分区
+      drawerPartitionExpress: false, // 分区价格抽屉(快递)
+      tip: 1, // 温馨提示
+      Require: 1, // 特殊要求
+      radio: 1, // 注意事项
+      modules: {
+        toolbar: [
+          // ['bold', 'italic', 'underline', 'strike'],
+          // ['blockquote', 'code-block'],
+          // [{ 'header': 1 }, { 'header': 2 }],
+          // [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+          // [{ 'script': 'sub'}, { 'script': 'super' }],
+          // [{ 'indent': '-1'}, { 'indent': '+1' }],
+          // [{ 'direction': 'rtl' }],
+          // [{ 'size': ['small', false, 'large', 'huge'] }],
+          // [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+          // [{ 'color': [] }, { 'background': [] }],
+          // [{ 'font': [] }],
+          // [{ 'align': [] }],
+          // ['clean'],
+          // ['image','video']
+        ]
+      },
+      content: `<p></p>`,
+      note: `<p><p>`,
+      editorOption: {
+        theme: 'snow'
+      },
+
+      control: 1, // 快递控制变量
+      controlKP: 1, // 卡派控制变量
+      weightTableData: [{
+        section: '区间1',
+        min: '',
+        max: '',
+        pricingMethod: ''
+        
+      }], // 渠道重量段
+
+      drawerKapai: true, // 分区价格抽屉（卡派）
+      addDrawerKapai: false, // 新增卡派抽屉
+      // 卡派表格
+      kapaiName: '', // 卡派分区名称
+      kapaiArr: [], // 新增卡派勾选表格数组
+      Data: [
+        {
+          FBAwarehouse: 'IND9',
+          FBAaddress: '11 California Avenue, USA',
+          FBAmail: '234242424'
+       }
+      ], 
+      name: '', // 分区名称（新增快递）
+      startPost: '', // 起始邮编
+      endPost: '', // 结束邮编
+      post: 1, // 寄送地区邮编
+      areaPost: '', // 输入地区邮编
+      excludePost: '', // 排除地区邮编
+      expressTableData: [], // 新增分区(快递)表格
+      priceTable: [
+        {
+          country: '美国',
+          quality1: '12元',
+          quality2: '11.5元',
+          quality3: '9元'
+        }
+      ], // 维护价格表格
+      date: '2020年12月15日 18:00 - 2020年12月20日 18:00', // 维护价格时间
+      agent: '深圳天图供应链有限公司', // 代理
+      agentCode: 'SZTT深圳天图', // 代理编码
+      cannelCode: 'YXTK以星特快', // 渠道编码
+      cannel: '以星特快海派包邮UPS派送', // 渠道
+      drawer: false, // 简介查看
+      recordsDrawer: false, // 查看记录抽屉
+      priceDrawer: false, // 维护价格抽屉
       activeName: '1', // 标签绑定
 
       pageSize: 10,
@@ -180,6 +919,18 @@ export default {
       channelCode: '', // 渠道编码
       channelEngLish: '', // 渠道英文
       channelType: '', // 渠道分类
+      unit: '',
+      // 抽屉表格
+      drawerTableData: [
+        {
+          aimCountry: '美国',
+          partitionPostcode: '100000-49999',
+          partitionName: '美东',
+          exclude: '1012312…',
+          remote: '2012312',
+          AmazonWarehouse: 'ONT8'
+        }
+      ], // 抽屉表格
       channelTypeOpts: [
         {
           id: 1,
@@ -208,6 +959,10 @@ export default {
           name: '卡派'
         }
       ],
+      inputTable: [{
+        date: '2020年9月11日 16:00 -2020年10月11日 17:00',
+        inputPeople: '张三'
+      }], // 查看历史记录表
       tableData: [
         {
           channelName: '美国空派-普货',
@@ -234,10 +989,120 @@ export default {
       dialogStop: false // 停用弹窗
     }
   },
+  computed: {
+    editor () {
+      return this.$refs.myQuillEditor.quill
+    }
+  },
   created () {
     // this.getData()
   },
   methods: {
+    onEditorReady (editor) { // 准备编辑器
+    },
+    onEditorBlur () {}, // 失去焦点事件
+    onEditorFocus () {}, // 获得焦点事件
+    onEditorChange () {}, // 内容改变事件
+    saveHtml (event) {
+      alert(this.content)
+    },
+
+    // 重量设置2确认
+    confirm (val) {
+      console.log(val)
+      if (val.max === '') {
+        return val.max = 111
+      }
+      this.addSection()
+    },
+    //新增区间
+    addSection () {
+      let obj = {
+        section: '', //区间
+        min: '',
+        max: '',
+        pricingMethod: ''
+      }
+      obj.section = '区间' + Number(this.weightTableData.length + 1)
+      this.weightTableData.push(obj)
+    },
+
+    // 分区价格抽屉（快递）下一步
+    controlBtn () {
+      if (this.control < 3) {
+        this.control = this.control + 1
+      }
+    },
+    // 分区价格抽屉（卡派）下一步
+    afterKP () {
+      if (this.controlKP < 3) {
+        this.controlKP = this.controlKP + 1
+      }
+    },
+    // 分区价格抽屉（卡派）上一步
+    lastKP () {
+      if (this.controlKP > 1) {
+        this.controlKP = this.controlKP - 1
+      }
+    },
+    // 分区价格抽屉（快递）上一步
+    lastBtn () {
+      if (this.control > 1) {
+        this.control = this.control - 1
+      }
+    },
+    // 新增后卡派下一步
+    addKPafter () {},
+    // 取消分区价格抽屉（快递）
+    PartitionExpressFasle () {
+      this.drawerPartitionExpress = false
+      this.control = 1
+    },
+    // 新增卡派
+    addKapai () {
+      this.controlKP = 4
+    },
+    // 卡派勾选表格
+    kapaiChange (val) {
+      console.log(val)
+      this.kapaiArr = val
+    },
+    // 卡派查看
+    kapaiCheck () {},
+    // 卡派修改
+    kapaiModify () {},
+    // 卡派删除
+    kapaiDelete () {},
+    // 新增快递
+    addExp () {
+      this.control = 4
+    },
+    // 删除分区
+    Delete () {
+      this.dialogDelete = true
+    },
+    add (event) {
+    console.log(event)
+    },
+    // 查看
+    chcek () {},
+    // 渠道简介查看
+    cannelChcek () {
+      this.drawer = true
+    },
+    // 维护价格抽屉
+    price () {
+      this.priceDrawer = true
+    },
+    // 查看记录（录价人）
+    recordsChcek (val) {
+      this.recordsDrawer = true
+    },
+    // 分区价格
+    openPartition () {
+      // this.drawerKapai = true
+      this.drawerPartitionExpress =true
+    },
     getData () {
     },
     handleSelectionChange (val) {
@@ -265,7 +1130,8 @@ export default {
       this.dialogTitle = '停用渠道'
     },
     toAdd () {
-      this.$router.push({ name: 'addAgent' })
+      // this.$router.push({ name: 'addAgent' })
+      this.$router.push({ name: 'addChannel' })
     },
     handleClose () {
       this.dialogStop = false
@@ -275,6 +1141,113 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/deep/ .table .el-input__inner{
+        border:none
+    }
+  
+// 添加颜色类
+ /deep/  .el-radio__input.is-checked + .el-radio__label { // 字体颜色
+       color: rgba(0, 0, 0, 0.65) !important;
+   }
+/deep/   .el-radio__input.is-checked .el-radio__inner { // 选框颜色
+       background: #FB4702 !important;
+       border-color: #FB4702 !important;
+   }
+.fenqu{
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
+  }
+.item-box{
+  display: flex;
+  align-items: center;
+}
+.title-item{
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.85);
+}
+.daili1{
+  display: flex;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
+}
+.title-dai{
+  font-size: 16px;
+  font-family: PingFangSC-Semibold, PingFang SC;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+}
+.circle1{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.35);
+}
+.circle{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  background: #FB4702;
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+.item-text{
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
+}
+/deep/ .el-drawer{
+  padding-top: 0px;
+  background: #E8EBF2;
+    .el-drawer__header{
+      padding: 30px 20px;
+      text-align: left;
+      background: #FFFFFF;
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;color: #333333;
+}
+.el-drawer__body{
+      margin-top: -6px;
+      padding-top: 0px;
+      overflow: scroll;
+    }
+.drawer_btn{
+      display: flex;
+      width:100%;
+      padding-left: 20px;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 26px;
+      // margin-left: -26px;
+      margin-bottom: -26px;
+      // width: 100%;
+      box-sizing: border-box;
+      height: 60px;
+      background: #FFFFFF;
+      box-sizing: border-box;
+    }
+}
 /deep/ .searchbox1{
   .stopBtn{
     height: 32px;
@@ -315,5 +1288,13 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+  #app {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
 }
 </style>
