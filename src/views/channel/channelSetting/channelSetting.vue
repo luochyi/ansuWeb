@@ -587,7 +587,7 @@
        </div>
        </el-row>
        <div class="drawer_btn">
-         <el-button class="orangeBtn long1" plain size="small" @click="lastBtn" style="margin-right:20px" v-if="control > 1 && control !== 4">
+         <el-button class="whiteBtn long1" plain size="small" @click="lastBtn" style="margin-right:20px" v-if="control > 1 && control !== 4">
             上一步
           </el-button>
           <!-- 新增下一步 -->
@@ -689,6 +689,7 @@
             <el-button class="orangeBtn long1" icon="el-icon-circle-plus-outline" @click="addKapai" style="width:110px">新增分区</el-button>
           </el-row>
           </div>
+
           <!-- 卡派显示2 -->
           <div v-if="controlKP === 2">
           <el-row style="margin-top:20px">
@@ -753,14 +754,88 @@
             </el-table-column>
             <el-table-column label="操作" min-width="80" key="9">
               <template slot-scope="scope">
-                <el-button type="text" @click="confirm(scope.row)">确认</el-button>
+                <el-button type="text" @click="confirm(scope.row)" v-if="scope.row.change === 0">确认</el-button>
+                <span v-if="scope.row.change === 1">
+                  <el-button type="text" @click="weightModify(scope.row)">修改</el-button>
+                  <span> ｜ </span>
+                  <el-button type="text" @click="visibleTable = true">删除</el-button>
+                </span>
               </template>
             </el-table-column>
           </el-table>
+          <el-row style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #FF0000;margin-top:10px"
+          v-if="wrong === 1">
+            请将表格输入完整
+          </el-row>
+          <el-row style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #FF0000;margin-top:10px"
+          v-if="wrong === 2">
+            错误，最高重量不能等于或小于最低重量
+          </el-row>
           </div>
           <el-row style="margin-top:16px;">
             <el-button class="orangeBtn long1" icon="el-icon-circle-plus-outline" @click="addSection" style="width:110px">新增分区</el-button>
           </el-row>
+          </div>
+
+          <!-- 第三步 -->
+          <div v-if="controlKP === 3">
+            <el-row style="margin-top:20px">
+              <el-col>
+                <span class="title-dai">渠道</span>
+              </el-col>
+            </el-row>
+            <el-row style="margin-top:20px;">
+                <el-col :span="10" class="item-box">
+                  <span class="title-item">渠道：</span>
+                  <span class="daili1">{{cannel}}</span>
+                </el-col>
+                <el-col :span="10" class="item-box">
+                  <span class="title-item">渠道编码：</span>
+                  <span class="daili1">{{cannel}}</span>
+                </el-col>
+            </el-row>
+            <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+            <el-row style="margin-top:20px">
+              <el-col>
+                <span class="title-dai">维护渠道价格</span>
+              </el-col>
+            </el-row>
+            <el-row style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #FB6024;margin:20px 0 16px 0">
+              价格按金额
+            </el-row>
+            <div class="table">
+          <el-table ref="multipleTable" :data="priceData" border  tooltip-effect="dark" style="width: 100%" 
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="country" label="" min-width="80" key="1"></el-table-column>
+            <el-table-column prop="zeroToOne" label="0-1 公斤" min-width="80" key="2"></el-table-column>
+            <el-table-column prop="twoToThree" label="2-3 公斤" min-width="100" key="3"></el-table-column>
+            <el-table-column prop="fourTofive" label="4-5 公斤" min-width="130" key="4"></el-table-column>
+          </el-table>
+          </div>
+          <el-row style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #FB6024;margin:20px 0 16px 0">
+              价格首续重
+            </el-row>
+            <div class="table">
+          <el-table ref="multipleTable" :data="priceData" border  tooltip-effect="dark" style="width: 100%" 
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="country" label="" min-width="80" key="1"></el-table-column>
+            <el-table-column prop="zeroToOne" label="0-1 公斤" min-width="80" key="2"></el-table-column>
+            <el-table-column prop="twoToThree" label="2-3 公斤" min-width="100" key="3"></el-table-column>
+            <el-table-column prop="fourTofive" label="4-5 公斤" min-width="130" key="4"></el-table-column>
+          </el-table>
+          </div>
+          <el-row style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #FB6024;margin:20px 0 16px 0">
+              价格按单价
+            </el-row>
+            <div class="table">
+          <el-table ref="multipleTable" :data="priceData" border  tooltip-effect="dark" style="width: 100%" 
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="country" label="" min-width="80" key="1"></el-table-column>
+            <el-table-column prop="zeroToOne" label="0-1 公斤" min-width="80" key="2"></el-table-column>
+            <el-table-column prop="twoToThree" label="2-3 公斤" min-width="100" key="3"></el-table-column>
+            <el-table-column prop="fourTofive" label="4-5 公斤" min-width="130" key="4"></el-table-column>
+          </el-table>
+          </div>
           </div>
           <!-- 新增分区卡派 -->
           <div v-if="controlKP === 4">
@@ -789,13 +864,17 @@
           </div>
           </div>
         </el-row>
+        <!-- 按钮 -->
        <div class="drawer_btn">
-          <el-button class="orangeBtn long1" plain size="small" @click="lastKP" style="margin-right:20px"
+         <el-button class="orangeBtn long1" plain size="small"  style="margin-right:20px" v-if="controlKP === 3">
+            确 认
+          </el-button>
+         <el-button class="orangeBtn long1" plain size="small" @click="afterKP" style="margin-right:20px" v-if="controlKP < 3 && controlKP !== 4">
+            下一步
+          </el-button>
+          <el-button class="whiteBtn long1" plain size="small" @click="lastKP" style="margin-right:20px"
             v-if="controlKP > 1 && controlKP !== 4">
             上一步
-          </el-button>
-          <el-button class="orangeBtn long1" plain size="small" @click="afterKP" style="margin-right:20px" v-if="controlKP < 3 && controlKP !== 4">
-            下一步
           </el-button>
           <!-- 新增后卡派下一步 -->
           <el-button class="orangeBtn long1" plain size="small" @click="controlKP = 2" style="margin-right:20px" v-if="controlKP === 4">
@@ -811,6 +890,37 @@
        </div>
       </div>
     </el-drawer>
+    <!-- 下一步弹框 -->
+          <el-dialog
+            title="更新报价"
+            :visible.sync="dialogAfter"
+            width="30%">
+            <span>您修改了渠道“的价格段”请修改对应的报价</span>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="dialogAfter = false" size="small" style="width:80px;margin-top:-2px;margin-right:20px" class='wuBtn'>
+                取 消
+              </el-button>
+              <el-button class='orangeBtn' @click="dialogAfter = false" size="small" style="width:80px;margin-top:10px">确 定</el-button>
+            </span>
+          </el-dialog>
+    <!-- 删除表格行 -->
+    <el-dialog
+      title="提示"
+      :visible.sync="visibleTable"
+      center
+      top="6%"
+      width="30%">
+      <el-row style="width:100%;text-align:center;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;
+      font-weight: 400;color: rgba(0, 0, 0, 0.65);">
+        确定删除此附加费吗？
+      </el-row>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="visibleTable = false" size="small" style="width:80px;margin-top:-2px;margin-right:20px" class='wuBtn'>
+          取 消
+        </el-button>
+        <el-button class='orangeBtn' @click="visibleTable = false" size="small" style="width:80px;margin-top:10px">确 定</el-button>
+      </span>
+    </el-dialog>
     <!-- 删除分区 -->
     <el-dialog
       title="删除分区"
@@ -828,6 +938,51 @@
         <el-button class='orangeBtn' @click="dialogDelete = false" size="small" style="width:80px;margin-top:10px">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 渠道附加费抽屉 -->
+    <el-drawer
+      title="渠道附加费"
+      :visible.sync="visibleSurcharge"
+      :wrapperClosable='false'
+      size="50%">
+      <div style="padding:0px 26px 26px 26px;margin-top:-6px;">
+        <el-row style="background:#fff;text-align:left;padding:26px">
+          <el-row >
+              <el-col>
+                <span class="title-dai">代理</span>
+              </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;">
+            <el-col :span="10" class="item-box">
+              <span class="title-item">渠道：</span>
+              <span class="daili1">{{cannel}}</span>
+            </el-col>
+            <el-col :span="10" class="item-box">
+              <span class="title-item">渠道编码：</span>
+              <span class="daili1">{{cannel}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:26px">
+            <el-col>
+              <span class="title-dai">代理附加费</span>
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:16px;">
+            <el-button class="orangeBtn" icon="el-icon-circle-plus-outline" @click="addExp" style="width:130px">
+              新增附加费
+            </el-button>
+          </el-row>
+        </el-row>
+      </div>
+      <el-row style="background:#fff;text-align:left;padding:26px">
+        <el-button class="orangeBtn long1" plain size="small"  style="margin-right:20px">
+            确 认
+        </el-button>
+        <el-button type="info long1" plain size="small" @click="controlKP = 1" style="margin-right:20px">
+            取 消
+        </el-button>
+      </el-row>
+    </el-drawer>
   </div>
 </template>
 
@@ -835,6 +990,7 @@
 export default {
   data () {
     return {
+      wrong: 0, // 错误提示默认0，1:未填满表格，2：最大与最小重量问题
       dialogDelete: false, // 删除分区
       drawerPartitionExpress: false, // 分区价格抽屉(快递)
       tip: 1, // 温馨提示
@@ -864,17 +1020,33 @@ export default {
         theme: 'snow'
       },
 
+      visibleSurcharge: true, // 附加费
+
+      // 价格首续重
+      continuationData: [{
+      }],
+
+      // 价格按金额表格
+      priceData: [{
+        country: '美国',
+        zeroToOne: '',
+        twoToThree: '',
+        fourTofive: ''
+      }], 
+
       control: 1, // 快递控制变量
+      dialogAfter: false, // 下一步弹框
+      visibleTable: false, // 快点表格删除
       controlKP: 1, // 卡派控制变量
       weightTableData: [{
         section: '区间1',
         min: '',
         max: '',
-        pricingMethod: ''
-        
+        pricingMethod: '',
+        change: 0
       }], // 渠道重量段
 
-      drawerKapai: true, // 分区价格抽屉（卡派）
+      drawerKapai: false, // 分区价格抽屉（卡派）
       addDrawerKapai: false, // 新增卡派抽屉
       // 卡派表格
       kapaiName: '', // 卡派分区名称
@@ -1009,22 +1181,34 @@ export default {
 
     // 重量设置2确认
     confirm (val) {
-      console.log(val)
-      if (val.max === '') {
-        return val.max = 111
+      if (val.max === '' || val.min === '' || val.pricingMethod ==='') {
+        this.wrong = 1
+        return
       }
-      this.addSection()
+      console.log(val)
+      if (val.max < val.min || val.max === val.min) {
+        this.wrong = 2
+        return
+      }
+      if (val.max !== '' && val.min !== '' && val.pricingMethod !=='') {
+        val.change = 1
+        this.addSection()
+      }
     },
+    // 重量修改
+    weightModify () {},
     //新增区间
     addSection () {
       let obj = {
         section: '', //区间
         min: '',
         max: '',
-        pricingMethod: ''
+        pricingMethod: '',
+        change: 0
       }
       obj.section = '区间' + Number(this.weightTableData.length + 1)
       this.weightTableData.push(obj)
+      this.wrong = 0
     },
 
     // 分区价格抽屉（快递）下一步
@@ -1037,6 +1221,9 @@ export default {
     afterKP () {
       if (this.controlKP < 3) {
         this.controlKP = this.controlKP + 1
+        if (this.controlKP === 3) {
+          this.dialogAfter = true
+        }
       }
     },
     // 分区价格抽屉（卡派）上一步
@@ -1100,8 +1287,8 @@ export default {
     },
     // 分区价格
     openPartition () {
-      // this.drawerKapai = true
-      this.drawerPartitionExpress =true
+      this.drawerKapai = true
+      // this.drawerPartitionExpress =true
     },
     getData () {
     },
