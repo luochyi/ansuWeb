@@ -170,8 +170,7 @@
     <el-drawer
       title="设置分区"
       :visible.sync="drawer"
-      size="50%"
-      :direction="rtl">
+      size="50%">
       <div style="padding:0px 26px 26px 26px;margin-top:-6px">
         <el-row style="background:#fff;text-align:left;padding:26px">
           <el-row style="display:flex;align-items:center">
@@ -228,7 +227,7 @@
           <el-row style="height: 1px;background:#E9E9E9;margin:26px 0"></el-row>
           <!-- 抽屉表格 -->
           <div class="table">
-          <el-table ref="multipleTable" :data="drawerTableData" border  tooltip-effect="dark" style="width: 100%" 
+          <el-table ref="multipleTable" :data="drawerTableData" border  tooltip-effect="dark" style="width: 100%"
             :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column prop="aimCountry" label="目的国" min-width="80"></el-table-column>
             <el-table-column prop="partitionName" label="分区名称" min-width="100"></el-table-column>
@@ -273,10 +272,9 @@
       </span>
     </el-dialog>
     <!-- 弹窗 -->
-    <!-- <el-dialog
+    <el-dialog
       :visible.sync="dialogStop"
-      width="30%"
-      :before-close="handleClose">
+      width="30%">
       <div slot="title" class="left">
         {{dialogTitle}}
       </div>
@@ -296,28 +294,30 @@
         <el-button class="wuBtn" @click="dialogStop = false">取 消</el-button>
         <el-button class="orangeBtn" @click="dialogStop = false">确 定</el-button>
       </span>
-    </el-dialog> -->
+    </el-dialog>
   </div>
 </template>
 
 <script>
-export default{
+export default {
   data () {
     return {
+      chooseArr: {},
+      dialogTitle: '', // 停用弹窗的可变字段
+      dialogStop: false,
       changeAgent: '', // 请选择需要复制怼代理分区
       dialogVisible: false, // 复制弹窗
       agentCode: 'SZTT深圳天图', // 代理编码
       agent: '深圳天图供应链有限公司', // 代理
       cannel: '以星特快海派包邮UPS派送', // 渠道
-      cannelCode: 'YXTK以星特快', //渠道编码
+      cannelCode: 'YXTK以星特快', // 渠道编码
       drawer: false, // 分区价格弹窗
       searchInput: '', // 搜索输入内容
       num: 3, // 代理数量
+      total: 50, // 数据总条数
       code: 'JP_hp1',
       delivery: '日本快船-佐川派送', // 送货方式
       agentName: '', // 代理名称
-      agentCode: '', // 代理编码
-      total: 50,
       currentPage: 1,
       pageSize: 15,
       drawerTableData: [
@@ -375,13 +375,13 @@ export default{
   },
   methods: {
     // 修改
-  modify () {},
-    toAdd () { 
+    modify () {},
+    toAdd () {
       this.$router.push({ name: 'newlyAddedAgent' })
     },
-    batchStop(){
+    batchStop () {
     },
-    handleSelectionChange(){},
+    handleSelectionChange () {},
     toPartition () {
       this.drawer = true
     }
@@ -516,5 +516,3 @@ export default{
   }
 }
 </style>
-
-

@@ -56,7 +56,7 @@
                 <el-col :span="8" style="display:flex;align-items:center">
                     <span class="item" style="margin-left:14px">目的国&nbsp;</span>
                     <div class="item-box" style="dispaly:flex;align-items:center">
-                        <el-input class="input" v-model="aimCountry" style="width:90%" size="small" 
+                        <el-input class="input" v-model="aimCountry" style="width:90%" size="small"
                     placeholder="请输入"></el-input>
                     <img src="@/assets/search.png" alt="" style="width: 13px;height: 13px;margin-right:0px">
                     </div>
@@ -85,8 +85,8 @@
             <el-row style="text-align:left;margin-top:28px;">
                 <div style="display:flex;align-items:center">
                     <span class="item">运输时间：最短时间&nbsp;
-                        <span><el-input v-model="shortest" style="width:10%" size="small"></el-input> 天 —— 最长时间 
-                        <el-input style="width:10%" v-model="Longest" size="small"></el-input> 天 
+                        <span><el-input v-model="shortest" style="width:10%" size="small"></el-input> 天 —— 最长时间
+                        <el-input style="width:10%" v-model="Longest" size="small"></el-input> 天
                         <el-select v-model="time" size="small" style="margin-left:20px;width:16%"></el-select>
                         </span>
                     </span>
@@ -185,7 +185,7 @@
                 </el-col>
                 <el-col :span="18">
                     <div class="item-box" style="dispaly:flex;align-items:center">
-                        <el-input class="input" v-model="otherChannel" style="width:90%" size="small" 
+                        <el-input class="input" v-model="otherChannel" style="width:90%" size="small"
                         placeholder="请输入"></el-input>
                         <img src="@/assets/search.png" alt="" style="width: 13px;height: 13px;margin-right:0px">
                     </div>
@@ -200,39 +200,39 @@
     </div>
 </template>
 <script>
-export default{
-    data() {
-        return {
-            otherChannel: '', // 参考其他渠道输入框
-            dialogChannel: false, // 选择其他渠道弹窗
-            tip: 1, // 是否有温馨提示
-            RequireText: '', // 有无特殊要求
-            Require: 1, // 特殊要求
-            carefulText: '', // 注意事项
-            sendRule: '', // 寄送规则
-            careful: 1, // 注意事项
-            shortest: '', // 最短时间
-            Longest: '', // 最长时间
-            time: '', // 派送时间
-            fuel: '', // 是否含燃料费
-            tax: '', // 是否含税
-            chearingFee: '', // 是否含清光费
-            aimCountry: '', // 目的国
-            channelScore: '', // 渠道评分
-            goods: '', // 接受货物
-            channelName: '', // 渠道名称
-            channelCode: '', // 渠道编号
-            channelEnglish: '', // 渠道英文
-            channelClassify: '', // 渠道分类
-            deliveryType: '' , // 派送类型
-            deliveryCompany: '' // 派送公司
-        }
-    },
-    methods: {
-        back () {
-            this.$router.go(-1);
-        }
+export default {
+  data () {
+    return {
+      otherChannel: '', // 参考其他渠道输入框
+      dialogChannel: false, // 选择其他渠道弹窗
+      tip: 1, // 是否有温馨提示
+      RequireText: '', // 有无特殊要求
+      Require: 1, // 特殊要求
+      carefulText: '', // 注意事项
+      sendRule: '', // 寄送规则
+      careful: 1, // 注意事项
+      shortest: '', // 最短时间
+      Longest: '', // 最长时间
+      time: '', // 派送时间
+      fuel: '', // 是否含燃料费
+      tax: '', // 是否含税
+      chearingFee: '', // 是否含清光费
+      aimCountry: '', // 目的国
+      channelScore: '', // 渠道评分
+      goods: '', // 接受货物
+      channelName: '', // 渠道名称
+      channelCode: '', // 渠道编号
+      channelEnglish: '', // 渠道英文
+      channelClassify: '', // 渠道分类
+      deliveryType: '', // 派送类型
+      deliveryCompany: '' // 派送公司
     }
+  },
+  methods: {
+    back () {
+      this.$router.go(-1)
+    }
+  }
 }
 </script>
 

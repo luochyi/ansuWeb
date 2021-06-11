@@ -55,6 +55,18 @@ export default [
     component: () =>
       import('@/views/channel/channelSetting/addChannel')
   },
+  // 渠道设置--查看价格曲线图
+  {
+    path: '/channelSetting/diagram',
+    name: 'diagram',
+    meta: {
+      title: '渠道设置',
+      icon: 'diagram',
+      hidden: false
+    },
+    component: () =>
+      import('@/views/channel/channelSetting/diagram')
+  },
   // 渠道下属代理
   {
     path: '/channelBrandAgent',

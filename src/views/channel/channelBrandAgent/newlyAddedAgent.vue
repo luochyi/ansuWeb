@@ -127,29 +127,29 @@
 </template>
 <script>
 export default {
-    data() {
-        return {
-            notAccepted: '', // 不接受的货物
-            ortherExpress: '', // 是否选择其他快递
-            express: '', // 其他快递
-            code: '', // 选择编码
-            agent: '', // 选择代理
-            invoice: '', // 发票模版
-            options: [{
-                value: 1,
-                label: '模版1'
-            }],
-            changeExpressList: [{
-                value: 1,
-                label: '使用'
-            },
-            {
-                value: 2,
-                label: '不使用' 
-            }],
-            expressList: []
-        }
-    },
+  data () {
+    return {
+      notAccepted: '', // 不接受的货物
+      ortherExpress: '', // 是否选择其他快递
+      express: '', // 其他快递
+      code: '', // 选择编码
+      agent: '', // 选择代理
+      invoice: '', // 发票模版
+      options: [{
+        value: 1,
+        label: '模版1'
+      }],
+      changeExpressList: [{
+        value: 1,
+        label: '使用'
+      },
+      {
+        value: 2,
+        label: '不使用'
+      }],
+      expressList: []
+    }
+  }
 }
 </script>
 <style lang="scss" scoped>
