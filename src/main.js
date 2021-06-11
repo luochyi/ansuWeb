@@ -9,9 +9,13 @@ import QuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.bubble.css'
 import 'quill/dist/quill.snow.css'
-Vue.use(QuillEditor)
 
+// echarts
+import echarts from 'echarts'
+//
 import util from '@/utils/util.js'
+Vue.prototype.echarts = echarts // echarts
+Vue.use(QuillEditor)
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)

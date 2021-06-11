@@ -65,7 +65,7 @@ export default [
       hidden: false
     },
     component: () =>
-      import('@/views/channel/channelSetting/diagram')
+      import('@/views/channel/channelSetting/diagram.vue')
   },
   // 渠道下属代理
   {

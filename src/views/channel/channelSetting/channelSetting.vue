@@ -1553,7 +1553,7 @@ export default {
     updataPrice () {},
     // 查看价格曲线图
     checkDiagram () {
-      this.$router.push({ path: 'diagram' })
+      this.$router.push({ name: 'diagram' })
     },
     // 新建待生效价格前往历史价格抽屉
     ToRecordsDrawer () {
