@@ -683,7 +683,7 @@
               </el-col>
               <el-col :span="10" class="item-box">
                 <span class="title-item">渠道编码：</span>
-                <span class="daili1">{{cannel}}</span>
+                <span class="daili1">{{cannelCode}}</span>
               </el-col>
           </el-row>
           <el-row style="height: 1px;background:#E9E9E9;margin:26px 0"></el-row>
@@ -1549,6 +1549,14 @@ export default {
         this.addSection()
       }
     },
+    // 排除地区邮编查看
+    excludeBtn () {},
+    // 偏远地区邮编查看
+    remoteBtn () {},
+    // 亚马逊仓库查看
+    AmazonWarehouseBtn  () {},
+    // 修改
+    modify () {},
     // 更新待生效价格
     updataPrice () {},
     // 查看价格曲线图

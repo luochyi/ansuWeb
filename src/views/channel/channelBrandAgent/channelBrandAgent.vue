@@ -127,7 +127,7 @@
                   分区价格
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text">
+                <el-button type="text" @click="visibleSurcharge = true">
                   附加费
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
@@ -149,7 +149,151 @@
               </template>
             </el-table-column>
           </el-table>
-
+          <!-- 渠道附加费抽屉 -->
+    <el-drawer
+      title="渠道附加费"
+      :visible.sync="visibleSurcharge"
+      :wrapperClosable='false'
+      size="50%">
+      <div style="padding:0px 26px 26px 26px;margin-top:-6px;">
+        <div v-if="additional === 0">
+          <el-row style="background:#fff;text-align:left;padding:26px">
+          <el-row >
+              <el-col>
+                <span class="title-dai">代理</span>
+              </el-col>
+          </el-row>
+          <el-row style="margin-top:20px;">
+            <el-col :span="10" class="item-box">
+              <span class="title-item">渠道：</span>
+              <span class="daili1">{{cannel}}</span>
+            </el-col>
+            <el-col :span="10" class="item-box">
+              <span class="title-item">渠道编码：</span>
+              <span class="daili1">{{cannel}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:26px">
+            <el-col>
+              <span class="title-dai">代理附加费</span>
+            </el-col>
+          </el-row>
+          <!-- 抽屉表格 -->
+          <div class="table" style="margin-top:16px">
+          <el-table ref="multipleTable" :data="additionalData" border  tooltip-effect="dark" style="width: 100%" @selection-change="kapaiChange" :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="additionalName" label="附加费名称" min-width="130" key="2"></el-table-column>
+            <el-table-column prop="condition" label="起收条件" min-width="250" key="3"></el-table-column>
+            <el-table-column prop="fee" label="收取费用" min-width="150" key="4"></el-table-column>
+          </el-table>
+          </div>
+          <el-row style="margin-top:16px;">
+            <el-button class="orangeBtn" icon="el-icon-circle-plus-outline" @click="addAdditional" style="width:130px">
+              新增附加费
+            </el-button>
+            <el-button class="orangeBtn" @click="modifyAdditional" style="width:130px">
+              修改附加费
+            </el-button>
+          </el-row>
+        </el-row>
+        </div>
+        <!-- 点击新增附加费 -->
+        <div v-if="additional === 1">
+          <el-row style="background:#fff;text-align:left;padding:26px">
+            <el-row >
+                <el-col>
+                  <span class="title-dai">代理</span>
+                </el-col>
+            </el-row>
+            <el-row style="margin-top:20px;">
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道：</span>
+                <span class="daili1">{{cannel}}</span>
+              </el-col>
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道编码：</span>
+                <span class="daili1">{{cannel}}</span>
+              </el-col>
+            </el-row>
+            <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+            <el-row style="margin-top:20px">
+              <el-col>
+                <span class="title-dai">代理附加费</span>
+              </el-col>
+            </el-row>
+              <el-row style="display:flex;align-items:center;margin-top:20px;margin-bottom:16px">
+                <span class="secondaryTitle" style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;
+                font-weight: 400;color: rgba(0, 0, 0, 0.65);">附加费名称</span>
+                <el-col :span="8" class="changebox" style="margin-left:10px">
+                  <el-input placeholder="请输入" v-model="surchargeName" size="small" style=""></el-input>
+                  <img src="@/assets/search.png" alt="" style="width: 13px;height: 13px;opacity: 0.65;margin-right:10px">
+                </el-col>
+              </el-row>
+              <template>
+                <div style="display:flex;align-items:center">
+                  <el-checkbox-group v-model="valueList" @change="valueChange">
+                    <el-checkbox v-for="(item, label) in checkList" :key="label" :label="label">&nbsp;&nbsp;{{item.label}}</el-checkbox>
+                  </el-checkbox-group>
+                  <div v-for="(item, index) in checkList" :key="index" style="display:flex;align-items:center">
+                    <span style="width:140px;text-align:right;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;
+                                 font-weight: 400;color: rgba(0, 0, 0, 0.45);">
+                      {{item.add}}
+                    </span>
+                    <el-input class="inputClass" style="margin-left:10px;width:80%;margin-right:20px" v-model="agentInput" size="small">
+                      <i slot="suffix" style="margin-right: 10px;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;">元/公斤</i>
+                    </el-input>
+                    <span style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #0091FF;
+                                 width:110px;cursor:pointer">
+                      {{item.className}}
+                    </span>
+                  </div>
+                </div>
+              </template>
+           </el-row>
+        </div>
+        <div v-if="additional === 2">
+          <el-row style="background:#fff;text-align:left;padding:26px">
+            <el-row >
+              <el-col>
+                <span class="title-dai">纺织品品名管理</span>
+              </el-col>
+            </el-row>
+            <el-row style="margin-top:20px;">
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道：</span>
+                <span class="daili1">{{cannel}}</span>
+              </el-col>
+              <el-col :span="10" class="item-box">
+                <span class="title-item">渠道编码：</span>
+                <span class="daili1">{{cannel}}</span>
+              </el-col>
+            </el-row>
+            <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+            <el-row style="font-size: 12px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #FF4D4F;margin:16px">
+              注：品名之间用,（英文逗号）做分割
+            </el-row>
+            <el-row>
+              <el-input type="textarea" rows="21" v-model="modifyText"></el-input>
+            </el-row>
+          </el-row>
+        </div>
+      </div>
+      <el-row style="background:#fff;text-align:left;padding:26px">
+        <el-button class="orangeBtn long1" plain size="small"  @click="fuJFConfirm" style="margin-right:20px">
+            确 认
+        </el-button>
+        <el-button type="info long1" plain size="small" @click="cancelSurcharge" style="margin-right:20px" v-if="additional === 0">
+            取 消
+        </el-button>
+        <el-button type="info long1" plain size="small" @click="addCancel" style="margin-right:20px" v-if="additional === 1">
+            取 消
+        </el-button>
+        <!-- 修改附加费取消 -->
+        <el-button type="info long1" plain size="small" @click="addCancel" style="margin-right:20px" v-if="additional === 2">
+            取 消
+        </el-button>
+      </el-row>
+    </el-drawer>
           <!-- 分页 -->
           <div class='block'>
             <el-pagination
@@ -295,13 +439,30 @@
         <el-button class="orangeBtn" @click="dialogStop = false">确 定</el-button>
       </span>
     </el-dialog>
+    <component :is="partitionName" :drawerKapai="dialogPartitionTrue" @handleClose="handleClose"></component>
   </div>
 </template>
-
 <script>
+import dialogPartition from './component/dialogPartition.vue'
 export default {
+  components: {
+    dialogPartition
+  },
   data () {
     return {
+      dialogPartitionTrue: false, // 父组建传给子组建的变量
+      partitionName: 'dialogPartition',
+      agentInput: '', // 代理附加费输入框
+      valueList: [], // 代理附加费选择的值
+      checkList: [{
+        label: '带电',
+        add: '增加',
+        className: '纺织品品名'
+      }],
+      surchargeName: '', // 附加费名称
+      additionalData: [], // 附加费抽屉表格
+      additional: 0, //
+      visibleSurcharge: false, // 附加费
       chooseArr: {},
       dialogTitle: '', // 停用弹窗的可变字段
       dialogStop: false,
@@ -374,6 +535,33 @@ export default {
   created () {
   },
   methods: {
+    // 代理附加费添加取消
+    addCancel () {
+      this.additional = 0
+      this.valueList = []
+      this.agentInput = ''
+    },
+    // 代理附加费选择
+    valueChange (val) {
+      console.log(val)
+    },
+    // 新增附加费
+    addAdditional () {
+      this.additional = 1
+    },
+    // 修改代理附加费
+    modifyAdditional () {
+      this.additional = 2
+    },
+    // 代理附加费取消
+    cancelSurcharge () {
+      this.visibleSurcharge = false
+      this.additional = 0
+    },
+    // 附加费表格多选
+    kapaiChange () {},
+    // 附加费抽屉确认
+    fuJFConfirm () {},
     // 修改
     modify () {},
     toAdd () {
@@ -383,7 +571,11 @@ export default {
     },
     handleSelectionChange () {},
     toPartition () {
-      this.drawer = true
+      this.dialogPartitionTrue = true
+    },
+    handleClose (val) {
+      this.dialogPartitionTrue = false
+      console.log(val)
     }
   }
 }

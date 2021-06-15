@@ -31,7 +31,7 @@ export default [
     component: () => import('@/views/orderManager/waybill/waybill.vue')
   },
   {
-    path: '/orderDetials',
+    path: '/waybill/orderDetials',
     name: 'orderDetials',
     meta: {
       title: '订单详情',
