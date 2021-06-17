@@ -499,6 +499,67 @@
        </div>
       </div>
     </el-drawer>
+    <!-- 下一步弹框 -->
+        <el-dialog
+        title="更新报价"
+        :visible.sync="dialogAfter"
+        width="30%">
+        <span>您修改了渠道“的价格段”请修改对应的报价</span>
+        <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogAfter = false" size="small" style="width:80px;margin-top:-2px;margin-right:20px" class='wuBtn'>
+            取 消
+            </el-button>
+            <el-button class='orangeBtn' @click="dialogAfter = false" size="small" style="width:80px;margin-top:10px">确 定</el-button>
+        </span>
+        </el-dialog>
+        <!-- 历史价格抽屉 -->
+    <el-drawer
+      title="历史价格"
+      :visible.sync="recordsDrawer"
+      size="50%">
+      <div style="padding:0px 26px 26px 26px;margin-top:-6px;">
+        <el-row style="background:#fff;text-align:left;padding:26px;">
+          <el-row>
+            <el-col :span="2" style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);">
+              渠道
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:16px">
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">渠道：</span><span>{{cannel}}</span>
+            </el-col>
+            <el-col :span="10" class="item-text">
+              <span style="color: rgba(0, 0, 0, 0.85);">渠道编码：</span><span>{{cannelCode}}</span>
+            </el-col>
+          </el-row>
+          <el-row style="height: 1px;background:#E9E9E9;margin-top:20px"></el-row>
+          <el-row style="margin-top:16px">
+            <el-col :span="4" style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;
+            color: rgba(0, 0, 0, 0.85);">
+              历史价格明细
+            </el-col>
+          </el-row>
+          <el-row style="margin-top:16px">
+            <div class="table">
+          <el-table ref="multipleTable" :data="inputTable" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="date" label="时间" min-width="400" key="1"></el-table-column>
+            <el-table-column prop="inputPeople" label="录价人" min-width="100" key="2"></el-table-column>
+            <el-table-column label="操作" min-width="100" key="3">
+              <template slot-scope="scope">
+                <el-button type="text" @click="price(scope.row)">查看价格</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+            </div>
+          </el-row>
+        </el-row>
+        <div class="drawer_btn">
+          <el-button type="info" plain size="small" @click="recordsDrawer = false" style="margin-right:10px">返 回</el-button>
+       </div>
+      </div>
+    </el-drawer>
     </div>
 </template>
 <script>
@@ -508,11 +569,45 @@ export default {
   },
   data () {
     return {
+      recordsDrawer: false, // 历史价格
+      wrong: 0, // 错误提示默认0，1:未填满表格，2：最大与最小重量问题
+      dialogAfter: false, // 下一步弹框(去第三步时)
       weightSetting: '重量段设置', // 重量段设置标题
+      startTime: '2020年12月15日 18:00', // controlKP=5,生效时间
+      date: '2020年12月15日 18:00 - 2020年12月20日 18:00', // 维护价格时间
+      dateNow: '', // 渠道当前价格的时间
+      timeChange: 1, // 价格维护时间选择
       cannel: '以星特快海派包邮UPS派送', // 渠道
+      priceToFee: [],
+      effectTime: '', // 生效时间
+      effectDate: '', // 生效日期
       cannelCode: 'YXTK以星特快', // 渠道编码
       agent: '深圳天图供应链有限公司', // 代理
+      kapaiName: '', // 卡派分区名称
+      kapaiArr: [], // 新增卡派勾选表格数组
       agentCode: 'SZTT深圳天图', // 代理编码
+      unit: '', // 渠道重量段的单位选择
+      // 查看历史记录表
+      inputTable: [{
+        date: '2020年9月11日 16:00 -2020年10月11日 17:00',
+        inputPeople: '张三'
+      }],
+      // 价格按金额表格
+      priceData: [{
+        country: '美国',
+        zeroToOne: '',
+        twoToThree: '',
+        fourTofive: ''
+      }],
+      // 维护价格表格
+      priceTable: [
+        {
+          country: '美国',
+          quality1: '12元',
+          quality2: '11.5元',
+          quality3: '9元'
+        }
+      ],
       // 抽屉表格
       drawerTableData: [
         {
@@ -524,6 +619,22 @@ export default {
           AmazonWarehouse: 'ONT8'
         }
       ],
+      // 第一步新增表格
+      Data: [
+        {
+          FBAwarehouse: 'IND9',
+          FBAaddress: '11 California Avenue, USA',
+          FBAmail: '234242424'
+        }
+      ],
+      // 渠道重量段
+      weightTableData: [{
+        section: '区间1',
+        min: '',
+        max: '',
+        pricingMethod: '',
+        change: 0
+      }],
       feeMaintain: '价格维护', // 价格维护标题
       controlKP: 1, // 卡派控制变量
       setting: '设置分区' // 设置分区标题
@@ -534,8 +645,95 @@ export default {
       let data = 1
       this.$emit('handleClose', data)
     },
+    // 分区价格抽屉（卡派）上一步
+    lastKP () {
+      if (this.controlKP > 1) {
+        this.controlKP = this.controlKP - 1
+      }
+    },
+    // 新建待生效价格
+    addToBePrice () {
+      this.controlKP = 6
+    },
+    // 重量设置2确认
+    confirm (val) {
+      if (val.max === '' || val.min === '' || val.pricingMethod === '') {
+        this.wrong = 1
+        return
+      }
+      console.log(val)
+      if (val.max < val.min || val.max === val.min) {
+        this.wrong = 2
+        return
+      }
+      if (val.max !== '' && val.min !== '' && val.pricingMethod !== '') {
+        val.change = 1
+        this.addSection()
+      }
+    },
+    // 卡派勾选表格
+    kapaiChange (val) {
+      console.log(val)
+      this.kapaiArr = val
+    },
     // 排除地区邮编查看
     excludeBtn () {},
+    // 新增卡派
+    addKapai () {
+      this.controlKP = 4
+    },
+    // 分区价格抽屉（卡派）下一步
+    afterKP () {
+      if (this.controlKP < 3) {
+        this.controlKP = this.controlKP + 1
+        if (this.controlKP === 3) {
+          this.dialogAfter = true
+        }
+      }
+    },
+    // 查看价格曲线图
+    checkDiagram () {
+      this.$router.push({ name: 'diagram' })
+    },
+    // 新建待生效价格--确认
+    effectConfirm () {
+      this.controlKP = 7
+    },
+    handleSelectionChange (val) {
+      console.log(val)
+      this.chooseArr = []
+      val && val.forEach((item) => {
+        this.chooseArr.push(item)
+      })
+    },
+    // 新建待生效价格前往历史价格抽屉
+    ToRecordsDrawer () {
+      this.cancelKapai()
+      this.recordsDrawer = true
+    },
+    // 确认
+    confirmFive () {
+      this.controlKP = 5
+    },
+    // 新增区间
+    addSection () {
+      let obj = {
+        section: '', // 区间
+        min: '',
+        max: '',
+        pricingMethod: '',
+        change: 0
+      }
+      obj.section = '区间' + Number(this.weightTableData.length + 1)
+      this.weightTableData.push(obj)
+      this.wrong = 0
+    },
+    updataPrice () {},
+    // 取消（关闭）卡派抽屉
+    cancelKapai () {
+      this.controlKP = 1
+      this.handleClose()
+    },
     // 偏远地区邮编查看
     remoteBtn () {},
     // 亚马逊仓库查看
@@ -543,11 +741,20 @@ export default {
     // 修改
     modify () {},
     // 删除
-    Delete () {}
+    Delete () {},
+    addExp () {
+      this.control = 4
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
+.item-text{
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
+}
 /deep/ .el-drawer{
   padding-top: 0px;
   background: #E8EBF2;

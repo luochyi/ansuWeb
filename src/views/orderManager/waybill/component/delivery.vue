@@ -16,23 +16,23 @@
                     <el-input placeholder="请输入" class="input" v-model="form.customerNo" size="small"></el-input>
                 </el-col>
                 <el-col :span="6" class="item">
-                    <span class="item-box">目的地&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.destination" size="small"></el-input>
+                    <span class="item-box">目的国&nbsp;&nbsp;</span>
+                    <el-input placeholder="请输入" class="input" v-model="form.destinationCountry" size="small"></el-input>
                 </el-col>
             </el-row>
             <!-- 第二行 -->
             <el-row  style="margin-top:18px">
                 <el-col :span="6" class="item">
-                    <span class="item-box">预报渠道&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.forecastChannel" size="small"></el-input>
+                    <span class="item-box">目的地&nbsp;&nbsp;</span>
+                    <el-input placeholder="请输入" class="input" v-model="form.destination" size="small"></el-input>
                 </el-col>
                 <el-col :span="6" class="item">
-                    <span class="item-box">出仓渠道&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.outletChannel" size="small"></el-input>
+                    <span class="item-box">订单类型&nbsp;&nbsp;</span>
+                    <el-select placeholder="请输入" class="input" v-model="form.orderType" size="small"></el-select>
                 </el-col>
                 <el-col :span="6" class="item">
-                    <span class="item-box">出仓时间&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.outletTime" size="small"></el-input>
+                    <span class="item-box">入仓时间&nbsp;&nbsp;</span>
+                    <el-input placeholder="请输入" class="input" v-model="form.warehousingTime" size="small"></el-input>
                 </el-col>
                 <el-col :span="6">
                     <el-button size="small" class="orangeBtn" style="margin-right:10px">查 询</el-button>
@@ -44,7 +44,11 @@
             <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
             <el-col :span='12' class="left">
                 <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button>
-                <el-button class='stopBtn' @click="batchArchive" size="small">批量归档</el-button>
+                <el-button class='stopBtn' size="small">批量修改入仓渠道</el-button>
+                <el-button class='stopBtn' size="small">批量出库</el-button>
+                <el-button class='stopBtn' size="small">批量扣货</el-button>
+                <el-button class='stopBtn' size="small">批量放货</el-button>
+                <el-button class='stopBtn' size="small">批量导出发票</el-button>
             </el-col>
             <el-col :span='12' class="right">
                 <el-button class='whiteBtn' @click="toAdd">查询条件设置</el-button>
@@ -61,25 +65,146 @@
                 <el-table-column prop="forecastNo" label="预报单号" min-width="100" key="3"></el-table-column>
                 <el-table-column prop="name" label="客户名称" min-width="100" key="4"></el-table-column>
                 <el-table-column prop="customerNo" label="客户编号" min-width="80" key="5"></el-table-column>
+                <el-table-column prop="warehousingNum" label="入仓件数" min-width="100" key="7"></el-table-column>
                 <el-table-column prop="incoming" label="入库件数" min-width="80" key="6"></el-table-column>
-                <el-table-column prop="outgoing" label="出库件数" min-width="100" key="7"></el-table-column>
                 <el-table-column prop="goodsNum" label="收货件数" min-width="80" key="8"></el-table-column>
-                <el-table-column prop="forecastNum" label="预报件数" min-width="120" key="9">
+                <el-table-column prop="forecastNum" label="预报件数" min-width="180" key="9">
                     <template slot-scope="scope">
                         <span class="forecastNo">{{scope.row.forecastNum}}</span>
                         <span class="electrified">带电</span>
                         <el-button type="text">装箱清单</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="problem" label="问题" min-width="100" key="10"></el-table-column>
-                <el-table-column label="操作" min-width="100" key="11">
+                <el-table-column prop="problem" label="问题件" min-width="100" key="10">
+                    <template>
+                        <span class="ele" style="color:#333333">正常件</span>
+                        <span class="ele" style="color:#FF0000">扣货件</span>
+                        <span class="ele" style="color:#FF0000">发票未做</span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="发票" min-width="180" key="11">
+                    <template slot-scope="scope">
+                        <div class="rows">
+                                <div class="dot"></div>
+                                <span class="ele" style="color:#333333;margin-right:10px">已做发票</span>
+                                <el-button type="text" @click="printing(scope.row)">打印</el-button>
+                                <span class="ele" style="color:#0084FF">｜</span>
+                                <el-button type="text" @click="modify(scope.row)">修改</el-button>
+                        </div>
+                        <div class="rows">
+                                <div class="dot"></div>
+                                <span class="ele" style="color:#FF0000;margin-right:10px">发票未做</span>
+                                <el-button type="text" @click="make(scope.row)">制作</el-button>
+                                <span class="ele" style="color:#0084FF">｜</span>
+                                <el-button type="text" @click="modify(scope.row)">修改</el-button>
+                        </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="forecastTime" label="预报时间" min-width="80" key="13"></el-table-column>
+                <!--  -->
+                <el-table-column prop="forecastTime" label="寄件方式" min-width="80" key="14"></el-table-column>
+                <el-table-column prop="forecastTime" label="方数" min-width="80" key="15"></el-table-column>
+                <el-table-column prop="forecastTime" label="实重" min-width="80" key="16"></el-table-column>
+                <el-table-column prop="forecastTime" label="材积重" min-width="80" key="17"></el-table-column>
+                <el-table-column prop="settlementWeight" label="结算重" min-width="80" key="18">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.settlementWeight}}</span>
+                        <el-button type="text" @click="Detials(scope.row)">详情</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="forecastTime" label="预报重量" min-width="100" key="19">
+
+                </el-table-column>
+                <el-table-column prop="forecastTime" label="预报方数" min-width="80" key="20"></el-table-column>
+                <el-table-column prop="forecastTime" label="改货方数" min-width="80" key="21"></el-table-column>
+                <el-table-column prop="forecastTime" label="改货重量" min-width="80" key="22"></el-table-column>
+                <el-table-column prop="forecastTime" label="改货材积重" min-width="100" key="23"></el-table-column>
+                <el-table-column prop="forecastTime" label="改货结算重" min-width="80" key="24">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.settlementWeight}}</span>
+                        <el-button type="text" @click="changeGoodsWeight(scope.row)">修改</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="goodsNo" label="货件编号" min-width="80" key="25">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.goodsNo}}</span>
+                        <el-button type="text" @click="goodsNoAll(scope.row)">全部</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="forecastTime" label="定单类型" min-width="80" key="26"></el-table-column>
+                <el-table-column prop="forecastTime" label="目的国" min-width="80" key="27"></el-table-column>
+                <el-table-column prop="forecastTime" label="目的地" min-width="80" key="28"></el-table-column>
+                <el-table-column prop="forecastTime" label="目的地邮编" min-width="80" key="29"></el-table-column>
+                <el-table-column prop="forecastTime" label="预报渠道" min-width="80" key="30"></el-table-column>
+                <el-table-column prop="warehousingChannel" label="入仓渠道" min-width="80" key="31">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.warehousingChannel}}</span>
+                        <el-button type="text" @click="warehousingChannelModify(scope.row)">修改</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="deliveryChannel" label="出库渠道" min-width="80" key="32">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.deliveryChannel}}</span>
+                        <el-button type="text" @click="deliveryChannelModify(scope.row)">修改</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="deliveryAgent" label="出库代理" min-width="80" key="33">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.deliveryAgent}}</span>
+                        <el-button type="text" @click="deliveryAgentModify(scope.row)">修改</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="forecastTime" label="报关类型" min-width="80" key="34"></el-table-column>
+                <el-table-column prop="forecastTime" label="单独清关" min-width="80" key="35"></el-table-column>
+                <el-table-column prop="productName" label="品名" min-width="80" key="36">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.productName}}</span>
+                        <el-button type="text" @click="productNameCheck(scope.row)">修改</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="forecastTime" label="申报价值" min-width="80" key="37"></el-table-column>
+                <el-table-column prop="forecastTime" label="下单时间" min-width="80" key="38"></el-table-column>
+                <el-table-column prop="forecastTime" label="客户备注" min-width="80" key="39"></el-table-column>
+                <el-table-column prop="innerRemarks" label="内部备注" min-width="80" key="40">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.innerRemarks}}</span>
+                        <el-button type="text" @click="innerRemarksCheck(scope.row)">修改</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="forecastTime" label="是否有保险" min-width="80" key="41"></el-table-column>
+                <el-table-column prop="salesman" label="业务员" min-width="80" key="42">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.salesman}}</span>
+                        <el-button type="text" @click="salesmanCheck(scope.row)">修改</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="forecastTime" label="入库员" min-width="80" key="43"></el-table-column>
+                <el-table-column prop="forecastTime" label="入仓员" min-width="80" key="44"></el-table-column>
+                <el-table-column prop="driver" label="收货司机" min-width="80" key="45">
+                    <template slot-scope="scope">
+                        <span class="Right">{{scope.row.driver}}</span>
+                        <el-button type="text" @click="driverCheck(scope.row)">修改</el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="fee" label="费用" min-width="180" key="46">
+                    <template slot-scope="scope">
+                        <span class="Right">已确认</span>
+                        <span class="Right">¥ {{scope.row.fee}}</span>
+                        <el-button type="text" @click="feeWithdraw(scope.row)">撤回</el-button>
+                        <span class="ele" style="color:#0084FF">｜</span>
+                        <el-button type="text" @click="supplement(scope.row)">补录</el-button>
+                    </template>
+                </el-table-column>
+<!--  -->
+                <el-table-column label="操作" min-width="240" key="47">
                     <template slot-scope="scope">
                         <el-button type="text" @click="check(scope.row)">查看详情</el-button>
-                        <span style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;
-                            color: #0084FF;">
-                         ｜
-                        </span>
-                        <el-button type="text" @click="file(scope.row)">归档</el-button>
+                        <span class="ele">｜</span>
+                        <el-button type="text" @click="detentionCargo(scope.row)">扣货</el-button>
+                        <span class="ele">｜</span>
+                        <el-button type="text" @click="checkInvoice(scope.row)">查看发票</el-button>
+                        <span class="ele">｜</span>
+                        <el-button type="text" @click="Delivery(scope.row)">出库</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -110,7 +235,6 @@
                 <el-button class="orangeBtn" @click="dialogFile = false" size="small">确 定</el-button>
             </span>
             </el-dialog>
-
             <!-- 归档错误弹窗 -->
           <el-dialog
             title="提示"
@@ -135,16 +259,16 @@ export default {
   data () {
     return {
       dialogFile: false, // 批量归档对话框
-      fileError: true,
+      fileError: false, // 提示
       number: 0, // 选择批量归档件数
       form: {
         WayBillNo: '', // 运单号
         name: '', // 客户名称
         customerNo: '', // 客户编码
+        destinationCountry: '', // 目的国
+        orderType: '', // 订单类型
         destination: '', // 目的地
-        forecastChannel: '', // 预报渠道
-        outletChannel: '', // 出仓渠道
-        outletTime: '' // 出仓时间
+        warehousingTime: '' // 入仓时间
       },
       total: 50, // 表格数据总条数
       currentPage: 1,
@@ -159,18 +283,48 @@ export default {
     }
   },
   methods: {
-    // 归档
-    file () {},
     // 表格选择
     handleSelectionChange () {},
-    // 批量归档
-    batchArchive () {
-      this.dialogFile = true
-    },
-    // 查看详情
+    // 打印
+    printing () {},
+    // 详情
+    Detials () {},
+    // 制作
+    make () {},
+    // 修改
+    modify () {},
+    // 改货结算重修改
+    changeGoodsWeight () {},
+    // 货件编码全部
+    goodsNoAll () {},
+    // 去仓渠道修改
+    warehousingChannelModify () {},
+    // 出库代理修改
+    deliveryAgentModify () {},
+    // 出库渠道修改
+    deliveryChannelModify () {},
+    // 品名查看
+    productNameCheck () {},
+    // 内部备注查看
+    innerRemarksCheck () {},
+    // 业务员产看
+    salesmanCheck () {},
+    // 收货司机查看
+    driverCheck () {},
+    // 费用撤回
+    feeWithdraw () {},
+    // 费用补录
+    supplement () {},
+    // 操作查看详情
     check () {
       this.$router.push({ name: 'orderDetials' })
     },
+    // 操作扣货
+    detentionCargo () {},
+    // 操作查看发票
+    checkInvoice () {},
+    // 操作出库
+    Delivery () {},
     // 批量导出
     Export () {},
     // 查询条件设置
@@ -183,6 +337,24 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.rows{
+    display: flex;
+    align-items: center;
+}
+.dot{
+    margin-right: 6px;
+    width: 7px;
+    height: 7px;
+    background: #3CBB00;
+    border-radius: 50%;
+}
+.Right{
+   font-size: 14px;
+    margin-right: 10px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #333333;
+}
 .number{
     font-size: 16px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -206,6 +378,11 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #333333;
+}
+.ele{
+    font-size: 12px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
 }
 .electrified{
     padding: 4px 10px;

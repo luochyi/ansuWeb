@@ -223,15 +223,25 @@
                                 <span class="item1">入仓渠道：</span>
                                 <span class="item2"></span>
                             </el-col>
-                            <el-col :span="8">
+                            <el-col :span="8" v-if="change === 1">
                                 <span class="item1">出仓渠道：</span>
+                                <span class="item2"></span>
+                                <el-button class="button" type="text">修改</el-button>
+                            </el-col>
+                            <el-col :span="8" v-if="change === 2">
+                                <span class="item1">出库渠道：</span>
                                 <span class="item2"></span>
                                 <el-button class="button" type="text">修改</el-button>
                             </el-col>
                         </el-row>
                         <el-row>
-                            <el-col :span="8">
+                            <el-col :span="8" v-if="change === 1">
                                 <span class="item1">出仓代理：</span>
+                                <span class="item2"></span>
+                                <el-button class="button" type="text">修改</el-button>
+                            </el-col>
+                            <el-col :span="8" v-if="change === 2">
+                                <span class="item1">出库代理：</span>
                                 <span class="item2"></span>
                                 <el-button class="button" type="text">修改</el-button>
                             </el-col>
@@ -254,12 +264,12 @@
                                 <span class="item1">目的地：</span>
                                 <span class="item2"></span>
                             </el-col>
-                            <el-col :span="8">
+                            <el-col :span="8" v-if="change === 1">
                                 <span class="item1">派送类型：</span>
                                 <span class="item2"></span>
                             </el-col>
                         </el-row>
-                        <el-row>
+                        <el-row v-if="change === 1">
                             <el-col :span="8">
                                 <span class="item1">派送状态：</span>
                                 <span class="item2"></span>
@@ -381,6 +391,44 @@
                 </el-collapse-item>
             </el-collapse>
         </el-row>
+        <el-drawer
+            :visible.sync="drawer"
+            size="50%"
+            :before-close="handleClose">
+            <div slot="title" class="headTitle">页面显示设置</div>
+           <el-row class="" style="padding:26px;text-align:left;background:#fff;margin-top:26px">
+               <el-row style="display:flex;align-items:center">
+                   <el-col :span="11" style="display:flex;align-items:center">
+                        <span class="formTitle">字段集名称&nbsp;&nbsp;</span>
+                        <span>
+                            <el-input size="small" style="width:100%" v-model="fieldName" placeholder="请输入"></el-input>
+                        </span>
+                   </el-col>
+                   <el-col :span="8">
+                       <el-button size="small" class="orangeBtn">查 询</el-button>
+                   </el-col>
+               </el-row>
+               <!-- 抽屉表格 -->
+          <div class="table" style="margin-top:16px">
+          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"
+          :header-cell-style="{background: '#F5F5F6'}">
+          <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column prop="name" label="字段集名称" min-width="130"></el-table-column>
+            <el-table-column prop="display" label="是否显示" min-width="100">
+                <template>
+                    <div style="display:flex;align-items:center">
+                        <div style="width: 8px;height: 8px;background: #32AF05;border-radius: 50%;margin-right:8px"></div>
+                        <span>显示</span>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column label="默认展开/收缩" min-width="150"></el-table-column>
+            <el-table-column label="顺序" min-width="150"></el-table-column>
+
+          </el-table>
+          </div>
+           </el-row>
+        </el-drawer>
     </div>
 </template>
 <script>
@@ -388,6 +436,9 @@ export default {
   data () {
     return {
       total: '10000元 ', // 已确认金额
+      fieldName: '',
+      drawer: true, // 页面显示设置
+      change: 1, // 变量改变
       // 预报信息列表
       predictionList: [{
         date: '2020年12月09日 15:00',
@@ -409,16 +460,56 @@ export default {
         position: '普通业务员',
         superior: '高飞'
       }],
+      tableData: [
+        {
+          name: '客户信息'
+        },
+        {
+          name: '业务员'
+        }
+      ], // 表格数据
       wayBill: 'AS202012120001', // 运单号
       customerInfo: '深圳大成亚马逊贸易科技有限公司', // 客户信息
       name: '深圳大成亚马逊贸易科技有限公司', // 客户名称
       customerCode: 'DCYMX', // 客户编码
       forecastNo: 'YB202012120001' // 预报单号
     }
+  },
+  methods: {
+    // 关闭抽屉
+    handleClose () {}
   }
 }
 </script>
 <style lang="scss" scoped>
+.formTitle{
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+}
+/deep/ .el-drawer{
+  padding-top: 0px;
+  background: #E8EBF2;
+    .el-drawer__header{
+      padding: 30px 26px;
+      text-align: left;
+      background: #FFFFFF;
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;color: #333333;
+      margin-bottom: 6px;
+}
+.el-drawer__rtl{
+    padding:0;
+    margin:0;
+}
+.el-drawer__body{
+      margin-top: -6px;
+      padding: 0px 26px;
+      overflow: scroll;
+    }
+}
 .button{
     margin-left: 14px;
 }

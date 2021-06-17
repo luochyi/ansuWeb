@@ -1405,6 +1405,7 @@ export default {
       // 卡派表格
       kapaiName: '', // 卡派分区名称
       kapaiArr: [], // 新增卡派勾选表格数组
+      // 第一步新增表格
       Data: [
         {
           FBAwarehouse: 'IND9',
