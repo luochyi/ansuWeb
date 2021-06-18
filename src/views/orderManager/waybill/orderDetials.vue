@@ -14,7 +14,7 @@
                     <span class="item">{{forecastNo}}</span>
                 </el-col>
                 <el-col :span="12" style="text-align:right">
-                    <el-button class="whiteBtn" size="small">页面显示设置</el-button>
+                    <el-button class="whiteBtn" @click="drawer = true" size="small">页面显示设置</el-button>
                 </el-col>
             </el-row>
             <el-collapse accordion>
@@ -422,9 +422,25 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column label="默认展开/收缩" min-width="150"></el-table-column>
-            <el-table-column label="顺序" min-width="150"></el-table-column>
-
+            <el-table-column type="expand" label="默认展开/收缩" :width="120">
+                <template v-slot="scope">
+                    <el-table :data="scope.row.view_detail" :row-class-name="tableRowClassName" :header-cell-style="{ background: '#EDF6FF' }">
+                        <el-table-column prop="goods_name" label="开票商品名称" min-width="120">
+                        </el-table-column>
+                        <el-table-column prop="tax_name" label="税收分类">
+                        </el-table-column>
+                        <el-table-column prop="unit" label="单位">
+                        </el-table-column>
+                        <el-table-column prop="unit_price" label="单价">
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </el-table-column>
+            <el-table-column label="顺序" min-width="150">
+                <template>
+                    <span>{{(num++)}}</span>
+                </template>
+            </el-table-column>
           </el-table>
           </div>
            </el-row>
@@ -437,7 +453,8 @@ export default {
     return {
       total: '10000元 ', // 已确认金额
       fieldName: '',
-      drawer: true, // 页面显示设置
+      num: 0,
+      drawer: false, // 页面显示设置
       change: 1, // 变量改变
       // 预报信息列表
       predictionList: [{
