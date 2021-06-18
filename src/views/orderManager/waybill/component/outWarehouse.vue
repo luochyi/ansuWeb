@@ -52,7 +52,13 @@
                 <el-table-column prop="goodsNo" label="货件编码" min-width="160">
                     <template slot-scope="scope">
                         <span class="forecastNo">{{scope.row.goodsNo}}</span>
-                        <el-button type="text">全部</el-button>
+                        <el-popover
+                            placement="bottom"
+                            width="200"
+                            trigger="click">
+                            <span>{{scope.row.goodsNo}}</span>
+                            <el-button slot="reference" type="text">全部</el-button>
+                        </el-popover>
                     </template>
                 </el-table-column>
                 <el-table-column prop="forecastStatus" label="预报状态" min-width="80">
@@ -142,7 +148,7 @@
                             </span>
                             <span>23423423234{{no}}</span>
                         </el-row>
-                        <el-row>产品：</el-row>
+                        <el-row class="product">产品：</el-row>
                         <el-row class="form-item">
                             <span class="no">保温杯2020款{{product}}</span>
                             <div class="label">带电</div>
@@ -235,9 +241,10 @@
                     </div>
                 </el-row>
                 <div class="el-drawer-button">
-                    <el-button class="orangeBtn">返 回</el-button>
+                    <el-button class="orangeBtn" @click="drawer = false">返 回</el-button>
                 </div>
             </el-drawer>
+            <!-- 气泡货件编码 -->
         </el-row>
     </div>
 </template>
@@ -254,7 +261,7 @@ export default {
       forecastOrderNo: 'YB202012120001', // 预报单号
       orderNo: 'AS202012120001', // 运单号
       boxNum: '12',
-      drawer: true, // 装箱清单
+      drawer: false, // 装箱清单
       fileError: true,
       number: 0, // 选择批量归档件数
       form: {
@@ -290,14 +297,19 @@ export default {
   methods: {
     // 表格选择
     handleSelectionChange () {},
-    packingList () {},
+    // 打开表格的装箱清单
+    packingList () {
+      this.drawer = true
+    },
+    // 表格查看全部
+    checkAll () {},
     // 录入详情
     input () {},
     // 取消运单
     cancelOrder () {},
     // 查看详情
     check () {
-      this.$router.push({ name: 'orderDetials' })
+      this.$router.push({ name: 'predictionDetials' })
     },
     // 抽屉点击查看详情
     checkDrawer () {
@@ -319,6 +331,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.product{
+    margin:16px 0 2px 0;
+    font-size: 14px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #333333;
+}
 .item-title{
     font-size: 14px;
     font-family: PingFangSC-Medium, PingFang SC;
