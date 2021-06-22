@@ -1,57 +1,189 @@
 <template>
     <div>
         <el-row class="box">
-            <!-- 第一行 -->
-            <el-row>
-                <el-col :span="6" class="item">
-                    <span class="item-box">运单号&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.wayBillNo" size="small">
-                        <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer ">批量</i>
-                        <i slot="suffix" class="expend">&#xe9cc;</i>
-                    </el-input>
-                </el-col>
-                <el-col :span="6" class="item">
-                    <span class="item-box">客户名称&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.name" size="small"></el-input>
-                </el-col>
-                <el-col :span="6" class="item">
-                    <span class="item-box">客户编码&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.customerNo" size="small"></el-input>
-                </el-col>
-                <el-col :span="6" class="item">
-                    <span class="item-box">目的国&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.control" size="small"></el-input>
-                </el-col>
-            </el-row>
-            <!-- 第二行 -->
-            <el-row  style="margin-top:18px">
-                <el-col :span="6" class="item">
-                    <span class="item-box">目的地&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.destination" size="small"></el-input>
-                </el-col>
-                <el-col :span="6" class="item">
-                    <span class="item-box">订单类型&nbsp;&nbsp;</span>
-                    <el-select placeholder="请输入" class="input" v-model="form.orderType" size="small"></el-select>
-                </el-col>
-                <el-col :span="6" class="item">
-                    <span class="item-box">入库件数&nbsp;&nbsp;</span>
-                    <el-input placeholder="请输入" class="input" v-model="form.incomingNum" size="small"></el-input>
-                </el-col>
-                <el-col :span="6">
-                    <el-button size="small" class="orangeBtn" style="margin-right:10px">查 询</el-button>
-                    <el-button size="small" class="wuBtn" style="margin-right:10px">重 置</el-button>
-                    <el-button size="small" class="wuBtn">展开全部</el-button>
-                </el-col>
-            </el-row>
+            <!-- FORM === 1 -->
+            <div v-if="FORM === 1">
+              <!-- 第一行 -->
+                <el-row>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">运单号&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.wayBillNo" size="small">
+                            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer ">批量</i>
+                            <i slot="suffix" class="expend">&#xe9cc;</i>
+                        </el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">客户名称&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.name" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">客户编码&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.customerNo" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">目的国&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.control" size="small"></el-input>
+                    </el-col>
+                </el-row>
+                <!-- 第二行 -->
+                <el-row  style="margin-top:18px">
+                    <el-col :span="6" class="item">
+                        <span class="item-box">目的地&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.destination" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">订单类型&nbsp;&nbsp;</span>
+                        <el-select placeholder="请输入" class="input" v-model="form.orderType" size="small"></el-select>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">入库件数&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.incomingNum" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-button size="small" class="orangeBtn" style="margin-right:10px">查 询</el-button>
+                        <el-button size="small" class="wuBtn" style="margin-right:10px">重 置</el-button>
+                        <el-button size="small" class="wuBtn"  @click="FORM = 2">展开全部</el-button>
+                    </el-col>
+                </el-row>
             <el-row class="line"></el-row>
+            </div>
+            <!-- FORM === 2 -->
+            <div v-if="FORM === 2">
+              <!-- 第一行 -->
+                <el-row>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">预报单号&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.forecastNo" size="small">
+                            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer ">批量</i>
+                            <i slot="suffix" class="expend">&#xe9cc;</i>
+                        </el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">运单号&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.wayBillNo" size="small">
+                            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer ">批量</i>
+                            <i slot="suffix" class="expend">&#xe9cc;</i>
+                        </el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">客户名称&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.name" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">客户编码&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.customerNo" size="small"></el-input>
+                    </el-col>
+                </el-row>
+                <!-- 第二行 -->
+                <el-row  style="margin-top:18px">
+                    <el-col :span="6" class="item">
+                        <span class="item-box">预报渠道&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.forecastChannel" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">收货司机&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.receivingGoodsDriver" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">业务员&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.salesman" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">订单类型&nbsp;&nbsp;</span>
+                        <el-select placeholder="请输入" class="input" v-model="form.orderType" size="small"></el-select>
+                    </el-col>
+                </el-row>
+                <!-- 3 -->
+                <el-row  style="margin-top:18px">
+                    <el-col :span="6" class="item">
+                        <span class="item-box">发票详情&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.invoiceDetails" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">装箱清单&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.packingList" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">寄件方式&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.mailingMethod" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">货号编码&nbsp;&nbsp;</span>
+                        <el-select placeholder="请输入" class="input" v-model="form.goodsNo" size="small"></el-select>
+                    </el-col>
+                </el-row>
+                <!-- 4 -->
+                <el-row  style="margin-top:18px">
+                    <el-col :span="6" class="item">
+                        <span class="item-box">带电带磁&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.chargedMagnetic" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">品名&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.productName" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">目的国&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.control" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">目的仓&nbsp;&nbsp;</span>
+                        <el-select placeholder="请输入" class="input" v-model="form.warehouse" size="small"></el-select>
+                    </el-col>
+                </el-row>
+                <el-row  style="margin-top:18px">
+                    <el-col :span="6" class="item">
+                        <span class="item-box">目的地邮编&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.destinationPost" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">是否有保险&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.insurance" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">报关类型&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.customsTypes" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">单独清关&nbsp;&nbsp;</span>
+                        <el-select placeholder="请输入" class="input" v-model="form.customsClearance" size="small"></el-select>
+                    </el-col>
+                </el-row>
+                <el-row  style="margin-top:18px">
+                    <el-col :span="6" class="item">
+                        <span class="item-box">递延&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.deferral" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">入仓员&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.warehouser" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">扣货状态&nbsp;&nbsp;</span>
+                        <el-input placeholder="请输入" class="input" v-model="form.withholdingStatus" size="small"></el-input>
+                    </el-col>
+                    <el-col :span="6" class="item">
+                        <span class="item-box">入仓渠道&nbsp;&nbsp;</span>
+                        <el-select placeholder="请输入" class="input" v-model="form.warehousingChannel" size="small"></el-select>
+                    </el-col>
+                </el-row>
+                <el-row style="display:flex;justify-content:flex-end;margin-top:20px">
+                    <el-col :span="6">
+                        <el-button size="small" class="orangeBtn" style="margin-right:10px">查 询</el-button>
+                        <el-button size="small" class="wuBtn" style="margin-right:10px">重 置</el-button>
+                        <el-button size="small" class="wuBtn" @click="FORM = 1">隐藏</el-button>
+                    </el-col>
+                </el-row>
+                <el-row class="line"></el-row>
+            </div>
             <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
             <el-col :span='12' class="left">
                 <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button>
                 <el-button class='stopBtn' @click="batchArchive" size="small">批量归档</el-button>
             </el-col>
             <el-col :span='12' class="right">
-                <el-button class='whiteBtn' @click="toAdd">查询条件设置</el-button>
-                <el-button class='whiteBtn'>列表显示设置</el-button>
+                <el-button class='whiteBtn' @click="visibleQueryCondition = true">查询条件设置</el-button>
+                <el-button class='whiteBtn' @click="visibleList = true">列表显示设置</el-button>
             </el-col>
             </el-row>
             <!-- 表格 -->
@@ -325,19 +457,154 @@
             </el-dialog>
 
             <!-- 归档错误弹窗 -->
-          <el-dialog
-            title="提示"
-            :visible.sync="fileError"
-            top="12%"
-            width="30%">
-            <div class="line" style="margin-top:-20px;margin-bottom:40px"></div>
-            <div class="number">运单AS202012120001的费用并未核销是</div>
-            <div class="number">否继续归档</div>
-            <span slot="footer" class="dialog-footer">
-                <el-row class="line"></el-row>
-                <el-button class="wuBtn" @click="fileError = false" size="small">取 消</el-button>
-                <el-button class="orangeBtn" @click="fileError = false" size="small">确 定</el-button>
-            </span>
+            <el-dialog
+                title="提示"
+                :visible.sync="fileError"
+                top="12%"
+                width="30%">
+                <div class="line" style="margin-top:-20px;margin-bottom:40px"></div>
+                <div class="number">运单AS202012120001的费用并未核销是</div>
+                <div class="number">否继续归档</div>
+                <span slot="footer" class="dialog-footer">
+                    <el-row class="line"></el-row>
+                    <el-button class="wuBtn" @click="fileError = false" size="small">取 消</el-button>
+                    <el-button class="orangeBtn" @click="fileError = false" size="small">确 定</el-button>
+                </span>
+            </el-dialog>
+
+          <!-- 查询条件设置 -->
+            <el-drawer
+            title="查询条件设置"
+            :visible.sync="visibleQueryCondition"
+            :wrapperClosable='false'
+            size="50%">
+            <!-- <div style="height:"></div> -->
+            <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                <el-row class="Flexcenter">
+                    <span class="query">查询名称&nbsp;&nbsp;</span>
+                    <el-select size="small" v-model="queryName"></el-select>
+                    <el-button class="orangeBtn" style="margin-left:20px">确 定</el-button>
+                    <el-button class="whiteBtn" style="margin-left:20px">保存配置</el-button>
+                    <el-button class="whiteBtn" style="margin-left:20px">查看配置</el-button>
+                </el-row>
+                <!-- 主要搜索条件 -->
+                <el-row class="mainSearch">主要搜索条件</el-row>
+                <div class="table">
+                    <el-table ref="multipleTable" :data="mainData" border  tooltip-effect="dark" style="width: 100%"
+                        @selection-change="mainChange" :header-cell-style="{background: '#F5F5F6'}">
+                        <el-table-column type="selection" width="50" key="1"></el-table-column>
+                        <el-table-column prop="condition" label="搜索条件名称" key="2"></el-table-column>
+                        <el-table-column prop="display" label="是否显示" key="3">
+                            <template slot-scope="scope">
+                                <div v-if="scope.row.status === true" class="Flexcenter">
+                                    <div class="dot"></div>
+                                    <span>显示</span>
+                                </div>
+                                <div v-if="scope.row.status === false" class="Flexcenter">
+                                    <div class="dot" style="background:#FF0000"></div>
+                                    <span>不显示</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+                <!-- 隐藏搜索条件 -->
+                <el-row class="mainSearch">隐藏搜索条件</el-row>
+                <div class="table">
+                    <el-table ref="multipleTable" :data="hideData" border  tooltip-effect="dark" style="width: 100%"
+                        @selection-change="hideDataChange" :header-cell-style="{background: '#F5F5F6'}">
+                        <el-table-column type="selection" width="50" key="1"></el-table-column>
+                        <el-table-column prop="condition" label="搜索条件名称" key="2"></el-table-column>
+                        <el-table-column prop="display" label="是否显示" key="3">
+                            <template slot-scope="scope">
+                                <div v-if="scope.row.status === true" class="Flexcenter">
+                                    <div class="dot"></div>
+                                    <span>显示</span>
+                                </div>
+                                <div v-if="scope.row.status === false" class="Flexcenter">
+                                    <div class="dot" style="background:#FF0000"></div>
+                                    <span>不显示</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </div>
+            <el-row style="background:#fff;text-align:left;padding:26px;margin-top:26px">
+                <el-button class="orangeBtn long1" plain size="small"  style="margin-right:20px">
+                    提 交
+                </el-button>
+                <el-button type="info long1" plain size="small" style="margin-right:20px">
+                    取 消
+                </el-button>
+            </el-row>
+            </el-drawer>
+            <!-- 列表显示设置 -->
+            <el-drawer
+            title="列表显示设置"
+            :visible.sync="visibleList"
+            :wrapperClosable='false'
+            size="50%">
+            <!-- <div style="height:"></div> -->
+            <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                <el-row class="Flexcenter">
+                    <span class="query">查询名称&nbsp;&nbsp;</span>
+                    <el-select size="small" v-model="listQueryName"></el-select>
+                    <el-button class="orangeBtn" style="margin-left:20px">确 定</el-button>
+                    <el-button class="whiteBtn" style="margin-left:20px" @click="preservation = true">保存配置</el-button>
+                    <el-button class="whiteBtn" style="margin-left:20px">查看配置</el-button>
+                </el-row>
+                <!-- 主要搜索条件 -->
+                <el-row class="mainSearch">主要搜索条件</el-row>
+                <div class="table">
+                    <el-table ref="multipleTable" :data="listData" border  tooltip-effect="dark" style="width: 100%"
+                        @selection-change="listChange" :header-cell-style="{background: '#F5F5F6'}">
+                        <el-table-column type="selection" width="50" key="1"></el-table-column>
+                        <el-table-column prop="condition" label="列表名" key="2"></el-table-column>
+                        <el-table-column prop="listWidth" label="列表宽度" key="3"></el-table-column>
+                        <el-table-column prop="display" label="是否显示" key="4">
+                            <template slot-scope="scope">
+                                <div v-if="scope.row.status === true" class="Flexcenter">
+                                    <div class="dot"></div>
+                                    <span>显示</span>
+                                </div>
+                                <div v-if="scope.row.status === false" class="Flexcenter">
+                                    <div class="dot" style="background:#FF0000"></div>
+                                    <span>不显示</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
+            </div>
+            <el-row style="background:#fff;text-align:left;padding:26px;margin-top:26px">
+                <el-button class="orangeBtn long1" plain size="small"  style="margin-right:20px">
+                    提 交
+                </el-button>
+                <el-button type="info long1" plain size="small" style="margin-right:20px">
+                    取 消
+                </el-button>
+            </el-row>
+            </el-drawer>
+
+            <!-- 列表显示设置保存配置 -->
+            <el-dialog
+                title="保存配置"
+                :visible.sync="preservation"
+                top="12%"
+                width="30%">
+                <div class="line" style="margin-top:-20px;margin-bottom:40px"></div>
+                <div class="Flexcenter">
+                    <span class="configuration">
+                        配置名称&nbsp;&nbsp;
+                    </span>
+                    <el-input size="small" v-model="configurationName" style="width:60%" placeholder="请输入配置名称"></el-input>
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-row class="line"></el-row>
+                    <el-button class="wuBtn" @click="preservation = false" size="small">取 消</el-button>
+                    <el-button class="orangeBtn" @click="preservation = false" size="small">确 定</el-button>
+                </span>
             </el-dialog>
         </el-row>
     </div>
@@ -348,20 +615,156 @@ export default {
   data () {
     return {
       dialogFile: false, // 批量归档对话框
+      queryName: '', // 查询名称
+      listQueryName: '', // 列表显示设置
+      visibleQueryCondition: false, // 查询条件设置
+      visibleList: false, // 列表显示设置
+      configurationName: '', //  列表显示设置-请输入配置名称
+      preservation: false, // 保存配置弹框
+      FORM: 1, // 控制搜索条件显示
       batch: '', // 批量搜索
       checked: false, // 是否模糊搜索
       dialogPL: false, // 批量搜索
       fileError: false,
       number: 0, // 选择批量归档件数
       form: {
+        // FORM === 1
         WayBillNo: '', // 运单号
         name: '', // 客户名称
         customerNo: '', // 客户编码
         control: '', // 目的国
         destination: '', // 目的地
         orderType: '', // 订单类型
-        incomingNum: '' // 入库件数
+        incomingNum: '', // 入库件数
+        // FORM === 2
+        forecastNo: '', // 预报单号
+        forecastChannel: '', // 预报渠道
+        receivingGoodsDriver: '', // 收货司机
+        salesman: '', // 业务员
+        invoiceDetails: '', // 发票详情
+        packingList: '', // 装箱清单
+        mailingMethod: '', // 寄件方式
+        goodsNo: '', // 货件编号
+        chargedMagnetic: '', // 带电带磁
+        productName: '', // 品名
+        warehouse: '', // 目的仓
+        destinationPost: '', // 目的地邮编
+        insurance: '', // 是否有保险
+        customsTypes: '', // 报关类型
+        customsClearance: '', // 单独清关
+        deferral: '', // 递延
+        warehouser: '', // 入仓员
+        withholdingStatus: '', // 扣货状态
+        warehousingChannel: '' // 入仓渠道
       },
+      // 列表显示设置
+      listData: [
+        {
+          condition: '预报单号',
+          listWidth: '37',
+          status: false
+        },
+        {
+          condition: '运单号',
+          listWidth: '60',
+          status: false
+        },
+        {
+          condition: '客户名称',
+          listWidth: '60',
+          status: false
+        },
+        {
+          condition: '客户编码',
+          listWidth: '20',
+          status: false
+        },
+        {
+          condition: '预报渠道',
+          listWidth: '60',
+          status: false
+        },
+        {
+          condition: '收货司机',
+          listWidth: '60',
+          status: false
+        },
+        {
+          condition: '业务员',
+          listWidth: '40',
+          status: false
+        },
+        {
+          condition: '是否分票',
+          listWidth: '60',
+          status: false
+        },
+        {
+          condition: '是否有发票',
+          listWidth: '40',
+          status: false
+        },
+        {
+          condition: '票数',
+          listWidth: '60',
+          status: false
+        }
+      ],
+      // 主要搜索条件
+      mainData: [
+        {
+          condition: '预报单号',
+          status: false
+        },
+        {
+          condition: '运单号',
+          status: false
+        },
+        {
+          condition: '客户名称',
+          status: false
+        },
+        {
+          condition: '客户编码',
+          status: false
+        },
+        {
+          condition: '预报渠道',
+          status: false
+        },
+        {
+          condition: '收货司机',
+          status: false
+        },
+        {
+          condition: '业务员',
+          status: false
+        }
+      ],
+      // 隐藏搜索条件
+      hideData: [
+        {
+          condition: '是否分票',
+          status: false
+        },
+        {
+          condition: '是否有发票',
+          status: false
+        },
+        {
+          condition: '票数',
+          status: false
+        },
+        {
+          condition: '寄件方式',
+          status: false
+        },
+        {
+          condition: '预报件数',
+          status: false
+        }
+      ],
+      hide: 0,
       total: 50, // 表格数据总条数
       currentPage: 1,
       pageSize: 10,
@@ -378,6 +781,34 @@ export default {
   methods: {
     // 归档
     file () {},
+    // 查询搜索条件
+    mainChange (val) {
+      this.mainData.forEach(item => {
+        item.status = false
+      })
+      val.forEach(item => {
+        item.status = true
+      })
+    },
+    // 列表显示设置
+    listChange (val) {
+      this.listData.forEach(item => {
+        item.status = false
+      })
+      val.forEach((item) => {
+        item.status = true
+      })
+    },
+    // 隐藏搜索条件
+    hideDataChange (val) {
+      console.log(val)
+      this.hideData.forEach(item => {
+        item.status = false
+      })
+      val.forEach((item) => {
+        item.status = true
+      })
+    },
     // 预报单号查看
     forecastNoCheck (val) {
       this.$router.push({ name: 'prediction' })
@@ -396,8 +827,6 @@ export default {
     },
     // 批量导出
     Export () {},
-    // 查询条件设置
-    toAdd () {},
     // 选择页码
     handleCurrentChange (val) {
       console.log(val)
@@ -406,6 +835,56 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.mainSearch{
+    font-size: 16px;
+    margin: 26px 0;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #333333;
+}
+.query{
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+}
+/deep/ .el-drawer{
+  padding-top: 0px;
+  background: #E8EBF2;
+    .el-drawer__header{
+      padding: 30px 20px;
+      margin-bottom: 0px;
+      text-align: left;
+      background: #FFFFFF;
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;color: #333333;
+}
+.el-drawer__rtl{
+    padding:0;
+    margin:0;
+}
+.el-drawer__body{
+      margin-top: 0px;
+      padding-top: 0px;
+      overflow: scroll;
+    }
+.drawer_btn{
+      display: flex;
+      width:100%;
+      padding-left: 20px;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 26px;
+      // margin-left: -26px;
+      margin-bottom: -26px;
+      // width: 100%;
+      box-sizing: border-box;
+      height: 60px;
+      background: #FFFFFF;
+      box-sizing: border-box;
+    }
+}
 .expend {
   font-family: "iconfont" !important;
   font-size: 14px;
@@ -464,6 +943,12 @@ export default {
     height: 7px;
     background: #3CBB00;
     border-radius: 50%;
+}
+.configuration{
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
 }
 .number{
     font-size: 16px;
@@ -534,7 +1019,7 @@ export default {
 }
 .item-box{
     text-align: right;
-    width: 70px;
+    width: 80px;
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;

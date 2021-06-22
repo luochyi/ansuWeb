@@ -89,7 +89,7 @@
         <div class='table'>
           <el-row class='tableBtn'>
             <el-col :span='12' class='left'>
-              <el-button class='orangeBtn long1'>批量导出Excel</el-button>
+              <el-button class='orangeBtn long1' style="width:130px">批量导出Excel</el-button>
             </el-col>
             <el-col :span='12' class='right'>
               <el-button class='whiteBtn '>查询条件设置</el-button>
@@ -216,6 +216,41 @@
               </template>
             </el-table-column>
           </el-table>
+          <!-- 列表显示设置 -->
+            <el-drawer
+            title="批量导出Excel"
+            :visible.sync="visibleList"
+            :wrapperClosable='false'
+            size="50%">
+              <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                  <el-row class="Flexcenter">
+                    <span class="query">导出配置&nbsp;&nbsp;</span>
+                    <el-select size="small" v-model="listQueryName"></el-select>
+                    <el-button class="orangeBtn" style="margin-left:20px">确 定</el-button>
+                    <el-button class="whiteBtn" style="margin-left:20px" @click="preservation = true">保存配置</el-button>
+                    <el-button class="whiteBtn" style="margin-left:20px">查看配置</el-button>
+                  </el-row>
+                  <el-row class="mainSearch">请选择需要导出Excel的字段</el-row>
+                  <el-tree
+                  ref="tree"
+                  :default-checked-keys="roleData"
+                  :data="data"
+                  show-checkbox
+                  @check-change="handleCheckChange"
+                  default-expand-all
+                  node-key="id"
+                  :props="{label: 'title'}">
+                </el-tree>
+              </div>
+            <el-row style="background:#fff;text-align:left;padding:26px;margin-top:26px">
+                <el-button class="orangeBtn long1" plain size="small"  style="margin-right:20px">
+                    提 交
+                </el-button>
+                <el-button type="info long1" plain size="small" style="margin-right:20px">
+                    取 消
+                </el-button>
+            </el-row>
+            </el-drawer>
           <!-- 分页 -->
           <div class='block'>
             <span>共搜索到{{ total }}条数据</span>
@@ -264,18 +299,102 @@ export default {
           invoiceNum: '1', // 票数
           waybillNo: 'AS2012090001' // 运单号
         }
-      ]
+      ],
+
+      visibleList: true, // 批量导出
+      listQueryName: '', // 导出配置名称
+      // 树组
+      props: {
+        label: '客户信息',
+        children: 'zones'
+      }
     }
   },
   methods: {
+    // 选择标签
     handleClick (val) {
       console.log(val)
+    },
+    // 保存配置
+    preservation () {},
+    // 回调
+    handleCheckChange (data, checked, indeterminate) {
+      console.log(data, checked, indeterminate)
+    },
+    loadNode (node, resolve) {
+      console.log(node, resolve)
+      if (node.level === 0) {
+        return resolve([{ name: 'label' }])
+      }
+      if (node.level > 1) return resolve([])
+
+      setTimeout(() => {
+        const data = [{
+          name: 'leaf',
+          leaf: true
+        }, {
+          name: 'zone'
+        }]
+
+        resolve(data)
+      }, 500)
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
+.mainSearch{
+  font-size: 16px;
+  margin: 26px 0 16px 0;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #333333;
+}
+.query{
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
+}
+/deep/ .el-drawer{
+  padding-top: 0px;
+  background: #E8EBF2;
+    .el-drawer__header{
+      padding: 30px 20px;
+      margin-bottom: 0px;
+      text-align: left;
+      background: #FFFFFF;
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;color: #333333;
+}
+.el-drawer__rtl{
+    padding:0;
+    margin:0;
+}
+.el-drawer__body{
+      margin-top: 0px;
+      padding-top: 0px;
+      text-align: left;
+      overflow: scroll;
+    }
+.drawer_btn{
+      display: flex;
+      width:100%;
+      padding-left: 20px;
+      align-items: center;
+      justify-content: flex-start;
+      margin-top: 26px;
+      // margin-left: -26px;
+      margin-bottom: -26px;
+      // width: 100%;
+      box-sizing: border-box;
+      height: 60px;
+      background: #FFFFFF;
+      box-sizing: border-box;
+    }
+}
 // .main {
 //   margin: 20px 0px;
 // }

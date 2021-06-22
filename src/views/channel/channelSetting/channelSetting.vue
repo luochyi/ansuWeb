@@ -1374,7 +1374,7 @@ export default {
         theme: 'snow'
       },
 
-      visibleSurcharge: false, // 附加费
+      visibleSurcharge: false, // 渠道附加费抽屉
 
       // 价格首续重
       continuationData: [{
