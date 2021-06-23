@@ -38,6 +38,9 @@ export default {
     handleClick (val) {
       console.log(val)
       switch (val.name) {
+        case '1':
+          this.componentsName = warehousing
+          break
         case '2':
           this.componentsName = delivery
           break

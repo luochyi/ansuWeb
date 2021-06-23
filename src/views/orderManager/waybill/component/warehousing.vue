@@ -401,7 +401,17 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="totalFreight" label="合计运费" min-width="80" key="48"></el-table-column>
-                <el-table-column prop="WithholdingStatus" label="扣货状态" min-width="80" key="49"></el-table-column>
+                <el-table-column prop="WithholdingStatus" label="扣货状态" min-width="120" key="49">
+                    <template slot-scope="scope">
+                        <div>
+                            <span class="WithholdingStatus">未扣货</span>
+                        </div>
+                        <div>
+                            <span class="WithholdingStatus" style="color:#FF0000">已扣货</span>
+                            <el-button type="text" @click="holdCustody(scope.row)">查看</el-button>
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="coordination" label="协同" min-width="80" key="50"></el-table-column>
                 <!-- 操作 -->
                 <el-table-column label="操作" min-width="220" key="51">
@@ -675,6 +685,145 @@
                     <el-button class="orangeBtn" @click="preservation = false" size="small">确 定</el-button>
                 </span>
             </el-dialog>
+            <!-- 表格扣货状态扣货抽屉 -->
+            <el-drawer
+            title="扣货"
+            :visible.sync="visibleholdCustody"
+            :wrapperClosable='false'
+            size="50%">
+            <div style="padding:0 26px">
+                <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                <el-row>
+                    <el-row>
+                        <el-col :span="12" class="font flex align-center">
+                            <span style="width:18%;text-align:right">所属公司：</span>
+                            <span>{{custodyCompany}}</span>
+                        </el-col>
+                        <el-col :span="12" class="font flex align-center">
+                            <span style="width:18%;text-align:right">客户名称：</span>
+                            <span>{{CustomerName}}</span>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin-top:20px">
+                        <el-col :span="12" class="font flex align-center">
+                            <span style="width:18%;text-align:right">运单号：</span>
+                            <span>{{orderNo}}</span>
+                        </el-col>
+                        <el-col :span="12" class="font flex align-center">
+                            <span style="width:18%;text-align:right">业务员：</span>
+                            <span>{{salesman}}</span>
+                        </el-col>
+                    </el-row>
+                    <el-row class="line" style="margin-bottom:30px"></el-row>
+                    <!-- 扣货 （v-if）-->
+                    <div>
+                       <el-row class="Yfont">扣货件</el-row>
+                        <el-row class="Bfont" style="margin:16px 0">
+                            <span style="width:16%">扣货原因：</span>
+                            <span>{{reason}}</span>
+                        </el-row>
+                        <el-row class="Gfont">
+                            <el-col :span="6">
+                                <span>{{date}}</span>
+                            </el-col>
+                            <el-col :span="6">
+                                <span>扣货人：</span>
+                                <span>{{operator}}</span>
+                            </el-col>
+                        </el-row>
+                    </div>
+                    <!-- 扣货放货 -->
+                    <div>
+                       <el-row class="Yfont" style="color:#000000">正常件</el-row>
+                        <el-row class="Bfont" style="margin:16px 0">
+                            <span style="width:16%">扣货原因：</span>
+                            <span>{{reason}}</span>
+                        </el-row>
+                        <el-row class="Gfont">
+                            <el-col :span="6">
+                                <span>{{date}}</span>
+                            </el-col>
+                            <el-col :span="6">
+                                <span>扣货人：</span>
+                                <span>{{operator}}</span>
+                            </el-col>
+                        </el-row>
+                        <el-row class="Bfont" style="margin:24px 0 16px 0">
+                            <span style="width:16%">放货理由：</span>
+                            <span>{{reason}}</span>
+                        </el-row>
+                        <el-row class="Gfont">
+                            <el-col :span="6">
+                                <span>{{ReleaseDate}}</span>
+                            </el-col>
+                            <el-col :span="6">
+                                <span>放货人：</span>
+                                <span>{{ReleaseOperator}}</span>
+                            </el-col>
+                        </el-row>
+                    </div>
+                </el-row>
+            </div>
+        </div>
+            <div class="drawer_btn">
+                <el-button class="orangeBtn" @click="visibleholdCustody = false">返 回</el-button>
+            </div>
+            </el-drawer>
+            <!-- 表格入仓渠道修改抽屉 -->
+            <el-drawer
+            title="扣货"
+            :visible.sync="visibleChanel"
+            :wrapperClosable='false'
+            size="50%">
+            <div style="padding:0 26px">
+                <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                <el-row>
+                    <el-row>
+                        <el-col :span="12" class="font flex align-center">
+                            <span style="width:18%;text-align:right">所属公司：</span>
+                            <span>{{custodyCompany}}</span>
+                        </el-col>
+                        <el-col :span="12" class="font flex align-center">
+                            <span style="width:18%;text-align:right">客户名称：</span>
+                            <span>{{CustomerName}}</span>
+                        </el-col>
+                    </el-row>
+                    <el-row style="margin-top:20px">
+                        <el-col :span="12" class="font flex align-center">
+                            <span style="width:18%;text-align:right">运单号：</span>
+                            <span>{{orderNo}}</span>
+                        </el-col>
+                        <el-col :span="12" class="font flex align-center">
+                            <span style="width:18%;text-align:right">业务员：</span>
+                            <span>{{salesman}}</span>
+                        </el-col>
+                    </el-row>
+                    <el-row class="line" style="margin-bottom:30px"></el-row>
+                    <el-row class="Flexcenter">
+                        <el-col :span="2" class="channel">渠道名称</el-col>
+                        <el-col :span="8" style="display:flex;justify-content:flex-start">
+                            <el-input placeholder="请输入渠道名称/编码" size="small" v-model="channelCode"></el-input>
+                        </el-col>
+                        <el-col :span="4">
+                            <el-button class="orangeBtn" style="margin-left:20px">查询</el-button>
+                        </el-col>
+                        <el-col :span="10" style="display:flex;justify-content:flex-end">
+                            <el-button class="whiteBtn" style="margin-left:20px">修改历史</el-button>
+                        </el-col>
+                    </el-row>
+                    <div class="CHANNEL">
+                        <el-table ref="multipleTable" :data="chaanelData" border  tooltip-effect="dark" style="width: 100%"
+                            @selection-change="channelChange" :header-cell-style="{background: '#F5F5F6'}"
+                            @row-click="rowClick" :row-class-name="tableRowClassName" :row-style="selectedHighlight">
+                            <el-table-column type="selection" width="50" key="1"></el-table-column>
+                            <el-table-column prop="channelName" label="渠道名称" key="2"></el-table-column>
+                            <el-table-column prop="channelCode" label="渠道编码" key="3"></el-table-column>
+                        </el-table>
+                    </div>
+                </el-row>
+                </div>
+            </div>
+            </el-drawer>
         </el-row>
     </div>
 </template>
@@ -684,12 +833,24 @@ export default {
   data () {
     return {
       prohibit: 'AS202012120001', // 无法出库订单id
+      channelCode: '', // 请输入渠道名称/编码
+      visibleChanel: true, // 表格入仓渠道修改抽屉
+      reason: '已经有10w的货款没接了啊', // 扣货原因
+      operator: '李四-业务', // 扣货人
+      date: '2020年10月11日 14:00', // 扣货日期
+      ReleaseDate: '2020年10月11日 14:00', // 放货日期
+      ReleaseOperator: '王武-业务', // 放货人
+      custodyCompany: '安速深圳分公司', // 所属公司
+      orderNo: 'AS202012120001', // 订单号
+      salesman: '张三', // 业务员
+      CustomerName: '深圳爱因美贸易科技有限公司', // 客户名称
+      visibleholdCustody: false, // 表格扣货状态扣货抽屉
       dialogFile: false, // 批量扣货
       DetentionCargo: '', // 请输入批量扣货
       singleRelease: false, // 单个放货
       singleDetentionCargo: false, // 单个扣货
       Release: '', // 请输入单个放货
-      dialogStop: true, // 无法出库弹窗
+      dialogStop: false, // 无法出库弹窗
       singleDeliveryCoods: '', // 请输入单个扣货
       dialogRelease: false, // 批量放货
       deliveryCoods: '', // 请输入批量放货
@@ -788,6 +949,25 @@ export default {
           status: false
         }
       ],
+      // 修改入仓渠道表格
+      chaanelData: [
+        {
+          channelName: '美森—UPS',
+          channelCode: 'UPS300'
+        },
+        {
+          channelName: '美森—UPS',
+          channelCode: 'UPS300'
+        },
+        {
+          channelName: '美森—UPS',
+          channelCode: 'UPS300'
+        },
+        {
+          channelName: '美森—UPS',
+          channelCode: 'UPS300'
+        }
+      ],
       // 主要搜索条件
       mainData: [
         {
@@ -859,6 +1039,24 @@ export default {
   methods: {
     // 归档
     file () {},
+    // 表格入仓渠道修改抽屉表格选择
+    channelChange () {},
+    // 表格入仓渠道修改抽屉表格选种颜色
+    rowClick (row) {
+      this.getIndex = row.index
+      this.$emit('rowClick', row)
+    },
+    tahleRowClassName ({ row, rowIndex }) {
+      // 把每行怼索引放进row
+      row.index = rowIndex
+    },
+    selectedHighlight ({ row, rowIndex }) {
+      if (this.getIndex === rowIndex) {
+        return {
+          background: '#FB4702'
+        }
+      }
+    },
     // 查询搜索条件
     mainChange (val) {
       this.mainData.forEach(item => {
@@ -895,6 +1093,10 @@ export default {
         item.status = true
       })
     },
+    // 扣货状态扣货
+    holdCustody () {
+      this.visibleholdCustody = true
+    },
     // 单个扣货
     detentionCargo () {
       this.singleDetentionCargo = true
@@ -925,6 +1127,46 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.CHANNEL /deep/ .el-table__row:hover > td {
+  background-color: transparent;
+}
+.channel{
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+}
+.Gfont{
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.45);
+}
+.Bfont{
+    font-size: 14px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #333333;
+}
+.Yfont{
+    font-size: 16px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #FB4E0C;
+}
+.font{
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #333333;
+}
+.WithholdingStatus{
+    font-size: 14px;
+    margin-right: 10px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: #333333;
+}
 .mainSearch{
     font-size: 16px;
     margin: 26px 0;

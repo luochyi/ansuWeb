@@ -1,5 +1,15 @@
 <template>
     <div>
+        <!-- 扣货详情 （v-if=""）-->
+        <div>
+            <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:17px 6px;">
+                <span class='text' style="color:#FF0000">扣货件详情</span>
+            </el-row>
+            <el-row class="titleReason">
+                <span>扣货原因：{{titleReason}}</span>
+            </el-row>
+        </div>
+        <!-- 不扣货详情 -->
         <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:17px 0">
             <span class='text'>订单详情</span>
         </el-row>
@@ -477,6 +487,7 @@ export default {
   data () {
     return {
       total: '10000元 ', // 已确认金额
+      titleReason: '10万元的货款没结清', // 扣货原因
       note: '走以星',
       changeAsettlement: false, // 改货结算重
       number: 6, // 件数
@@ -533,6 +544,16 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.titleReason{
+    font-size: 14px;
+    background: #fff;
+    margin-bottom: 26px;
+    text-align: left;
+    padding: 20px 0 26px 42px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+}
 .body{
     text-align:left;
     background: #fff;
