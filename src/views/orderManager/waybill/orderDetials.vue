@@ -17,13 +17,11 @@
                     <el-button class="whiteBtn" @click="drawer = true" size="small">页面显示设置</el-button>
                 </el-col>
             </el-row>
-            <el-collapse accordion>
                 <!-- 客户信息 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">客户信息</span>
-                            <span class="item-info">{{customerInfo}}</span>
-                    </template>
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">客户信息</span>
+                    </el-row>
                     <el-row style="margin-top:10px">
                         <el-col :span="8">
                             <span class="item1">客户名称：</span>
@@ -34,158 +32,166 @@
                             <span class="item2">{{customerCode}}</span>
                         </el-col>
                     </el-row>
-                </el-collapse-item>
+                </el-row>
+                <el-row class="line"></el-row>
                 <!-- 业务员 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">业务员</span>
-                            <span class="item-info">{{salesman}}</span>
-                    </template>
-                    <el-row style="margin-top:10px" v-for="(item, index) in salesmanList" :key="index">
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">业务员</span>
+                    </el-row>
+                    <el-row style="margin-top:10px">
                         <el-col :span="8">
                             <span class="item1">所属业务员：</span>
-                            <span class="item2">{{item.name}}</span>
+                            <span class="item2"></span>
                         </el-col>
                         <el-col :span="8">
                             <span class="item1">业务员手机：</span>
-                            <span class="item2">{{item.tel}}</span>
+                            <span class="item2"></span>
                         </el-col>
                         <el-col :span="8">
                             <span class="item1">业务员职位：</span>
-                            <span class="item2">{{item.position}}</span>
+                            <span class="item2"></span>
                         </el-col>
                         <el-col :span="8" style="margin-top:8px">
                             <span class="item1">上级领导：</span>
-                            <span class="item2">{{item.superior}}</span>
+                            <span class="item2"></span>
                         </el-col>
                     </el-row>
-                </el-collapse-item>
-                <!-- 收货司机 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">收货司机</span>
-                            <span class="item-info">{{receivingDriver}}</span>
-                    </template>
-                    <el-row style="margin-top:10px" v-for="(item, index) in receivingDriverList" :key="index">
+                </el-row>
+                <el-row class="line"></el-row>
+                <!-- 收货信息 -->
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">收货信息</span>
+                    </el-row>
+                    <el-row style="margin-top:10px">
                         <el-col :span="8">
                             <span class="item1">收货司机：</span>
-                            <span class="item2">{{item.name}}</span>
+                            <span class="item2"></span>
+                        </el-col>
+                        <el-col :span="8">
+                            <span class="item1">司机职位：</span>
+                            <span class="item2"></span>
                         </el-col>
                         <el-col :span="8">
                             <span class="item1">司机手机：</span>
-                            <span class="item2">{{item.tel}}</span>
+                            <span class="item2"></span>
                         </el-col>
+                            <el-col :span="8" style="margin-top:8px">
+                                <span class="item1">收货时间：</span>
+                                <span class="item2"></span>
+                            </el-col>
+                            <el-col :span="8" style="margin-top:8px">
+                                <span class="item1">收货件数：</span>
+                                <span class="item2"></span>
+                            </el-col>
                     </el-row>
-                </el-collapse-item>
+                </el-row>
+                <el-row class="line"></el-row>
                 <!-- 预报信息 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">预报信息</span>
-                            <span class="item-info"></span>
-                    </template>
-                    <el-row style="margin-top:10px" v-for="(item, index) in predictionList" :key="index">
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">预报信息</span>
+                        <span class="item-info"></span>
+                    </el-row>
+                    <el-row style="margin-top:10px">
                         <el-col :span="8">
-                            <span class="item1">预报时间：</span>
-                            <span class="item2">{{item.data}}</span>
+                            <span class="item1">下单时间：</span>
+                            <span class="item2"></span>
                         </el-col>
                         <el-col :span="8">
-                            <span class="item1">货号时间：</span>
-                            <span class="item2">{{item.goodsTime}}</span>
+                            <span class="item1">货好时间：</span>
+                            <span class="item2"></span>
                         </el-col>
                         <el-col :span="8">
                             <span class="item1">邮寄方式：</span>
-                            <span class="item2">{{item.mailingMethod}}</span>
+                            <span class="item2"></span>
                         </el-col>
                         <el-col :span="8" style="margin-top:8px">
-                            <span class="item1">订单类型：</span>
-                            <span class="item2">{{item.orderType}}</span>
+                            <span class="item1">预报件数：</span>
+                            <span class="item2"></span>
+                        </el-col>
+                        <el-col :span="8" style="margin-top:8px">
+                            <span class="item1">预报渠道：</span>
+                            <span class="item2"></span>
                         </el-col>
                     </el-row>
-                </el-collapse-item>
-                 <!-- 产品件数 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">产品件数</span>
-                            <span class="item-info"></span>
-                    </template>
+                </el-row>
+                <el-row class="line"></el-row>
+                 <!-- 入库入仓 -->
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">入库入仓</span>
+                        <span class="item-info"></span>
+                    </el-row>
                     <el-row style="margin-top:10px">
                         <el-col :span="8">
-                            <span class="item1">预报时间：</span>
+                            <span class="item1">入库时间：</span>
                             <span class="item2"></span>
                         </el-col>
                         <el-col :span="8">
-                            <span class="item1">货号时间：</span>
+                            <span class="item1">入库件数：</span>
                             <span class="item2"></span>
                         </el-col>
                         <el-col :span="8">
-                            <span class="item1">邮寄方式：</span>
+                            <span class="item1">入仓件数：</span>
                             <span class="item2"></span>
                         </el-col>
-                        <el-col :span="8" style="margin-top:16px">
-                            <span class="item1">订单类型：</span>
+                        <el-col :span="8" style="margin-top:8px">
+                            <span class="item1">入仓时间：</span>
                             <span class="item2"></span>
+                        </el-col>
+                        <el-col :span="8" style="margin-top:8px">
+                            <span class="item1">入仓员：</span>
+                            <span class="item2"></span>
+                        </el-col>
+                        <el-col :span="8" style="margin-top:8px">
+                            <span class="item1">入仓渠道：</span>
+                            <span class="item2"></span>
+                            <el-button class="button" type="text" @click="modify = true">修改</el-button>
                         </el-col>
                     </el-row>
-                </el-collapse-item>
-                <!-- 仓库 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">仓库</span>
-                            <span class="item-info"></span>
-                    </template>
-                    <el-row style="margin-top:10px">
-                        <el-col :span="8">
-                            <span class="item1">入库人：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1">入仓人：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1">出仓人：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                    </el-row>
-                </el-collapse-item>
+                </el-row>
+                <el-row class="line"></el-row>
                 <!-- 重量尺寸 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">重量尺寸</span>
-                            <span class="item-info"></span>
-                    </template>
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">重量尺寸</span>
+                        <span class="item-info"></span>
+                    </el-row>
                     <el-row style="margin-top:10px">
                         <el-row style="margin-bottom:8px">
-                            <el-col :span="8">
-                                <span class="item1">预报重量：</span>
-                                <span class="item2"></span>
-                            </el-col>
-                            <el-col :span="8">
-                                <span class="item1">预报方数：</span>
-                                <span class="item2"></span>
-                            </el-col>
                             <el-col :span="8">
                                 <span class="item1">实重：</span>
                                 <span class="item2"></span>
                             </el-col>
-                        </el-row>
-                        <el-row style="margin-bottom:8px">
                             <el-col :span="8">
-                                <span class="item1">实方：</span>
+                                <span class="item1">方数：</span>
                                 <span class="item2"></span>
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">材积重：</span>
                                 <span class="item2"></span>
                             </el-col>
+                        </el-row>
+                        <el-row style="margin-bottom:8px">
                             <el-col :span="8">
                                 <span class="item1">结算重：</span>
+                                <span class="item2"></span>
+                                <el-button type="text" style="padding:0" @click="changeAsettlement = true">查看</el-button>
+                            </el-col>
+                            <el-col :span="8">
+                                <span class="item1">改货重量：</span>
+                                <span class="item2"></span>
+                            </el-col>
+                            <el-col :span="8">
+                                <span class="item1">改货方数：</span>
                                 <span class="item2"></span>
                             </el-col>
                         </el-row>
                         <el-row style="margin-bottom:8px">
                             <el-col :span="8">
-                                <span class="item1">改货方数：</span>
+                                <span class="item1">改货材积重：</span>
                                 <span class="item2"></span>
                             </el-col>
                             <el-col :span="8">
@@ -193,67 +199,24 @@
                                 <span class="item2"></span>
                             </el-col>
                             <el-col :span="8">
-                                <span class="item1">改货材积重：</span>
+                                <span class="item1">改货结算重：</span>
                                 <span class="item2"></span>
+                                <el-button type="text" style="padding:0" @click="changeAsettlement = true">查看</el-button>
                             </el-col>
                         </el-row>
-                        <el-col :span="8">
-                            <span class="item1">改货结算重：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8">
+                        <!-- <el-col :span="8">
                             <span class="item1">代理结算重：</span>
                             <span class="item2"></span>
-                        </el-col>
+                        </el-col> -->
                     </el-row>
-                </el-collapse-item>
-                <!-- 渠道 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">渠道</span>
-                            <span class="item-info"></span>
-                    </template>
-                    <el-row style="margin-top:10px">
-                        <el-row style="margin-bottom:8px">
-                            <el-col :span="8">
-                                <span class="item1">预报渠道：</span>
-                                <span class="item2"></span>
-                            </el-col>
-                            <el-col :span="8">
-                                <span class="item1">入仓渠道：</span>
-                                <span class="item2"></span>
-                            </el-col>
-                            <el-col :span="8" v-if="change === 1">
-                                <span class="item1">出仓渠道：</span>
-                                <span class="item2"></span>
-                                <el-button class="button" type="text">修改</el-button>
-                            </el-col>
-                            <el-col :span="8" v-if="change === 2">
-                                <span class="item1">出库渠道：</span>
-                                <span class="item2"></span>
-                                <el-button class="button" type="text">修改</el-button>
-                            </el-col>
-                        </el-row>
-                        <el-row>
-                            <el-col :span="8" v-if="change === 1">
-                                <span class="item1">出仓代理：</span>
-                                <span class="item2"></span>
-                                <el-button class="button" type="text">修改</el-button>
-                            </el-col>
-                            <el-col :span="8" v-if="change === 2">
-                                <span class="item1">出库代理：</span>
-                                <span class="item2"></span>
-                                <el-button class="button" type="text">修改</el-button>
-                            </el-col>
-                        </el-row>
-                    </el-row>
-                </el-collapse-item>
+                </el-row>
+                <el-row class="line"></el-row>
                 <!-- 物流 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">物流</span>
-                            <span class="item-info"></span>
-                    </template>
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">物流</span>
+                        <span class="item-info"></span>
+                    </el-row>
                     <el-row style="margin-top:10px">
                         <el-row style="margin-bottom:8px">
                             <el-col :span="8">
@@ -264,39 +227,23 @@
                                 <span class="item1">目的地：</span>
                                 <span class="item2"></span>
                             </el-col>
-                            <el-col :span="8" v-if="change === 1">
-                                <span class="item1">派送类型：</span>
-                                <span class="item2"></span>
-                            </el-col>
-                        </el-row>
-                        <el-row v-if="change === 1">
                             <el-col :span="8">
-                                <span class="item1">派送状态：</span>
-                                <span class="item2"></span>
-                            </el-col>
-                            <el-col :span="8">
-                                <span class="item1">转单号</span>
-                                <span class="item2"></span>
-                                <el-button class="button" type="text">查看官网</el-button>
-                                <span style="color:#0084FF">｜</span>
-                                <el-button type="text">修改</el-button>
-                            </el-col>
-                            <el-col :span="8">
-                                <span class="item1">提号单：</span>
+                                <span class="item1">目的地邮编：</span>
                                 <span class="item2"></span>
                             </el-col>
                         </el-row>
                     </el-row>
-                </el-collapse-item>
+                </el-row>
+                <el-row class="line"></el-row>
                 <!-- 产品信息 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">产品信息</span>
-                            <span class="item-info"></span>
-                    </template>
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">产品信息</span>
+                        <span class="item-info"></span>
+                    </el-row>
                     <el-row style="margin-top:10px">
                         <el-col :span="8">
-                            <span class="item1">产品数量：</span>
+                            <span class="item1">装箱清单：</span>
                             <span class="item2"></span>
                             <el-button class="button" type="text">查看装箱清单</el-button>
                         </el-col>
@@ -306,20 +253,21 @@
                             <el-button class="button" type="text">查看</el-button>
                         </el-col>
                         <el-col :span="8">
-                            <span class="item1">申报价值：</span>
+                            <span class="item1">总申报价值：</span>
                             <span class="item2"></span>
                         </el-col>
                     </el-row>
-                </el-collapse-item>
+                </el-row>
+                <el-row class="line"></el-row>
                 <!-- 申报信息 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">申报信息</span>
-                            <span class="item-info"></span>
-                    </template>
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">申报信息</span>
+                        <span class="item-info"></span>
+                    </el-row>
                     <el-row style="margin-top:10px">
                         <el-col :span="8">
-                            <span class="item1">是否单独清关：</span>
+                            <span class="item1">单独清关：</span>
                             <span class="item2"></span>
                         </el-col>
                         <el-col :span="8">
@@ -331,70 +279,85 @@
                             <span class="item2"></span>
                             <el-button class="button" type="text">查看发票</el-button>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="8" style="margin-top:-20px">
                             <span class="item1">保险：</span>
                             <span class="item2"></span>
                             <el-button class="button" type="text">购买保险</el-button>
                         </el-col>
-                    </el-row>
-                </el-collapse-item>
-                <!-- 费用 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">费用</span>
-                            <span class="item-info">已确认：<span>{{total}}</span></span>
-                    </template>
-                    <el-row style="margin-top:10px">
                         <el-col :span="8">
-                            <span class="item1">费用确认：</span>
+                            <span class="item1" style="margin-top:-20px">VAT税号：</span>
                             <span class="item2"></span>
-                            <el-button class="button" type="text">撤回</el-button>
-                            <span style="color:#0084FF">｜</span>
-                            <el-button type="text">补录</el-button>
+                        </el-col>
+                        <el-col :span="8">
+                            <span class="item1" style="margin-top:-20px">递延：</span>
+                            <span class="item2"></span>
                         </el-col>
                     </el-row>
-                </el-collapse-item>
+                </el-row>
+                <el-row class="line"></el-row>
                 <!-- 备注 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">备注</span>
-                            <span class="item-info"></span>
-                    </template>
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">备注</span>
+                        <span class="item-info"></span>
+                    </el-row>
                     <el-row style="margin-top:10px">
                         <el-col :span="8">
                             <span class="item1">客户备注：</span>
                             <span class="item2"></span>
                         </el-col>
-                        <el-col :span="8">
+                        <el-col :span="8" style="margin-top:-10px">
                             <span class="item1">内部备注：</span>
                             <span class="item2"></span>
                             <el-button class="button" type="text">查看详情</el-button>
                         </el-col>
                     </el-row>
-                </el-collapse-item>
-                <!-- 货件编号 -->
-                <el-collapse-item>
-                    <template slot="title">
-                            <span class="headerTitle">货件编号（12件）</span>
-                            <span class="item-info"></span>
-                    </template>
+                </el-row>
+                <el-row class="line"></el-row>
+                <!-- 货件编号（FBA） -->
+                <el-row>
+                    <el-row>
+                        <span class="headerTitle">货件编号（12件）</span>
+                        <span class="item-info"></span>
+                    </el-row>
                     <el-row style="margin-top:10px">
                         <el-col :span="8">
                             <span class="item1">客户备注：</span>
                             <span class="item2"></span>
+                            <el-button class="button" type="text">下载FBA贴条</el-button>
                         </el-col>
                         <el-col :span="8">
                             <span class="item1">内部备注：</span>
                             <span class="item2"></span>
+                            <el-button class="button" type="text">下载FBA贴条</el-button>
                         </el-col>
                     </el-row>
-                </el-collapse-item>
-            </el-collapse>
+                </el-row>
+                <!-- 货件编号（非FBA） -->
+                <el-row v-if="a === false">
+                    <el-row>
+                        <span class="headerTitle">货件编号（12件）</span>
+                        <span class="item-info"></span>
+                    </el-row>
+                    <el-row style="margin-top:10px">
+                        <el-col :span="8">
+                            <span class="item1">客户备注：</span>
+                            <span class="item2"></span>
+                            <el-button class="button" type="text">下载FBA贴条</el-button>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="8">
+                            <span class="item1">内部备注：</span>
+                            <span class="item2"></span>
+                            <el-button class="button" type="text">下载FBA贴条</el-button>
+                        </el-col>
+                    </el-row>
+                </el-row>
         </el-row>
         <el-drawer
             :visible.sync="drawer"
-            size="50%"
-            :before-close="handleClose">
+            size="50%">
             <div slot="title" class="headTitle">页面显示设置</div>
            <el-row class="" style="padding:26px;text-align:left;background:#fff;margin-top:26px">
                <el-row style="display:flex;align-items:center">
@@ -438,12 +401,74 @@
             </el-table-column>
             <el-table-column label="顺序" min-width="150">
                 <template>
-                    <span>{{(num++)}}</span>
+                    <span>{{(num+1)}}</span>
                 </template>
             </el-table-column>
           </el-table>
           </div>
            </el-row>
+        </el-drawer>
+        <!-- 入仓入库-入仓渠道修改 -->
+        <el-dialog
+            title="入仓渠道修改"
+            :visible.sync="modify"
+            top="12%"
+            width="30%">
+            <div class="line" style="margin-top:-20px;margin-bottom:40px"></div>
+            <el-row class="Flexcenter">
+                <span class="item1">去仓渠道：</span>
+                <el-input placeholder="请输入去仓渠道" size="small" style="width:60%">
+                    <i slot="suffix" class="search" style="line-height:32px;margin-right:6px">&#xe9a1;</i>
+                </el-input>
+                <!-- <el-button type="text" style="margin-left:20px">确认</el-button>
+                <span style="color:#0084FF">｜</span>
+                <el-button type="text">取消</el-button> -->
+            </el-row>
+            <span slot="footer" class="dialog-footer">
+                <el-row class="line"></el-row>
+                <el-button class="wuBtn" @click="fileError = false" size="small">取 消</el-button>
+                <el-button class="orangeBtn" @click="fileError = false" size="small">确 定</el-button>
+            </span>
+        </el-dialog>
+        <el-drawer
+            :visible.sync="changeAsettlement"
+            size="50%">
+            <div slot="title" class="headTitle">改货结算重</div>
+            <div class="body">
+                <el-row class="orderId">{{orderId}}</el-row>
+                <el-row style="margin-top:16px">
+                    <span class="item1">客户名称：</span>
+                    <span class="item2">{{name}}</span>
+                </el-row>
+                <el-row class="line"></el-row>
+                <el-row style="margin-top:16px">
+                    <span class="item1">预报渠道：</span>
+                    <span class="item2">{{forecastChannel}}</span>
+                </el-row>
+                <el-row style="margin-top:16px">
+                    <span class="item1">件数：</span>
+                    <span class="item2">{{number}}</span>
+                </el-row>
+                <el-row style="margin-top:16px">
+                    <span class="item1">备注：</span>
+                    <span class="item2">{{note}}</span>
+                </el-row>
+                <div class="table" style="margin-top:16px">
+                    <el-table ref="multipleTable" :data="changeSettlementTable" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"
+                    :header-cell-style="{background: '#F5F5F6'}">
+                    <el-table-column prop="orderNum" label="货件编号" min-width="180" key="1"></el-table-column>
+                    <el-table-column prop="long" label="长（cm）" key="2"></el-table-column>
+                    <el-table-column prop="width" label="宽（cm）" key="3"></el-table-column>
+                    <el-table-column prop="high" label="高（cm）" key="4"></el-table-column>
+                    <el-table-column prop="squareNumber" label="方数（m³）" key="5"></el-table-column>
+                    <el-table-column prop="realWeight" label="实重（kg）" key="6"></el-table-column>
+                    <el-table-column prop="volumeWeight" label="材积重（kg）" min-width="120" key="7"></el-table-column>
+                    </el-table>
+                </div>
+                <el-row style="font-size: 14px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: #333333;margin-top:16px">
+                    <span>合计结算重：<span>{{total}}</span>公斤</span>
+                </el-row>
+            </div>
         </el-drawer>
     </div>
 </template>
@@ -452,6 +477,23 @@ export default {
   data () {
     return {
       total: '10000元 ', // 已确认金额
+      note: '走以星',
+      changeAsettlement: false, // 改货结算重
+      number: 6, // 件数
+      // 改货结算重表格
+      changeSettlementTable: [
+        {
+          orderNum: 'FBA15RY33MN8U000001',
+          long: '10.1',
+          width: '10.1',
+          high: '10.1',
+          squareNumber: '100.1',
+          realWeight: '28.5',
+          volumeWeight: '30'
+        }
+      ],
+      forecastChannel: '香港UPS红单5000', // 预报渠道
+      orderId: 'AS2012090001', // 改货结算重orderId
       fieldName: '',
       num: 0,
       drawer: false, // 页面显示设置
@@ -464,19 +506,8 @@ export default {
         orderType: 'FBA订单'
       }],
       receivingDriver: '李四', // 收货司机
-      // 收货司机列表
-      receivingDriverList: [{
-        name: '李四',
-        tel: '15990589231'
-      }],
       salesman: '张三', // 所属业务员
       // 业务员列表
-      salesmanList: [{
-        name: '张三',
-        tel: '15990589493',
-        position: '普通业务员',
-        superior: '高飞'
-      }],
       tableData: [
         {
           name: '客户信息'
@@ -485,6 +516,7 @@ export default {
           name: '业务员'
         }
       ], // 表格数据
+      modify: false, // 去仓渠道修改弹窗
       wayBill: 'AS202012120001', // 运单号
       customerInfo: '深圳大成亚马逊贸易科技有限公司', // 客户信息
       name: '深圳大成亚马逊贸易科技有限公司', // 客户名称
@@ -494,11 +526,38 @@ export default {
   },
   methods: {
     // 关闭抽屉
-    handleClose () {}
+    handleClose () {},
+    // 抽屉表格
+    tableChange () {}
   }
 }
 </script>
 <style lang="scss" scoped>
+.body{
+    text-align:left;
+    background: #fff;
+    margin-top: 26px;
+    padding: 20px 30px;
+}
+.orderId{
+    font-size: 20px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #FB4702;
+}
+.search{
+  font-family: "iconfont" !important;
+  font-size: 14px;
+  font-style: normal;
+  color: #000000;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.line{
+    height: 1px;
+    background: #E9E9E9;
+    margin: 14px 0 20px 0;
+}
 .formTitle{
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -534,7 +593,7 @@ export default {
     font-size: 14px;
     font-family: PingFangSC-Semibold, PingFang SC;
     font-weight: 400;
-    color: rgba(0, 0, 0, 0.85);
+    color: rgba(0, 0, 0, 0.65);
 }
 .item2{
     font-size: 14px;

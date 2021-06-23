@@ -179,7 +179,11 @@
             <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
             <el-col :span='12' class="left">
                 <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button>
-                <el-button class='stopBtn' @click="batchArchive" size="small">批量归档</el-button>
+                <el-button class='stopBtn' @click="batchArchive" size="small">批量设置出库渠道</el-button>
+                <el-button class='stopBtn' @click="Export" size="small">批量出仓</el-button>
+                <el-button class='stopBtn' @click="Export" size="small">批量扣货</el-button>
+                <el-button class='stopBtn' size="small" @click="dialogRelease = true">批量放货</el-button>
+                <el-button class='stopBtn' @click="Export" size="small">批量导出发票</el-button>
             </el-col>
             <el-col :span='12' class="right">
                 <el-button class='whiteBtn' @click="visibleQueryCondition = true">查询条件设置</el-button>
@@ -265,7 +269,7 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="changeGoodsSettlementW" label="改货结算重" min-width="80" key="17">
+                <el-table-column prop="changeGoodsSettlementW" label="改货结算重" min-width="100" key="17">
                     <template slot-scope="scope">
                         <span class="Right">{{scope.row.settlementWeight}}</span>
                         <el-button type="text" @click="changeGoodsWeight(scope.row)">修改</el-button>
@@ -287,10 +291,11 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="mailingMethod" label="寄件方式" min-width="80" key="20"></el-table-column>
-                <el-table-column prop="forecastNum" label="预报件数" min-width="180" key="21">
+                <el-table-column prop="forecastNum" label="预报件数" min-width="150" key="21">
                     <template slot-scope="scope">
                         <span class="forecastNo">{{scope.row.forecastNum}}</span>
                         <span class="electrified">带电</span>
+                        <!-- <el-button type="text">装箱清单</el-button> -->
                     </template>
                 </el-table-column>
                 <el-table-column prop="goodsNum" label="收货件数" min-width="80" key="22"></el-table-column>
@@ -330,7 +335,7 @@
                 </el-table-column>
                 <el-table-column prop="destinationCountry" label="目的国" min-width="80" key="32"></el-table-column>
                 <el-table-column prop="destination" label="目的地" min-width="80" key="33"></el-table-column>
-                <el-table-column prop="destinationPostcode" label="目的地邮编" min-width="80" key="34"></el-table-column>
+                <el-table-column prop="destinationPostcode" label="目的地邮编" min-width="100" key="34"></el-table-column>
                 <el-table-column prop="forecastChannel" label="预报渠道" min-width="80" key="35"></el-table-column>
                 <el-table-column prop="customsType" label="报关类型" min-width="80" key="36"></el-table-column>
                 <el-table-column prop="aloneClearance" label="单独清关" min-width="80" key="37"></el-table-column>
@@ -359,7 +364,7 @@
                         <el-button type="text" @click="innerRemarksCheck(scope.row)">修改</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="insurance" label="是否有保险" min-width="80" key="44"></el-table-column>
+                <el-table-column prop="insurance" label="是否有保险" min-width="100" key="44"></el-table-column>
                 <el-table-column prop="salesman" label="业务员" min-width="130" key="45">
                     <template slot-scope="scope">
                             <span class="Right">{{scope.row.salesman}}</span>
@@ -399,13 +404,14 @@
                 <el-table-column prop="WithholdingStatus" label="扣货状态" min-width="80" key="49"></el-table-column>
                 <el-table-column prop="coordination" label="协同" min-width="80" key="50"></el-table-column>
                 <!-- 操作 -->
-                <el-table-column label="操作" min-width="240" key="51">
+                <el-table-column label="操作" min-width="220" key="51">
                     <template slot-scope="scope">
                         <el-button type="text" @click="check(scope.row)">查看详情</el-button>
                         <span class="ele">｜</span>
                         <el-button type="text" @click="detentionCargo(scope.row)">扣货</el-button>
                         <span class="ele">｜</span>
-                        <el-button type="text" @click="checkInvoice(scope.row)">查看发票</el-button>
+                        <el-button type="text" @click="RELEASE(scope.row)">放货</el-button>
+                        <!-- <el-button type="text" @click="checkInvoice(scope.row)">查看发票</el-button> -->
                         <span class="ele">｜</span>
                         <el-button type="text" @click="Delivery(scope.row)">出库</el-button>
                     </template>
@@ -424,18 +430,66 @@
                 @current-change="handleCurrentChange">
               </el-pagination>
           </div>
-          <!-- 批量归档弹窗 -->
+          <!-- 批量扣货 -->
           <el-dialog
-            title="批量归档"
+            title="批量扣货"
             :visible.sync="dialogFile"
             top="12%"
             width="30%">
-            <div class="line" style="margin-top:-20px;margin-bottom:40px"></div>
-            <div class="number">是否对这<span> {{number}} </span>笔运单批量进行归档</div>
+            <div class="line" style="margin-top:-20px;margin-bottom:20px"></div>
+            <div class="number">是否对这<span> {{number}} </span>笔运单批量进行扣货处理</div>
+            <div class="number" style="margin:14px 0 10px 0">扣货原因</div>
+            <el-input type="textarea" rows=5 placeholder="请输入扣货原因" v-model="DetentionCargo"></el-input>
             <span slot="footer" class="dialog-footer">
                 <el-row class="line"></el-row>
                 <el-button class="wuBtn" @click="dialogFile = false" size="small">取 消</el-button>
                 <el-button class="orangeBtn" @click="dialogFile = false" size="small">确 定</el-button>
+            </span>
+            </el-dialog>
+            <!-- 单个扣货 -->
+          <el-dialog
+            title="扣货"
+            :visible.sync="singleDetentionCargo"
+            top="12%"
+            width="30%">
+            <div class="line" style="margin-top:-20px;margin-bottom:20px"></div>
+            <div class="number" style="margin:14px 0 10px 0">扣货原因</div>
+            <el-input type="textarea" rows=5 placeholder="请输入扣货原因" v-model="singleDeliveryCoods"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-row class="line"></el-row>
+                <el-button class="wuBtn" @click="dialogRelease = false" size="small">取 消</el-button>
+                <el-button class="orangeBtn" @click="dialogRelease = false" size="small">确 定</el-button>
+            </span>
+            </el-dialog>
+            <!-- 批量放货 -->
+          <el-dialog
+            title="批量放货"
+            :visible.sync="dialogRelease"
+            top="12%"
+            width="30%">
+            <div class="line" style="margin-top:-20px;margin-bottom:20px"></div>
+            <div class="number">是否对这<span> {{number}} </span>笔运单批量进行放货处理</div>
+            <div class="number" style="margin:14px 0 10px 0">放货原因</div>
+            <el-input type="textarea" rows=5 placeholder="请输入放货原因" v-model="deliveryCoods"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-row class="line"></el-row>
+                <el-button class="wuBtn" @click="dialogRelease = false" size="small">取 消</el-button>
+                <el-button class="orangeBtn" @click="dialogRelease = false" size="small">确 定</el-button>
+            </span>
+            </el-dialog>
+            <!-- 单个放货 -->
+          <el-dialog
+            title="批量放货"
+            :visible.sync="singleRelease"
+            top="12%"
+            width="30%">
+            <div class="line" style="margin-top:-20px;margin-bottom:20px"></div>
+            <div class="number" style="margin:14px 0 10px 0">放货理由</div>
+            <el-input type="textarea" rows=5 placeholder="请输入放货理由" v-model="Release"></el-input>
+            <span slot="footer" class="dialog-footer">
+                <el-row class="line"></el-row>
+                <el-button class="wuBtn" @click="dialogRelease = false" size="small">取 消</el-button>
+                <el-button class="orangeBtn" @click="dialogRelease = false" size="small">确 定</el-button>
             </span>
             </el-dialog>
             <!-- 批量搜索 -->
@@ -470,6 +524,21 @@
                     <el-button class="wuBtn" @click="fileError = false" size="small">取 消</el-button>
                     <el-button class="orangeBtn" @click="fileError = false" size="small">确 定</el-button>
                 </span>
+            </el-dialog>
+            <!-- 出库弹窗 -->
+            <el-dialog
+            :visible.sync="dialogStop"
+            top="10%"
+            width="30%">
+            <div slot="title" class="left">无法出库</div>
+            <div class="flex align-center">
+                <div class="icon" style="font-size: 58px; color: #FF0000;margin-right: 20px">&#xe781;</div>
+                <div>抱歉！运单{{prohibit}}无法出库因为该运单已被扣货</div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-button class="wuBtn" @click="dialogStop = false">取 消</el-button>
+                <el-button class="orangeBtn" @click="dialogStop = false">确 定</el-button>
+            </span>
             </el-dialog>
 
           <!-- 查询条件设置 -->
@@ -614,7 +683,16 @@
 export default {
   data () {
     return {
-      dialogFile: false, // 批量归档对话框
+      prohibit: 'AS202012120001', // 无法出库订单id
+      dialogFile: false, // 批量扣货
+      DetentionCargo: '', // 请输入批量扣货
+      singleRelease: false, // 单个放货
+      singleDetentionCargo: false, // 单个扣货
+      Release: '', // 请输入单个放货
+      dialogStop: true, // 无法出库弹窗
+      singleDeliveryCoods: '', // 请输入单个扣货
+      dialogRelease: false, // 批量放货
+      deliveryCoods: '', // 请输入批量放货
       queryName: '', // 查询名称
       listQueryName: '', // 列表显示设置
       visibleQueryCondition: false, // 查询条件设置
@@ -790,6 +868,14 @@ export default {
         item.status = true
       })
     },
+    // 单个放货
+    RELEASE () {
+      this.singleRelease = true
+    },
+    // 出库
+    Delivery () {
+      this.dialogStop = true
+    },
     // 列表显示设置
     listChange (val) {
       this.listData.forEach(item => {
@@ -808,6 +894,10 @@ export default {
       val.forEach((item) => {
         item.status = true
       })
+    },
+    // 单个扣货
+    detentionCargo () {
+      this.singleDetentionCargo = true
     },
     // 预报单号查看
     forecastNoCheck (val) {
@@ -893,6 +983,14 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.icon {
+  font-family: "iconfont" !important;
+  font-size: 14px;
+  font-style: normal;
+  color: #FE822F;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 /deep/ .el-checkbox {
   .el-checkbox__input.is-checked .el-checkbox__inner,
        .el-checkbox__input.is-indeterminate .el-checkbox__inner {
@@ -951,9 +1049,9 @@ export default {
     color: rgba(0, 0, 0, 0.65);
 }
 .number{
-    font-size: 16px;
+    font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 500;
+    font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
     }
 .block{

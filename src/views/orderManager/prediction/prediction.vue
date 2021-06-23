@@ -87,15 +87,16 @@
         </el-row>
         <el-divider></el-divider>
         <div class='table'>
-          <el-row class='tableBtn'>
+          <!-- <el-row class='tableBtn'>
             <el-col :span='12' class='left'>
-              <el-button class='orangeBtn long1' style="width:130px">批量导出Excel</el-button>
+              <el-button class='orangeBtn long1' size="samll"
+              style="width:130px;background: #FEF4E1;color: rgba(0, 0, 0, 0.65);" @click="visibleList = true">批量导出Excel</el-button>
             </el-col>
             <el-col :span='12' class='right'>
               <el-button class='whiteBtn '>查询条件设置</el-button>
               <el-button class='whiteBtn '>列表显示设置</el-button>
             </el-col>
-          </el-row>
+          </el-row> -->
           <!--  -->
           <el-table
             :data='tableData'
@@ -231,6 +232,11 @@
                     <el-button class="whiteBtn" style="margin-left:20px">查看配置</el-button>
                   </el-row>
                   <el-row class="mainSearch">请选择需要导出Excel的字段</el-row>
+                  <!-- 全选/反选 -->
+                  <div class="Flexcenter" style="margin-left:24px">
+                    <el-checkbox v-model="checked" @change="checked1"/>
+                    <span class="checked1">全部</span>
+                  </div>
                   <el-tree
                   ref="tree"
                   :default-checked-keys="roleData"
@@ -239,7 +245,7 @@
                   @check-change="handleCheckChange"
                   default-expand-all
                   node-key="id"
-                  :props="{label: 'title'}">
+                  :props="{label: 'label'}">
                 </el-tree>
               </div>
             <el-row style="background:#fff;text-align:left;padding:26px;margin-top:26px">
@@ -301,13 +307,46 @@ export default {
         }
       ],
 
-      visibleList: true, // 批量导出
+      visibleList: false, // 批量导出
       listQueryName: '', // 导出配置名称
       // 树组
-      props: {
-        label: '客户信息',
-        children: 'zones'
-      }
+      data: [
+        {
+          label: '客户信息',
+          id: 1,
+          children: [{
+            label: '客户名称',
+            id: '1-1'
+          },
+          {
+            label: '客户编码',
+            id: '1-2'
+          }]
+        },
+        {
+          label: '运号',
+          id: 2,
+          children: [{
+            label: '订单类型',
+            id: '2-1'
+          },
+          {
+            label: '运单号',
+            id: '2-2'
+          },
+          {
+            label: '预报单号',
+            id: '2-3'
+          },
+          {
+            label: '货件编号',
+            id: '2-4'
+          }
+          ]
+        }
+      ],
+      roleData: [],
+      checked: ''
     }
   },
   methods: {
@@ -315,35 +354,44 @@ export default {
     handleClick (val) {
       console.log(val)
     },
+    // 全选/反选
+    checked1 (val) {
+      console.log(val)
+      if (this.checked) { // 全选
+        this.$refs.tree.setCheckedNodes(this.data)
+      } else { // 取消选中
+        this.$refs.tree.setCheckedKeys([])
+      }
+    },
     // 保存配置
     preservation () {},
     // 回调
     handleCheckChange (data, checked, indeterminate) {
-      console.log(data, checked, indeterminate)
-    },
-    loadNode (node, resolve) {
-      console.log(node, resolve)
-      if (node.level === 0) {
-        return resolve([{ name: 'label' }])
-      }
-      if (node.level > 1) return resolve([])
-
-      setTimeout(() => {
-        const data = [{
-          name: 'leaf',
-          leaf: true
-        }, {
-          name: 'zone'
-        }]
-
-        resolve(data)
-      }, 500)
+      // console.log(data)
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
+.SelectedNodeStyle{
+  margin: 10px 0;
+}
+.checked1{
+  font-size: 16px;
+  margin-left: 10px;
+  font-family: PingFangSC-Semibold, PingFang SC;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+}
+.el-tree {
+    /deep/ .el-tree-node__children {
+        display: flex;
+        .el-tree-node__children {
+            display: flex;
+        }
+    }
+}
 .mainSearch{
   font-size: 16px;
   margin: 26px 0 16px 0;
