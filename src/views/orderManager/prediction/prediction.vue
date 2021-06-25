@@ -87,7 +87,7 @@
         </el-row>
         <el-divider></el-divider>
         <div class='table'>
-          <!-- <el-row class='tableBtn'>
+          <el-row class='tableBtn'>
             <el-col :span='12' class='left'>
               <el-button class='orangeBtn long1' size="samll"
               style="width:130px;background: #FEF4E1;color: rgba(0, 0, 0, 0.65);" @click="visibleList = true">批量导出Excel</el-button>
@@ -96,7 +96,7 @@
               <el-button class='whiteBtn '>查询条件设置</el-button>
               <el-button class='whiteBtn '>列表显示设置</el-button>
             </el-col>
-          </el-row> -->
+          </el-row>
           <!--  -->
           <el-table
             :data='tableData'

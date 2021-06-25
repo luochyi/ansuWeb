@@ -8,8 +8,8 @@
                     <el-col :span="6" class="item">
                         <span class="item-box">运单号&nbsp;&nbsp;</span>
                         <el-input placeholder="请输入" class="input" v-model="form.wayBillNo" size="small">
-                            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer ">批量</i>
-                            <i slot="suffix" class="expend">&#xe9cc;</i>
+                            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
+                            <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i>
                         </el-input>
                     </el-col>
                     <el-col :span="6" class="item">
@@ -1819,6 +1819,8 @@ export default {
 }
 .input{
     width: 70%;
+    display: flex;
+    align-items: center;
 }
 .box{
     background: #fff;
