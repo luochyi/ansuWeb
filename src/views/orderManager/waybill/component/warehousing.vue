@@ -177,15 +177,16 @@
                 <el-row class="line"></el-row>
             </div>
             <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
-            <el-col :span='12' class="left">
+            <el-col :span='14' class="left">
                 <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button>
-                <el-button class='stopBtn' @click="batchArchive" size="small">批量设置出库渠道</el-button>
-                <el-button class='stopBtn' @click="Export" size="small">批量出仓</el-button>
-                <el-button class='stopBtn' @click="Export" size="small">批量扣货</el-button>
+                <el-button class='stopBtn' @click="batchSendChannel" size="small">批量设置出库渠道</el-button>
+                <el-button class='stopBtn' @click="batchModifyChannel" size="small">批量修改入仓渠道</el-button>
+                <el-button class='stopBtn' @click="batchWarehouse" size="small">批量出仓</el-button>
+                <el-button class='stopBtn' @click="batchArchive" size="small">批量扣货</el-button>
                 <el-button class='stopBtn' size="small" @click="dialogRelease = true">批量放货</el-button>
                 <el-button class='stopBtn' @click="Export" size="small">批量导出发票</el-button>
             </el-col>
-            <el-col :span='12' class="right">
+            <el-col :span='10' class="right">
                 <el-button class='whiteBtn' @click="visibleQueryCondition = true">查询条件设置</el-button>
                 <el-button class='whiteBtn' @click="visibleList = true">列表显示设置</el-button>
             </el-col>
@@ -278,14 +279,14 @@
                 <el-table-column prop="warehousingChannel" label="入仓渠道" min-width="80" key="18">
                     <template slot-scope="scope">
                         <span class="Right">{{scope.row.warehousingChannel}}</span>
-                        <el-button type="text" @click="warehousingChannelModify(scope.row)">修改</el-button>
+                        <el-button type="text" @click="modifyChanel(scope.row)">修改</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column label="发票" min-width="180" key="19">
                     <template slot-scope="scope">
-                        <div class="rows">
+                        <div class="Flexchannel">
                                 <div class="dot"></div>
-                                <span class="ele" style="color:#333333;margin-right:10px">已做发票</span>
+                                <span class="ele" style="color:#333333;margin-right:40px">已做发票</span>
                                 <el-button type="text" @click="invoiceDetials(scope.row)">详情</el-button>
                         </div>
                     </template>
@@ -414,7 +415,7 @@
                 </el-table-column>
                 <el-table-column prop="coordination" label="协同" min-width="80" key="50"></el-table-column>
                 <!-- 操作 -->
-                <el-table-column label="操作" min-width="220" key="51">
+                <el-table-column label="操作" min-width="220" key="51" fixed="right">
                     <template slot-scope="scope">
                         <el-button type="text" @click="check(scope.row)">查看详情</el-button>
                         <span class="ele">｜</span>
@@ -771,59 +772,391 @@
             </el-drawer>
             <!-- 表格入仓渠道修改抽屉 -->
             <el-drawer
-            title="扣货"
+            title="修改入仓渠道"
             :visible.sync="visibleChanel"
+            :wrapperClosable='false'
+            :before-close="handleClose"
+            size="50%">
+            <div style="padding:0 26px">
+                <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                    <el-row>
+                        <el-row>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">所属公司：</span>
+                                <span>{{custodyCompany}}</span>
+                            </el-col>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">客户名称：</span>
+                                <span>{{CustomerName}}</span>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px">
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">运单号：</span>
+                                <span>{{orderNo}}</span>
+                            </el-col>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">业务员：</span>
+                                <span>{{salesman}}</span>
+                            </el-col>
+                        </el-row>
+                        <el-row class="line" style="margin-bottom:30px"></el-row>
+                        <el-row class="Flexcenter">
+                            <el-col :span="2" class="channel">渠道名称</el-col>
+                            <el-col :span="8" style="display:flex;justify-content:flex-start">
+                                <el-input placeholder="请输入渠道名称/编码" size="small" v-model="channelCode"></el-input>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-button class="orangeBtn" style="margin-left:20px">查询</el-button>
+                            </el-col>
+                            <el-col :span="10" style="display:flex;justify-content:flex-end" v-if="add === false">
+                                <el-button class="whiteBtn" style="margin-left:20px" @click="modifyHistory">修改历史</el-button>
+                            </el-col>
+                            <el-col :span="10" style="display:flex;justify-content:flex-end" v-if="add === true">
+                                <el-button class="whiteBtn" style="margin-left:20px">新增渠道</el-button>
+                            </el-col>
+                        </el-row>
+                        <div class="CHANNEL" style="margin-top:26px">
+                            <el-table ref="multipleTable" :data="chaanelData" border  tooltip-effect="dark" style="width: 100%"
+                                @selection-change="channelChange" :header-cell-style="{background: '#F5F5F6'}">
+                                <el-table-column type="selection" width="50" key="1"></el-table-column>
+                                <el-table-column prop="channelName" label="渠道名称" key="2"></el-table-column>
+                                <el-table-column prop="channelCode" label="渠道编码" key="3"></el-table-column>
+                            </el-table>
+                        </div>
+                    </el-row>
+                </div>
+            </div>
+            <div class="drawer_btn">
+                <el-button class="orangeBtn" size="small" icon="el-icon-circle-check" @click="drawerChannelConfirm">确 认</el-button>
+                <el-button  class="wuBtn" size="small" style="margin-left:20px;line-height:30px">取 消</el-button>
+            </div>
+            </el-drawer>
+            <!-- 修改入仓渠道错误框 -->
+            <el-dialog
+            :visible.sync="dialogChannelError"
+            top="10%"
+            width="30%">
+            <div slot="title" class="left">无法修改入仓渠道</div>
+            <el-row class="line" style="margin-top:-20px"></el-row>
+            <div class="flex align-center">
+                <div class="icon" style="font-size: 58px; color: #FF0000;margin-right: 20px">&#xe781;</div>
+                <div>抱歉！无法修改
+                    <div>运单{{prohibit}}的目的地为美国</div>
+                    修改后的入仓渠道英国海运不支持该目的地
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-row class="line" style="margin-top:-20px"></el-row>
+                <el-button class="wuBtn" @click="dialogChannelError = false">取 消</el-button>
+                <el-button class="orangeBtn" @click="dialogChannelError = false">确 定</el-button>
+            </span>
+            </el-dialog>
+            <!-- 修改入仓渠道--修改历史 -->
+            <el-drawer
+            title="入仓渠道修改历史"
+            :visible.sync="visibleModifyHistory"
             :wrapperClosable='false'
             size="50%">
             <div style="padding:0 26px">
                 <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
-                <el-row>
                     <el-row>
-                        <el-col :span="12" class="font flex align-center">
-                            <span style="width:18%;text-align:right">所属公司：</span>
-                            <span>{{custodyCompany}}</span>
-                        </el-col>
-                        <el-col :span="12" class="font flex align-center">
-                            <span style="width:18%;text-align:right">客户名称：</span>
-                            <span>{{CustomerName}}</span>
-                        </el-col>
+                        <el-row>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">所属公司：</span>
+                                <span>{{custodyCompany}}</span>
+                            </el-col>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">客户名称：</span>
+                                <span>{{CustomerName}}</span>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px">
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">运单号：</span>
+                                <span>{{orderNo}}</span>
+                            </el-col>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">业务员：</span>
+                                <span>{{salesman}}</span>
+                            </el-col>
+                        </el-row>
+                        <el-row class="line" style="margin-bottom:30px"></el-row>
+                        <div class="CHANNEL" style="margin-top:26px">
+                            <el-table ref="multipleTable" :data="channelModifyData" border  tooltip-effect="dark" style="width: 100%"
+                            :header-cell-style="{background: '#F5F5F6'}">
+                                <el-table-column prop="modifyTime" label="修改时间" key="1"></el-table-column>
+                                <el-table-column prop="modifyBeforChannel" label="修改前渠道" key="2"></el-table-column>
+                                <el-table-column prop="modifyBeforChannel" label="修改后渠道" key="3"></el-table-column>
+                                <el-table-column prop="reviser" label="修改人" key="4"></el-table-column>
+                            </el-table>
+                        </div>
                     </el-row>
-                    <el-row style="margin-top:20px">
-                        <el-col :span="12" class="font flex align-center">
-                            <span style="width:18%;text-align:right">运单号：</span>
-                            <span>{{orderNo}}</span>
-                        </el-col>
-                        <el-col :span="12" class="font flex align-center">
-                            <span style="width:18%;text-align:right">业务员：</span>
-                            <span>{{salesman}}</span>
-                        </el-col>
-                    </el-row>
-                    <el-row class="line" style="margin-bottom:30px"></el-row>
-                    <el-row class="Flexcenter">
-                        <el-col :span="2" class="channel">渠道名称</el-col>
-                        <el-col :span="8" style="display:flex;justify-content:flex-start">
-                            <el-input placeholder="请输入渠道名称/编码" size="small" v-model="channelCode"></el-input>
-                        </el-col>
-                        <el-col :span="4">
-                            <el-button class="orangeBtn" style="margin-left:20px">查询</el-button>
-                        </el-col>
-                        <el-col :span="10" style="display:flex;justify-content:flex-end">
-                            <el-button class="whiteBtn" style="margin-left:20px">修改历史</el-button>
-                        </el-col>
-                    </el-row>
-                    <div class="CHANNEL">
-                        <el-table ref="multipleTable" :data="chaanelData" border  tooltip-effect="dark" style="width: 100%"
-                            @selection-change="channelChange" :header-cell-style="{background: '#F5F5F6'}"
-                            @row-click="rowClick" :row-class-name="tableRowClassName" :row-style="selectedHighlight">
-                            <el-table-column type="selection" width="50" key="1"></el-table-column>
-                            <el-table-column prop="channelName" label="渠道名称" key="2"></el-table-column>
-                            <el-table-column prop="channelCode" label="渠道编码" key="3"></el-table-column>
-                        </el-table>
-                    </div>
-                </el-row>
                 </div>
             </div>
+            <div class="drawer_btn">
+                <el-button class="orangeBtn" size="small" icon="el-icon-circle-check" @click="visibleModifyHistory = false">
+                    确 认
+                </el-button>
+                <el-button  class="wuBtn" size="small" style="margin-left:20px;line-height:30px" @click="visibleModifyHistory = false">
+                    取 消
+                </el-button>
+            </div>
             </el-drawer>
+            <!-- 单个表格出库抽屉 -->
+            <el-drawer
+            title="出仓渠道"
+            :visible.sync="visibleOutletChanel"
+            :wrapperClosable='false'
+            :before-close="handleOutletClose"
+            size="50%">
+            <div style="padding:0 26px">
+                <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                    <el-row>
+                        <el-row>
+                            <el-row style="display:flex;align-items:center">
+                                <el-col :span="3" style="display:flex;">
+                                <div style="display:flex;flex-direction: column;align-items:center">
+                                    <div class="circle">1</div>
+                                    <div>选择渠道</div>
+                                </div>
+                                </el-col>
+                                <el-col :span="2">
+                                    <img src="@/assets/jiantou.png" alt="">
+                                </el-col>
+                                <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="change === 1">
+                                    <div class="circle1">2</div>
+                                    <div>选择代理</div>
+                                </el-col>
+                                <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="change === 2">
+                                    <div class="circle">2</div>
+                                    <div>选择代理</div>
+                                </el-col>
+                            </el-row>
+                            <el-row class="line"></el-row>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">所属公司：</span>
+                                <span>{{custodyCompany}}</span>
+                            </el-col>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">客户名称：</span>
+                                <span>{{CustomerName}}</span>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px">
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">运单号：</span>
+                                <span>{{orderNo}}</span>
+                            </el-col>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">业务员：</span>
+                                <span>{{salesman}}</span>
+                            </el-col>
+                        </el-row>
+                        <el-row class="line" style="margin-bottom:30px"></el-row>
+                        <!-- 选择渠道 -->
+                        <el-row class="Flexcenter" v-if="change === 1">
+                            <el-col :span="2" class="channel">渠道名称</el-col>
+                            <el-col :span="8" style="display:flex;justify-content:flex-start">
+                                <el-input placeholder="请输入渠道名称/编码" size="small" v-model="channelCode"></el-input>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-button class="orangeBtn" style="margin-left:20px">查询</el-button>
+                            </el-col>
+                        </el-row>
+                        <!-- 选择代理 -->
+                        <el-row class="Flexcenter" v-if="change === 2">
+                            <el-col :span="2" class="channel">代理名称</el-col>
+                            <el-col :span="8" style="display:flex;justify-content:flex-start">
+                                <el-input placeholder="请输入渠道名称/编码" size="small" v-model="agentName"></el-input>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-button class="orangeBtn" style="margin-left:20px">查询</el-button>
+                            </el-col>
+                        </el-row>
+                        <!-- 单选选择渠道表格 -->
+                        <div class="CHANNEL" style="margin-top:26px" v-if="change === 1">
+                            <el-table ref="multipleTable" :data="changeChannelData" border  tooltip-effect="dark" style="width: 100%"
+                            :header-cell-style="{background: '#F5F5F6'}" @select="select" @select-all="selectAll">
+                                <el-table-column type="selection" key="1"></el-table-column>
+                                <el-table-column prop="name" label="渠道名称" key="2" min-width="300"></el-table-column>
+                                <el-table-column prop="code" label="渠道编码" key="3"></el-table-column>
+                            </el-table>
+                        </div>
+                        <!-- 单选选择代理表格 -->
+                        <div class="CHANNEL" style="margin-top:26px" v-if="change === 2">
+                            <el-table ref="multipleTable" :data="changeAgentlData" border  tooltip-effect="dark" style="width: 100%"
+                            :header-cell-style="{background: '#F5F5F6'}" @select="select" @select-all="selectAll">
+                                <el-table-column type="selection" key="1"></el-table-column>
+                                <el-table-column prop="name" label="代理名称" key="2" min-width="300"></el-table-column>
+                                <el-table-column prop="code" label="代理编码" key="3"></el-table-column>
+                            </el-table>
+                        </div>
+
+                        <!-- 多选选择渠道表格 -->
+                        <div class="CHANNEL" style="margin-top:26px" v-if="change === 3">
+                            <el-table ref="multipleTable" :data="changeChannelData" border  tooltip-effect="dark" style="width: 100%"
+                            :header-cell-style="{background: '#F5F5F6'}"  @select="select" @select-all="selectAll">
+                                <el-table-column type="selection" key="1"></el-table-column>
+                                <el-table-column prop="name" label="渠道名称" key="2" min-width="300"></el-table-column>
+                                <el-table-column prop="code" label="渠道编码" key="3"></el-table-column>
+                            </el-table>
+                        </div>
+                        <!-- 多选选择代理表格 -->
+                        <div class="CHANNEL" style="margin-top:26px" v-if="change === 4">
+                            <el-table ref="multipleTable" :data="changeAgentlData" border  tooltip-effect="dark" style="width: 100%"
+                            :header-cell-style="{background: '#F5F5F6'}">
+                                <el-table-column type="selection" key="1"></el-table-column>
+                                <el-table-column prop="name" label="代理名称" key="2" min-width="300"></el-table-column>
+                                <el-table-column prop="code" label="代理编码" key="3"></el-table-column>
+                            </el-table>
+                        </div>
+                    </el-row>
+                </div>
+            </div>
+            <div class="drawer_btn">
+                <el-button class="orangeBtn" size="small" @click="change = 2" v-if="change === 1">
+                    下一步
+                </el-button>
+                <el-button class="orangeBtn" size="small" icon="el-icon-circle-check" @click="dialogConfirmChannel = true"
+                v-if="change === 2">
+                    确 认
+                </el-button>
+                <el-button class="orangeBtn" size="small" @click="change = 1" v-if="change === 2" style="margin-left:20px">
+                    上一步
+                </el-button>
+                <el-button  type="info" size="small" style="margin-left:20px;line-height:10px" @click="falseOutletChanel">
+                    取 消
+                </el-button>
+            </div>
+            </el-drawer>
+            <!-- 多个表格出库抽屉 -->
+            <el-drawer
+            title="出仓渠道"
+            :visible.sync="visibleManyOutletChanel"
+            :wrapperClosable='false'
+            :before-close="handleManyOutletClose"
+            size="50%">
+            <div style="padding:0 26px">
+                <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                    <el-row>
+                        <el-row>
+                            <el-row style="display:flex;align-items:center">
+                                <el-col :span="3" style="display:flex;">
+                                <div style="display:flex;flex-direction: column;align-items:center">
+                                    <div class="circle">1</div>
+                                    <div>选择渠道</div>
+                                </div>
+                                </el-col>
+                                <el-col :span="2">
+                                    <img src="@/assets/jiantou.png" alt="">
+                                </el-col>
+                                <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="change === 3">
+                                    <div class="circle1">2</div>
+                                    <div>选择代理</div>
+                                </el-col>
+                                <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="change === 4">
+                                    <div class="circle">2</div>
+                                    <div>选择代理</div>
+                                </el-col>
+                            </el-row>
+                            <el-row class="line"></el-row>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">所属公司：</span>
+                                <span>{{custodyCompany}}</span>
+                            </el-col>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">客户名称：</span>
+                                <span>{{CustomerName}}</span>
+                            </el-col>
+                        </el-row>
+                        <el-row style="margin-top:20px">
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">运单号：</span>
+                                <span>{{orderNo}}</span>
+                            </el-col>
+                            <el-col :span="12" class="font flex align-center">
+                                <span style="width:18%;text-align:right">业务员：</span>
+                                <span>{{salesman}}</span>
+                            </el-col>
+                        </el-row>
+                        <el-row class="line" style="margin-bottom:30px"></el-row>
+                        <!-- 选择渠道 -->
+                        <el-row class="Flexcenter" v-if="change === 1">
+                            <el-col :span="2" class="channel">渠道名称</el-col>
+                            <el-col :span="8" style="display:flex;justify-content:flex-start">
+                                <el-input placeholder="请输入渠道名称/编码" size="small" v-model="channelCode"></el-input>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-button class="orangeBtn" style="margin-left:20px">查询</el-button>
+                            </el-col>
+                        </el-row>
+                        <!-- 选择代理 -->
+                        <el-row class="Flexcenter" v-if="change === 2">
+                            <el-col :span="2" class="channel">代理名称</el-col>
+                            <el-col :span="8" style="display:flex;justify-content:flex-start">
+                                <el-input placeholder="请输入渠道名称/编码" size="small" v-model="agentName"></el-input>
+                            </el-col>
+                            <el-col :span="4">
+                                <el-button class="orangeBtn" style="margin-left:20px">查询</el-button>
+                            </el-col>
+                        </el-row>
+                        <!-- 多选选择渠道表格 -->
+                        <div class="CHANNEL" style="margin-top:26px" v-if="change === 3">
+                            <el-table ref="multipleTable" :data="changeChannelData" border  tooltip-effect="dark" style="width: 100%"
+                            :header-cell-style="{background: '#F5F5F6'}">
+                                <el-table-column type="selection" key="1"></el-table-column>
+                                <el-table-column prop="name" label="渠道名称" key="2" min-width="300"></el-table-column>
+                                <el-table-column prop="code" label="渠道编码" key="3"></el-table-column>
+                            </el-table>
+                        </div>
+                        <!-- 多选选择代理表格 -->
+                        <div class="CHANNEL" style="margin-top:26px" v-if="change === 4">
+                            <el-table ref="multipleTable" :data="changeAgentlData" border  tooltip-effect="dark" style="width: 100%"
+                            :header-cell-style="{background: '#F5F5F6'}">
+                                <el-table-column type="selection" key="1"></el-table-column>
+                                <el-table-column prop="name" label="代理名称" key="2" min-width="300"></el-table-column>
+                                <el-table-column prop="code" label="代理编码" key="3"></el-table-column>
+                            </el-table>
+                        </div>
+                    </el-row>
+                </div>
+            </div>
+            <div class="drawer_btn">
+                <el-button class="orangeBtn" size="small" @click="change = 4" v-if="change === 3">
+                    下一步
+                </el-button>
+                <el-button class="orangeBtn" size="small" icon="el-icon-circle-check" @click="dialogConfirmChannel = true"
+                v-if="change === 4">
+                    确 认
+                </el-button>
+                <el-button class="orangeBtn" size="small" @click="change = 3" v-if="change === 4" style="margin-left:20px">
+                    上一步
+                </el-button>
+                <el-button  type="info" size="small" style="margin-left:20px;line-height:10px" @click="ManyOutletChanel">
+                    取 消
+                </el-button>
+            </div>
+            </el-drawer>
+            <!-- 表格出库抽屉--确定弹框 -->
+            <el-dialog
+            :visible.sync="dialogConfirmChannel"
+            top="10%"
+            width="25%">
+            <div slot="title" class="left">出库</div>
+            <el-row class="line" style="margin-top:-20px"></el-row>
+            <div class="flex align-center">
+                <div>您确认对运单号AS202012120001的运单进行出仓操作
+                <div>出仓渠道：{{channelCode}}</div>
+                <div>出仓代理：{{agentName}}</div>
+                </div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <el-row class="line" style="margin-top:-20px"></el-row>
+                <el-button class="wuBtn" @click="dialogConfirmChannel = false">取 消</el-button>
+                <el-button class="orangeBtn" @click="dialogConfirmChannel = false">确 定</el-button>
+            </span>
+            </el-dialog>
         </el-row>
     </div>
 </template>
@@ -833,8 +1166,16 @@ export default {
   data () {
     return {
       prohibit: 'AS202012120001', // 无法出库订单id
+      agentName: '', // 代理名称搜索input
+      visibleManyOutletChanel: false, // 多个出仓渠道
+      change: 1, // 控制显示选择渠道、选择代理
+      add: false, // 批量入仓渠道修改抽屉--控制新增渠道按钮
+      dialogChannelError: false, // 修改入仓渠道错误框
+      visibleOutletChanel: false, // 出仓渠道
+      dialogConfirmChannel: false, // 确认出仓渠道
+      visibleModifyHistory: false, // 修改入仓渠道--修改历史
       channelCode: '', // 请输入渠道名称/编码
-      visibleChanel: true, // 表格入仓渠道修改抽屉
+      visibleChanel: false, // 表格入仓渠道修改抽屉
       reason: '已经有10w的货款没接了啊', // 扣货原因
       operator: '李四-业务', // 扣货人
       date: '2020年10月11日 14:00', // 扣货日期
@@ -1022,6 +1363,49 @@ export default {
           status: false
         }
       ],
+      // 入仓渠道修改历史
+      channelModifyData: [
+        {
+          modifyTime: '2020年12月12日 15:00',
+          modifyBeforChannel: '美森—UPS',
+          modifyAfterChannel: '英国海运',
+          reviser: '张三'
+        },
+        {
+          modifyTime: '2020年12月12日 15:00',
+          modifyBeforChannel: '美森—UPS',
+          modifyAfterChannel: '英国海运',
+          reviser: '张三'
+        },
+        {
+          modifyTime: '2020年12月12日 15:00',
+          modifyBeforChannel: '美森—UPS',
+          modifyAfterChannel: '英国海运',
+          reviser: '张三'
+        }
+      ],
+      // 选择渠道表格
+      changeChannelData: [
+        {
+          name: '美森—UPS',
+          code: 'MSUPS'
+        },
+        {
+          name: '以星卡派送',
+          code: 'XYKP'
+        }
+      ],
+      // 选择代理表格
+      changeAgentlData: [
+        {
+          name: '奥威捷国际',
+          code: 'AWJGJ'
+        },
+        {
+          name: '安信国际',
+          code: 'AXGJ'
+        }
+      ],
       hide: 0,
       total: 50, // 表格数据总条数
       currentPage: 1,
@@ -1041,21 +1425,77 @@ export default {
     file () {},
     // 表格入仓渠道修改抽屉表格选择
     channelChange () {},
+
     // 表格入仓渠道修改抽屉表格选种颜色
-    rowClick (row) {
-      this.getIndex = row.index
-      this.$emit('rowClick', row)
+    // rowClick (row) {
+    //   this.getIndex = row.index
+    //   this.$emit('rowClick', row)
+    // },
+    // tableRowClassName ({ row, rowIndex }) {
+    //   // 把每行怼索引放进row
+    //   row.index = rowIndex
+    // },
+    // selectedHighlight ({ row, rowIndex }) {
+    //   if (this.getIndex === rowIndex) {
+    //     return {
+    //       background: '#FB4702'
+    //     }
+    //   }
+    // },
+
+    // 表格入仓渠道修改抽屉确认
+    drawerChannelConfirm () {
+      this.dialogChannelError = true
     },
-    tahleRowClassName ({ row, rowIndex }) {
-      // 把每行怼索引放进row
-      row.index = rowIndex
-    },
-    selectedHighlight ({ row, rowIndex }) {
-      if (this.getIndex === rowIndex) {
-        return {
-          background: '#FB4702'
-        }
+    select (selection, row) {
+      if (selection.length > 1) {
+        let delrow = selection.shift()
+        console.log(delrow)
+        this.$refs.multipleTable.toggleRowSelection(delrow, false)
       }
+    },
+    selectAll (selection) {
+      if (selection.length > 1) {
+        selection.length = 1
+      }
+    },
+    // 批量出仓
+    batchWarehouse () {
+      this.change = 3
+      this.visibleManyOutletChanel = true
+    },
+    // 关闭单个出库渠道
+    falseOutletChanel () {
+      this.visibleOutletChanel = false
+      this.change = 1
+    },
+    handleManyOutletClose () {
+      this.ManyOutletChanel()
+    },
+    // 关闭批量出库渠道
+    ManyOutletChanel () {
+      this.visibleManyOutletChanel = false
+      this.change = 3
+    },
+    // 表格出库抽屉关闭
+    handleOutletClose () {
+      this.falseOutletChanel()
+    },
+    // 批量设置出库渠道
+    batchSendChannel () {},
+    // 表格入仓渠道修改抽屉
+    handleClose () {
+      this.visibleChanel = false
+      this.add = false
+    },
+    // 批量修改出仓渠道
+    batchModifyChannel () {
+      this.add = true
+      this.visibleChanel = true
+    },
+    // 修改历史
+    modifyHistory () {
+      this.visibleModifyHistory = true
     },
     // 查询搜索条件
     mainChange (val) {
@@ -1070,8 +1510,13 @@ export default {
     RELEASE () {
       this.singleRelease = true
     },
+    // 表格入仓渠道修改
+    modifyChanel () {
+      this.visibleChanel = true
+    },
     // 出库
     Delivery () {
+      this.visibleOutletChanel = true
       this.dialogStop = true
     },
     // 列表显示设置
@@ -1127,8 +1572,35 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.CHANNEL /deep/ .el-table__row:hover > td {
-  background-color: transparent;
+.Flexchannel{
+    display: flex;
+    align-items: center;
+}
+.circle1{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.35);
+}
+.circle{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  background: #FB4702;
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
 }
 .channel{
     font-size: 14px;

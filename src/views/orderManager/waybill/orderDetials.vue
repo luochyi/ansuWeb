@@ -1,6 +1,6 @@
 <template>
     <div>
-        <!-- 扣货详情 （v-if=""）-->
+        <!-- 扣货详情 （v-if="" ）-->
         <div>
             <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:17px 6px;">
                 <span class='text' style="color:#FF0000">扣货件详情</span>
