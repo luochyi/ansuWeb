@@ -598,46 +598,96 @@
                 </el-button>
             </el-row>
             </el-drawer>
+            <!-- 批量导出Excel -->
             <el-drawer
-            title="批量导出Excel"
             :visible.sync="visibleExport"
             :wrapperClosable='false'
             size="50%">
-              <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
-                  <el-row class="Flexcenter">
-                    <span class="query">导出配置&nbsp;&nbsp;</span>
-                    <el-select size="small" v-model="listQueryName"></el-select>
-                    <el-button class="orangeBtn" style="margin-left:20px">确 定</el-button>
-                    <el-button class="whiteBtn" style="margin-left:20px" @click="preservation = true">保存配置</el-button>
-                    <el-button class="whiteBtn" style="margin-left:20px">查看配置</el-button>
-                  </el-row>
-                  <el-row class="mainSearch">请选择需要导出Excel的字段</el-row>
-                  <!-- 全选/反选 -->
-                  <div class="Flexcenter" style="margin-left:24px">
-                    <el-checkbox class="table" v-model="checked" @change="checked1"/>
-                    <span class="checked1">全部</span>
-                  </div>
-                  <el-tree
-                  ref="tree"
-                  class="table"
-                  :default-checked-keys="roleData"
-                  :data="data"
-                  show-checkbox
-                  @check-change="handleCheckChange"
-                  default-expand-all
-                  node-key="id"
-                  :props="{label: 'label'}">
-                </el-tree>
-              </div>
-            <el-row style="background:#fff;text-align:left;padding:26px;margin-top:26px">
-                <el-button class="orangeBtn long1" plain size="small"  style="margin-right:20px" @click="visibleExport = false">
+            <div slot="title">批量导出Excel</div>
+                <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                    <el-row class="Flexcenter">
+                        <span class="query">导出配置&nbsp;&nbsp;</span>
+                        <el-select size="small" v-model="listQueryName"></el-select>
+                        <el-button class="orangeBtn" style="margin-left:20px">确 定</el-button>
+                        <el-button class="whiteBtn" style="margin-left:20px" @click="preservation = true">保存配置</el-button>
+                        <el-button class="whiteBtn" style="margin-left:20px">查看配置</el-button>
+                    </el-row>
+                    <el-row class="mainSearch">请选择需要导出Excel的字段</el-row>
+                    <!-- 全选/反选 -->
+                    <div class="Flexcenter" style="margin-left:24px">
+                        <el-checkbox class="table" v-model="checked" @change="checked1"/>
+                        <span class="checked1">全部</span>
+                    </div>
+                    <el-tree
+                    ref="tree"
+                    class="table"
+                    :default-checked-keys="roleData"
+                    :data="data"
+                    show-checkbox
+                    @check-change="handleCheckChange"
+                    default-expand-all
+                    node-key="id"
+                    :props="{label: 'label'}">
+                    </el-tree>
+                </div>
+            <el-row class="drawer_btn" style="background:#fff;text-align:left;padding:26px;margin-top:26px">
+                <el-button class="orangeBtn" plain size="small" icon="el-icon-circle-check"  style="margin-right:20px" @click="visibleExport = false">
                     提 交
                 </el-button>
-                <el-button type="info long1" plain size="small" style="margin-right:20px" @click="visibleExport = false">
+                <el-button type="info long1" plain size="small" style="margin-right:20px;line-height:10px" @click="visibleExport = false">
                     取 消
                 </el-button>
             </el-row>
             </el-drawer>
+            <!-- 导出Excel设置 -->
+            <el-drawer
+            :visible.sync="visibleExportSetting"
+            :wrapperClosable='false'
+            size="50%">
+            <div slot="title">导出Excel配置</div>
+                <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
+                    <el-row class="backStage">后台配置</el-row>
+                    <el-table ref="multipleTable" :data="ExcelChange" border  tooltip-effect="dark" style="width: 100%"
+                        @selection-change="listChange" :header-cell-style="{background: '#F5F5F6'}">
+                        <el-table-column prop="settingName" label="列表名" key="1"></el-table-column>
+                    </el-table>
+                    <el-row class="backStage" style="margin-top:20px">我的配置</el-row>
+                    <el-table ref="multipleTable" :data="ExcelData" border  tooltip-effect="dark" style="width: 100%"
+                        @selection-change="listChange" :header-cell-style="{background: '#F5F5F6'}">
+                        <el-table-column prop="settingName" label="列表名" key="1"></el-table-column>
+                        <el-table-column label="操作" key="2">
+                            <template slot-scope="scope">
+                                <el-button type="text" @click="Edit(scope.row)">编辑</el-button>
+                                <el-button type="text" @click="Edit(scope.row)">重命名</el-button>
+                                <el-button type="text" @click="Delete(scope.row)" style="color:#FF0000">删除</el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                    <el-button type="primary" size="small" style="margin-top:20px">新增配置</el-button>
+                </div>
+            <el-row class="drawer_btn" style="background:#fff;text-align:left;padding:26px;margin-top:26px">
+                <el-button class="orangeBtn" plain size="small" style="margin-right:20px" @click="visibleExportSetting = false">
+                    返 回
+                </el-button>
+            </el-row>
+            </el-drawer>
+            <!-- 删除 -->
+            <el-dialog
+            :visible.sync="dialogDelete"
+            top="14%"
+            width="30%">
+            <div slot="title" class="left">无法出仓</div>
+            <div class="line" style="margin-top:-20px"></div>
+            <div class="flex align-center">
+                <div class="icon" style="font-size: 58px; color: #FF0000;margin-right: 20px">&#xe781;</div>
+                <div>您确认要删除“业务员导出设置”？</div>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                <div class="line"></div>
+                <el-button class="wuBtn" @click="dialogDelete = false">返 回</el-button>
+                <el-button class="orangeBtn" @click="dialogDelete = false">确认删除</el-button>
+            </span>
+            </el-dialog>
         </el-row>
     </div>
 </template>
@@ -650,8 +700,38 @@ export default {
       checked: '', // 模糊搜索
       batch: '', // 批量输入单号
 
+      visibleExportSetting: true, // 导出设置
+      dialogDelete: false, // 删除弹框
+      // 后台配置
+      ExcelChange: [
+        {
+          settingName: '业务导出配置'
+        },
+        {
+          settingName: '操作导出配置'
+        }
+      ],
+      ExcelData: [
+        {
+          settingName: '业务导出配置'
+        },
+        {
+          settingName: '操作导出配置'
+        },
+        {
+          settingName: '操作导出配置'
+        }
+      ], // Excel表格
+
       visibleExport: false, // 批量导出Excel
-      roleData: [],
+      roleData: [
+        {
+          settingName: '业务导出配置'
+        },
+        {
+          settingName: '操作导出配置'
+        }
+      ],
       // 树组
       data: [
         {
@@ -858,6 +938,10 @@ export default {
   methods: {
     // 表格选择
     handleSelectionChange () {},
+    // 导出配置删除弹框
+    Delete () {
+      this.dialogDelete = true
+    },
     // 批量扣货
     batchArchive () {},
     // 批量出仓
@@ -965,6 +1049,13 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.backStage{
+    font-size: 16px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: #333333;
+    margin-bottom: 20px;
+}
 .SelectedNodeStyle{
   margin: 10px 0;
 }

@@ -621,11 +621,10 @@
             </el-drawer>
             <!-- 列表显示设置 -->
             <el-drawer
-            title="列表显示设置"
             :visible.sync="visibleList"
             :wrapperClosable='false'
             size="50%">
-            <!-- <div style="height:"></div> -->
+            <div class="title">列表显示设置</div>
             <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
                 <el-row class="Flexcenter">
                     <span class="query">查询名称&nbsp;&nbsp;</span>
