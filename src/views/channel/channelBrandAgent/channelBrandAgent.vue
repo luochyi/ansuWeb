@@ -23,15 +23,12 @@
             </el-select>
             </el-col>
           </el-row>
-          <el-row  style="padding:0px 30px 12px 40px;display:flex;align-items:center;margin-bottom:8px">
-            <span class="input" style="width: 67%;height: 36px;background: #FFFFFF;border-top-left-radius: 18px;border-bottom-left-radius: 18px;
-            border: 1px solid #979797;display:flex;justify-content:flex-start;padding-left:10px;align-items:center">
+          <el-row class="search-box">
+            <span class="input-box">
               <img alt class='logoimg' src='@/assets/search.png' style="width: 14px;height: 14px;" />
               <el-input class="elin" size="small" placeholder="请输入渠道名或编码" style="border:0" v-model="searchInput"></el-input>
             </span>
-            <span style="width: 60px;height: 36px;background: #FB4702;border: 1px solid #979797;border-left: 0;border-bottom-right-radius: 18px;
-            border-top-right-radius: 18px;text-align:center;line-height:36px;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;
-            font-weight: 400;color: #FFFFFF;">搜索</span>
+            <span class="search-font" style="">搜索</span>
           </el-row>
           <el-row style="padding:0px 30px 12px 40px;display:flex;align-items:center;">
             <el-row style="padding:12px;margin-bottom:20px;background: #F9F9F9;
@@ -581,6 +578,38 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.search-font{
+  width: 60px;
+  height: 36px;
+  background: #FB4702;
+  border: 1px solid #979797;
+  border-left: 0;
+  border-bottom-right-radius: 18px;
+  border-top-right-radius: 18px;
+  text-align:center;
+  line-height:36px;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;color: #FFFFFF;
+}
+.input-box{
+  width: 67%;
+  height: 36px;
+  background: #FFFFFF;
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+  border: 1px solid #979797;
+  display:flex;
+  justify-content:flex-start;
+  padding-left:10px;
+  align-items:center;
+}
+.search-box{
+  padding:0px 30px 12px 40px;
+  display:flex;
+  align-items:center;
+  margin-bottom:8px
+}
 /deep/ .changebox{
     display: flex;
     align-items: center;
