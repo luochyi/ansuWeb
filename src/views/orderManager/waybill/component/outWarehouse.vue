@@ -181,10 +181,11 @@
                 <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button>
                 <el-button class='stopBtn' @click="batchSendChannel" size="small">批量设置出库渠道</el-button>
                 <el-button class='stopBtn' @click="batchModifyChannel" size="small">批量修改入仓渠道</el-button>
-                <el-button class='stopBtn' @click="batchWarehouse" size="small">批量出仓</el-button>
+                <el-button class='stopBtn' @click="batchWarehouse" size="small">批量出运</el-button>
                 <el-button class='stopBtn' @click="batchArchive" size="small">批量扣货</el-button>
                 <el-button class='stopBtn' size="small" @click="dialogRelease = true">批量放货</el-button>
                 <el-button class='stopBtn' @click="Export" size="small">批量导出发票</el-button>
+                <el-button class='stopBtn' @click="batchSetTransfer" size="small">批量设置转单号</el-button>
             </el-col>
             <el-col :span='10' class="right">
                 <el-button class='whiteBtn' @click="visibleQueryCondition = true">查询条件设置</el-button>
@@ -424,9 +425,26 @@
                 </el-table-column>
                 <el-table-column prop="deliveryAgent" label="派送类型" min-width="120" key="51"></el-table-column>
                 <el-table-column prop="deliveryAgent" label="派送状态" min-width="120" key="51"></el-table-column>
-                <el-table-column prop="deliveryAgent" label="转单号" min-width="120" key="51"></el-table-column>
-                <el-table-column prop="deliveryAgent" label="提单号" min-width="120" key="51"></el-table-column>
-
+                <el-table-column prop="transferOrder" label="转单号" min-width="120" key="51">
+                    <template slot-scope="scope">
+                      <div class="alignment flex align-center">
+                        <el-button type="text" @click="checkWebsite(scope.row)">查看官网</el-button>
+                        <span class="ele">｜</span>
+                        <el-button type="text" @click="modifyTransferOrder(scope.row)">修改</el-button>
+                      </div>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="ladingOrder" label="提单号" min-width="120" key="51">
+                  <template slot-scope="scope">
+                    <div>
+                      <el-button type="text" @click="modifyLadingOrder(scope.row)">修改</el-button>
+                    </div>
+                    <div class="alignment flex align-center">
+                      <span class="WithholdingStatus">无</span>
+                      <el-button type="text" @click="modifyLadingOrder(scope.row)">添加</el-button>
+                    </div>
+                  </template>
+                </el-table-column>
 
                 <el-table-column prop="coordination" label="协同" min-width="80" key="52"></el-table-column>
                 <!-- 操作 -->
@@ -437,7 +455,7 @@
                         <el-button type="text" @click="detentionCargo(scope.row)">扣货</el-button>
                         <!-- <el-button type="text" @click="checkInvoice(scope.row)">查看发票</el-button> -->
                         <span class="ele">｜</span>
-                        <el-button type="text" @click="outWarehouse(scope.row)">出仓</el-button>
+                        <el-button type="text" @click="outWarehouse(scope.row)">出运</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -454,33 +472,107 @@
                 @current-change="handleCurrentChange">
               </el-pagination>
           </div>
-            <!-- 出仓弹窗 -->
+            <!-- 无法出运 -->
             <el-dialog
-            :visible.sync="dialogStop"
+            :visible.sync="dialogShipment"
             top="10%"
             width="30%">
-            <div slot="title" class="left">无法出仓</div>
-            <!-- v-if -->
-            <div class="flex align-center" v-if="show === 1">
+            <div slot="title" class="left">无法出运</div>
+            <div slot="title" class="left">出运</div>
+            <div class="flex align-center">
                 <div class="icon" style="font-size: 58px; color: #FF0000;margin-right: 20px">&#xe781;</div>
                 <div>
-                    <div>抱歉！运单号{{orderId}}未做完发票，无法出仓。</div>
-                    <div>请完善发票信息！</div>
-                </div>
-            </div>
-            <!-- v-if -->
-            <div class="flex align-center" v-if="show === 2">
-                <div class="icon" style="font-size: 58px; color: #FF0000;margin-right: 20px">&#xe781;</div>
-                <div>
-                    <div>抱歉！运单号{{orderId}}无法出仓。</div>
-                    <div>因为该运单已被扣货！</div>
+                  <div>抱歉！运单{{unableOrderId}}无法出运</div>
+                  <div>因为该运单已被扣货</div>
                 </div>
             </div>
             <span slot="footer" class="dialog-footer">
-                <el-button class="wuBtn" @click="dialogStop = false">部分入仓</el-button>
-                <el-button class="orangeBtn" @click="dialogStop = false">确 定</el-button>
+                <el-button class="wuBtn" @click="dialogShipment = false">部分入仓</el-button>
+                <el-button class="wuBtn" @click="dialogShipment = false">取 消</el-button>
+                <el-button class="orangeBtn" @click="dialogShipment = false">重新扫描</el-button>
+                <el-button class="orangeBtn" @click="dialogShipment = false">确 认</el-button>
             </span>
             </el-dialog>
+            <!-- 转单号修改 -->
+            <el-dialog
+            :visible.sync="dialogTransferOrder"
+            top="10%"
+            width="30%">
+            <div slot="title" class="left">设置转单号</div>
+            <div class="line" style="margin-top:-20px;"></div>
+                <div style="padding-top:20px">
+                  <div>您确定对运单号为“{{orderId}}”的运单设置转单号吗？</div>
+                  <div class="alignment flex align-center" style="margin-top:16px">
+                    <span class="zd" style="width:60px">转单号 </span>
+                    <el-input placeholder="请输入转单号" size="small" v-model="transferOrder" style="width:60%"></el-input>
+                  </div>
+                </div>
+            <span slot="footer" class="dialog-footer">
+              <div class="line"></div>
+              <el-button class="wuBtn" @click="dialogTransferOrder = false">取 消</el-button>
+              <el-button class="orangeBtn" @click="dialogTransferOrder = false">确 定</el-button>
+            </span>
+            </el-dialog>
+            <!-- 修改提单号 -->
+            <el-dialog
+            :visible.sync="dialogLadingOrder"
+            top="10%"
+            width="30%">
+            <div slot="title" class="left">设置转单号</div>
+            <div class="line" style="margin-top:-20px;"></div>
+                <div style="padding-top:20px">
+                  <div>您确定对运单号为“{{orderId}}”的运单设置提单号吗？</div>
+                  <div class="alignment flex align-center" style="margin-top:16px">
+                    <span class="zd" style="width:60px">提单号 </span>
+                    <el-input placeholder="请输入转单号" size="small" v-model="ladingOrder" style="width:60%"></el-input>
+                  </div>
+                </div>
+            <span slot="footer" class="dialog-footer">
+              <div class="line"></div>
+              <el-button class="wuBtn" @click="dialogLadingOrder = false">取 消</el-button>
+              <el-button class="orangeBtn" @click="dialogLadingOrder = false">确 定</el-button>
+            </span>
+            </el-dialog>
+            <!-- 批量出运 -->
+            <el-dialog
+            :visible.sync="bulkShipment"
+            top="10%"
+            width="30%">
+            <div slot="title" class="left">批量出运</div>
+            <div class="line" style="margin-top:-20px;"></div>
+                <div style="padding-top:20px">
+                  <div>您确定对运单号为“{{orderId}}”的运单设置提单号吗？</div>
+                  <div class="alignment flex align-center" style="margin-top:16px">
+                    <span class="zd" style="width:60px">提单号 </span>
+                    <el-input placeholder="请输入转单号" size="small" v-model="ladingOrder" style="width:60%"></el-input>
+                  </div>
+                </div>
+            <span slot="footer" class="dialog-footer">
+              <div class="line"></div>
+              <el-button class="wuBtn" @click="bulkShipment = false">取 消</el-button>
+              <el-button class="orangeBtn" @click="bulkShipment = false">确 定</el-button>
+            </span>
+            </el-dialog>
+            <!-- 批量设置提单号 -->
+            <el-dialog
+            :visible.sync="dialogBatchSetTransfer"
+            top="10%"
+            width="30%">
+            <div slot="title" class="left">批量设置提单号</div>
+            <div class="line" style="margin-top:-20px;"></div>
+                <div style="padding-top:20px">
+                  <div>您确定对这{{BatchSetTransferNum}}笔订单批量设置提单号吗？</div>
+                  <div class="alignment flex align-center" style="margin-top:16px">
+                    <span class="zd" style="width:60px">提单号 </span>
+                    <el-input placeholder="请输入提单号" size="small" v-model="batchTransfer" style="width:60%"></el-input>
+                  </div>
+                </div>
+            <span slot="footer" class="dialog-footer">
+              <div class="line"></div>
+              <el-button class="wuBtn" @click="dialogBatchSetTransfer = false">取 消</el-button>
+              <el-button class="orangeBtn" @click="dialogBatchSetTransfer = false">确 定</el-button>
+            </span>
+            </el-dialog>dialogBatchSetTransfer
             <!-- 批量搜索 -->
           <el-dialog
             title="批量输入预报单号"
@@ -710,6 +802,18 @@
 export default {
   data () {
     return {
+      dialogShipment: false, // 无法出运
+      unableOrderId: 'AS202012120001', // 无法出运订单号
+
+      dialogBatchSetTransfer: false, // 批量设置提单号
+      batchTransfer: '', // // 请输入提单号
+      BatchSetTransferNum: 34, // 批量设置提单号--数量
+      bulkShipment: false, // 批量出运
+      bulkShipmentNum: 34, // 批量出运--数量
+
+      transferOrder: '', // 请输入转单号
+      dialogLadingOrder: false, // 修改提单号
+      ladingOrder: '', // 请输入提单号
       dialogPL: false, // 批量搜索
       checked: '', // 模糊搜索
       batch: '', // 批量输入单号
@@ -896,12 +1000,11 @@ export default {
         }
       ],
 
-      orderId: '', // 出仓错误运单号
       show: 1, // 控制不可出仓时的提示
       FORM: 1, // 控制form显示
 
       dialogFile: false, // 批量归档对话框
-      dialogStop: false, // 出仓
+      dialogTransferOrder: false, // 出仓
       fileError: false, // 提示
       number: 0, // 选择批量归档件数
 
@@ -937,6 +1040,7 @@ export default {
       },
 
       total: 50, // 表格数据总条数
+      orderId: 'ASSZ202112120001',
       currentPage: 1,
       pageSize: 10,
 
@@ -950,21 +1054,37 @@ export default {
     }
   },
   methods: {
+    // 批量设置转单号
+    batchSetTransfer () {
+      this.dialogBatchSetTransfer = true
+    },
     // 表格选择
     handleSelectionChange () {},
+    // 转单号查看官网
+    checkWebsite () {},
+    // 转单号修改
+    modifyTransferOrder () {
+      this.dialogTransferOrder = true
+    },
+    // 提单号修改
+    modifyLadingOrder () {
+      this.dialogLadingOrder = true
+    },
     // 导出配置删除弹框
     Delete () {
       this.dialogDelete = true
     },
     // 批量扣货
     batchArchive () {},
-    // 批量出仓
-    batchWarehouse () {},
+    // 批量出运
+    batchWarehouse () {
+      this.bulkShipment = true
+    },
     // 批量修改入仓渠道
     batchModifyChannel () {},
     // 表格出仓
     outWarehouse () {
-      this.dialogStop = true
+      this.dialogShipment = true
     },
     // 查询搜索条件
     mainChange (val) {
@@ -1068,13 +1188,19 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.zd{
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
+}
 .weightFont1{
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: #333333;
 }
-.weightFont1{
+.weightFont2{
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
@@ -1284,6 +1410,7 @@ export default {
 }
 .ele{
     font-size: 12px;
+    color: #0084FF;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
 }
