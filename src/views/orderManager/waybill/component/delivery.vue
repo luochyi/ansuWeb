@@ -631,7 +631,7 @@
                     </el-tree>
                 </div>
             <el-row class="drawer_btn" style="background:#fff;text-align:left;padding:26px;margin-top:26px">
-                <el-button class="orangeBtn" plain size="small" icon="el-icon-circle-check"  style="margin-right:20px" @click="visibleExport = false">
+                <el-button class="orangeBtn" plain size="small" icon="el-icon-circle-check"  style="margin-right:20px" @click="batchExportSubmit">
                     提 交
                 </el-button>
                 <el-button type="info long1" plain size="small" style="margin-right:20px;line-height:10px" @click="visibleExport = false">
@@ -700,7 +700,7 @@ export default {
       checked: '', // 模糊搜索
       batch: '', // 批量输入单号
 
-      visibleExportSetting: true, // 导出设置
+      visibleExportSetting: false, // 导出设置
       dialogDelete: false, // 删除弹框
       // 后台配置
       ExcelChange: [
@@ -988,6 +988,11 @@ export default {
       } else { // 取消选中
         this.$refs.tree.setCheckedKeys([])
       }
+    },
+    // 批量excel提交--导出设置
+    batchExportSubmit () {
+      this.visibleExport = false
+      this.visibleExportSetting = true
     },
     // 回调
     handleCheckChange (data, checked, indeterminate) {
