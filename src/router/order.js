@@ -39,5 +39,15 @@ export default [
       hidden: false
     },
     component: () => import('@/views/orderManager/waybill/orderDetials.vue')
+  },
+  {
+    path: '/waybill/outWarehousDetials',
+    name: 'outWarehousDetials',
+    meta: {
+      title: '订单详情',
+      icon: 'outWarehousDetialsIcon',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/waybill/outWarehousDetials.vue')
   }
 ]

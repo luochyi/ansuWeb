@@ -572,7 +572,7 @@
               <el-button class="wuBtn" @click="dialogBatchSetTransfer = false">取 消</el-button>
               <el-button class="orangeBtn" @click="dialogBatchSetTransfer = false">确 定</el-button>
             </span>
-            </el-dialog>dialogBatchSetTransfer
+            </el-dialog>
             <!-- 批量搜索 -->
           <el-dialog
             title="批量输入预报单号"
@@ -1166,7 +1166,7 @@ export default {
     supplement () {},
     // 操作查看详情
     check () {
-      this.$router.push({ name: 'orderDetials' })
+      this.$router.push({ name: 'outWarehousDetials' })
     },
     // 操作扣货
     detentionCargo () {},
