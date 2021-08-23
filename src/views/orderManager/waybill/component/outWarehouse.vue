@@ -178,6 +178,7 @@
             </div>
             <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
             <el-col :span='14' class="left">
+              <el-button class='stopBtn' @click="UpdateRouter" size="small">批量更新轨迹</el-button>
                 <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button>
                 <el-button class='stopBtn' @click="batchSendChannel" size="small">批量设置出库渠道</el-button>
                 <el-button class='stopBtn' @click="batchModifyChannel" size="small">批量修改入仓渠道</el-button>
@@ -434,6 +435,7 @@
                       </div>
                     </template>
                 </el-table-column>
+                <!-- key重复 报错 -->
                 <el-table-column prop="ladingOrder" label="提单号" min-width="120" key="51">
                   <template slot-scope="scope">
                     <div>
@@ -745,6 +747,44 @@
                 </el-button>
             </el-row>
             </el-drawer>
+            <!-- 更新轨迹弹窗 -->
+            <el-drawer
+            :visible.sync="routerVisible"
+            :wrapperClosable='false'
+            size="50%">
+            <div slot="title">更新轨迹弹窗</div>
+              <div>
+                  <el-steps :active="2" align-left>
+                    <el-step title="已收货" description="这是一段很长很长很长的描述性文字"></el-step>
+                    <el-step title="已入仓" description="这是一段很长很长很长的描述性文字"></el-step>
+                    <el-step title="已出仓" description="这是一段很长很长很长的描述性文字"></el-step>
+                    <el-step title="已装船" description="这是一段很长很长很长的描述性文字"></el-step>
+                </el-steps>
+              </div>
+               <div>
+                  <el-steps :active="2" align-left>
+                    <el-step title="步骤1" description="这是一段很长很长很长的描述性文字"></el-step>
+                    <el-step title="步骤2" description="这是一段很长很长很长的描述性文字"></el-step>
+                    <el-step title="步骤3" description="这是一段很长很长很长的描述性文字"></el-step>
+                    <el-step title="步骤4" description="这是一段很长很长很长的描述性文字"></el-step>
+                </el-steps>
+              </div>
+               <div>
+                  <el-steps :active="2" align-left>
+                    <el-step title="步骤1" description="这是一段很长很长很长的描述性文字"></el-step>
+                    <el-step title="步骤2" description="这是一段很长很长很长的描述性文字"></el-step>
+                    <el-step title="步骤3" description="这是一段很长很长很长的描述性文字"></el-step>
+                </el-steps>
+              </div>
+            <el-row class="drawer_btn" style="background:#fff;text-align:left;padding:26px;margin-top:26px">
+                <el-button class="orangeBtn" plain size="small" icon="el-icon-circle-check"  style="margin-right:20px" @click="batchExportSubmit">
+                    提 交
+                </el-button>
+                <el-button type="info long1" plain size="small" style="margin-right:20px;line-height:10px" @click="visibleExport = false">
+                    取 消
+                </el-button>
+            </el-row>
+            </el-drawer>
             <!-- 导出Excel设置 -->
             <el-drawer
             :visible.sync="visibleExportSetting"
@@ -840,7 +880,7 @@ export default {
           settingName: '操作导出配置'
         }
       ], // Excel表格
-
+      routerVisible: false, // 更新轨迹弹窗
       visibleExport: false, // 批量导出Excel
       roleData: [
         {
@@ -1177,6 +1217,9 @@ export default {
     // 批量导出
     Export () {
       this.visibleExport = true
+    },
+    UpdateRouter () {
+      this.routerVisible = true
     },
     // 查询条件设置
     toAdd () {},

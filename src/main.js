@@ -14,13 +14,15 @@ import 'quill/dist/quill.snow.css'
 import echarts from 'echarts'
 //
 import util from '@/utils/util.js'
+import Table from '@/components/table/index.vue'
+
 Vue.prototype.echarts = echarts // echarts
 Vue.use(QuillEditor)
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(util)
-
+Vue.component('Table', Table)
 new Vue({
   router,
   store,
