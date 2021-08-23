@@ -29,14 +29,6 @@
         <el-table-column prop="address" label="地址"> </el-table-column>
       </el-table>
     </div>
-    <div>
-      <!-- 分页 -->
-      <el-pagination
-        background
-        layout="prev, pager, next"
-        :total="1000">
-      </el-pagination>
-    </div>
   </div>
 </template>
 
@@ -45,7 +37,7 @@ export default {
   data () {
     return {
       // 写数据的地方，用于渲染到页面，可以抽一下午看看vue入门
-      msg: '公海客户',
+      msg: '私海客户',
       formInline: {
         user: '',
         region: ''
@@ -78,5 +70,5 @@ export default {
 </script>
 
 <style>
-/* 写样式的地方，可以百度一下elementui怎么更改样式，要使用/deep/给组件改样式*/
+/* 写样式的地方 */
 </style>

@@ -247,8 +247,32 @@ export default {
               path: 'highSeaCustomers',
               parentId: '4'
             },
+            {
+              name: 'privateSea',
+              meta: {
+                title: '私海客户',
+                icon: 'predictionIcon',
+                hidden: false
+              },
+              ID: 41,
+              menuId: '41',
+              path: 'privateSea',
+              parentId: '4'
+            },
+            {
+              name: 'myCustomer',
+              meta: {
+                title: '我的客户',
+                icon: 'predictionIcon',
+                hidden: false
+              },
+              ID: 42,
+              menuId: '42',
+              path: 'myCustomer',
+              parentId: '4'
+            }
           ]
-        },
+        }
       ],
 
       user: '张三',
