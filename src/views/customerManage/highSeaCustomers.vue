@@ -125,7 +125,7 @@ export default {
 
       pageSize: 10,
       currentPage: 1,
-      total: 50,
+      total: 150,
       a: 1,
       b: 9,
 
