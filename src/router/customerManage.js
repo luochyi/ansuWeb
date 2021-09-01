@@ -34,10 +34,31 @@ export default [
     path: '/myCustomer',
     name: 'myCustomer',
     meta: {
-      title: '私海客户',
-      icon: 'privateSea',
+      title: '我的客户',
+      icon: 'myCustomer',
       hidden: false
     },
     component: () => import('@/views/customerManage/myCustomer')
+  },
+  {
+    path: '/addcustomerh',
+    name: 'addcustomerh',
+    meta: {
+      title: '添加客户',
+      icon: 'addcustomerh',
+      hidden: false
+    },
+    component: () => import('@/views/customerManage/addcustomerh.vue')
+  },
+  {
+    path: '/addcustomerp',
+    name: 'addcustomerp',
+    meta: {
+      title: '添加客户',
+      icon: 'addcustomerp',
+      hidden: false
+    },
+    component: () => import('@/views/customerManage/addcustomerp.vue')
   }
+
 ]
