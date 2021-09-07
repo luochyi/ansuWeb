@@ -222,6 +222,56 @@ export default {
               parentId: '1'
             }
           ]
+        },
+        {
+          name: 'customerManage',
+          meta: {
+            title: '客户管理',
+            icon: 'channelIcon',
+            hidden: false
+          },
+          ID: 4,
+          menuId: '4',
+          path: 'customerManage',
+          parentId: '0',
+          children: [
+            {
+              name: 'highSeaCustomers',
+              meta: {
+                title: '公海客户',
+                icon: 'predictionIcon',
+                hidden: false
+              },
+              ID: 40,
+              menuId: '40',
+              path: 'highSeaCustomers',
+              parentId: '4'
+            },
+            {
+              name: 'privateSea',
+              meta: {
+                title: '私海客户',
+                icon: 'predictionIcon',
+                hidden: false
+              },
+              ID: 41,
+              menuId: '41',
+              path: 'privateSea',
+              parentId: '4'
+            },
+            {
+              name: 'myCustomer',
+              meta: {
+                title: '我的客户',
+                icon: 'predictionIcon',
+                hidden: false
+              },
+              ID: 42,
+              menuId: '42',
+              path: 'myCustomer',
+              parentId: '4'
+            }
+          ]
         }
       ],
 

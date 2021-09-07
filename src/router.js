@@ -4,6 +4,7 @@ import Router from 'vue-router'
 import order from '@/router/order.js'
 import channel from '@/router/channel.js'
 import configureCenter from '@/router/configureCenter.js'
+import customerManage from '@/router/customerManage.js'
 Vue.use(Router)
 
 export default new Router({
@@ -22,7 +23,8 @@ export default new Router({
         ...order,
         // 渠道管理
         ...channel,
-        ...configureCenter
+        ...configureCenter,
+        ...customerManage
       ]
     }
   ]
