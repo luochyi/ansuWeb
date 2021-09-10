@@ -230,8 +230,8 @@ export default {
             icon: 'channelIcon',
             hidden: false
           },
-          ID: 4,
-          menuId: '4',
+          ID: 3,
+          menuId: '3',
           path: 'customerManage',
           parentId: '0',
           children: [
@@ -272,6 +272,177 @@ export default {
               parentId: '4'
             }
           ]
+        },
+        {
+          name: 'configureCenter',
+          meta: {
+            title: '配置中心',
+            icon: 'configIcon',
+            hidden: false
+          },
+          ID: 4,
+          menuId: '4',
+          path: 'configureCenter',
+          parentId: '0',
+          children: [
+            {
+              name: 'subsidiary',
+              meta: {
+                title: '子公司管理',
+                icon: 'predictionIcon',
+                hidden: false
+              },
+              ID: 50,
+              menuId: '50',
+              path: 'subsidiary',
+              parentId: '5'
+            },
+            {
+              name: 'organizationalStructure',
+              meta: {
+                title: '组织架构',
+                icon: 'predictionIcon',
+                hidden: false
+              },
+              ID: 51,
+              menuId: '51',
+              path: 'organizationalStructure',
+              parentId: '5'
+            },
+            {
+              name: 'ygzh',
+              meta: {
+                title: '员工账号',
+                icon: 'ygzh',
+                hidden: false
+              },
+              ID: 52,
+              menuId: '52',
+              path: 'ygzh',
+              parentId: '5'
+            },
+            // driverManagementIcon
+            {
+              name: 'distributionDriver',
+              meta: {
+                title: '司机管理',
+                icon: 'distributionDriver',
+                hidden: false
+              },
+              ID: 52,
+              menuId: '52',
+              path: 'distributionDriver',
+              parentId: '5'
+            },
+            {
+              name: 'truckManagement',
+              meta: {
+                title: '车辆管理',
+                icon: 'truckManagement',
+                hidden: false
+              },
+              ID: 53,
+              menuId: '53',
+              path: 'truckManagement',
+              parentId: '5'
+            },
+            {
+              name: 'customerAccount',
+              meta: {
+                title: '客户账号',
+                icon: 'customerAccount',
+                hidden: false
+              },
+              ID: 54,
+              menuId: '54',
+              path: 'customerAccount',
+              parentId: '5'
+            },
+            {
+              name: 'customerLevel',
+              meta: {
+                title: '客户等级',
+                icon: 'customerLevel',
+                hidden: false
+              },
+              ID: 55,
+              menuId: '55',
+              path: 'customerLevel',
+              parentId: '5'
+            },
+            {
+              name: 'receivingWarehouseManage',
+              meta: {
+                title: '收货仓管理',
+                icon: 'receivingWarehouseManage',
+                hidden: false
+              },
+              ID: 56,
+              menuId: '56',
+              path: 'receivingWarehouseManage',
+              parentId: '5'
+            },
+            {
+              name: 'warehouseOperation',
+              meta: {
+                title: '仓库操作管理',
+                icon: 'warehouseOperation',
+                hidden: false
+              },
+              ID: 57,
+              menuId: '57',
+              path: 'warehouseOperation',
+              parentId: '5'
+            },
+            {
+              name: 'currencyExchangerate',
+              meta: {
+                title: '货币汇率',
+                icon: 'currencyExchangerate',
+                hidden: false
+              },
+              ID: 57,
+              menuId: '57',
+              path: 'currencyExchangerate',
+              parentId: '5'
+            },
+            {
+              name: 'countryManagement',
+              meta: {
+                title: '目的国管理',
+                icon: 'countryManagement',
+                hidden: false
+              },
+              ID: 58,
+              menuId: '58',
+              path: 'countryManagement',
+              parentId: '5'
+            },
+            {
+              name: 'milestoneConfiguration',
+              meta: {
+                title: '里程碑配置',
+                icon: 'milestoneConfiguration',
+                hidden: false
+              },
+              ID: 59,
+              menuId: '59',
+              path: 'milestoneConfiguration',
+              parentId: '5'
+            },
+            {
+              name: 'FBAmanage',
+              meta: {
+                title: 'FBA仓管理',
+                icon: 'FBAmanage',
+                hidden: false
+              },
+              ID: 60,
+              menuId: '60',
+              path: 'FBAmanage',
+              parentId: '5'
+            }
+          ]
         }
       ],
 
@@ -290,6 +461,7 @@ export default {
   mounted () {
     let arr = this.$route.path.split('/')[1]
     console.log(this.$route.name)
+    console.log(this.menu)
     this.menu.forEach((item, index) => {
       item.children.forEach(items => {
         console.log(items.name)

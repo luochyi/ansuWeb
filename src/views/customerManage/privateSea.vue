@@ -186,6 +186,9 @@ export default {
         console.log(res)
       })
     },
+    batchStop () {
+
+    },
     handleSelectionChange (val) {
       console.log(val)
       this.chooseArr = []
