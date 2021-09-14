@@ -3,7 +3,8 @@ import Router from 'vue-router'
 
 import order from '@/router/order.js'
 import channel from '@/router/channel.js'
-
+import configureCenter from '@/router/configureCenter.js'
+import customerManage from '@/router/customerManage.js'
 Vue.use(Router)
 
 export default new Router({
@@ -21,7 +22,9 @@ export default new Router({
         // 订单管理
         ...order,
         // 渠道管理
-        ...channel
+        ...channel,
+        ...configureCenter,
+        ...customerManage
       ]
     }
   ]
