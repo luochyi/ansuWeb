@@ -133,6 +133,16 @@ export default [
     component: () => import('@/views/configureCenter/countryManagement/addCountry.vue')
   },
   {
+    path: '/FBAmanage',
+    name: 'FBAmanage',
+    meta: {
+      title: 'FBA仓管理',
+      icon: 'FBAmanage',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/FBAmanage/FBAmanage.vue')
+  },
+  {
     path: '/FBAmanage/addFBA',
     name: 'addFBA',
     meta: {
