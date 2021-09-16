@@ -2,7 +2,7 @@
   <div>
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span class='text'>我的客户</span>
+      <span class='text'>目的国管理</span>
     </el-row>
     <!-- 主要内容 -->
     <div class='content'>
@@ -10,49 +10,33 @@
       <el-row  class='searchbox1'>
         <!-- 客户名称 -->
         <el-col :span='6' class='colbox'>
-          <span class='text'>客户名称</span>
-          <el-col :span='16'>
+        <span class='text'>国家名称</span>
+          <el-col :span='14'>
             <el-input v-model='agentName' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
-         <el-col :span='6' class='colbox'>
-          <span class='text'>客户编码</span>
-          <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-         <el-col :span="6" class='colbox' >
-            <span class="text">上月上单时间&nbsp;</span>
-            <span><el-select v-model="agentName" size="small" placeholder="超过一个月"></el-select></span>
-          </el-col>
-        <!--  -->
-        <el-col :span='6' class='colbox justify-center'>
-          <el-button class='orangeBtn long1'>查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
+        <el-col :span='10' class='colboxx justify-center'>
+          <el-button @click="country" class='orangeBtn long3' > 新增目的国</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
       <div>
+
         <div class="table">
           <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
             :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type="selection" width="55"></el-table-column>
-             <el-table-column prop="name"  label="客户名称"  width="255"></el-table-column>
-    <el-table-column  prop="code" label="客户编码"  width="138"> </el-table-column>
-     <el-table-column  prop="contacts" label="客户联系人"  width="111"></el-table-column>
-     <el-table-column  prop="number"  label="客户联系电话"  width="137"> </el-table-column>
-    <el-table-column  prop="time"  label="上次下单时间"  width="159"></el-table-column>
-    <el-table-column  prop="address"  label="未核销金额"  width="119"> </el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="169">
+             <el-table-column prop="name" label="目的国" width="331"></el-table-column>
+             <el-table-column prop="number" label="国家电话区号" width="331"></el-table-column>
+             <el-table-column prop="address" label="仓库数量" width="331"></el-table-column>
+            <el-table-column fixed="right" label="操作" min-width="126">
               <template slot-scope="scope">
-                <el-button type="text" @click="toDetail(scope.row.id)"> 查看详情</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">指派业务</el-button>
+                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">编辑</el-button>
               </template>
             </el-table-column>
           </el-table>
-
-          <!-- 分页 -->
+        </div>
+      </div>
+       <!--分页-->
           <div class='block'>
             <el-pagination
               :current-page.sync='currentPage'
@@ -63,9 +47,6 @@
               :total='150'>
               </el-pagination>
           </div>
-        </div>
-      </div>
-
     </div>
   </div>
 </template>
@@ -75,7 +56,6 @@ export default {
   data () {
     return {
       activeName: '1', // 标签绑定
-
       pageSize: 10,
       currentPage: 1,
       total: 50,
@@ -85,30 +65,25 @@ export default {
       agentAccount: '', // 代理账期
       tableData: [
         {
-          date: '2016-05-02',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1518 弄'
         },
         {
-          date: '2016-05-04',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1517 弄'
         },
         {
-          date: '2016-05-01',
           name: '王小虎',
           address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
         }
       ]
 
     }
   },
   methods: {
+    country () {
+      this.$router.push({ name: 'country' })
+    },
     getData () {
       let params = {
         status: Number(this.activeName),
@@ -168,8 +143,40 @@ export default {
   }
 
 }
+.title .text{
+    width: 250px;
+    text-align:left;
+    margin: 17px;
+}
+.title .texta{
+    width: 250px;
+    text-align:left;
+    margin: 32px;
+    color:#FB4702 ;
+    font-size: 18px;
+    line-height: 25px;
+    font-family: PingFangSC-Semibold, PingFang SC;
+}
+/deep/ .el-dialog{
+  text-align: left;
+}
+//biankuang
+
+/deep/ .input{
+  height: 80px;
+}
 /deep/ .title{
  height: 56px;
  font-size: 16px;
 }
+.searchbox1 .colbox .text {
+    width: 90px;
+}
+.colbox{
+    width: 300px;
+}
+.colboxa {
+width: 200px;
+}
+
 </style>
