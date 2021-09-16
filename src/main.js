@@ -9,6 +9,7 @@ import QuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.bubble.css'
 import 'quill/dist/quill.snow.css'
+import commonTable from './components/table/table'
 
 // echarts
 import echarts from 'echarts'
@@ -20,6 +21,7 @@ Vue.use(QuillEditor)
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(util)
+Vue.component('commonTable', commonTable)
 
 new Vue({
   router,
