@@ -1,4 +1,3 @@
-// 预报管理
 <template>
   <div>
     <div class='main'>
@@ -273,6 +272,10 @@
 export default {
   data () {
     return {
+      customerCode: null,
+      valuea: null,
+      valueb: null,
+      valuec: null,
       drawer: false, // 抽屉
       table: false,
       dialog: false,
@@ -439,6 +442,9 @@ export default {
     }
   },
   methods: {
+    handleSelectionChange () {},
+    checked1 () {},
+    handleCheckChange () {},
     waybill () {
       this.$router.push({ name: 'waybill' })
     },

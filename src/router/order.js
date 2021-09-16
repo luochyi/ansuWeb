@@ -1,8 +1,8 @@
 // 订单管理
 export default [
   {
-    path: '/order',
-    name: 'order',
+    path: '/orderManager',
+    name: 'orderManager',
     meta: {
       title: '订单管理',
       icon: 'orderIcon',
