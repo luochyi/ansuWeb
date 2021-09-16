@@ -187,27 +187,28 @@ export default {
           done()
         })
         .catch(_ => {})
+    },
+    getData () {
+      let params = {
+        status: Number(this.activeName),
+        page: this.currentPage,
+        limit: this.pageSize,
+        name: this.agentName,
+        code: this.agentCode
+      }
+      this.$api.agent.settingAgentLists(params).then((res) => {
+        console.log(res)
+      })
+    },
+    handleSelectionChange (val) {
+      console.log(val)
+      this.chooseArr = []
+      val && val.forEach((item) => {
+        this.chooseArr.push(item)
+      })
     }
-  },
-  getData () {
-    let params = {
-      status: Number(this.activeName),
-      page: this.currentPage,
-      limit: this.pageSize,
-      name: this.agentName,
-      code: this.agentCode
-    }
-    this.$api.agent.settingAgentLists(params).then((res) => {
-      console.log(res)
-    })
-  },
-  handleSelectionChange (val) {
-    console.log(val)
-    this.chooseArr = []
-    val && val.forEach((item) => {
-      this.chooseArr.push(item)
-    })
   }
+
 }
 
 </script>

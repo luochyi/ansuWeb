@@ -28,8 +28,7 @@
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button class='stopBtn' @click="changes=true">批量转入公海</el-button>
-            <el-button class='stopBtn' @click="batchStop">批量指派客户</el-button>
+            <el-button class='stopBtn' @click="changes=true">批量转回公海</el-button>
           </el-col>
         </el-row>
 
@@ -43,11 +42,11 @@
              <el-table-column prop="address" label="客户地址" width="425"></el-table-column>
             <el-table-column fixed="right" label="操作" min-width="169">
               <template slot-scope="scope">
-                <el-button type="text" @click="informationis = true"> 完善信息</el-button>
+                <el-button type="text" @click="informationis = true"> 编辑</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="dialogVisible = true">转回公海</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="toDetail(scope.row.id)"> 指派业务</el-button>
+                <el-button type="text" class="visi" @click="Visitrecord"> 拜访记录</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">开户</el-button>
               </template>
@@ -152,6 +151,9 @@ export default {
   methods: {
     add () {
       this.$router.push({ name: 'addcustomerp' })
+    },
+    Visitrecord () {
+      this.$router.push({ name: 'Visitrecord' })
     },
     handleClose (done) {
       this.$confirm('确认转入')
