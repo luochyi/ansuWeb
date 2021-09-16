@@ -22,6 +22,7 @@
         <el-button class="whiteBtn">取 消</el-button>
       </div>
     </div>
+    <!-- 组件 -->
     <commonTable
       :columns="columns"
       :data="tableData"

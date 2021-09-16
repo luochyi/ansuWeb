@@ -21,6 +21,7 @@ Vue.use(QuillEditor)
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(util)
+// 注册组件
 Vue.component('commonTable', commonTable)
 
 new Vue({
