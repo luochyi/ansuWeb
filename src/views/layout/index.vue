@@ -104,8 +104,8 @@ export default {
                 icon: 'predictionIcon',
                 hidden: false
               },
-              ID: 30,
-              menuId: '30',
+              ID: 10,
+              menuId: '10',
               path: 'prediction',
               parentId: '1'
             },
@@ -116,8 +116,8 @@ export default {
                 icon: 'waybillIcon',
                 hidden: false
               },
-              ID: 31,
-              menuId: '31',
+              ID: 11,
+              menuId: '11',
               path: 'waybill',
               parentId: '1'
             },
@@ -128,20 +128,8 @@ export default {
                 icon: 'managementIcon',
                 hidden: false
               },
-              ID: 32,
-              menuId: '32',
-              path: 'management',
-              parentId: '1'
-            },
-            {
-              name: 'historyOrder',
-              meta: {
-                title: '历史订单',
-                icon: 'historyOrderIcon',
-                hidden: false
-              },
-              ID: 33,
-              menuId: '33',
+              ID: 12,
+              menuId: '12',
               path: 'historyOrder',
               parentId: '1'
             },
@@ -152,8 +140,8 @@ export default {
                 icon: 'portissuesIcon',
                 hidden: false
               },
-              ID: 34,
-              menuId: '34',
+              ID: 13,
+              menuId: '13',
               path: 'portissues',
               parentId: '1'
             },
@@ -164,10 +152,86 @@ export default {
                 icon: 'PostportissuesIcon',
                 hidden: false
               },
-              ID: 35,
-              menuId: '35',
+              ID: 14,
+              menuId: '14',
               path: 'Postportissues',
               parentId: '1'
+            }
+          ]
+        },
+        {
+          name: 'finance',
+          meta: {
+            title: '财务费用',
+            icon: 'FinanceIcon',
+            hidden: false
+          },
+          ID: 2,
+          menuId: '2',
+          path: 'finance',
+          parentId: '0',
+          children: [
+            {
+              name: 'finance',
+              meta: {
+                title: '运单费用',
+                icon: 'finance',
+                hidden: false
+              },
+              ID: 20,
+              menuId: '20',
+              path: 'finance',
+              parentId: '2',
+              children: [
+                {
+                  name: 'expenseConfirmation',
+                  meta: {
+                    title: '费用确认',
+                    icon: 'expenseConfirmation',
+                    hidden: false
+                  },
+                  ID: 201,
+                  menuId: '201',
+                  path: 'expenseConfirmation',
+                  parentId: '20'
+                },
+                {
+                  name: 'expenseAudit',
+                  meta: {
+                    title: '费用审核',
+                    icon: 'expenseAudit',
+                    hidden: false
+                  },
+                  ID: 202,
+                  menuId: '202',
+                  path: 'expenseAudit',
+                  parentId: '20'
+                },
+                {
+                  name: 'expenseConfirmationForm',
+                  meta: {
+                    title: '费用确认单',
+                    icon: 'expenseConfirmationForm',
+                    hidden: false
+                  },
+                  ID: 203,
+                  menuId: '203',
+                  path: 'expenseConfirmationForm',
+                  parentId: '20'
+                },
+                {
+                  name: 'expenseRegister',
+                  meta: {
+                    title: '费用登记',
+                    icon: 'expenseRegister',
+                    hidden: false
+                  },
+                  ID: 204,
+                  menuId: '204',
+                  path: 'expenseRegister',
+                  parentId: '20'
+                }
+              ]
             }
           ]
         },
@@ -178,8 +242,8 @@ export default {
             icon: 'channelIcon',
             hidden: false
           },
-          ID: 2,
-          menuId: '2',
+          ID: 3,
+          menuId: '3',
           path: 'channel',
           parentId: '0',
           children: [
@@ -193,7 +257,7 @@ export default {
               ID: 30,
               menuId: '30',
               path: 'agentManage',
-              parentId: '1'
+              parentId: '3'
             },
             {
               name: 'channelAllocation',
@@ -205,7 +269,7 @@ export default {
               ID: 31,
               menuId: '31',
               path: 'channelAllocation',
-              parentId: '1',
+              parentId: '3',
               children: [
                 {
                   name: 'channelSetting',
@@ -214,8 +278,8 @@ export default {
                     icon: 'channelSetting',
                     hidden: false
                   },
-                  ID: 120,
-                  menuId: '120',
+                  ID: 310,
+                  menuId: '310',
                   path: 'channelSetting',
                   parentId: '31'
                 },
@@ -226,8 +290,8 @@ export default {
                     icon: 'channelBrandAgent',
                     hidden: false
                   },
-                  ID: 121,
-                  menuId: '121',
+                  ID: 311,
+                  menuId: '311',
                   path: 'channelBrandAgent',
                   parentId: '31'
                 }
@@ -243,7 +307,7 @@ export default {
               ID: 32,
               menuId: '32',
               path: 'subsidiaryChannel',
-              parentId: '1'
+              parentId: '3'
             },
             {
               name: 'invoiceTemplate',
@@ -255,7 +319,7 @@ export default {
               ID: 33,
               menuId: '33',
               path: 'invoiceTemplate',
-              parentId: '1'
+              parentId: '3'
             }
           ]
         },
@@ -266,8 +330,8 @@ export default {
             icon: 'channelIcon',
             hidden: false
           },
-          ID: 3,
-          menuId: '3',
+          ID: 4,
+          menuId: '4',
           path: 'customerManage',
           parentId: '4',
           children: [
@@ -316,8 +380,8 @@ export default {
             icon: 'configIcon',
             hidden: false
           },
-          ID: 4,
-          menuId: '4',
+          ID: 5,
+          menuId: '5',
           path: 'configureCenter',
           parentId: '0',
           children: [
@@ -365,8 +429,8 @@ export default {
                 icon: 'distributionDriver',
                 hidden: false
               },
-              ID: 52,
-              menuId: '52',
+              ID: 53,
+              menuId: '53',
               path: 'distributionDriver',
               parentId: '5'
             },
@@ -377,8 +441,8 @@ export default {
                 icon: 'truckManagement',
                 hidden: false
               },
-              ID: 53,
-              menuId: '53',
+              ID: 54,
+              menuId: '54',
               path: 'truckManagement',
               parentId: '5'
             },
@@ -389,8 +453,8 @@ export default {
                 icon: 'customerAccount',
                 hidden: false
               },
-              ID: 54,
-              menuId: '54',
+              ID: 55,
+              menuId: '55',
               path: 'customerAccount',
               parentId: '5'
             },
@@ -401,8 +465,8 @@ export default {
                 icon: 'customerLevel',
                 hidden: false
               },
-              ID: 55,
-              menuId: '55',
+              ID: 56,
+              menuId: '56',
               path: 'customerLevel',
               parentId: '5'
             },
@@ -413,8 +477,8 @@ export default {
                 icon: 'receivingWarehouseManage',
                 hidden: false
               },
-              ID: 56,
-              menuId: '56',
+              ID: 57,
+              menuId: '57',
               path: 'receivingWarehouseManage',
               parentId: '5'
             },
@@ -425,8 +489,8 @@ export default {
                 icon: 'warehouseOperation',
                 hidden: false
               },
-              ID: 57,
-              menuId: '57',
+              ID: 58,
+              menuId: '58',
               path: 'warehouseOperation',
               parentId: '5'
             },
@@ -437,8 +501,8 @@ export default {
                 icon: 'currencyExchangerate',
                 hidden: false
               },
-              ID: 57,
-              menuId: '57',
+              ID: 59,
+              menuId: '59',
               path: 'currencyExchangerate',
               parentId: '5'
             },
@@ -449,8 +513,8 @@ export default {
                 icon: 'countryManagement',
                 hidden: false
               },
-              ID: 58,
-              menuId: '58',
+              ID: 591,
+              menuId: '591',
               path: 'countryManagement',
               parentId: '5'
             },
@@ -461,8 +525,8 @@ export default {
                 icon: 'milestoneConfiguration',
                 hidden: false
               },
-              ID: 59,
-              menuId: '59',
+              ID: 592,
+              menuId: '592',
               path: 'milestoneConfiguration',
               parentId: '5'
             },
@@ -473,8 +537,8 @@ export default {
                 icon: 'FBAmanage',
                 hidden: false
               },
-              ID: 60,
-              menuId: '60',
+              ID: 593,
+              menuId: '593',
               path: 'FBAmanage',
               parentId: '5'
             }
