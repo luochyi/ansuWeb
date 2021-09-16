@@ -386,7 +386,7 @@ export default {
           parentId: '0',
           children: [
             {
-              name: 'subsidiary',
+              name: 'Subsidiarymanagement',
               meta: {
                 title: '子公司管理',
                 icon: 'predictionIcon',
@@ -394,7 +394,7 @@ export default {
               },
               ID: 50,
               menuId: '50',
-              path: 'subsidiary',
+              path: 'Subsidiarymanagement',
               parentId: '5'
             },
             {
@@ -410,15 +410,15 @@ export default {
               parentId: '5'
             },
             {
-              name: 'ygzh',
+              name: 'Employeeaccount',
               meta: {
                 title: '员工账号',
-                icon: 'ygzh',
+                icon: 'Employeeaccount',
                 hidden: false
               },
               ID: 52,
               menuId: '52',
-              path: 'ygzh',
+              path: 'Employeeaccount',
               parentId: '5'
             },
             // driverManagementIcon
@@ -459,15 +459,15 @@ export default {
               parentId: '5'
             },
             {
-              name: 'customerLevel',
+              name: 'Customerlevel',
               meta: {
                 title: '客户等级',
-                icon: 'customerLevel',
+                icon: 'Customerlevel',
                 hidden: false
               },
               ID: 56,
               menuId: '56',
-              path: 'customerLevel',
+              path: 'Customerlevel',
               parentId: '5'
             },
             {

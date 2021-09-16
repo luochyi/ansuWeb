@@ -8,7 +8,17 @@ export default [
       icon: 'configIcon',
       hidden: false
     },
-    redirect: '/organizationalStructure'
+    redirect: '/Subsidiarymanagement'
+  },
+  {
+    path: '/Subsidiarymanagement',
+    name: 'Subsidiarymanagement',
+    meta: {
+      title: '子公司管理',
+      icon: 'SubsidiarymanagementIcon',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/Subsidiarymanagement/Subsidiarymanagement.vue')
   },
   // 代理管理
   {
@@ -19,7 +29,17 @@ export default [
       icon: 'organizationalStructureIcon',
       hidden: false
     },
-    component: () => import('@/views/configureCenter/organizationalStructure')
+    component: () => import('@/views/configureCenter/organizationalStructure/organizationalStructure')
+  },
+  {
+    path: '/Employeeaccount',
+    name: 'Employeeaccount',
+    meta: {
+      title: '员工账号',
+      icon: 'Employeeaccount',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/Employeeaccount/Employeeaccount.vue')
   },
   {
     path: '/distributionDriver',
@@ -62,14 +82,14 @@ export default [
     component: () => import('@/views/configureCenter/customerAccount/customerAccount.vue')
   },
   {
-    path: '/customerAccount/addAccount',
-    name: 'addAccount',
+    path: '/Customerlevel',
+    name: 'Customerlevel',
     meta: {
-      title: '客户账户',
-      icon: 'addAccount',
+      title: '客户等级',
+      icon: 'Customerlevel',
       hidden: false
     },
-    component: () => import('@/views/configureCenter/customerAccount/addAccount.vue')
+    component: () => import('@/views/configureCenter/Customerlevel/Customerlevel.vue')
   },
   {
     path: '/receivingWarehouseManage',
@@ -90,6 +110,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/receivingWarehouseManage/addWarehouse.vue')
+  },
+  {
+    path: '/currencyExchangerate',
+    name: 'currencyExchangerate',
+    meta: {
+      title: '货币汇率',
+      icon: 'currencyExchangerate',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/currencyExchangerate/currencyExchangerate.vue')
   },
   // 仓库操作
   {
@@ -131,6 +161,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/countryManagement/addCountry.vue')
+  },
+  {
+    path: '/milestoneConfiguration',
+    name: 'milestoneConfiguration',
+    meta: {
+      title: '里程碑配置',
+      icon: 'milestoneConfiguration',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/milestoneConfiguration/milestoneConfiguration.vue')
   },
   {
     path: '/FBAmanage',

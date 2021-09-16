@@ -1,3 +1,4 @@
+// 预报管理
 <template>
   <div>
     <div class='main'>
@@ -197,60 +198,12 @@
               <template slot-scope="scope">
                  <el-button type="text" @click="Orderdetails(scope.row.id)"> 查看详情</el-button>
                  <span v-if="scope.row.Forecasttype == '未建计划'" style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="scope.row.Forecasttype == '未建计划'" type="text" @click="table = true" style="margin-left: 16px;"> 发货 </el-button>
-                <el-drawer title="我嵌套了表格!"  :visible.sync="table" direction="rtl" size="50%">
-           <el-table :data="gridData">
-      <el-table-column property="date" label="日期" width="150"></el-table-column>
-      <el-table-column property="name" label="姓名" width="200"></el-table-column>
-      <el-table-column property="address" label="地址"></el-table-column>
-    </el-table>
-</el-drawer>
-
+                <el-button v-if="scope.row.Forecasttype == '未建计划'" type="text" @click="drawer= true" style="margin-left: 16px;"> 发货 </el-button>
                  <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="Coordinated"> 协同运单 </el-button>
               </template>
             </el-table-column>
           </el-table>
-          <!-- 列表显示设置 -->
-            <el-drawer
-            title="批量导出Excel"
-            :visible.sync="visibleList"
-            :wrapperClosable='false'
-            size="50%">
-              <div style="padding:20px 26px 26px 26px;margin-top:26px;background:#ffffff;margin-bottom:26px">
-                  <el-row class="Flexcenter">
-                    <span class="query">导出配置&nbsp;&nbsp;</span>
-                    <el-select size="small" v-model="listQueryName"></el-select>
-                    <el-button class="orangeBtn" style="margin-left:20px">确 定</el-button>
-                    <el-button class="whiteBtn" style="margin-left:20px" @click="preservation = true">保存配置</el-button>
-                    <el-button class="whiteBtn" style="margin-left:20px">查看配置</el-button>
-                  </el-row>
-                  <el-row class="mainSearch">请选择需要导出Excel的字段</el-row>
-                  <!-- 全选/反选 -->
-                  <div class="Flexcenter" style="margin-left:24px">
-                    <el-checkbox v-model="checked" @change="checked1"/>
-                    <span class="checked1">全部</span>
-                  </div>
-                  <el-tree
-                  ref="tree"
-                  :default-checked-keys="roleData"
-                  :data="data"
-                  show-checkbox
-                  @check-change="handleCheckChange"
-                  default-expand-all
-                  node-key="id"
-                  :props="{label: 'label'}">
-                </el-tree>
-              </div>
-            <el-row style="background:#fff;text-align:left;padding:26px;margin-top:26px">
-                <el-button class="orangeBtn long1" plain size="small"  style="margin-right:20px">
-                    提 交
-                </el-button>
-                <el-button type="info long1" plain size="small" style="margin-right:20px">
-                    取 消
-                </el-button>
-            </el-row>
-            </el-drawer>
           <!-- 分页 -->
          <div class='block'>
             <el-pagination
@@ -263,6 +216,21 @@
               </el-pagination>
           </div>
         </div>
+        <el-drawer
+  title="我是外面的 Drawer"
+  :visible.sync="drawer"
+  size="50%">
+  <div>
+   <el-button @click="innerDrawer = true">打开里面的!</el-button>
+   <el-drawer
+     title="我是里面的"
+     :append-to-body="true"
+     :before-close="handleClose"
+     :visible.sync="innerDrawer">
+     <p>_(:зゝ∠)_</p>
+   </el-drawer>
+  </div>
+</el-drawer>
       </div>
     </div>
   </div>
@@ -272,31 +240,9 @@
 export default {
   data () {
     return {
-      customerCode: null,
-      valuea: null,
-      valueb: null,
-      valuec: null,
-      drawer: false, // 抽屉
-      table: false,
-      dialog: false,
-      loading: false,
-      gridData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }],
+      // 抽屉
+      drawer: false,
+      innerDrawer: false,
       // 分页
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码
@@ -397,54 +343,10 @@ export default {
           salesman: '李四', // 业务员
           coordination: '无' // 协同
         }
-      ],
-
-      visibleList: false, // 批量导出
-      listQueryName: '', // 导出配置名称
-      // 树组
-      data: [
-        {
-          label: '客户信息',
-          id: 1,
-          children: [{
-            label: '客户名称',
-            id: '1-1'
-          },
-          {
-            label: '客户编码',
-            id: '1-2'
-          }]
-        },
-        {
-          label: '运号',
-          id: 2,
-          children: [{
-            label: '订单类型',
-            id: '2-1'
-          },
-          {
-            label: '运单号',
-            id: '2-2'
-          },
-          {
-            label: '预报单号',
-            id: '2-3'
-          },
-          {
-            label: '货件编号',
-            id: '2-4'
-          }
-          ]
-        }
-      ],
-      roleData: [],
-      checked: ''
+      ]
     }
   },
   methods: {
-    handleSelectionChange () {},
-    checked1 () {},
-    handleCheckChange () {},
     waybill () {
       this.$router.push({ name: 'waybill' })
     },
@@ -458,101 +360,17 @@ export default {
       console.log(tab, event)
     },
     handleClose (done) {
-      if (this.loading) {
-        return
-      }
-      this.$confirm('确定要提交表单吗？')
+      this.$confirm('还有未保存的工作哦确定关闭吗？')
         .then(_ => {
-          this.loading = true
-          this.timer = setTimeout(() => {
-            done()
-            // 动画关闭需要一定的时间
-            setTimeout(() => {
-              this.loading = false
-            }, 400)
-          }, 2000)
+          done()
         })
         .catch(_ => {})
-    },
-    cancelForm () {
-      this.loading = false
-      this.dialog = false
-      clearTimeout(this.timer)
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
-.SelectedNodeStyle{
-  margin: 10px 0;
-}
-.checked1{
-  font-size: 16px;
-  margin-left: 10px;
-  font-family: PingFangSC-Semibold, PingFang SC;
-  font-weight: 600;
-  color: rgba(0, 0, 0, 0.85);
-}
-.el-tree {
-    /deep/ .el-tree-node__children {
-        display: flex;
-        .el-tree-node__children {
-            display: flex;
-        }
-    }
-}
-.mainSearch{
-  font-size: 16px;
-  margin: 26px 0 16px 0;
-  font-family: PingFangSC-Medium, PingFang SC;
-  font-weight: 500;
-  color: #333333;
-}
-.query{
-  font-size: 14px;
-  font-family: PingFangSC-Regular, PingFang SC;
-  font-weight: 400;
-  color: rgba(0, 0, 0, 0.65);
-}
-/deep/ .el-drawer{
-  padding-top: 0px;
-  background: #E8EBF2;
-    .el-drawer__header{
-      padding: 30px 20px;
-      margin-bottom: 0px;
-      text-align: left;
-      background: #FFFFFF;
-      font-size: 16px;
-      font-family: PingFangSC-Medium, PingFang SC;
-      font-weight: 500;color: #333333;
-}
-.el-drawer__rtl{
-    padding:0;
-    margin:0;
-}
-.el-drawer__body{
-      margin-top: 0px;
-      padding-top: 0px;
-      text-align: left;
-      overflow: scroll;
-    }
-.drawer_btn{
-      display: flex;
-      width:100%;
-      padding-left: 20px;
-      align-items: center;
-      justify-content: flex-start;
-      margin-top: 26px;
-      // margin-left: -26px;
-      margin-bottom: -26px;
-      // width: 100%;
-      box-sizing: border-box;
-      height: 60px;
-      background: #FFFFFF;
-      box-sizing: border-box;
-    }
-}
 // .main {
 //   margin: 20px 0px;
 // }
