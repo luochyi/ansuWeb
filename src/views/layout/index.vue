@@ -86,7 +86,7 @@ export default {
           children: []
         },
         {
-          name: 'order',
+          name: 'orderManager',
           meta: {
             title: '订单管理',
             icon: 'orderIcon',
@@ -94,7 +94,7 @@ export default {
           },
           ID: 1,
           menuId: '1',
-          path: 'order',
+          path: 'orderManager',
           parentId: '0',
           children: [
             {
@@ -112,7 +112,7 @@ export default {
             {
               name: 'waybill',
               meta: {
-                title: '运单管理',
+                title: '预报运单',
                 icon: 'waybillIcon',
                 hidden: false
               },
@@ -122,15 +122,51 @@ export default {
               parentId: '1'
             },
             {
-              name: 'historyOrder',
+              name: 'management',
               meta: {
-                title: '历史订单',
-                icon: 'historyOrder',
+                title: '运单管理',
+                icon: 'managementIcon',
                 hidden: false
               },
               ID: 32,
               menuId: '32',
+              path: 'management',
+              parentId: '1'
+            },
+            {
+              name: 'historyOrder',
+              meta: {
+                title: '历史订单',
+                icon: 'historyOrderIcon',
+                hidden: false
+              },
+              ID: 33,
+              menuId: '33',
               path: 'historyOrder',
+              parentId: '1'
+            },
+            {
+              name: 'portissues',
+              meta: {
+                title: '港前问题件',
+                icon: 'portissuesIcon',
+                hidden: false
+              },
+              ID: 34,
+              menuId: '34',
+              path: 'portissues',
+              parentId: '1'
+            },
+            {
+              name: 'Postportissues',
+              meta: {
+                title: '港后问题件',
+                icon: 'PostportissuesIcon',
+                hidden: false
+              },
+              ID: 35,
+              menuId: '35',
+              path: 'Postportissues',
               parentId: '1'
             }
           ]
@@ -233,7 +269,7 @@ export default {
           ID: 3,
           menuId: '3',
           path: 'customerManage',
-          parentId: '0',
+          parentId: '4',
           children: [
             {
               name: 'highSeaCustomers',

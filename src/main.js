@@ -9,12 +9,12 @@ import QuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.bubble.css'
 import 'quill/dist/quill.snow.css'
+import commonTable from './components/table/table'
 
 // echarts
 import echarts from 'echarts'
 //
 import util from '@/utils/util.js'
-import Table from '@/components/table/index.vue'
 
 Vue.prototype.echarts = echarts // echarts
 Vue.use(QuillEditor)
@@ -22,7 +22,9 @@ Vue.use(QuillEditor)
 Vue.config.productionTip = false
 Vue.use(ElementUI)
 Vue.use(util)
-Vue.component('Table', Table)
+// 注册组件
+Vue.component('commonTable', commonTable)
+
 new Vue({
   router,
   store,

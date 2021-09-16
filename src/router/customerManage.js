@@ -1,4 +1,4 @@
-// 渠道
+// 客户管理
 export default [
   {
     path: '/customerManage',
@@ -18,7 +18,7 @@ export default [
       icon: 'highSeaCustomers',
       hidden: false
     },
-    component: () => import('@/views/customerManage/highSeaCustomers')
+    component: () => import('@/views/customerManage/highSeaCustomers/highSeaCustomers')
   },
   {
     path: '/privateSea',
@@ -28,7 +28,7 @@ export default [
       icon: 'privateSea',
       hidden: false
     },
-    component: () => import('@/views/customerManage/privateSea')
+    component: () => import('@/views/customerManage/privateSea/privateSea')
   },
   {
     path: '/myCustomer',
@@ -38,7 +38,7 @@ export default [
       icon: 'myCustomer',
       hidden: false
     },
-    component: () => import('@/views/customerManage/myCustomer')
+    component: () => import('@/views/customerManage/myCustomer/myCustomer')
   },
   {
     path: '/addcustomerh',
@@ -48,7 +48,7 @@ export default [
       icon: 'addcustomerh',
       hidden: false
     },
-    component: () => import('@/views/customerManage/addcustomerh.vue')
+    component: () => import('@/views/customerManage/highSeaCustomers/addcustomerh.vue')
   },
   {
     path: '/addcustomerp',
@@ -59,6 +59,46 @@ export default [
       hidden: false
     },
     component: () => import('@/views/customerManage/addcustomerp.vue')
+  },
+  {
+    path: '/Visitrecord',
+    name: 'Visitrecord',
+    meta: {
+      title: '拜访记录',
+      icon: 'Visitrecord',
+      hidden: false
+    },
+    component: () => import('@/views/customerManage/privateSea/Visitrecord.vue')
+  },
+  {
+    path: '/record',
+    name: 'record',
+    meta: {
+      title: '新增拜访记录',
+      icon: 'record',
+      hidden: false
+    },
+    component: () => import('@/views/customerManage/privateSea/record.vue')
+  },
+  {
+    path: '/Viewdetails',
+    name: 'Viewdetails',
+    meta: {
+      title: '查看详情',
+      icon: 'Viewdetails',
+      hidden: false
+    },
+    component: () => import('@/views/customerManage/myCustomer/Viewdetails.vue')
+  },
+  {
+    path: '/modify',
+    name: 'modify',
+    meta: {
+      title: '修改',
+      icon: 'modify',
+      hidden: false
+    },
+    component: () => import('@/views/customerManage/myCustomer/modify.vue')
   }
 
 ]

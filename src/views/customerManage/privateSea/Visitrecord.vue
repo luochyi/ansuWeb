@@ -2,52 +2,54 @@
   <div>
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span class='text'>我的客户</span>
+      <span class='text'>拜访记录</span>
+    </el-row>
+    <el-row type='flex'  class='title' align='middle'>
+      <span class='texta' :span='18'>深圳大成亚马逊科技有限公司</span>
     </el-row>
     <!-- 主要内容 -->
     <div class='content'>
       <!-- 搜索栏 -->
       <el-row  class='searchbox1'>
         <!-- 客户名称 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>客户名称</span>
+        <el-col :span='20' class='colbox'>
+          <span class='text'>拜访时间</span>
+          <el-date-picker
+      v-model="value1"
+      type="monthrange"
+      range-separator="——"
+      start-placeholder="开始日期"
+      end-placeholder="结束日期">
+    </el-date-picker>
+    <span class='text'>拜访人</span>
           <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
+            <el-input v-model='agentName' placeholder='请选择拜访人'></el-input>
           </el-col>
         </el-col>
-         <el-col :span='6' class='colbox'>
-          <span class='text'>客户编码</span>
-          <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-         <el-col :span="6" class='colbox' >
-            <span class="text">上月上单时间&nbsp;</span>
-            <span><el-select v-model="agentName" size="small" placeholder="超过一个月"></el-select></span>
-          </el-col>
         <!--  -->
-        <el-col :span='6' class='colbox justify-center'>
+        <el-col :span='6' class='colboxa justify-center'>
           <el-button class='orangeBtn long1'>查 询</el-button>
           <el-button class='wuBtn long1'>重 置</el-button>
+        </el-col>
+        <el-col :span='12' class='colboxx justify-center'>
+          <el-button @click="record" class='orangeBtn long3'>⊕ 新增拜访记录</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
       <div>
+
         <div class="table">
           <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
             :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column type="selection" width="55"></el-table-column>
-             <el-table-column prop="name"  label="客户名称"  width="255"></el-table-column>
-    <el-table-column  prop="code" label="客户编码"  width="138"> </el-table-column>
-     <el-table-column  prop="contacts" label="客户联系人"  width="111"></el-table-column>
-     <el-table-column  prop="number"  label="客户联系电话"  width="137"> </el-table-column>
-    <el-table-column  prop="time"  label="上次下单时间"  width="159"></el-table-column>
-    <el-table-column  prop="address"  label="未核销金额"  width="119"> </el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="169">
+             <el-table-column prop="name" label="拜访时间" width="221"></el-table-column>
+             <el-table-column prop="contacts" label="拜访人" width="86"></el-table-column>
+             <el-table-column prop="number" label="随行人员" width="143"></el-table-column>
+             <el-table-column prop="address" label="拜访记录" width="323"></el-table-column>
+             <el-table-column prop="address" label="拜访总结" width="453"></el-table-column>
+            <el-table-column fixed="right" label="操作" min-width="94">
               <template slot-scope="scope">
-                <el-button type="text" @click="toDetail(scope.row.id)"> 查看详情</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">指派业务</el-button>
+                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">查看详情</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -65,7 +67,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
@@ -74,8 +75,10 @@
 export default {
   data () {
     return {
+      changes: false,
+      dialogVisible: false,
+      informationis: false,
       activeName: '1', // 标签绑定
-
       pageSize: 10,
       currentPage: 1,
       total: 50,
@@ -109,6 +112,12 @@ export default {
     }
   },
   methods: {
+    record () {
+      this.$router.push({ name: 'record' })
+    },
+    Visitrecord () {
+      this.$router.push({ name: 'Visitrecord' })
+    },
     getData () {
       let params = {
         status: Number(this.activeName),
@@ -168,8 +177,44 @@ export default {
   }
 
 }
+.title .text{
+    width: 250px;
+    text-align:left;
+    margin: 32px;
+}
+.title .texta{
+    width: 250px;
+    text-align:left;
+    margin: 32px;
+    color:#FB4702 ;
+    font-size: 18px;
+    line-height: 25px;
+    font-family: PingFangSC-Semibold, PingFang SC;
+}
+/deep/ .el-dialog{
+  text-align: left;
+}
+//biankuang
+
+/deep/ .input{
+  height: 80px;
+}
 /deep/ .title{
  height: 56px;
  font-size: 16px;
+}
+.searchbox1 .colbox .text {
+    width: 150px;
+}
+.colbox{
+    width: 550px;
+}
+.colboxa {
+width: 450px;
+flex: right;
+}
+.colboxx {
+width: 200px;
+flex: right;
 }
 </style>

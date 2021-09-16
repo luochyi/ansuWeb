@@ -18,23 +18,26 @@
             <el-col :span='6'>
               <span class='text'>预报单号</span>
             </el-col>
-            <el-col :span='16'>
-              <el-input v-model='predictionNo' placeholder='请输入'></el-input>
+            <el-col :span='12'>
+              <el-input v-model='ForecastNo' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>运单号</span>
+              <span class='text'>预报类型</span>
             </el-col>
-            <el-col :span='16'>
-              <el-input v-model='waybillNo' placeholder='请输入'></el-input>
+            <el-col :span='13'>
+                        <el-select v-model="value" placeholder="请选择">
+         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+         </el-option>
+         </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
               <span class='text'>客户名称</span>
             </el-col>
-            <el-col :span='16'>
+            <el-col :span='11'>
               <el-input v-model='customerName' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
@@ -42,178 +45,170 @@
             <el-col :span='6'>
               <span class='text'>客户编码</span>
             </el-col>
-            <el-col :span='16'>
+            <el-col :span='13'>
               <el-input v-model='customerCode' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
         </el-row>
-        <!--  -->
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>预报渠道</span>
+              <span class='text'>业务员</span>
             </el-col>
-            <el-col :span='16'>
-              <el-input
-                v-model='predictionChannel'
-                placeholder='请输入'
-              ></el-input>
+            <el-col :span='13'>
+              <el-select v-model="valuea" placeholder="请输入">
+         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+         </el-option>
+         </el-select>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>寄件方式</span>
+            </el-col>
+            <el-col :span='13'>
+                         <el-select v-model="valueb" placeholder="请选择">
+         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+         </el-option>
+         </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
               <span class='text'>收货司机</span>
             </el-col>
-            <el-col :span='16'>
-              <el-input
-                v-model='receivingDriver'
-                placeholder='请输入'
-              ></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>业务员</span>
-            </el-col>
-            <el-col :span='16'>
-              <el-input v-model='salesman' placeholder='请输入'></el-input>
+            <el-col :span='13'>
+                       <el-select v-model="valuec" placeholder="请选择">
+         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+         </el-option>
+         </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
-            <el-button class='wuBtn long1'>展开全部</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
         <div class='table'>
           <el-row class='tableBtn'>
             <el-col :span='12' class='left'>
-              <el-button class='orangeBtn long1' size="samll"
-              style="width:130px;background: #FEF4E1;color: rgba(0, 0, 0, 0.65);" @click="visibleList = true">批量导出Excel</el-button>
+              <el-button class='batch'>批量导出Excel</el-button>
+              <el-button class='batch'>协调订单</el-button>
             </el-col>
-            <el-col :span='12' class='right'>
-              <el-button class='whiteBtn '>查询条件设置</el-button>
+            <el-col :span='20' class='right'>
               <el-button class='whiteBtn '>列表显示设置</el-button>
             </el-col>
           </el-row>
-          <!--  -->
-          <el-table
-            :data='tableData'
-            style='width: 100%; margin-top: 20px'
-            :header-cell-style="{ background: '#E9E9E9' }"
-          >
+          <br>
+          <!-- 表格 -->
+          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
+            :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column type='selection' min-width='50'> </el-table-column>
             <!-- 预报单号 -->
-            <el-table-column
-              prop='predictionNo'
-              label='预报单号'
-              min-width='130'
-            >
+            <el-table-column  prop='ForecastNo'  label='预报单号'  min-width='153'> </el-table-column>
+            <!-- 预报类型 -->
+            <el-table-column  prop='Forecasttype'  label='预报类型'  min-width='126'></el-table-column>
+            <!-- 票数 -->
+            <el-table-column label='票数' min-width='107'>
+               <template v-slot='scope'>
+                <span style='margin-right: 5px'>  {{ scope.row.votes }}  </span>
+                <el-button @click="waybill" type='text'>查看</el-button>
+              </template>
             </el-table-column>
-            <!-- 客户名称 -->
-            <el-table-column
-              prop='customerName'
-              label='客户名称'
-              min-width='200'
-            >
-            </el-table-column>
+             <!-- 客户名称 -->
+            <el-table-column  prop='customerName'  label='客户名称'  min-width='193'>  </el-table-column>
             <!-- 客户编号 -->
-            <el-table-column
-              prop='customerCode'
-              label='客户编号'
-              min-width='80'
-            >
+            <el-table-column  prop='Customernumber'  label='客户编号'  min-width='118'>
             </el-table-column>
-            <!-- 司机 -->
-            <el-table-column label='收货司机' min-width='110'>
+            <!-- 收货司机 -->
+            <el-table-column label='收货司机' min-width='107'>
               <template v-slot='scope'>
                 <span style='margin-right: 5px'>
-                  {{ scope.row.receivingDriver }}
+                  {{ scope.row.Receivingdriver }}
                 </span>
                 <el-button type='text'>查看</el-button>
               </template>
             </el-table-column>
-            <!-- 分票 -->
-            <el-table-column label='发票' min-width='130'>
-              <template v-slot='scope'>
-                <div v-if="scope.row.isvotes === '已分票'">
-                  <span class='greenCricle' style='margin-right: 5px'></span>
-                  <span style='margin-right: 15px'>
-                    {{ scope.row.isvotes }}
-                  </span>
-                  <el-button type='text'>详情</el-button>
-                </div>
-                <div v-else-if="scope.row.isvotes === '部分分票'">
-                  <span class='orangeCricle' style='margin-right: 5px'></span>
-                  <span style='margin-right: 15px'>
-                    {{ scope.row.isvotes }}
-                  </span>
-                  <el-button type='text'>分票</el-button>
-                </div>
-                <div v-else>
-                  <span class='redCricle' style='margin-right: 5px'></span>
-                  <span style='margin-right: 15px'>
-                    {{ scope.row.isvotes }}
-                  </span>
-                  <el-button type='text'>分票</el-button>
-                </div>
+            <!-- 预报件数 -->
+            <el-table-column prop='Forecastnumber' label='预报件数' min-width='86'>  </el-table-column>
+            <!-- 预报重量 -->
+            <el-table-column prop='Predictedweight' label='预报重量' min-width='80'>  </el-table-column>
+            <!-- 预报方数 -->
+             <el-table-column prop='Predictionsquare' label='预报方数' min-width='80'>  </el-table-column>
+             <!-- 收货件数 -->
+            <el-table-column label='收货件数' min-width='107' v-if="activeName === '2'">
+              <template v-slot='scope' >
+                <span style='margin-right: 5px'>
+                  {{ scope.row.goodsreceived }}
+                </span>
+                <el-button type='text'>查看</el-button>
               </template>
             </el-table-column>
-            <!-- 发票 -->
-            <el-table-column label='发票' min-width='130'>
-              <template v-slot='scope'>
-                <div v-if="scope.row.invoice === '已做发票'">
-                  <span class='greenCricle' style='margin-right: 5px'></span>
-                  <span style='margin-right: 15px'>
-                    {{ scope.row.invoice }}
-                  </span>
-                  <el-button type='text'>详情</el-button>
-                </div>
-                <div v-else>
-                  <span class='redCricle' style='margin-right: 5px'></span>
-                  <span style='margin-right: 15px'>
-                    {{ scope.row.invoice }}
-                  </span>
-                  <el-button type='text'>制作</el-button>
-                </div>
+             <!-- 收货件数 -->
+            <el-table-column label='收货件数' min-width='107' v-if="activeName === '3'">
+              <template v-slot='scope' >
+                <span style='margin-right: 5px'>
+                  {{ scope.row.goodsreceived }}
+                </span>
+                <el-button type='text'>查看</el-button>
               </template>
             </el-table-column>
-            <!-- 票数 -->
-            <el-table-column label='收货司机' min-width='80'>
-              <template v-slot='scope'>
-                <span> {{ scope.row.invoiceNum }}票 </span>
-              </template>
-            </el-table-column>
-            <!-- 运单号 -->
-            <el-table-column prop='waybillNo' label='运单号' min-width='150'>
-            </el-table-column>
-            <!-- 运单号 -->
-            <el-table-column prop='waybillNo' label='运单号' min-width='150'>
+             <!-- 入库件数 -->
+             <el-table-column prop='warehousedpieces' label='入库件数' min-width='182' v-if="activeName === '3'">
             </el-table-column>
             <!-- 货好时间 -->
-            <el-table-column label='货好时间' min-width='160'>
+            <el-table-column label='货好时间' min-width='157'>
               <template v-slot='scope'>
                 {{ scope.row.completeTime }}
               </template>
             </el-table-column>
             <!-- 寄件方式 -->
-            <el-table-column label='寄件方式' min-width='160'>
+            <el-table-column label='寄件方式' min-width='81'>
               <template v-slot='scope'>
                 {{ scope.row.mailingMethod }}
               </template>
             </el-table-column>
-            <!-- 操作 -->
-            <el-table-column label='操作' fixed='right' min-width='110'>
+            <!-- 预报时间 -->
+             <el-table-column prop='Forecasttime' label='预报时间' min-width='182'>
+            </el-table-column>
+              <!-- 收货时间 -->
+             <el-table-column prop='Receiving' label='收货时间' min-width='182' v-if="activeName === '2'">
+            </el-table-column>
+              <!-- 收货时间 -->
+             <el-table-column prop='Receiving' label='收货时间' min-width='182' v-if="activeName === '3'">
+            </el-table-column>
+              <!-- 入库时间 -->
+             <el-table-column prop='Warehousingtime' label='入库时间' min-width='182' v-if="activeName === '3'">
+            </el-table-column>
+            <!-- 业务员 -->
+            <el-table-column label='业务员' min-width='110'>
               <template v-slot='scope'>
-                <div v-if="scope.row.isvotes === '已分票'">
-                  <el-button type='text'>查看详情</el-button>
-                </div>
-                <div v-else>
-                  <el-button type='text'>查看详情</el-button>
-                  <span style='color: blue'>|</span>
-                  <el-button type='text'>分票</el-button>
-                </div>
+                <span style='margin-right: 5px'>
+                  {{ scope.row.salesman }}
+                </span>
+                <el-button type='text'>查看</el-button>
+              </template>
+            </el-table-column>
+            <!-- 协同 -->
+             <el-table-column prop='coordination' label='协同' min-width='124'>
+            </el-table-column>
+            <!-- 操作 -->
+            <el-table-column label='操作' fixed='right' min-width='199'>
+              <template slot-scope="scope">
+                 <el-button type="text" @click="Orderdetails(scope.row.id)"> 查看详情</el-button>
+                 <span v-if="scope.row.Forecasttype == '未建计划'" style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button v-if="scope.row.Forecasttype == '未建计划'" type="text" @click="table = true" style="margin-left: 16px;"> 发货 </el-button>
+                <el-drawer title="我嵌套了表格!"  :visible.sync="table" direction="rtl" size="50%">
+           <el-table :data="gridData">
+      <el-table-column property="date" label="日期" width="150"></el-table-column>
+      <el-table-column property="name" label="姓名" width="200"></el-table-column>
+      <el-table-column property="address" label="地址"></el-table-column>
+    </el-table>
+</el-drawer>
+
+                 <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click="Coordinated"> 协同运单 </el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -258,16 +253,15 @@
             </el-row>
             </el-drawer>
           <!-- 分页 -->
-          <div class='block'>
-            <span>共搜索到{{ total }}条数据</span>
+         <div class='block'>
             <el-pagination
               :current-page.sync='currentPage'
               :pager-count='9'
-              :page-size='pageSize'
-              :page-sizes='[10, 20, 50, 100, 200, 500]'
-              layout='prev, pager, next, sizes, jumper'
-              :total='total'
-            ></el-pagination>
+               :page-size='pageSize'
+               :page-sizes='[10, 20, 50, 100]'
+              layout='total, sizes, prev, pager, next, jumper'
+              :total='150'>
+              </el-pagination>
           </div>
         </div>
       </div>
@@ -279,31 +273,126 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
+      drawer: false, // 抽屉
+      table: false,
+      dialog: false,
+      loading: false,
+      gridData: [{
+        date: '2016-05-02',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-04',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-01',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }, {
+        date: '2016-05-03',
+        name: '王小虎',
+        address: '上海市普陀区金沙江路 1518 弄'
+      }],
+      // 分页
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码
+      total: 150, // 数据数量
+      a: 1,
+      b: 9,
 
-      activeName: '1',
-      predictionNo: '', // 预报单号
-      waybillNo: '', // 运单号
+      activeName: '1', // 默认第一项‘已下单’
+
+      ForecastNo: '', // 预报单号
+      Forecasttype: '', // 预报类型
+      votes: '', // 票数
       customerName: '', // 客户名称
-      customerCode: '', // 客户编码
-      predictionChannel: '', // 预报渠道
-      receivingDriver: '', // 收货司机
-      salesman: '', // 业务员
+      Customernumber: '', // 客户编号
+      Receivingdriver: '', // 收货司机
+      goodsreceived: '', // 收货件数
+      warehousedpieces: '', // 入库件数
+      Forecastnumber: '', // 预报件数
+      Predictedweight: '', // 预报重量
+      Predictionsquare: '', // 预报方数
       completeTime: '', // 货好时间
       mailingMethod: '', // 寄件方式
+      Forecasttime: '', // 预报时间
+      Receiving: '', // 收货时间
+      Warehousingtime: '', // 入库时间
+      salesman: '', // 业务员
+      coordination: '', // 协同
 
+      options: [{
+        label: ''
+      }, {
+        value: '选项2',
+        label: '已建计划'
+      }, {
+        value: '选项3',
+        label: '未建计划'
+      }
+      ],
+      value: '',
       tableData: [
         {
-          predictionNo: 'YB2012090001', // 预报单号
-          customerName: '深圳沙马家居贸易有限公司', // 客户名称
-          customerCode: 'SMJJ', // 客户编号
+          ForecastNo: 'YB2012090001', // 预报单号
+          Forecasttype: '已建计划', // 预报类型
+          votes: '2票', // 票数
+          customerName: '深圳沙马家居有限公司', // 客户名称
+          Customernumber: 'SMJJ沙马家具', // 客户编号
           receivingDriver: '王狮虎', // 司机
-          isvotes: '已分票', // 分票
-          invoice: '已做发票', // 发票
-          invoiceNum: '1', // 票数
-          waybillNo: 'AS2012090001' // 运单号
+          goodsreceived: '12件', // 收货件数
+          warehousedpieces: '', // 入库件数
+          Forecastnumber: '100件', // 预报件数
+          Predictedweight: '80公斤', // 预报重量
+          Predictionsquare: '90立方', // 预报方数
+          completeTime: '今天14:00-15:00', // 货好时间
+          mailingMethod: '上门取件', // 寄件方式
+          Forecasttime: '2020年12月09日 15:00', // 预报时间
+          Receiving: '11', // 收货时间
+          Warehousingtime: '', // 入库时间
+          salesman: '张三', // 业务员
+          coordination: '协同至安速广州' // 协同
+        },
+        {
+          ForecastNo: 'YB2012090001', // 预报单号
+          Forecasttype: '未建计划', // 预报类型
+          votes: '————', // 票数
+          customerName: '深圳大通科技有限公司', // 客户名称
+          Customernumber: 'DTK大通科技', // 客户编号
+          receivingDriver: '王狮虎', // 司机
+          goodsreceived: '100件', // 件数
+          warehousedpieces: '', // 入库件数
+          Forecastnumber: '20件', // 预报件数
+          Predictedweight: '80公斤', // 预报重量
+          Predictionsquare: '90立方', // 预报方数
+          completeTime: '今天16:00-17:00', // 货好时间
+          mailingMethod: '上门取件', // 寄件方式
+          Forecasttime: '2020年12月09日 20:00', // 预报时间
+          Receiving: '', // 收货时间
+          Warehousingtime: '', // 入库时间
+          salesman: '李四', // 业务员
+          coordination: '无' // 协同
+        },
+        {
+          ForecastNo: 'YB2012090001', // 预报单号
+          Forecasttype: '已建计划', // 预报类型
+          votes: '1票', // 票数
+          customerName: '深圳大通科技有限公司', // 客户名称
+          Customernumber: 'DTK大通科技', // 客户编号
+          receivingDriver: '王狮虎', // 司机
+          goodsreceived: '', // 件数
+          warehousedpieces: '', // 入库件数
+          Forecastnumber: '20件', // 预报件数
+          Predictedweight: '80公斤', // 预报重量
+          Predictionsquare: '90立方', // 预报方数
+          completeTime: '今天16:00-17:00', // 货好时间
+          mailingMethod: '上门取件', // 寄件方式
+          Forecasttime: '2020年12月09日 20:00', // 预报时间
+          Receiving: '11', // 收货时间
+          Warehousingtime: '', // 入库时间
+          salesman: '李四', // 业务员
+          coordination: '无' // 协同
         }
       ],
 
@@ -350,24 +439,39 @@ export default {
     }
   },
   methods: {
-    // 选择标签
-    handleClick (val) {
-      console.log(val)
+    waybill () {
+      this.$router.push({ name: 'waybill' })
     },
-    // 全选/反选
-    checked1 (val) {
-      console.log(val)
-      if (this.checked) { // 全选
-        this.$refs.tree.setCheckedNodes(this.data)
-      } else { // 取消选中
-        this.$refs.tree.setCheckedKeys([])
+    Orderdetails () {
+      this.$router.push({ name: 'Orderdetails' })
+    },
+    Coordinated () {
+      this.$router.push({ name: 'Coordinated' })
+    },
+    handleClick (tab, event) {
+      console.log(tab, event)
+    },
+    handleClose (done) {
+      if (this.loading) {
+        return
       }
+      this.$confirm('确定要提交表单吗？')
+        .then(_ => {
+          this.loading = true
+          this.timer = setTimeout(() => {
+            done()
+            // 动画关闭需要一定的时间
+            setTimeout(() => {
+              this.loading = false
+            }, 400)
+          }, 2000)
+        })
+        .catch(_ => {})
     },
-    // 保存配置
-    preservation () {},
-    // 回调
-    handleCheckChange (data, checked, indeterminate) {
-      // console.log(data)
+    cancelForm () {
+      this.loading = false
+      this.dialog = false
+      clearTimeout(this.timer)
     }
   }
 }
@@ -446,4 +550,17 @@ export default {
 // .main {
 //   margin: 20px 0px;
 // }
+/deep/ .tableBtn{
+  .batch{
+    height: 32px;
+    line-height: 32px;
+    padding: 0px 15px;
+    background: #FEF4E1;
+    border-radius: 4px;
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+  }
+}
 </style>

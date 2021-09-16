@@ -197,24 +197,24 @@
 </template>
 
 <script>
-import search from "@/views/layout/search";
-import history from "@/views/layout/aside/historyComponent/history";
+import search from '@/views/layout/search'
+import history from '@/views/layout/aside/historyComponent/history'
 export default {
-  data() {
+  data () {
     return {
-      active: "",
+      active: '',
       show: false,
       isCollapse: false,
       isSider: true,
       isMobile: false,
       isShadowBg: false,
       loadingFlag: false
-    };
+    }
   },
-  created() {
-    this.$bus.on("collapse", item => {
-      this.isCollapse = item;
-    });
+  created () {
+    this.$bus.on('collapse', item => {
+      this.isCollapse = item
+    })
   },
   // beforeDestroy() {
   //   this.$bus.off("collapse");
@@ -224,14 +224,14 @@ export default {
     history
   },
   methods: {
-    totalCollapse() {
-      this.isCollapse = !this.isCollapse;
-      this.isSider = !this.isCollapse;
-      this.isShadowBg = !this.isCollapse;
-      this.$bus.emit("collapse", this.isCollapse);
+    totalCollapse () {
+      this.isCollapse = !this.isCollapse
+      this.isSider = !this.isCollapse
+      this.isShadowBg = !this.isCollapse
+      this.$bus.emit('collapse', this.isCollapse)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
