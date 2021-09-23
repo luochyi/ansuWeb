@@ -3,11 +3,15 @@
     <el-table
       :data="data"
       :max-height="maxHeight"
+      :header-cell-style="{ background: '#F5F5F6', color: '#999999FF',fontSize:'14px' }"
       border
-      stripe
       tooltip-effect="light"
       @selection-change="handleSelectionChange"
     >
+      <el-table-column
+      type="selection"
+      width="50">
+    </el-table-column>
       <template v-for="(item, index) in columns">
         <el-table-column
           v-if="item.show != false"
@@ -64,3 +68,13 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+/deep/.el-checkbox__input.is-checked .el-checkbox__inner, .el-checkbox__input.is-indeterminate .el-checkbox__inner{
+  border-color:#FE822FFF;
+  background-color:#FE822FFF;
+}
+/deep/.el-checkbox__input.is-indeterminate .el-checkbox__inner{
+  border-color:#FE822FFF;
+  background-color:#FE822FFF;
+}
+</style>

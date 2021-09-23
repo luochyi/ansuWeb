@@ -72,6 +72,7 @@ export default {
   },
   mounted () {
     this.tableData = [
+      { date: '2016-05-02', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' },
       { date: '2016-05-02', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
     ]
     this.page.total = 2
