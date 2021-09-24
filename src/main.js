@@ -10,6 +10,7 @@ import 'quill/dist/quill.core.css'
 import 'quill/dist/quill.bubble.css'
 import 'quill/dist/quill.snow.css'
 import commonTable from './components/table/table'
+import commonDrawer from './components/drawer/drawer'
 
 // echarts
 import echarts from 'echarts'
@@ -24,7 +25,7 @@ Vue.use(ElementUI)
 Vue.use(util)
 // 注册组件
 Vue.component('commonTable', commonTable)
-
+Vue.component('commonDrawer', commonDrawer)
 new Vue({
   router,
   store,

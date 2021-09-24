@@ -3,14 +3,14 @@
     <div class="main">
       <!--  标签页 -->
       <el-row type="flex" justify="flex-start" class="title" align="middle">
-        <span class="text">预报管理</span>
+        <span class="text">报价单</span>
       </el-row>
       <!-- 主要内容 -->
       <div class="content">
         <el-row class="searchbox1">
           <el-col :span="6" class="colbox">
             <el-col :span="6">
-              <span class="text">预报单号</span>
+              <span class="text">运单号</span>
             </el-col>
             <el-col :span="12">
               <el-input v-model="msg" placeholder="请输入"></el-input>
@@ -18,7 +18,7 @@
           </el-col>
           <el-col :span="6" class="colbox">
             <el-col :span="6">
-              <span class="text">预报类型</span>
+              <span class="text">客户名称</span>
             </el-col>
             <el-col :span="13">
               <el-select v-model="msg" placeholder="请选择">
@@ -34,7 +34,7 @@
           </el-col>
           <el-col :span="6" class="colbox">
             <el-col :span="6">
-              <span class="text">客户名称</span>
+              <span class="text">客户编号</span>
             </el-col>
             <el-col :span="11">
               <el-input v-model="msg" placeholder="请输入"></el-input>
@@ -42,7 +42,7 @@
           </el-col>
           <el-col :span="6" class="colbox">
             <el-col :span="6">
-              <span class="text">客户编码</span>
+              <span class="text">预报渠道</span>
             </el-col>
             <el-col :span="13">
               <el-input v-model="msg" placeholder="请输入"></el-input>
@@ -52,7 +52,7 @@
         <el-row class="searchbox1">
           <el-col :span="6" class="colbox">
             <el-col :span="6">
-              <span class="text">业务员</span>
+              <span class="text">目的地</span>
             </el-col>
             <el-col :span="13">
               <el-select v-model="msg" placeholder="请输入">
@@ -68,7 +68,7 @@
           </el-col>
           <el-col :span="6" class="colbox">
             <el-col :span="6">
-              <span class="text">寄件方式</span>
+              <span class="text">目的地分区</span>
             </el-col>
             <el-col :span="13">
               <el-select v-model="msg" placeholder="请选择">
@@ -84,7 +84,7 @@
           </el-col>
           <el-col :span="6" class="colbox">
             <el-col :span="6">
-              <span class="text">收货司机</span>
+              <span class="text">目的地邮编</span>
             </el-col>
             <el-col :span="13">
               <el-select v-model="msg" placeholder="请选择">
@@ -132,11 +132,13 @@
         :resizable="false"
       >
         <template slot-scope="scope">
-          <el-button
-            class="edit-bgc"
-            icon="el-icon-edit"
+          <a
             @click="editTableData(scope.row)"
-            >修改</el-button
+            >查看详情&nbsp;</a
+          > |
+          <a
+            @click="editTableData(scope.row)"
+            >查看运单</a
           >
         </template>
       </el-table-column>
@@ -154,10 +156,32 @@ export default {
       msg: '',
       options: [],
       columns: [
-        { prop: 'date', label: '日期', width: '150', align: 'center' },
-        { prop: 'name', label: '姓名', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'address', label: '地址', align: 'center', formatter: this.formatters },
-        { prop: 'button', label: '链接', align: 'center' }
+        { prop: 'code', label: '安速单号', width: '150', align: 'center' },
+        { prop: 'name', label: '客户名称', width: '200', align: 'center', formatter: this.formatter },
+        { prop: 'khcode', label: '客户编号', width: '150', align: 'center', formatter: this.formatters },
+        { prop: 'status', label: '审核状态', width: '150', align: 'center' },
+        { prop: 'people', label: '业务员', width: '200', align: 'center' },
+        { prop: 'type', label: '订单类型', width: '150', align: 'center' },
+        { prop: 'num', label: '件数', width: '250', align: 'center' },
+        { prop: 'isElectromagnetism', label: '带电带磁', width: '250', align: 'center' },
+        { prop: 'ybqd', label: '预报渠道', width: '250', align: 'center' },
+        { prop: 'ysfs', label: '运输方式', width: '250', align: 'center' },
+        { prop: 'mdg', label: '目的国', width: '250', align: 'center' },
+        { prop: 'mdgyb', label: '目的国邮编', width: '250', align: 'center' },
+        { prop: 'fjf', label: '附加费', width: '250', align: 'center' },
+        { prop: '', label: '基础费用', width: '250', align: 'center' },
+        { prop: '', label: '附加费用', width: '250', align: 'center' },
+        { prop: '', label: '合计费用', width: '250', align: 'center' },
+        { prop: '', label: '下单时间', width: '250', align: 'center' },
+        { prop: '', label: '报关类型', width: '250', align: 'center' },
+        { prop: '', label: '单独清关', width: '250', align: 'center' },
+        { prop: '', label: '结算重', width: '250', align: 'center' },
+        { prop: '', label: '实重', width: '250', align: 'center' },
+        { prop: '', label: '方数', width: '250', align: 'center' },
+        { prop: '', label: '材积重', width: '250', align: 'center' },
+        { prop: '', label: '客户备注', width: '250', align: 'center' },
+        { prop: '', label: '内部备注', width: '250', align: 'center' },
+        { prop: '', label: '是否保险', width: '250', align: 'center' }
       ],
       tableData: [],
       page: {
@@ -199,6 +223,11 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+a{
+  font-size: 14px;
+  color: #0084FFFF;
+  cursor: pointer;
+}
 .title{
   height: 56px;
 }
