@@ -31,9 +31,10 @@
       @handleCurrentChange="handleCurrentChange"
     >
         <!-- slot -->
-      <template v-slot:slotbtn='slotData'>
-          {{slotData.data.info}}<span style="color:blue;cursor:pointer" @click="check(slotData)">查看</span>
+      <template v-slot:chakan='slotData'>
+         {{slotData.data.info}}<span style="color:blue;cursor:pointer" @click="check(slotData)">查看</span>
       </template>
+      <!-- 操作 -->
       <el-table-column
         slot="table_oper"
         align="center"
@@ -56,6 +57,7 @@
     <commonDrawer :drawerVrisible="drawerVrisible" :drawerTitle="drawerTitle">
       <div class="dra-content">
         <!-- 内容区域 -->
+        <button>1</button>
       </div>
       <!-- 抽屉底部按钮 -->
       <div slot="footer">
@@ -75,7 +77,7 @@ export default {
   data () {
     return {
       drawerVrisible: true, // 控制抽屉显示隐藏
-      drawerTitle: 'FBA新增', // 标题
+      drawerTitle: 'biaoti', // 抽屉标题
       columns: [
         { prop: 'date', label: '日期', width: '150', align: 'center' },
         {
@@ -85,8 +87,8 @@ export default {
           align: 'center',
           formatter: this.formatter
         },
-        // 定义类型为slot，slot插槽名字为slotbtn
-        { prop: 'info', label: '人员信息', width: '150', align: 'center', type: 'slot', slotName: 'slotbtn' },
+        // 定义表格列的类型为slot，slot插槽名字为 slotbtn
+        { prop: 'info', label: '人员信息', width: '150', align: 'center', type: 'slot', slotName: 'chakan' },
         {
           prop: 'address',
           label: '地址',
@@ -140,8 +142,9 @@ export default {
         }
       ]
     },
+    // 查看
     check (val) {
-      console.log(val)
+      console.log(val.data)
     },
     // 操作按钮列表
     editTableData (row) {},
