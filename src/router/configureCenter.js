@@ -20,6 +20,16 @@ export default [
     },
     component: () => import('@/views/configureCenter/Subsidiarymanagement/Subsidiarymanagement.vue')
   },
+  {
+    path: '/subsidiaries',
+    name: 'subsidiaries',
+    meta: {
+      title: '新增子公司',
+      icon: 'subsidiariesIcon',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/Subsidiarymanagement/subsidiaries.vue')
+  },
   // 代理管理
   {
     path: '/organizationalStructure',
@@ -42,10 +52,30 @@ export default [
     component: () => import('@/views/configureCenter/Employeeaccount/Employeeaccount.vue')
   },
   {
+    path: '/employeeaccounta',
+    name: 'employeeaccounta',
+    meta: {
+      title: '新建账号',
+      icon: 'employeeaccounta',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/Employeeaccount/employeeaccounta.vue')
+  },
+  {
+    path: '/driverManagement',
+    name: 'driverManagement',
+    meta: {
+      title: '司机管理',
+      icon: 'driverManagement',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/driverManagement/driverManagement.vue')
+  },
+  {
     path: '/distributionDriver',
     name: 'distributionDriver',
     meta: {
-      title: '司机管理',
+      title: '分配区域',
       icon: 'distributionDriver',
       hidden: false
     },
@@ -62,7 +92,7 @@ export default [
     component: () => import('@/views/configureCenter/truckManagement/truckManagement.vue')
   },
   {
-    path: '/truckManagement/addTruck',
+    path: '/addTruck',
     name: 'addTruck',
     meta: {
       title: '新增车辆',
@@ -80,6 +110,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/customerAccount/customerAccount.vue')
+  },
+  {
+    path: '/addAccount',
+    name: 'addAccount',
+    meta: {
+      title: '新建客户账户',
+      icon: 'addAccount',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/customerAccount/addAccount.vue')
   },
   {
     path: '/Customerlevel',
@@ -102,6 +142,16 @@ export default [
     component: () => import('@/views/configureCenter/receivingWarehouseManage/receivingWarehouseManage.vue')
   },
   {
+    path: '/equipment',
+    name: 'equipment',
+    meta: {
+      title: '仓库设备',
+      icon: 'equipment',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/receivingWarehouseManage/equipment.vue')
+  },
+  {
     path: '/receivingWarehouseManage/addWarehouse',
     name: 'addWarehouse',
     meta: {
@@ -110,16 +160,6 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/receivingWarehouseManage/addWarehouse.vue')
-  },
-  {
-    path: '/currencyExchangerate',
-    name: 'currencyExchangerate',
-    meta: {
-      title: '货币汇率',
-      icon: 'currencyExchangerate',
-      hidden: false
-    },
-    component: () => import('@/views/configureCenter/currencyExchangerate/currencyExchangerate.vue')
   },
   // 仓库操作
   {
@@ -130,10 +170,10 @@ export default [
       icon: 'warehouseOperation',
       hidden: false
     },
-    component: () => import('@/views/configureCenter/warehouseOperation/responsibleWarehouse.vue')
+    component: () => import('@/views/configureCenter/warehouseOperation/warehouseOperation.vue')
   },
   {
-    path: '/warehouseOperation/responsibleWarehouse',
+    path: '/responsibleWarehouse',
     name: 'responsibleWarehouse',
     meta: {
       title: '操作员负责仓库',
@@ -141,6 +181,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/warehouseOperation/responsibleWarehouse.vue')
+  },
+  {
+    path: '/currencyExchangerate',
+    name: 'currencyExchangerate',
+    meta: {
+      title: '货币汇率',
+      icon: 'currencyExchangerate',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/currencyExchangerate/currencyExchangerate.vue')
   },
   {
     path: '/countryManagement',

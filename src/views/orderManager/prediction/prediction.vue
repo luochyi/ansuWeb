@@ -1,4 +1,3 @@
-// 预报管理
 <template>
   <div>
     <div class='main'>

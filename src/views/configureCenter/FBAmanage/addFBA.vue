@@ -22,32 +22,7 @@
         <el-button class="whiteBtn">取 消</el-button>
       </div>
     </div>
-    <!-- 组件 -->
-    <commonTable
-      :columns="columns"
-      :data="tableData"
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
-      <el-table-column
-        slot="table_oper"
-        align="center"
-        fixed="right"
-        label="操作"
-        width="150"
-        :resizable="false"
-      >
-        <template slot-scope="scope">
-          <el-button
-            class="edit-bgc"
-            icon="el-icon-edit"
-            @click="editTableData(scope.row)"
-            >修改</el-button
-          >
-        </template>
-      </el-table-column>
-    </commonTable>
+
   </div>
 </template>
 
@@ -55,47 +30,11 @@
 export default {
   data () {
     return {
-      columns: [
-        { prop: 'date', label: '日期', width: '150', align: 'center' },
-        { prop: 'name', label: '姓名', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'address', label: '地址', align: 'center', formatter: this.formatters },
-        { prop: 'button', label: '链接', align: 'center' }
-      ],
-      tableData: [],
-      page: {
-        pageNo: 1,
-        limit: 1,
-        sizes: [1, 5, 10],
-        total: 0
-      }
     }
   },
-  mounted () {
-    this.tableData = [
-      { date: '2016-05-02', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
-  },
-  methods: {
-    // 重新渲染name列
-    formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
-    },
-    // 改变页面大小处理
-    handleSizeChange (val) {
 
-    },
-    // 翻页处理
-    handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
-    },
-    // 操作按钮列表
-    editTableData (row) {}
+  methods: {
+
   }
 }
 </script>
@@ -116,5 +55,10 @@ export default {
 }
 .el-input__iconyellow {
   color: #ffbd32ff;
+}
+.content{
+  width: 970px;
+  height: 676px;
+
 }
 </style>

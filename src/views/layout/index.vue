@@ -160,7 +160,7 @@ export default {
           ]
         },
         {
-          name: 'finance',
+          name: 'Financialexpenses',
           meta: {
             title: '财务费用',
             icon: 'FinanceIcon',
@@ -168,11 +168,11 @@ export default {
           },
           ID: 2,
           menuId: '2',
-          path: 'finance',
+          path: 'Financialexpenses',
           parentId: '0',
           children: [
             {
-              name: 'finance',
+              name: 'Waybillfee',
               meta: {
                 title: '运单费用',
                 icon: 'finance',
@@ -180,7 +180,7 @@ export default {
               },
               ID: 20,
               menuId: '20',
-              path: 'finance',
+              path: 'Waybillfee',
               parentId: '2',
               children: [
                 {
@@ -230,6 +230,156 @@ export default {
                   menuId: '204',
                   path: 'expenseRegister',
                   parentId: '20'
+                }
+              ]
+            },
+            {
+              name: 'Rmanagement',
+              meta: {
+                title: '应收管理',
+                icon: 'Rmanagement',
+                hidden: false
+              },
+              ID: 21,
+              menuId: '21',
+              path: 'Rmanagement',
+              parentId: '2',
+              children: [
+                {
+                  name: 'receivablestatement',
+                  meta: {
+                    title: '应收对账单',
+                    icon: 'receivablestatement',
+                    hidden: false
+                  },
+                  ID: 211,
+                  menuId: '211',
+                  path: 'receivablestatement',
+                  parentId: '21'
+                },
+                {
+                  name: 'paymentrecord',
+                  meta: {
+                    title: '来款记录',
+                    icon: 'paymentrecord',
+                    hidden: false
+                  },
+                  ID: 212,
+                  menuId: '212',
+                  path: 'paymentrecord',
+                  parentId: '21'
+                },
+                {
+                  name: 'Billwriteoff',
+                  meta: {
+                    title: '账单核销',
+                    icon: 'Billwriteoff',
+                    hidden: false
+                  },
+                  ID: 213,
+                  menuId: '213',
+                  path: 'Billwriteoff',
+                  parentId: '21'
+                },
+                {
+                  name: 'Writeoffrecord',
+                  meta: {
+                    title: '核销记录',
+                    icon: 'Writeoffrecord',
+                    hidden: false
+                  },
+                  ID: 214,
+                  menuId: '214',
+                  path: 'Writeoffrecord',
+                  parentId: '21'
+                }
+              ]
+            },
+            {
+              name: 'Payablemanagement',
+              meta: {
+                title: '应付管理',
+                icon: 'Payablemanagement',
+                hidden: false
+              },
+              ID: 22,
+              menuId: '22',
+              path: 'Payablemanagement',
+              parentId: '2',
+              children: [
+                {
+                  name: 'Payablemanagement',
+                  meta: {
+                    title: '应付管理',
+                    icon: 'Payablemanagement',
+                    hidden: false
+                  },
+                  ID: 221,
+                  menuId: '221',
+                  path: 'Payablemanagement',
+                  parentId: '22'
+                },
+                {
+                  name: 'Paymentapplication',
+                  meta: {
+                    title: '付款申请',
+                    icon: 'Paymentapplication',
+                    hidden: false
+                  },
+                  ID: 222,
+                  menuId: '222',
+                  path: 'Paymentapplication',
+                  parentId: '22'
+                },
+                {
+                  name: 'Paymentapproval',
+                  meta: {
+                    title: '付款审核',
+                    icon: 'Paymentapproval',
+                    hidden: false
+                  },
+                  ID: 223,
+                  menuId: '223',
+                  path: 'Paymentapproval',
+                  parentId: '22'
+                }
+              ]
+            },
+            {
+              name: 'other',
+              meta: {
+                title: '其他',
+                icon: 'other',
+                hidden: false
+              },
+              ID: 23,
+              menuId: '23',
+              path: 'other',
+              parentId: '2',
+              children: [
+                {
+                  name: 'Losssheet',
+                  meta: {
+                    title: '亏损单',
+                    icon: 'Losssheet',
+                    hidden: false
+                  },
+                  ID: 231,
+                  menuId: '231',
+                  path: 'Losssheet',
+                  parentId: '231'
+                },
+                {
+                  name: 'Deductgrossprofit',
+                  meta: {
+                    title: '扣毛利',
+                    icon: 'Deductgrossprofit',
+                    hidden: false
+                  },
+                  ID: 232,
+                  menuId: '232',
+                  path: 'Deductgrossprofit',
+                  parentId: '23'
                 }
               ]
             }
@@ -423,10 +573,10 @@ export default {
             },
             // driverManagementIcon
             {
-              name: 'distributionDriver',
+              name: 'driverManagement',
               meta: {
                 title: '司机管理',
-                icon: 'distributionDriver',
+                icon: 'driverManagement',
                 hidden: false
               },
               ID: 53,
