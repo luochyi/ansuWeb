@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="drawers_box">
     <el-drawer
       :title="drawerTitle"
       :visible.sync="isVisibleDrawe"

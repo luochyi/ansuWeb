@@ -14,7 +14,20 @@
     </el-table-column>
       <template v-for="(item, index) in columns">
         <el-table-column
-          v-if="item.show != false"
+          v-if="item.type=='slot'"
+          :key="index"
+          :prop="item.prop"
+          :label="item.label"
+          :align="item.align ? item.align : 'center'"
+          :width="item.width"
+          :formatter="item.formatter ? item.formatter : formatterValue">
+              <template slot-scope="scope">
+                  <slot :name="item.slotName"
+                              :data="scope.row"></slot>
+                </template>
+        </el-table-column>
+        <el-table-column
+          v-else
           :key="index"
           :prop="item.prop"
           :label="item.label"
@@ -64,6 +77,9 @@ export default {
     },
     formatterValue (row, column, cellValue) {
       return cellValue
+    },
+    check (val) {
+      this.$emit('check', val)
     }
   }
 }
