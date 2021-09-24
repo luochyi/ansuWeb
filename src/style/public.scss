@@ -87,7 +87,31 @@ body{
   .whiteBtn {
     @include whitebtn();
   }
-
+  .btn-orange,
+  .btn-gray {
+      cursor: pointer;
+      height: 34px;
+      font-size: 14px;
+      outline: none;
+      border: none;
+      color: #ffffff;
+      border-radius: 4px;
+      transition: 0.2s;
+      margin-right: 8px;
+      padding: 0 20px;
+      i {
+          padding-right: 3px;
+      }
+      &:hover {
+          opacity: 0.8;
+      }
+  }
+  .btn-orange {
+      background: #fb4702;
+  }
+  .btn-gray {
+      background: #c2c2c2;
+  }
 
 
 
@@ -242,4 +266,98 @@ body{
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
   border-radius: 9px;
   border-color:#FF7D44;
+}
+// drawer
+/* 抽屉盒子 */
+#el-drawer__title{
+  text-align: left;
+  font-size: 16px;
+  line-height: 22px;
+  color: #333333FF;
+  font-weight: 500;
+}
+.drawer-box {
+  width: 100%;
+  height: 100vh;
+  background: #e8ebf2;
+  position: relative;
+}
+/* 头部 */
+.dra-header {
+  padding-left: 20px;
+  line-height: 81px;
+  height: 81px;
+  background: #ffffff;
+}
+/* 底部 */
+.dra-footer {
+  width: 100%;
+  /* position: absolute; */
+  background: #ffffff;
+  text-align: left;
+  /* bottom: 0; */
+}
+/* 底部内容 */
+.dra-footer-content {
+  padding-left: 20px;
+  line-height: 81px;
+  height: 81px;
+}
+/* 头部title */
+.dra-header span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #333333;
+  line-height: 22px;
+}
+/* 主体 */
+.dra-body {
+  width: 100%;
+  height: calc(100vh - 162px);
+  overflow: auto;
+  background-color: #E8EBF2FF;
+}
+/* 主体内容 */
+.dra-content {
+  margin: 32px 30px 30px 30px;
+  border-radius: 4px;
+  background: white;
+}
+/* 主体title */
+.content-titel {
+  height: 50px;
+  line-height: 50px;
+  padding-left: 22px;
+  margin-bottom: 50px;
+  border-bottom: 1px solid #e8e8e8;
+}
+/* 主体title span */
+.content-titel span {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333333;
+  line-height: 20px;
+}
+.dra-submit,
+.dra-cancel {
+  cursor: pointer;
+  height: 34px;
+  font-size: 14px;
+  outline: none;
+  border: none;
+  color: #ffffff;
+  border-radius: 4px;
+  transition: 0.2s;
+  margin-right: 10px;
+}
+.dra-submit span {
+  padding-left: 7px;
+}
+.dra-submit {
+  width: 89px;
+  background: #fb4702;
+}
+.dra-cancel {
+  width: 68px;
+  background: #c2c2c2;
 }
