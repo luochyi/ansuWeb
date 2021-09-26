@@ -39,7 +39,8 @@
       </template>
       <slot name="table_oper" />
     </el-table>
-    <el-pagination
+    <div class="block">
+      <el-pagination
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       style="text-align: center; margin: 20px 0"
@@ -50,6 +51,7 @@
       layout="total, sizes, prev, pager, next, jumper"
     >
     </el-pagination>
+    </div>
   </div>
 </template>
 
