@@ -62,6 +62,41 @@
                     </div>
                  </el-col>
             </el-row>
+             <el-row style="margin-top:16px">
+                <el-col :span="8" style="display:flex;align-items:center">
+                    <span class="item">申报币种&nbsp;</span>
+                    <span><el-select v-model="bizhong" size="small" placeholder="请选择"></el-select></span>
+                </el-col>
+            </el-row>
+            <el-row class="line"></el-row>
+            <el-row style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);
+            margin-top:16px">
+                计算规则
+            </el-row>
+             <el-row style="margin-top:16px">
+                <el-col :span="8" style="display:flex;align-items:center">
+                    <span class="item">材积除&nbsp;</span>
+                    <span><el-select v-model="bizhong" size="small" placeholder="请选择"></el-select></span>
+                </el-col>
+                <el-col :span="8" style="display:flex;align-items:center">
+                    <span class="item">结算重计算规则&nbsp;</span>
+                    <span><el-select v-model="bizhong" size="small" placeholder="请选择"></el-select></span>
+                </el-col>
+                <el-col :span="8" style="display:flex;align-items:center">
+                    <span class="item">多件重量计算方式&nbsp;</span>
+                    <span><el-select v-model="bizhong" size="small" placeholder="请选择"></el-select></span>
+                </el-col>
+            </el-row>
+             <el-row style="margin-top:16px">
+                <el-col :span="8" style="display:flex;align-items:center">
+                    <span class="item">大货起始重&nbsp;</span>
+                    <span><el-input v-model="bizhong" size="small" placeholder="请选择"> <template slot="append">KG</template></el-input></span>
+                </el-col>
+                <el-col :span="8" style="display:flex;align-items:center">
+                    <span class="item">结算重进位规则&nbsp;</span>
+                    <span><el-select v-model="bizhong" size="small" placeholder="请选择"></el-select></span>
+                </el-col>
+            </el-row>
             <!--  -->
             <el-row class="line"></el-row>
             <el-row style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);
@@ -78,16 +113,16 @@
                     <span><el-select v-model="tax" size="small" placeholder="请选择"></el-select></span>
                 </el-col>
                 <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">是否含清光费&nbsp;</span>
+                    <span class="item">是否含税清关费&nbsp;</span>
                     <span><el-select v-model="chearingFee" size="small" placeholder="请选择"></el-select></span>
                 </el-col>
             </el-row>
             <el-row style="text-align:left;margin-top:28px;">
                 <div style="display:flex;align-items:center">
-                    <span class="item">运输时间：最短时间&nbsp;
-                        <span><el-input v-model="shortest" style="width:10%" size="small"></el-input> 天 —— 最长时间
-                        <el-input style="width:10%" v-model="Longest" size="small"></el-input> 天
-                        <el-select v-model="time" size="small" style="margin-left:20px;width:16%"></el-select>
+                    <span class="item">运输时间&nbsp;
+                        <span><el-input v-model="shortest" style="width:20%" size="small" placeholder="最短时间"><template slot="append">天</template></el-input>  ——
+                        <el-input style="width:20%" v-model="Longest" size="small" placeholder="最长时间"><template slot="append">天</template></el-input>
+                        <el-select v-model="time" size="small" style="margin-left:20px;width:16%" ></el-select>
                         </span>
                     </span>
                 </div>

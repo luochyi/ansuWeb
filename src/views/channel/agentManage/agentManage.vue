@@ -64,6 +64,10 @@
                   查看详情
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button v-if="activeName === '1'" type="text" @click="channelService(scope.row)">
+                  渠道服务
+                </el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">
                   停用代理
                 </el-button>
@@ -201,6 +205,9 @@ export default {
     },
     toAdd () {
       this.$router.push({ name: 'addAgent' })
+    },
+    channelService () {
+      this.$router.push({ name: 'channelService' })
     },
     toDetail (val) {
       console.log(val)

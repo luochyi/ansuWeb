@@ -72,7 +72,8 @@
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button class='stopBtn' @click="batchStop">批量停用</el-button>
+            <el-button class='stopBtn' v-if="activeName === '1'" @click="batchStop">批量停用</el-button>
+             <el-button class='stopBtn' v-else-if="activeName === '2'" @click="batchStop">批量启用</el-button>
           </el-col>
           <el-col :span='12' class="right">
             <el-button class='whiteBtn' @click="toAdd">新增渠道</el-button>
@@ -121,16 +122,17 @@
                   附加费
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">
                   停用
                 </el-button>
+                <el-button v-else-if="activeName === '2'" type="text">
+                  启用
+                </el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text">
                   修改
                 </el-button>
-                <el-button v-if="activeName === '2'" type="text">
-                  启用渠道
-                </el-button>
+
               </template>
             </el-table-column>
           </el-table>
