@@ -7,26 +7,28 @@ const axios = GetAxios((config) => {
   location.href = '/'
 }, process.env.VUE_APP_URL)
 
-// 公共接口
-// 登录 登出
-export const login = (data) => {
+// 配置中心接口
+// 子公司列表
+export const companyLists = (params) => {
   return axios({
-    url: '/login',
+    url: '/company/lists',
     method: 'post',
-    data: data
+    data: params
   })
 }
-export const logout = (data) => {
+// 新增子公司
+export const companyAdd = (params) => {
   return axios({
-    url: '/login/logout',
+    url: '/company/add',
     method: 'post',
-    data: data
+    data: params
   })
 }
-// 省市区 三级联动数据
-export const settingRegionAll = () => {
+// 子公司详情
+export const companyInfo = (params) => {
   return axios({
-    url: '/setting/region/all',
-    method: 'post'
+    url: '/company/info',
+    method: 'post',
+    data: params
   })
 }

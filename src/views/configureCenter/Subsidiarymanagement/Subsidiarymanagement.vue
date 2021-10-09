@@ -13,7 +13,7 @@
         <el-col :span='6' class='colbox'>
         <span class='text'>公司名称</span>
           <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
+            <el-input v-model='name' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <!--  -->
@@ -55,47 +55,62 @@
 export default {
   data () {
     return {
+      name: '',
       columns: [
         { prop: 'name', label: '公司名称', width: '215', align: 'center' },
-        { prop: 'number', label: '运单起始号码', width: '151', align: 'center', formatter: this.formatter },
-        { prop: 'address', label: '公司地址', width: '659', align: 'center', formatter: this.formatters }
+        { prop: 'startNo', label: '运单起始号码', width: '151', align: 'center' },
+        { prop: 'address', label: '公司地址', align: 'center' }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
       }
     }
   },
   mounted () {
-    this.tableData = [
-      { date: '2016-05-02', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    // 在页面加载前调用获取列表数据函数
+    this.getData()
   },
   methods: {
+    // 获取列表数据
+    getData () {
+      this.tableData = []
+      // limit: this.page.limit, page: this.page.pageNo 页码和页容量
+      this.$api.configure.companyLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
+        console.log(res.data) // res是接口返回的结果
+        res.data.list && res.data.list.forEach(ele => {
+          let obj = {
+            id: ele.id,
+            name: ele.name,
+            startNo: ele.start_no,
+            address: ele.address
+          }
+          this.tableData.push(obj)
+        })
+        this.page.total = res.data.total // 数据总量
+      })
+    },
     // 新建子公司
     subsidiaries () {
       this.$router.push({ name: 'subsidiaries' })
     },
     // 重新渲染name列
-    formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
-    },
+    // formatter (row, column, cellValue) {
+    // },
+    // formatters (row, column, cellValue) {
+    // },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // 操作按钮列表
     editTableData (row) {}

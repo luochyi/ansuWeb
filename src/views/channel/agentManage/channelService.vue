@@ -52,7 +52,7 @@
           <template v-slot:chakan="slotData">
             {{ slotData.data.info
             }}<span
-              style="color: blue; cursor: pointer"
+              style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
               >查看</span
             >
@@ -67,11 +67,11 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <span @click="editZone(scope.row)" class="function" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span>
-              <span @click="fqjg(scope.row)" class="function">分区价格<span style="margin:0px 5px 0px">|</span></span>
-              <span @click="additional(scope.row)" class="function">附加费<span style="margin:0px 5px 0px">|</span></span>
-              <span @click="stop(scope.row)" class="function">停用<span style="margin:0px 5px 0px">|</span></span>
-              <span @click="edit(scope.row)" class="function">修改</span>
+              <span @click="editZone(scope.row)" class="blue" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span>
+              <span @click="fqjg(scope.row)" class="blue">分区价格<span style="margin:0px 5px 0px">|</span></span>
+              <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span>
+              <span @click="stop(scope.row)" class="blue">停用<span style="margin:0px 5px 0px">|</span></span>
+              <span @click="edit(scope.row)" class="blue">修改</span>
             </template>
           </el-table-column>
         </commonTable>
@@ -174,7 +174,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.function{
+.blue{
     color: #0084FFFF;
     font-size: 14px;
     cursor: pointer;

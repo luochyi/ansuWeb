@@ -1,119 +1,228 @@
 <template>
-<div id='boxx'>
-   <el-row type='flex' justify='flex-start' class='title' align='middle' >
-      <span class='text'>新建子公司</span>
+  <div id="boxx">
+    <el-row type="flex" justify="flex-start" class="title" align="middle">
+      <span class="text">新建子公司</span>
     </el-row>
-  <div class="box">
-    <!--  标签页 -->
-   <el-descriptions class="margin-top" :column="2" direction="vertical">
-   <el-descriptions-item label="公司名称">
-       <el-input style="width: 265px" v-model="input" placeholder="请输入"></el-input>
-   </el-descriptions-item>
-   <el-descriptions-item label="运单起始号码">
-        <el-input style="width: 265px" v-model="inputa" placeholder="请输入"></el-input>
+    <div class="box">
+      <!--  标签页 -->
+      <el-descriptions class="margin-top" :column="2" direction="vertical">
+        <el-descriptions-item label="公司名称">
+          <el-input
+            style="width: 265px"
+            v-model="name"
+            placeholder="请输入"
+          ></el-input>
         </el-descriptions-item>
-         </el-descriptions>
-        <el-descriptions class="margin-top" :column="1" direction="vertical">
-   <el-descriptions-item label="公司地址" :span="2">
-    <el-select v-model="value" placeholder="请选择">
-        <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-        </el-option>
-    </el-select>
-   </el-descriptions-item>
-   <el-descriptions-item label="详细地址">
-        <el-input style="width: 517px" type="textarea" :rows="2" placeholder="请输入" v-model="textarea"></el-input>
-   </el-descriptions-item>
-   </el-descriptions>
-    <div class="top">
+        <el-descriptions-item label="运单起始号码">
+          <el-input
+            style="width: 265px"
+            v-model="startNo"
+            placeholder="请输入"
+          ></el-input>
+        </el-descriptions-item>
+      </el-descriptions>
+      <el-descriptions class="margin-top" :column="1" direction="vertical">
+        <el-descriptions-item label="公司地址" :span="2">
+          <!-- 级联选择器 三级联动 -->
+          <el-cascader
+          v-model="countyId"
+          :options="provinceOptions"
+          @change="handleChange"></el-cascader>
+        </el-descriptions-item>
+        <el-descriptions-item label="详细地址">
+          <el-input
+            style="width: 517px"
+            type="textarea"
+            :rows="2"
+            placeholder="请输入"
+            v-model="address"
+          ></el-input>
+        </el-descriptions-item>
+      </el-descriptions>
+      <div class="top">
         <el-descriptions class="margin-top" :column="2" direction="vertical">
-   <el-descriptions-item label="管理员名称">
-       <el-input style="width: 265px" v-model="inputb" placeholder=""></el-input>
-   </el-descriptions-item>
-   <el-descriptions-item label="管理员手机">
-        <el-input  style="width: 265px" v-model="inputc" placeholder=""></el-input>
-        </el-descriptions-item>
-         </el-descriptions>
-         <el-descriptions class="margin-top" :column="4" direction="vertical">
-   <el-descriptions-item label="登陆账号" >
-       <el-input style="width: 265px" v-model="inputd" placeholder=""></el-input>
-   </el-descriptions-item>
-   <el-descriptions-item label="登陆密码">
-       <el-input style="width: 265px" placeholder="" v-model="inpute" show-password></el-input>
-   </el-descriptions-item>
-   <el-descriptions-item label="确认密码">
-       <el-input style="width: 265px" placeholder="" v-model="inputf" show-password></el-input>
-       <el-button class='whiteBtn'>生成随机密码</el-button>
-   </el-descriptions-item>
-   </el-descriptions>
-   <el-form >
-    <el-form-item size="large">
-    <el-button type="primary" @click="determine" class="orangeBtn long2">确定</el-button>
-    <el-button class='whiteBtn long2' >取消</el-button>
-    </el-form-item>
-   </el-form>
+          <el-descriptions-item label="管理员名称">
+            <el-input
+              style="width: 265px"
+              v-model="admin.name"
+              placeholder=""
+            ></el-input>
+          </el-descriptions-item>
+          <el-descriptions-item label="管理员手机">
+            <el-input
+              style="width: 265px"
+              v-model="admin.phone"
+              placeholder=""
+            ></el-input>
+          </el-descriptions-item>
+        </el-descriptions>
+        <el-descriptions class="margin-top" :column="4" direction="vertical">
+          <el-descriptions-item label="登陆账号">
+            <el-input
+              style="width: 265px"
+              v-model="admin.username"
+              placeholder=""
+            ></el-input>
+          </el-descriptions-item>
+          <el-descriptions-item label="登陆密码">
+            <el-input
+              style="width: 265px"
+              placeholder=""
+              v-model="admin.password"
+              show-password
+            ></el-input>
+          </el-descriptions-item>
+          <el-descriptions-item label="确认密码">
+            <el-input
+              style="width: 265px"
+              placeholder=""
+              v-model="admin.confirmPassword"
+              show-password
+            ></el-input>
+            <el-button style="width: 165px; marginLeft: 20px" class="whiteBtn" @click="randomPsw()"
+              >生成随机密码</el-button
+            >
+          </el-descriptions-item>
+        </el-descriptions>
+        <el-form>
+          <el-form-item size="large">
+            <el-button type="primary" @click="submit()" class="orangeBtn long2"
+              >确定</el-button
+            >
+            <el-button class="whiteBtn long2">取消</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
 export default {
   data () {
     return {
-      value: '',
-      input: '',
-      inputa: '',
-      inputb: '',
-      inputc: '',
-      inputd: '',
-      inpute: '',
-      inputf: '',
-      options: '',
-      textarea: '',
-      determine: '',
-      methods: {
-        add () {
-          this.$router.push({ name: 'addcustomerp' })
-        },
-        determine () {
-          console.log('ondetermine!')
-        }
-
+      provinceOptions: [],
+      name: '',
+      startNo: '',
+      countyId: null,
+      address: null,
+      admin: {
+        name: null,
+        phone: null,
+        username: null,
+        password: null,
+        confirmPassword: null
       }
     }
+  },
+  methods: {
+    submit () {
+      // 给请求参数赋值
+      let resData = {
+        name: this.name,
+        startNo: this.startNo,
+        countyId: this.countyId,
+        address: this.address,
+        admin: {
+          name: this.admin.name,
+          phone: this.admin.phone,
+          username: this.admin.username,
+          password: this.admin.password,
+          confirmPassword: this.admin.confirmPassword
+        }
+      }
+      // 把请求参数传输至后端，并且获取接口返回的结果res
+      this.$api.configure.companyAdd(resData).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.$router.push({ name: 'Subsidiarymanagement' }) // 添加成功后返回子公司列表
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    },
+    // 生成随机密码
+    randomPsw () {
+      this.admin.password = Math.floor((Math.random() + Math.floor(Math.random() * 9 + 1)) * Math.pow(10, 9))
+      this.admin.confirmPassword = this.admin.password
+    },
+    // 级联选择器选择
+    handleChange (val) {
+      console.log(val)
+      console.log(this.provinceOptions) // 打印级联选择器的options
+      this.countyId = val[2] // 区域id
+    }
+  },
+  mounted () {
+    // 省市区三级联动
+    this.$api.common.settingRegionAll().then(res => {
+      console.log(res)
+      res.data && res.data.forEach(ele => {
+        let province = {
+          value: ele.id,
+          label: ele.name,
+          children: []
+        }
+        if (province.value === ele.id) {
+          ele.children && ele.children.forEach(eles => {
+            let city = {
+              value: eles.id,
+              label: eles.name,
+              children: []
+            }
+            if (city.value === eles.id) {
+              eles.children && eles.children.forEach(item => {
+                let county = {
+                  value: item.id,
+                  label: item.name
+                }
+                city.children.push(county)
+              })
+            }
+            province.children.push(city)
+          })
+          province.children.push()
+        }
+        province.children.push()
+        this.provinceOptions.push(province)
+      })
+    })
   }
 }
 </script>
 
 <style>
-.text{
-    width: 100px;
-    font-size: 16px;
-    font-weight: 500;
-    margin: 17px;
+.margin-top{
+  margin-top: 10px;
 }
-.box{
+.text {
+  width: 100px;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 17px;
+}
+.box {
   height: 400px;
   margin: 25px;
-background: #FFFFFF;
+  background: #ffffff;
 }
-#boxx{
-width: 1191px;
-height: 914px;
-background: #FFFFFF;
-border-radius: 4px;
-border: 1px solid #E8E8E8;
+#boxx {
+  width: 1191px;
+  height: 914px;
+  background: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #e8e8e8;
 }
-.boxa{
-    width:1191px ;
-    height: 300px;
-    border: 1px solid #E9E9E9;
+.boxa {
+  width: 1191px;
+  height: 300px;
+  border: 1px solid #e9e9e9;
 }
-.top{
-  border-top:1px solid #E9E9E9;
+.top {
+  border-top: 1px solid #e9e9e9;
 }
-.el-form{
+.el-form {
   margin: 10px;
-    text-align: left;
+  text-align: left;
 }
 </style>

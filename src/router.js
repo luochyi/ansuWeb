@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+import login from '@/views/Login.vue'
 import order from '@/router/order.js'
 import channel from '@/router/channel.js'
 import configureCenter from '@/router/configureCenter.js'
@@ -17,7 +18,7 @@ export default new Router({
     {
       path: '/',
       name: 'layout',
-      redirect: '/prediction',
+      redirect: '/login',
       component: () => import('./views/layout/index.vue'),
       children: [
         // 订单管理
@@ -28,6 +29,15 @@ export default new Router({
         ...customerManage,
         ...finance
       ]
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: login
+    },
+    {
+      path: '*',
+      redirect: '/Home'
     }
   ]
 })

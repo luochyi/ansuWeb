@@ -21,7 +21,7 @@ export const GetAxios = (config, login, baseUrl) => {
     // console.log(response)
     if (response.status === 200) {
       if (response.headers['content-type'].indexOf('application/json') !== -1) {
-        if (response.data.code === 10000) {
+        if (response.data.code === 100000) {
           // 登录失败 跳转到登陆页面
           // 登录
           // 跳转到登录页

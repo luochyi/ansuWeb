@@ -31,3 +31,22 @@ new Vue({
   store,
   render: h => h(App)
 }).$mount('#app')
+// 路由判断登录 根据路由配置文件的参数
+router.beforeEach((to, from, next) => {
+  const isLogin = sessionStorage.getItem('token')
+  if (isLogin) {
+    next()
+  } else {
+    if (to.path === '/Login') {
+      // 这就是跳出循环的关键
+      next()
+    } else {
+      // router.replace({
+      //     path: '/'
+      // })
+      next('/Login')
+      // next()
+    }
+  }
+  // next('/Login')
+})

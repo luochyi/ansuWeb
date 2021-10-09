@@ -32,7 +32,7 @@
     >
         <!-- slot -->
       <template v-slot:chakan='slotData'>
-         {{slotData.data.info}}<span style="color:blue;cursor:pointer" @click="check(slotData)">查看</span>
+         {{slotData.data.info}}<span style="color:#0084FF;cursor:pointer" @click="check(slotData)">查看</span>
       </template>
       <!-- 操作 -->
       <el-table-column

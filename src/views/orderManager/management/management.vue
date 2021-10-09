@@ -15,9 +15,18 @@
   </div>
 </template>
 <script>
-
+import warehousing from './component/warehousing'
+import delivery from './component/delivery'
+import outWarehouse from './component/outWarehouse'
+import transport from './component/transport'
+import signFor from './component/signFor'
 export default {
   components: {
+    warehousing,
+    delivery,
+    outWarehouse,
+    transport,
+    signFor
   },
   data () {
     return {
@@ -26,7 +35,26 @@ export default {
     }
   },
   methods: {
-
+    handleClick (val) {
+      console.log(val)
+      switch (val.name) {
+        case '1':
+          this.componentsName = warehousing
+          break
+        case '2':
+          this.componentsName = delivery
+          break
+        case '3':
+          this.componentsName = outWarehouse
+          break
+        case '4':
+          this.componentsName = transport
+          break
+        case '5':
+          this.componentsName = signFor
+          break
+      }
+    }
   }
 }
 </script>

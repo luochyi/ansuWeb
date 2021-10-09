@@ -89,5 +89,36 @@ export default [
       hidden: false
     },
     component: () => import('@/views/orderManager/Postportissues/Postportissues.vue')
+  },
+  {
+    path: '/sjmssq',
+    name: 'sjmssq',
+    meta: {
+      title: '收件免扫申请',
+      icon: 'sjmssq',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/sjmssq/sjmssq.vue')
+  },
+  {
+    path: '/gmbxyd',
+    name: 'gmbxyd',
+    meta: {
+      title: '购买保险运单',
+      icon: 'gmbxyd',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/gmbxyd/gmbxyd.vue')
+  },
+  {
+    path: '/ccd',
+    name: 'ccd',
+    meta: {
+      title: '出仓单',
+      icon: 'ccd',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/ccd/ccd.vue')
   }
+
 ]

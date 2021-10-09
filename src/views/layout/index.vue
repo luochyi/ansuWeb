@@ -29,8 +29,8 @@
           </el-menu>
         </el-col>
         <el-col :span='3'>
-          <span class='user'>你好，{{ user }}</span>
-          <el-button type='text' class='red' style=''>退出</el-button>
+          <span class='user'>你好，{{ uname }}</span>
+          <el-button type='text' class='red' style='' @click="logout()">退出</el-button>
         </el-col>
       </el-row>
     </el-header>
@@ -155,6 +155,41 @@ export default {
               ID: 14,
               menuId: '14',
               path: 'Postportissues',
+              parentId: '1'
+            },
+            {
+              name: 'sjmssq',
+              meta: {
+                title: '收件免扫申请',
+                icon: 'sjmssq',
+                hidden: false
+              },
+              ID: 15,
+              menuId: '15',
+              path: 'sjmssq',
+              parentId: '1'
+            },
+            {
+              name: 'gmbxyd',
+              meta: {
+                title: '购买保险运单',
+                icon: 'gmbxyd',
+                hidden: false
+              },
+              ID: 16,
+              menuId: '16',
+              path: 'gmbxyd',
+              parentId: '1'
+            }, {
+              name: 'ccd',
+              meta: {
+                title: '出仓单',
+                icon: 'ccd',
+                hidden: false
+              },
+              ID: 17,
+              menuId: '17',
+              path: 'ccd',
               parentId: '1'
             }
           ]
@@ -696,7 +731,7 @@ export default {
         }
       ],
 
-      user: '张三',
+      uname: '',
       activeIndex: '',
 
       active: '',
@@ -709,6 +744,8 @@ export default {
     }
   },
   mounted () {
+    this.uid = sessionStorage.getItem('id')
+    this.uname = sessionStorage.getItem('name')
     let arr = this.$route.path.split('/')[1]
     console.log(this.$route.name)
     console.log(this.menu)
@@ -755,6 +792,15 @@ export default {
     },
     setRouter () {
       this.setAsyncRouter(this.menu)
+    },
+    logout () {
+      this.$api.common.logout().then(res => {
+        console.log(res)
+        if (res.msg === '退出成功') {
+          this.$message.success('退出成功')
+          this.$router.push('/login')
+        }
+      })
     }
   }
 }
