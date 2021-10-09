@@ -32,3 +32,50 @@ export const companyInfo = (params) => {
     data: params
   })
 }
+// department/all获取全部部门
+export const departmentAll = (params) => {
+  return axios({
+    url: '/company/department/all',
+    method: 'post',
+    data: params
+  })
+}
+// 新增部门
+export const departmentAdd = (params) => {
+  return axios({
+    url: '/company/department/add',
+    method: 'post',
+    data: params
+  })
+}
+export const departmentEdit = (params) => {
+  return axios({
+    url: '/company/department/edit',
+    method: 'post',
+    data: params
+  })
+}
+// 角色list
+
+export const positionAll = (params) => {
+  return axios({
+    url: '/company/position/all',
+    method: 'post',
+    data: params
+  })
+}
+// /company/position/add
+export const positionAdd = (params) => {
+  return axios({
+    url: '/company/position/add',
+    method: 'post',
+    data: params
+  })
+}
+export const positionEdit = (params) => {
+  return axios({
+    url: '/company/position/edit',
+    method: 'post',
+    data: params
+  })
+}
