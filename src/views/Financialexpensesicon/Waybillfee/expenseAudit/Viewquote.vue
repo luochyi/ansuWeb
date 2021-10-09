@@ -1,57 +1,104 @@
 <template>
   <div>
-     <div class="left">
-          <el-row type='flex' justify='flex-start' class='title' align='middle'>
-         <span class='text'>目的国</span>
-        </el-row>
-       <div class="first">
+  <div class="left" >
+        <el-row type='flex' justify='flex-start' class='title' align='middle'>
+       <span class='text'>报价确认单</span>
+    </el-row>
+        <div class="first">
        <span class='text'>业务员：张三</span><br>
         <el-button type="text" @click="Deletedestination= true"> 删除 </el-button>
        </div>
-      </div>
-     <div class="right">
+     </div>
+  <div class="right">
       <div class="one">
       <el-button @click="Approvaldetails= true" class='whiteBtn' style="margin:15px; float: left; ">审批详情 </el-button>
       </div>
       <br>
       <div class="two">
+      <el-button type="text" style="margin:15px; float: left;  " icon="el-icon-success">审核通过 </el-button>
+      </div>
+      <br>
+            <div class="three">
+          <el-row type='flex' justify='flex-start' class='title' align='middle'>
+       <span class='text'>基础运价确认</span>
+     </el-row>
+ <el-descriptions class="margin-top" column="4" :size="size">
+<el-descriptions-item label="运费单价">18/公斤</el-descriptions-item>
+    <el-descriptions-item label="单价调整">+1/公斤</el-descriptions-item>
+    <el-descriptions-item label="报价单价">19/公斤</el-descriptions-item>
+  </el-descriptions>
+  <el-divider></el-divider>
+  <el-descriptions >
+         <el-descriptions-item label="调价理由">老客户了，希望能便宜点，长久合作</el-descriptions-item>
+</el-descriptions>
+    </div>
+      <br>
+      <div class="four">
+          <el-row type='flex' justify='flex-start' class='title' align='middle'>
+       <span class='text'>附加费用明细</span>
+     </el-row>
+          <commonTable
+      :columns="columns"
+      :data="tableData"
+      :pager="page"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+     >
+       <el-table-column
+        slot="table_oper"
+        align="center"
+        fixed="right"
+        label="操作"
+        width="105"
+        :resizable="false"
+      >
+         <template slot-scoped="scoped">
+          <el-button type="text" @click="detailspage"> 修改</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click="password= true"> 删除 </el-button>
+        </template>
+      </el-table-column>
+     </commonTable>
+    </div>
+    <br>
+      <div class="five">
           <el-row type='flex' justify='flex-start' class='title' align='middle'>
        <span class='text'>运单信息</span>
      </el-row>
       <el-descriptions class="margin-top" title="AS202012120001"  :column="4" :size="size">
-     <el-descriptions-item label="客户名称">深圳沙马家具贸易有限公司</el-descriptions-item>
+    <el-descriptions-item label="客户名称">深圳沙马家具贸易有限公司</el-descriptions-item>
       </el-descriptions>
      <el-descriptions class="margin-top" column="4" :size="size">
-     <el-descriptions-item label="客户编码">沙马家具SMJJFBAONTB</el-descriptions-item>
-     <el-descriptions-item label="订单类型">FBA订单</el-descriptions-item>
-     <el-descriptions-item label="目的仓">ONTB</el-descriptions-item>
-     </el-descriptions>
+<el-descriptions-item label="客户编码">沙马家具SMJJFBAONTB</el-descriptions-item>
+    <el-descriptions-item label="订单类型">FBA订单</el-descriptions-item>
+    <el-descriptions-item label="目的仓">ONTB</el-descriptions-item>
+  </el-descriptions>
      <el-descriptions class="margin-top" column="4" :size="size">
-     <el-descriptions-item label="目的国">美国</el-descriptions-item>
-     <el-descriptions-item label="目的国邮编">19999</el-descriptions-item>
-     <el-descriptions-item label="申报价值">1000美元</el-descriptions-item>
-     <el-descriptions-item label="业务员">张三</el-descriptions-item>
-     <el-descriptions-item label="报关类型">一般贸易</el-descriptions-item>
-     <el-descriptions-item label="清关类型">单独清关</el-descriptions-item>
-     <el-descriptions-item label="是否有保险">有保险</el-descriptions-item>
-     <el-descriptions-item label="品名">玩具</el-descriptions-item>
-     <el-descriptions-item label="预报渠道">以星特快UPS派送</el-descriptions-item>
-     <el-descriptions-item label="入仓渠道">以星特快UPS派送</el-descriptions-item>
-     <el-descriptions-item label="货物数量">12件</el-descriptions-item>
-     <el-descriptions-item label="货物">带电</el-descriptions-item>
-     <el-descriptions-item label="方数">30立方</el-descriptions-item>
-     <el-descriptions-item label="实重">100公斤</el-descriptions-item>
-     <el-descriptions-item label="材积重">90公斤</el-descriptions-item>
-     <el-descriptions-item label="结算重">80公斤</el-descriptions-item>
-      </el-descriptions>
+    <el-descriptions-item label="目的国">美国</el-descriptions-item>
+    <el-descriptions-item label="目的国邮编">19999</el-descriptions-item>
+    <el-descriptions-item label="申报价值">1000美元</el-descriptions-item>
+    <el-descriptions-item label="业务员">张三</el-descriptions-item>
+    <el-descriptions-item label="报关类型">一般贸易</el-descriptions-item>
+    <el-descriptions-item label="清关类型">单独清关</el-descriptions-item>
+    <el-descriptions-item label="是否有保险">有保险</el-descriptions-item>
+    <el-descriptions-item label="品名">玩具</el-descriptions-item>
+    <el-descriptions-item label="预报渠道">以星特快UPS派送</el-descriptions-item>
+    <el-descriptions-item label="入仓渠道">以星特快UPS派送</el-descriptions-item>
+    <el-descriptions-item label="货物数量">12件</el-descriptions-item>
+    <el-descriptions-item label="货物">带电</el-descriptions-item>
+    <el-descriptions-item label="方数">30立方</el-descriptions-item>
+    <el-descriptions-item label="实重">100公斤</el-descriptions-item>
+    <el-descriptions-item label="材积重">90公斤</el-descriptions-item>
+    <el-descriptions-item label="结算重">80公斤</el-descriptions-item>
+  </el-descriptions>
          <el-descriptions >
          <el-descriptions-item label="备注">走以星</el-descriptions-item></el-descriptions>
          <el-descriptions >
          <el-descriptions-item label="内部备注">走以星报美森</el-descriptions-item>
-      </el-descriptions>
+</el-descriptions>
     </div>
     <br>
-      <div class="three">
+      <div class="six">
           <el-row type='flex' justify='flex-start' class='title' align='middle'>
        <span class='text'>发货产品</span>
      </el-row>
@@ -98,98 +145,14 @@
 </el-descriptions>
     </div>
     <br>
-      <div class="four">
-          <el-row type='flex' justify='flex-start' class='title' align='middle'>
-       <span class='text'>基础运价确认</span>
-     </el-row>
-     <div class="infoBox">
-        <el-row class="info">
-          <el-col>
-  <div class="name">运费单价：18/公斤</div>
-</el-col>
-          <el-col :span="10" class="flex align-center">
-              <div class="name">单价调整：</div>
-            <el-col :span="10" >
-               <el-input placeholder="请输入" v-model="input1" style="width:195px">
-                    <template slot="prepend">
-                        <el-select v-model="value1" style="width:80px">
-                            <el-option v-for="item in options1" :key="item.value" :value="item.value" :label="item.label"></el-option>
-                        </el-select>
-                    </template>
-                    <i slot="suffix" class="el-input__icon">元</i>
-                </el-input>
-            </el-col>
-           </el-col>
-           <el-button class="orangeBtn"  @click=" confirm =true">确认</el-button>
-        </el-row>
-      </div>
-    </div>
-    <br>
-      <div class="five">
-          <el-row type='flex' justify='flex-start' class='title' align='middle'>
-       <span class='text'>附加费用明细</span>
-     </el-row>
-         <el-row style="margin: 20px; float: left;">
-          <el-button class="orangeBtn">添加附加费</el-button>
-        </el-row>
-    </div>
-    <br>
-      <div class="six">
-           <span class='text' >报价合计：¥0.00</span>
+      <div class="seven">
+           <span class='text' >报价合计：¥1200.00</span>
           <el-row style="margin: 20px; float: right;">
-          <el-button class="orangeBtn" icon="el-icon-circle-check">确认报价</el-button>
+          <el-button class="orangeBtn" icon="el-icon-circle-check">通过审核</el-button>
           <el-button class="wthBtn">取消</el-button>
         </el-row>
     </div>
   </div>
-   <!--审批详情 -->
-   <el-dialog title="审批详情" :visible.sync="Approvaldetails" width="30%">
-      <el-steps :active="active" finish-status="success">
-  <el-step title="确定报价"></el-step>
-  <el-step title="财务审核"></el-step>
-  <el-step title="总经理审核"></el-step>
-  </el-steps>
-    <span slot="footer" class="Approvaldetails-footer">
-       <el-button type="primary" @click="Approvaldetails = false" class='orangeBtn'>关闭</el-button>
-    </span>
-   </el-dialog>
-    <!-- 基础运单确认 -->
-     <el-dialog title="基础运单确认" :visible.sync="confirm" width="50%">
-         <el-row class="info">
-          <el-col> <div class="name">运费单价：18/公斤</div></el-col>
-          <el-col :span="8" class="flex align-center">
-              <div class="name">单价调整：</div>
-            <el-col :span="10" >
-               <el-input placeholder="请输入" v-model="input1" style="width:195px">
-                    <template slot="prepend">
-                        <el-select v-model="value1" style="width:80px">
-                            <el-option v-for="item in options1" :key="item.value" :value="item.value" :label="item.label"></el-option>
-                        </el-select>
-                    </template>
-                    <i slot="suffix" class="el-input__icon">元</i>
-                </el-input>
-            </el-col>
-           </el-col>
-           <el-button class="orangeBtn"  @click=" Tips =true">确认</el-button>
-        </el-row>
-         <span slot="footer" class="Approvaldetails-footer" style="float: left;">
-             <span class='text' >基础运费：¥200.00</span> </span>
-            </el-dialog>
-            <!-- 基础运单确认提示 -->
-             <el-dialog title="提示" :visible.sync="Tips" width="30%" >
-               <span class='text' >您的单价金额减少了2元/公斤</span>
-               <br>
-               <span class='text' >本次价格会发送总经理确认，请耐心等待</span>
-                <el-descriptions class="margin-top" title="保温杯2020款"  :column="4" :size="size">
-            <el-descriptions-item label="调价理由">
-            <el-input type="textarea"  :rows="2"  placeholder="请输入内容"  v-model="textarea"></el-input>
-            </el-descriptions-item>
-              </el-descriptions>
-    <span slot="footer" class="Tips-footer">
-       <el-button @click="Tips = false" class='wuBtn '>取消</el-button>
-        <el-button type="primary" @click="Tips = false" class='orangeBtn'>确定</el-button>
-    </span>
-   </el-dialog>
   </div>
 </template>
 
@@ -219,13 +182,59 @@ export default {
       size: '',
       Deletedestination: false, // 删除目的国
       activeName: '1', // 标签绑定
-      Approvaldetails: false // 审批详情
+      Approvaldetails: false, // 审批详情
+
+      columns: [
+        { prop: 'OrderNo', label: '费用名称', width: '122', align: 'center' },
+        { prop: 'name', label: '费运类型', width: '85', align: 'center', formatter: this.formatter },
+        { prop: 'customerCode', label: '结算对象', width: '110', align: 'center', formatter: this.formatters },
+        { prop: 'status', label: '币种', width: '66', align: 'center' },
+        { prop: 'salesman', label: '单价', width: '66', align: 'center', type: 'slot', slotName: 'chakan' },
+        { prop: 'Reviewer', label: '单位', width: '54', align: 'center' },
+        { prop: 'Ordertype', label: '数量', width: '54', align: 'center' },
+        { prop: 'number', label: '费用', width: '81', align: 'center', type: 'slot', slotName: 'jianshu' },
+        { prop: 'Chargedmagnetic', label: '税金', width: '54', align: 'center' },
+        { prop: 'channel', label: '结算费用', width: '81', align: 'center' },
+        { prop: 'shipping', label: '录入人', width: '66', align: 'center' }
+      ],
+      tableData: [],
+      page: {
+        pageNo: 1,
+        limit: 1,
+        sizes: [1, 5, 10],
+        total: 0
+      }
     }
+  },
+  mounted () {
+    this.tableData = [
+      { OrderNo: 'AS123123423412313', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
+    ]
+    this.page.total = 2
   },
   methods: {
     handleClick (val) {
       console.log(val)
     },
+    // 重新渲染name列
+    formatter (row, column, cellValue) {
+      return row.name + '测试'
+    },
+    formatters (row, column, cellValue) {
+      return row.address + '测试'
+    },
+    // 改变页面大小处理
+    handleSizeChange (val) {
+
+    },
+    // 翻页处理
+    handleCurrentChange (val) {
+      this.tableData = [
+        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
+      ]
+    },
+    // 操作按钮列表
+    editTableData (row) {},
     next () {
       if (this.active++ > 2) this.active = 0
     }
@@ -242,7 +251,7 @@ export default {
 .left{
   float: left;
   width: 212px;
-  height: 1337px;
+  height: 1701px;
   background: #FFFFFF;
 border-radius: 4px;
 border: 1px solid #E8E8E8;
@@ -257,7 +266,7 @@ text-align:left;
 .right{
 float: left;
 width: 1028px;
-height: 1337px;
+height: 1601px;
 background: #E8EBF2;
 border-radius: 4px;
 border: 1px solid #E8E8E8;
@@ -269,20 +278,20 @@ margin: auto 20px;
     height:63px ;
 }
 .two{
-    height:367px ;
     background: #FFFFFF ;
     width: 988px;
+    height:63px ;
+}
+.three{
+  background: #FFFFFF ;
+    width: 988px;
+    height:161px ;
 }
 .el-descriptions{
     margin: auto  30px;
 }
 .title .text {
     width: 100px;
-}
-.three{
-    height:520px ;
-    background: #FFFFFF ;
-    width: 988px;
 }
 .infoBox{
   margin-bottom: 20px;
@@ -322,16 +331,21 @@ margin: auto 20px;
     margin: 14px 0;
 }
 .four{
-    height:144px ;
+    height:325px ;
     background: #FFFFFF ;
     width: 988px;
 }
 .five{
-    height:136px ;
+    height:367px ;
     background: #FFFFFF ;
     width: 988px;
 }
 .six{
+    height:514px ;
+    background: #FFFFFF ;
+    width: 988px;
+}
+.seven{
     height:63px ;
     background: #FFFFFF ;
     width: 1028px;

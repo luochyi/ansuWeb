@@ -82,7 +82,7 @@
         <el-divider></el-divider>
          <el-row class='searchbox1'>
           <el-col :span='10' class="left">
-            <el-button class='stopBtn' @click="changes=true">批量登记费用</el-button>          </el-col>
+            <el-button class='stopBtn' @click="Batchregistration">批量登记费用</el-button></el-col>
             <el-col :span='12' class='right'>
                 <el-button class='whiteBtn '>查询条件设置</el-button>
               <el-button class='whiteBtn '>列表显示设置</el-button>
@@ -97,6 +97,52 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
+    <!-- slot -->
+      <template v-slot:jianshu='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="list(slotData)">装箱清单</span>
+      </template>
+      <template v-slot:guiji='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="track(slotData)">更新轨迹</span>
+      </template>
+      <template v-slot:fapiao='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Print(slotData)">打印|修改</span>
+      </template>
+      <template v-slot:jiesuan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">详情</span>
+      </template>
+       <template v-slot:gaihuo='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="modify(slotData)">修改</span>
+      </template>
+      <template v-slot:bianhao='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="whole(slotData)">全部</span>
+      </template>
+      <template v-slot:rucang='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Warehousing(slotData)">修改</span>
+      </template>
+      <template v-slot:chucang='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Outwarehouse(slotData)">修改</span>
+      </template>
+      <template v-slot:daili='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="agent(slotData)">修改</span>
+      </template>
+      <template v-slot:dailijiesuan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="settlement(slotData)">详情</span>
+      </template>
+      <template v-slot:zhuandanhao='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="website(slotData)">查看官网|修改</span>
+      </template>
+       <template v-slot:jiedanhao='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Receipt(slotData)">修改</span>
+      </template>
+      <template v-slot:pinming='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Name(slotData)">查看</span>
+      </template>
+      <template v-slot:neibu='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="inside(slotData)">查看</span>
+      </template>
+      <template v-slot:yewuyuan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="salesman(slotData)">查看</span>
+      </template>
       <el-table-column
         slot="table_oper"
         align="center"
@@ -106,7 +152,7 @@
         :resizable="false"
       >
          <template slot-scoped="scoped">
-          <el-button type="text" @click="Viewquote"> 费运登记</el-button>
+          <el-button type="text" @click="registration"> 费运登记</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="adopt= true"> 修改尺寸 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
@@ -114,9 +160,68 @@
         </template>
       </el-table-column>
     </commonTable>
-
       </div>
     </div>
+     <!-- 修改尺寸抽屉组件 -->
+    <commonDrawer :drawerVrisible="drawerVrisible" :drawerTitle="drawerTitle">
+       <!-- 内容区域 -->
+      <div class="dra-content">
+        <div class="adopt">
+              <span class='texta'>箱子：FBA1342342525001</span>
+              <br>
+              <span class='text'>产品：</span>
+              <br>
+              <span class='text'>保温杯2020款
+                <el-button class='whiteBtn '>12件</el-button>
+                 <el-button type="text" size="mini" @click="() => change(data)">
+                  隐藏详情
+                </el-button>
+              </span>
+        </div>
+        <div class="biaodan">
+      <el-descriptions class="margin-top"  :column="2" :size="size">
+<el-descriptions-item label="产品中文名">保温杯</el-descriptions-item>
+    <el-descriptions-item label="产品英文名">vacuum cup</el-descriptions-item>
+    <el-descriptions-item label="材质中文名">不锈钢、塑料</el-descriptions-item>
+     <el-descriptions-item label="材质英文名">Stainless steel、 plastic</el-descriptions-item>
+    <el-descriptions-item label="用途中文名">容器、杯子</el-descriptions-item>
+    <el-descriptions-item label="用途英文名">Container、 cup</el-descriptions-item>
+    <el-descriptions-item label="海关编码">14234231</el-descriptions-item>
+    <el-descriptions-item label="申报价格">30$</el-descriptions-item>
+    <el-descriptions-item label="产品品牌">TIGER</el-descriptions-item>
+    <el-descriptions-item label="产品型号">ATX660-2020</el-descriptions-item>
+    <el-descriptions-item label="产品重量">70KG</el-descriptions-item>
+  </el-descriptions>
+   <el-descriptions >
+    <el-descriptions-item label="亚马逊店铺商店">http://www.amazon.cn/dp/B072MKVS7F/ref=Ip-1488436071-1-1？s=shoes&ie=UTF&&qid=1605232976&sr</el-descriptions-item>
+</el-descriptions>
+        </div>
+         <div class="foot">
+           <span class='text'>保温杯2019款
+                <el-button class='whiteBtn'>10件</el-button>
+                 <el-button type="text" size="mini" @click="() => change(data)">
+                  查看详情
+                </el-button>
+              </span>
+              <br>
+              <span class='text'>保温杯漫威联名版
+                <el-button class='whiteBtn '>10件</el-button>
+                 <el-button type="text" size="mini" @click="() => change(data)">
+                  查看详情
+                </el-button>
+              </span>
+        </div>
+      </div>
+      <!-- 抽屉底部按钮 -->
+      <div slot="footer">
+        <button class="btn-orange" @click="submit()">
+          <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button>
+        <button class="btn-gray" @click="addClose">
+          <span>取消</span>
+        </button>
+      </div>
+    </commonDrawer>
   </div>
 </template>
 
@@ -136,6 +241,9 @@ export default {
       destination: '', // 目的地
       zipcode: '', // 目的地邮编
 
+      drawerVrisible: false, // 控制抽屉显示隐藏
+      drawerTitle: '装箱清单', // 抽屉标题
+
       columns: [
         { prop: 'WaybillNo', label: '运单号', width: '140', align: 'center' },
         { prop: 'OrderNo', label: '预报单号', width: '133', align: 'center' },
@@ -154,45 +262,45 @@ export default {
         { prop: 'Duedate', label: '应收日期', width: '137', align: 'center' },
         { prop: 'duedate', label: '应付日期', width: '137', align: 'center' },
         { prop: 'ReceivingNumber', label: '收货件数', width: '88', align: 'center' },
-        { prop: 'Forecastnumber', label: '预报件数', width: '164', align: 'center' },
+        { prop: 'Forecastnumber', label: '预报件数', width: '164', align: 'center', type: 'slot', slotName: 'jianshu' },
         { prop: 'Problempiece', label: '问题件', width: '89', align: 'center' },
-        { prop: 'Transportationtrack', label: '运输轨迹', width: '133', align: 'center' },
-        { prop: 'invoice', label: '发票', width: '188', align: 'center' },
+        { prop: 'Transportationtrack', label: '运输轨迹', width: '133', align: 'center', type: 'slot', slotName: 'guiji' },
+        { prop: 'invoice', label: '发票', width: '188', align: 'center', type: 'slot', slotName: 'fapiao' },
         { prop: 'Forecasttime', label: '预报时间', width: '179', align: 'center' },
         { prop: 'Sendingmethod', label: '寄件方式', width: '81', align: 'center' },
         { prop: 'Squarenumber', label: '方数', width: '70', align: 'center' },
         { prop: 'Realweight', label: '实重', width: '70', align: 'center' },
         { prop: 'Volumeweight', label: '材积重', width: '70', align: 'center' },
-        { prop: 'Settlementweight', label: '结算重', width: '111', align: 'center' },
+        { prop: 'Settlementweight', label: '结算重', width: '111', align: 'center', type: 'slot', slotName: 'jiesuan' },
         { prop: 'Predictedweight', label: '预报重量', width: '80', align: 'center' },
         { prop: 'Predictionsquare', label: '预报方数', width: '80', align: 'center' },
         { prop: 'goodschanged', label: '改货方数', width: '95', align: 'center' },
         { prop: 'Modifiedweight', label: '改货重量', width: '95', align: 'center' },
         { prop: 'Modifiedvolumeweight', label: '改货材积重', width: '95', align: 'center' },
-        { prop: 'Changesettlementweight', label: '改货结算重', width: '115', align: 'center' },
-        { prop: 'Shipmentnumber', label: '货件编号', width: '165', align: 'center' },
+        { prop: 'Changesettlementweight', label: '改货结算重', width: '115', align: 'center', type: 'slot', slotName: 'gaihuo' },
+        { prop: 'Shipmentnumber', label: '货件编号', width: '165', align: 'center', type: 'slot', slotName: 'bianhao' },
         { prop: 'Ordertype', label: '订单类型', width: '89', align: 'center' },
         { prop: 'Destinationcountry', label: '目的国', width: '66', align: 'center' },
         { prop: 'destination', label: '目的地', width: '66', align: 'center' },
         { prop: 'Destinationzipcode', label: '目的地邮编', width: '123', align: 'center' },
         { prop: 'Forecastchannel', label: '预报渠道', width: '179', align: 'center' },
-        { prop: 'Warehousingchannel', label: '入仓渠道', width: '179', align: 'center' },
-        { prop: 'Exitchannel', label: '出仓渠道', width: '178', align: 'center' },
-        { prop: 'Outboundagent', label: '出仓代理', width: '206', align: 'center' },
-        { prop: 'Agencysettlement', label: '代理结算重', width: '111', align: 'center' },
+        { prop: 'Warehousingchannel', label: '入仓渠道', width: '179', align: 'center', type: 'slot', slotName: 'rucang' },
+        { prop: 'Exitchannel', label: '出仓渠道', width: '178', align: 'center', type: 'slot', slotName: 'chucang' },
+        { prop: 'Outboundagent', label: '出仓代理', width: '206', align: 'center', type: 'slot', slotName: 'daili' },
+        { prop: 'Agencysettlement', label: '代理结算重', width: '111', align: 'center', type: 'slot', slotName: 'dailijiesuan' },
         { prop: 'Dispatchtype', label: '派送类型', width: '80', align: 'center' },
         { prop: 'Dispatchstatus', label: '派送状态', width: '80', align: 'center' },
-        { prop: 'TransferorderNo', label: '转单号', width: '260', align: 'center' },
-        { prop: 'ReceiptNo', label: '接单号', width: '145', align: 'center' },
+        { prop: 'TransferorderNo', label: '转单号', width: '260', align: 'center', type: 'slot', slotName: 'zhuandanhao' },
+        { prop: 'ReceiptNo', label: '接单号', width: '145', align: 'center', type: 'slot', slotName: 'jiedanhao' },
         { prop: 'declarationtype', label: '报关类型', width: '122', align: 'center' },
         { prop: 'customs clearance', label: '单独清关', width: '115', align: 'center' },
-        { prop: 'ProductName', label: '品名', width: '103', align: 'center' },
+        { prop: 'ProductName', label: '品名', width: '103', align: 'center', type: 'slot', slotName: 'pinming' },
         { prop: 'Declaredvalue', label: '申报价值', width: '81', align: 'center' },
         { prop: 'Ordertime', label: '下单时间', width: '182', align: 'center' },
         { prop: 'Customercomments', label: '客户备注', width: '110', align: 'center' },
-        { prop: 'Internalremarks', label: '内部备注', width: '152', align: 'center' },
+        { prop: 'Internalremarks', label: '内部备注', width: '152', align: 'center', type: 'slot', slotName: 'neibu' },
         { prop: 'Isthereinsurance', label: '是否有保险', width: '92', align: 'center' },
-        { prop: 'salesman', label: '业务员', width: '108', align: 'center' }
+        { prop: 'salesman', label: '业务员', width: '108', align: 'center', type: 'slot', slotName: 'yewuyuan' }
       ],
       tableData: [],
       page: {
@@ -210,8 +318,11 @@ export default {
     this.page.total = 2
   },
   methods: {
-    detailspage () {
-      this.$router.push({ name: 'detailspage' })
+    registration () {
+      this.$router.push({ name: 'registration' })
+    },
+    Batchregistration () {
+      this.$router.push({ name: 'Batchregistration' })
     },
     handleClick (val) {
       console.log(val)
@@ -234,12 +345,47 @@ export default {
       ]
     },
     // 操作按钮列表
-    editTableData (row) {}
+    editTableData (row) {},
+    // 查看
+    check (val) {
+      console.log(val.data)
+      this.drawerVrisible = true
+    },
+    // 装箱清单
+    list (val) {
+      console.log(val.data)
+      this.drawerVrisible = true
+    },
+    // 关闭抽屉
+    addClose () {
+      this.drawerVrisible = false
+    },
+    // 返回抽屉
+    raturn () {
+      this.drawerVrisibla = false
+    },
+    // 内部备注
+    remarks (val) {
+      console.log(val.data)
+      this.drawerVrisibla = true
+    },
+    // 结算备注
+    details (val) {
+      console.log(val.data)
+      this.drawerVrisiblb = true
+    }
   }
 }
 </script>
 
 <style lang='scss' scoped>
+.sub_title{
+  margin:20px
+}
+/deep/ .title {
+  height: 56px;
+  font-size: 16px;
+}
 /deep/ .searchbox1{
   .stopBtn{
     height: 32px;

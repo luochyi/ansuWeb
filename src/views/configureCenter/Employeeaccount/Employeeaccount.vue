@@ -178,6 +178,8 @@ export default {
 
       chooseAgent: {}, // 选择停用
       activeName: '1', // 标签绑定
+      agentName: '',
+      input: '',
 
       columns: [
         { prop: 'name', label: '姓名', width: '143', align: 'center' },

@@ -41,7 +41,7 @@
    </el-descriptions-item>
    <el-descriptions-item label="确认密码">
        <el-input style="width: 200px" placeholder="请输入" v-model="inputf" show-password></el-input>
-       <el-button class="whiteBtn">生成随机密码</el-button>
+       <el-button class="whiteBtn" @click=" password = true">生成随机密码</el-button>
    </el-descriptions-item>
    </el-descriptions>
     <el-descriptions class="margin-top" :column="1" direction="vertical">
@@ -62,11 +62,11 @@
   <!-- 生成随机密码 -->
    <el-dialog title="生成随机密码" :visible.sync="password" width="30%">
                <div class="input" >
-               <br><span><i class="el-icon-circle-check"></i>随机密码：LDKDLJ3432</span><br>
+               <br><span>随机密码：LDKDLJ3432</span><br>
                </div>
                <span slot="footer" class="password-footer">
                 <el-button  @click="password = false" class='orangeBtn'>复制密码</el-button>
-                 <el-button @click="password = false" class='wuBtn'>取 消</el-button>
+                 <el-button @click="password = false" class='wuBtn'>返回</el-button>
                </span>
             </el-dialog>
 </div>
@@ -151,5 +151,32 @@ border: 1px solid #E8E8E8;
 .el-form{
   margin: 10px;
     text-align: left;
+}
+.el-dialog{
+  text-align: left;
+}
+.el-dialog{
+  position: absolute;
+  margin: 0px !important;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  }
+.el-dialog__header{
+    font-size: 16px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+  }
+.el-dialog__body {
+    padding: 10px 15px;
+    border-top:1px solid rgba(0, 0, 0, 0.06);
+    border-bottom:1px solid rgba(0, 0, 0, 0.06);
+}
+.el-dialog__header {
+    padding: 10px 10px ;
+}
+.el-dialog__footer{
+  padding: 5px 10px ;
 }
 </style>

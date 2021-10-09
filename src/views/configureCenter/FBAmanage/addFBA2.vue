@@ -54,7 +54,7 @@
       </el-table-column>
     </commonTable>
     <!-- 抽屉组件 -->
-    <commonDrawer :drawerVrisible="drawerVrisible" :drawerTitle="drawerTitle">
+    <commonDrawer :drawerVrisible="drawerVrisible" :drawerTitle="drawerTitle" @click="check(slotData)">
       <div class="dra-content">
         <!-- 内容区域 -->
         <button>1</button>
@@ -76,7 +76,7 @@
 export default {
   data () {
     return {
-      drawerVrisible: true, // 控制抽屉显示隐藏
+      drawerVrisible: false, // 控制抽屉显示隐藏
       drawerTitle: 'biaoti', // 抽屉标题
       columns: [
         { prop: 'date', label: '日期', width: '150', align: 'center' },
@@ -145,6 +145,7 @@ export default {
     // 查看
     check (val) {
       console.log(val.data)
+      this.drawerVrisible = true
     },
     // 操作按钮列表
     editTableData (row) {},

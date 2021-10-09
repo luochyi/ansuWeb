@@ -89,11 +89,6 @@
          <el-button @click="status= true" class='whiteBtn'>查看配置 </el-button>
           </el-col>
         </el-row>
-        <el-col :span='6'>
-              <span class='text'>请选择需要配置的权限</span>
-                 <el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
-         <div style="margin: 15px 0;"></div>
-            </el-col>
     </div>
     </div>
 </el-drawer>
@@ -130,6 +125,7 @@
 export default {
   data () {
     return {
+      input: '',
       agentName: '',
       Department: false, // 新增部门
       toAdd: false, // 新增角色

@@ -62,7 +62,7 @@
          <template slot-scoped="scoped">
           <el-button type="text" @click="detailspage"> 查看账单</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="password= true"> 核销账单 </el-button>
+                <el-button type="text" @click="bill"> 核销账单 </el-button>
         </template>
       </el-table-column>
     </commonTable>
@@ -113,8 +113,8 @@ export default {
     this.page.total = 2
   },
   methods: {
-    detailspage () {
-      this.$router.push({ name: 'detailspage' })
+    bill () {
+      this.$router.push({ name: 'bill' })
     },
     handleClick (val) {
       console.log(val)
@@ -143,6 +143,13 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.sub_title{
+  margin:20px
+}
+/deep/ .title {
+  height: 56px;
+  font-size: 16px;
+}
 /deep/ .tableBtn{
   .stopBtn{
     height: 32px;

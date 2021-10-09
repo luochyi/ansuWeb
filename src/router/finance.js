@@ -52,6 +52,16 @@ export default [
     component: () => import('@/views/Financialexpensesicon/Waybillfee/expenseAudit/expenseAudit.vue')
   },
   {
+    path: '/Viewquote',
+    name: 'Viewquote',
+    meta: {
+      title: '查看报价',
+      icon: 'Viewquote',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Waybillfee/expenseAudit/Viewquote.vue')
+  },
+  {
     path: '/expenseConfirmationForm',
     name: 'expenseConfirmationForm',
     meta: {
@@ -62,6 +72,16 @@ export default [
     component: () => import('@/views/Financialexpensesicon/Waybillfee/expenseConfirmationForm/expenseConfirmationForm.vue')
   },
   {
+    path: '/Expenseconfirmation',
+    name: 'Expenseconfirmation',
+    meta: {
+      title: '费用确认单',
+      icon: 'Expenseconfirmation',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Waybillfee/expenseConfirmationForm/Expenseconfirmation.vue')
+  },
+  {
     path: '/expenseRegister',
     name: 'expenseRegister',
     meta: {
@@ -70,6 +90,26 @@ export default [
       hidden: false
     },
     component: () => import('@/views/Financialexpensesicon/Waybillfee/expenseRegister/expenseRegister.vue')
+  },
+  {
+    path: '/Batchregistration',
+    name: 'Batchregistration',
+    meta: {
+      title: '费用登记单',
+      icon: 'Batchregistration',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Waybillfee/expenseRegister/Batchregistration.vue')
+  },
+  {
+    path: '/registration',
+    name: 'registration',
+    meta: {
+      title: '费用登记单',
+      icon: 'registration',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Waybillfee/expenseRegister/registration.vue')
   },
   {
     path: '/Rmanagement',
@@ -110,6 +150,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/Financialexpensesicon/Rmanagement/Billwriteoff/Billwriteoff.vue')
+  },
+  {
+    path: '/bill',
+    name: 'bill',
+    meta: {
+      title: '账单核销',
+      icon: 'bill',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Rmanagement/Billwriteoff/bill.vue')
   },
   {
     path: '/Writeoffrecord',
@@ -191,5 +241,15 @@ export default [
       hidden: false
     },
     component: () => import('@/views/Financialexpensesicon/other/Deductgrossprofit/Deductgrossprofit.vue')
+  },
+  {
+    path: '/details',
+    name: 'details',
+    meta: {
+      title: '扣毛利',
+      icon: 'details',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/other/Deductgrossprofit/details.vue')
   }
 ]
