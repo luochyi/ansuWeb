@@ -193,6 +193,13 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.sub_title{
+  margin:20px
+}
+/deep/ .title {
+  height: 56px;
+  font-size: 16px;
+}
 /deep/ .tableBtn{
   .stopBtn{
     height: 32px;

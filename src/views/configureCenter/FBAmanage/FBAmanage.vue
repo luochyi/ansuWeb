@@ -7,7 +7,7 @@
     </el-row>
       </div>
       <input class="inputa" autocomplete="off" type="text" value="" placeholder="请输入目的国">
-     <el-button type="primary"  @click="country = true" icon="el-icon-circle-plus-outline" round>新建目的国</el-button>
+     <el-button type="primary"  @click="addFBA2" icon="el-icon-circle-plus-outline" round>新建目的国</el-button>
 <br>
 <br>
 <div class="first">
@@ -199,6 +199,9 @@ export default {
   methods: {
     addFBA () {
       this.$router.push({ name: 'addFBA' })
+    },
+    addFBA2 () {
+      this.$router.push({ name: 'addFBA2' })
     },
     handleSelectionChange (val) {
       console.log(val)

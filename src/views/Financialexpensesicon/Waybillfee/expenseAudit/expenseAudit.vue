@@ -96,6 +96,27 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
+    <template v-slot:chakan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看</span>
+      </template>
+            <template v-slot:leixin='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">详情</span>
+      </template>
+      <template v-slot:jianshu='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="list(slotData)">装箱清单</span>
+      </template>
+      <template v-slot:liyou='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="see(slotData)">查看</span>
+      </template>
+      <template v-slot:feiyong='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="cost(slotData)">查看</span>
+      </template>
+      <template v-slot:jiesuan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">详情</span>
+      </template>
+      <template v-slot:neibu='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="remarks(slotData)">查看</span>
+      </template>
       <el-table-column
         slot="table_oper"
         align="center"
@@ -140,29 +161,29 @@ export default {
         { prop: 'name', label: '客户名称', width: '193', align: 'center', formatter: this.formatter },
         { prop: 'customerCode', label: '客户编号', width: '80', align: 'center', formatter: this.formatters },
         { prop: 'status', label: '审核状态', width: '94', align: 'center' },
-        { prop: 'salesman', label: '业务员', width: '106', align: 'center' },
-        { prop: 'Ordertype', label: '订单类型', width: '101', align: 'center' },
-        { prop: 'number', label: '件数', width: '123', align: 'center' },
+        { prop: 'salesman', label: '业务员', width: '106', align: 'center', type: 'slot', slotName: 'chakan' },
+        { prop: 'Ordertype', label: '订单类型', width: '101', align: 'center', type: 'slot', slotName: 'leixin' },
+        { prop: 'number', label: '件数', width: '123', align: 'center', type: 'slot', slotName: 'jianshu' },
         { prop: 'Chargedmagnetic', label: '带电带磁', width: '94', align: 'center' },
         { prop: 'channel', label: '预报渠道', width: '108', align: 'center' },
         { prop: 'shipping', label: '运输方式', width: '80', align: 'center' },
         { prop: 'destination', label: '目的地', width: '66', align: 'center' },
         { prop: 'warehouse', label: '目的仓', width: '94', align: 'center' },
         { prop: 'zipcode', label: '目的地邮编', width: '94', align: 'center' },
-        { prop: 'adjustment', label: '调价理由', width: '82', align: 'center' },
+        { prop: 'adjustment', label: '调价理由', width: '82', align: 'center', type: 'slot', slotName: 'liyou' },
         { prop: 'surcharge', label: '附加费', width: '115', align: 'center' },
         { prop: 'Basiccost', label: '基础费用', width: '94', align: 'center' },
         { prop: 'Additionalcost', label: '附加费用', width: '94', align: 'center' },
-        { prop: 'Totalcost', label: '合计费用', width: '118', align: 'center' },
+        { prop: 'Totalcost', label: '合计费用', width: '118', align: 'center', type: 'slot', slotName: 'feiyong' },
         { prop: 'Forecasttime', label: '预报时间', width: '182', align: 'center' },
         { prop: 'Customsdeclaration', label: '报关类型', width: '122', align: 'center' },
         { prop: 'clearance', label: '单独清关', width: '115', align: 'center' },
-        { prop: 'Settlementweight', label: '结算重', width: '111', align: 'center' },
+        { prop: 'Settlementweight', label: '结算重', width: '111', align: 'center', type: 'slot', slotName: 'jiesuan' },
         { prop: 'Realweight', label: '实重', width: '70', align: 'center' },
         { prop: 'Squarenumber', label: '方数', width: '70', align: 'center' },
         { prop: 'Volumeweight', label: '材积重', width: '70', align: 'center' },
         { prop: 'comments', label: '客户备注', width: '110', align: 'center' },
-        { prop: 'remarks', label: '内部备注', width: '152', align: 'center' },
+        { prop: 'remarks', label: '内部备注', width: '152', align: 'center', type: 'slot', slotName: 'neibu' },
         { prop: 'insured', label: '是否保险', width: '83', align: 'center' },
         { prop: 'Reviewer', label: '审核人', width: '110', align: 'center' }
       ],
@@ -182,8 +203,8 @@ export default {
     this.page.total = 2
   },
   methods: {
-    detailspage () {
-      this.$router.push({ name: 'detailspage' })
+    Viewquote () {
+      this.$router.push({ name: 'Viewquote' })
     },
     handleClick (val) {
       console.log(val)
@@ -212,6 +233,13 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.sub_title{
+  margin:20px
+}
+/deep/ .title {
+  height: 56px;
+  font-size: 16px;
+}
 /deep/ .searchbox1{
   .stopBtn{
     height: 32px;

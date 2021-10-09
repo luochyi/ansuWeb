@@ -3,69 +3,60 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>付款审批</span>
+        <span class='text'>账单核销</span>
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
+          <el-col >
+              <span class='text' style="float: left;">深圳莱茵宝宝贸易有限公司</span>
+            </el-col>
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>付款单号</span>
+              <span class='text'>账单号</span>
             </el-col>
-            <el-col :span='13'>
-              <el-input v-model='PaymentNo' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>付款金额</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='amount' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>代理编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='code' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>审核状态</span>
-            </el-col>
-            <el-col :span='13'>
-                <el-input v-model='status' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>申请状态</span>
-            </el-col>
-            <el-col :span='13'>
-           <el-select v-model="value" placeholder="请选择">
+            <el-col :span='12'>
+            <el-select v-model="value" placeholder="请选择">
          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
          </el-option>
          </el-select>
             </el-col>
           </el-col>
-          <el-col :span='17' class='right'>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>核销状态</span>
+            </el-col>
+            <el-col :span='12'>
+            <el-select v-model="value" placeholder="请选择">
+         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+         </el-option>
+         </el-select>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>外账单日</span>
+            </el-col>
+            <el-col :span='12'>
+              <el-input v-model='destination' placeholder='请输入'></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>结算方式</span>
+            </el-col>
+             <el-col :span='12'>
+                <el-select v-model="value" placeholder="请选择">
+         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+         </el-option>
+         </el-select>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox' style="float: right;">
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
           </el-col>
         </el-row>
-        <el-divider></el-divider>
-          <el-row class='tableBtn'>
-             <el-col :span='10' class="left">
-               <el-button class='stopBtn' @click="changes=true">批量审核</el-button>
-          </el-col>
-          </el-row>
-          <br>
           <!-- 组件 -->
     <commonTable
       :columns="columns"
@@ -79,22 +70,20 @@
         align="center"
         fixed="right"
         label="操作"
-        width="156"
+        width="86"
         :resizable="false"
       >
          <template slot-scoped="scoped">
-            <el-button type="text" @click="password= true"> 查看 </el-button>
-            <span style="color: #0084FF; margin: 0px 5px">|</span>
-          <el-button type="text" @click="detailspage"> 通过</el-button>
-          <span style="color: #0084FF; margin: 0px 5px">|</span>
-          <el-button type="text" @click="detailspage"> 驳回</el-button>
+                <el-button type="text" @click="bill"> 核销账单 </el-button>
         </template>
       </el-table-column>
     </commonTable>
+
       </div>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data () {
@@ -104,20 +93,21 @@ export default {
       currentPage: 1, // 当前页码
 
       activeName: '1',
-      PaymentNo: '', // 付款单号
-      amount: '', // 付款金额
-      code: '', // 代理编码
-      status: '', // 审核状态
-      value: '',
+      waybillNo: '', // 运单号
+      customerName: '', // 客户名称
+      customerCode: '', // 客户编码
+      predictionChannel: '', // 预报渠道
+      destination: '', // 目的地
+      zipcode: '', // 目的地邮编
 
       columns: [
-        { prop: 'PaymentNo', label: '付款单号', width: '212', align: 'center' },
-        { prop: 'apply', label: '申请金额', width: '82', align: 'center' },
-        { prop: 'agent', label: '代款代理', width: '255', align: 'center' },
-        { prop: 'code', label: '代理编码', width: '142', align: 'center' },
-        { prop: 'status', label: '审核状态', width: '95', align: 'center' },
-        { prop: 'date', label: '申请日期', width: '129', align: 'center' },
-        { prop: 'applicant', label: '申请人', width: '73', align: 'center' }
+        { prop: 'name', label: '账单号', width: '193', align: 'center', formatter: this.formatter },
+        { prop: 'Customercode', label: '部分核销', width: '118', align: 'center', formatter: this.formatters },
+        { prop: 'Unwrittenoffbill', label: '包含运单', width: '82', align: 'center' },
+        { prop: 'Unwrittenoffwaybill', label: '未核销运单', width: '220', align: 'center' },
+        { prop: 'Unwrittenoffamount', label: '未核销金额', width: '126', align: 'center' },
+        { prop: 'Accountamount', label: '账户金额', width: '189', align: 'center' },
+        { prop: 'Settlementmethod', label: '结算方式', width: '126', align: 'center' }
       ],
       tableData: [],
       page: {
@@ -130,13 +120,13 @@ export default {
   },
   mounted () {
     this.tableData = [
-      { PaymentNo: 'AS123123423412313', apply: '王小虎', code: '上海市普陀区金沙江路 1518 弄' }
+      { OrderNo: 'AS123123423412313', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
     ]
     this.page.total = 2
   },
   methods: {
-    detailspage () {
-      this.$router.push({ name: 'detailspage' })
+    bill () {
+      this.$router.push({ name: 'bill' })
     },
     handleClick (val) {
       console.log(val)

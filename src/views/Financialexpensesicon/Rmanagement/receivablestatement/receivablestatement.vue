@@ -79,13 +79,15 @@
           <el-col :span='6' class='colbox'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='wuBtn long1'>展开全部</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
          <el-row class='tableBtn'>
              <el-col :span='10' class="left">
-            <el-button class='stopBtn' @click="changes=true">批量导出Excle</el-button>
-            <el-button class='stopBtn' @click="changes=true">批量发送邮件</el-button>
+            <el-button class='stopBtn' @click="Batchexport=true">批量导出Excle</el-button>
+            <el-button class='stopBtn' @click="Bulksendmail=true">批量发送邮件</el-button>
+             <el-button class='stopBtn' @click="confirmation=true">批量确认费用</el-button>
           </el-col>
             <el-col :span='10' class='right'>
                 <el-button class='whiteBtn '>查询条件设置</el-button>
@@ -101,6 +103,21 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
+     <template v-slot:youxiang='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="modify(slotData)">修改</span>
+      </template>
+       <template v-slot:changgui='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">查看详情</span>
+      </template>
+      <template v-slot:shihou='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="View(slotData)">查看详情</span>
+      </template>
+      <template v-slot:yundan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="see(slotData)">查看详情</span>
+      </template>
+       <template v-slot:yewuyuan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看</span>
+      </template>
       <el-table-column
         slot="table_oper"
         align="center"
@@ -121,6 +138,36 @@
 
       </div>
     </div>
+     <!-- 批量导出Excle -->
+   <el-dialog title="批量导出Excle" :visible.sync="Batchexport" width="30%">
+               <div class="input" >
+               <br><span>您确认批量导出这34笔账单的Excle吗？</span><br>
+               </div>
+               <span slot="footer" class="Batchexport-footer">
+                 <el-button class='wuBtn long1'>取消</el-button>
+                 <el-button type="primary" @click="Batchexport = false" class='orangeBtn'>确 定</el-button>
+               </span>
+            </el-dialog>
+             <!-- 批量发送邮件 -->
+   <el-dialog title="批量发送邮件" :visible.sync="Bulksendmail" width="30%">
+               <div class="input" >
+               <br><span>您确认批量发送这34笔账单的邮件吗？</span><br>
+               </div>
+               <span slot="footer" class="Bulksendmail-footer">
+                 <el-button class='wuBtn long1'>取消</el-button>
+                 <el-button type="primary" @click="Bulksendmail = false" class='orangeBtn'>确 定</el-button>
+               </span>
+            </el-dialog>
+              <!-- 批量确认费用 -->
+   <el-dialog title="批量确认费用" :visible.sync="confirmation" width="30%">
+               <div class="input" >
+               <br><span>您确认批量确认这34笔账单的费用吗？</span><br>
+               </div>
+               <span slot="footer" class="confirmation-footer">
+                 <el-button class='wuBtn long1'>取消</el-button>
+                 <el-button type="primary" @click="confirmation = false" class='orangeBtn'>确 定</el-button>
+               </span>
+            </el-dialog>
   </div>
 </template>
 
@@ -140,6 +187,11 @@ export default {
       destination: '', // 目的地
       zipcode: '', // 目的地邮编
 
+      // 弹框
+      Batchexport: false, // 批量导出Excle
+      Bulksendmail: false, // 批量发送邮件
+      confirmation: false, // 批量确认费用
+
       columns: [
         { prop: 'receivableNo', label: '应收账单号', width: '155', align: 'center' },
         { prop: 'name', label: '客户名称', width: '193', align: 'center', formatter: this.formatter },
@@ -147,13 +199,13 @@ export default {
         { prop: 'Openingbalance', label: '期初余额', width: '82', align: 'center' },
         { prop: 'Settlementperiod', label: '结算周期', width: '220', align: 'center' },
         { prop: 'Reconciliationstatus', label: '对账确认状态', width: '126', align: 'center' },
-        { prop: 'Customeremail', label: '客户邮箱', width: '189', align: 'center' },
-        { prop: 'Conventionalwaybill', label: '常规运单', width: '126', align: 'center' },
-        { prop: 'Expostwaybill', label: '事后运单', width: '114', align: 'center' },
-        { prop: 'Totalwaybill', label: '合计运单', width: '126', align: 'center' },
+        { prop: 'Customeremail', label: '客户邮箱', width: '189', align: 'center', type: 'slot', slotName: 'youxiang' },
+        { prop: 'Conventionalwaybill', label: '常规运单', width: '126', align: 'center', type: 'slot', slotName: 'changgui' },
+        { prop: 'Expostwaybill', label: '事后运单', width: '114', align: 'center', type: 'slot', slotName: 'shihou' },
+        { prop: 'Totalwaybill', label: '合计运单', width: '126', align: 'center', type: 'slot', slotName: 'yundan' },
         { prop: 'Settlementamount', label: '结算金额', width: '95', align: 'center' },
         { prop: 'Affiliatedcompany', label: '所属公司', width: '123', align: 'center' },
-        { prop: 'salesman', label: '业务员', width: '95', align: 'center' },
+        { prop: 'salesman', label: '业务员', width: '95', align: 'center', type: 'slot', slotName: 'yewuyuan' },
         { prop: 'Reconciliation', label: '对账确定员', width: '95', align: 'center' }
       ],
       tableData: [],
@@ -202,6 +254,13 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.sub_title{
+  margin:20px
+}
+/deep/ .title {
+  height: 56px;
+  font-size: 16px;
+}
 /deep/ .tableBtn{
   .stopBtn{
     height: 32px;
@@ -215,5 +274,33 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+}
+/deep/ .el-dialog{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .el-dialog__header{
+    font-size: 16px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+}
+/deep/ .el-dialog{
+  text-align: left;
+}
+//biankuang
+/deep/ .el-dialog__body {
+    padding: 20px 25px;
+    border-top:1px solid rgba(0, 0, 0, 0.06);
+    border-bottom:1px solid rgba(0, 0, 0, 0.06);
+}
+/deep/ .el-dialog__header {
+    padding: 10px 10px ;
+}
+/deep/ .el-dialog__footer{
+  padding: 5px 10px ;
 }
 </style>

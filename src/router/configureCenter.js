@@ -241,5 +241,15 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/FBAmanage/addFBA.vue')
+  },
+  {
+    path: '/FBAmanage/addFBA',
+    name: 'addFBA2',
+    meta: {
+      title: '新建目的国',
+      icon: 'addFBA2',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/FBAmanage/addFBA2.vue')
   }
 ]

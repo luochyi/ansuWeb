@@ -1,5 +1,4 @@
-
-司机管理<template>
+<template>
   <div>
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
@@ -50,19 +49,17 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
       >
-       <el-table-column
-        slot="table_oper"
-        v-if ="activeName === '1'"
-        label="开户人"
-        width="109"
-        >
-      </el-table-column>
+      <!-- slot -->
+      <template v-slot:chakan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看更多</span>
+      </template>
+            <!-- 操作 -->
       <el-table-column
         slot="table_oper"
         align="center"
         fixed="right"
         label="操作"
-        width="238"
+        width="84"
         :resizable="false"
         >
         <template slot-scope="scope">
@@ -109,8 +106,8 @@ export default {
         { prop: 'driver', label: '司机', width: '152', align: 'center' },
         { prop: 'position', label: '职位', width: '151', align: 'center', formatter: this.formatter },
         { prop: 'distribution', label: '区域分配', width: '183', align: 'center', formatter: this.formatter },
-        { prop: 'City', label: '所属城市', width: '198', align: 'center', formatter: this.formatter },
-        { prop: 'area', label: '收货区域', width: '198', align: 'center', formatter: this.formatter },
+        { prop: 'City', label: '所属城市', width: '198', align: 'center', type: 'slot', slotName: 'chakan' },
+        { prop: 'area', label: '收货区域', width: '198', align: 'center', type: 'slot', slotName: 'chakan' },
         { prop: 'status', label: '账号状态', width: '171', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
@@ -133,7 +130,12 @@ export default {
   },
   mounted () {
     this.tableData = [
-      { date: '2016-05-02', driver: '王小虎', area: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
+      {
+        date: '2016-05-02',
+        driver: '王小虎',
+        area: '上海市普陀区金沙江路 1518 弄',
+        City: '深圳'
+      }
     ]
     this.page.total = 2
   },
@@ -272,6 +274,7 @@ export default {
 }
 .contenta{
   margin: 10px;
+
 }
 
 </style>

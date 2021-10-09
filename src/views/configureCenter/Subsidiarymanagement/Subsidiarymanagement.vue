@@ -55,6 +55,7 @@
 export default {
   data () {
     return {
+      agentName: '',
       columns: [
         { prop: 'name', label: '公司名称', width: '215', align: 'center' },
         { prop: 'number', label: '运单起始号码', width: '151', align: 'center', formatter: this.formatter },

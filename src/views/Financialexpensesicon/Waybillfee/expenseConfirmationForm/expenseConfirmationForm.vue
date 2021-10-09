@@ -88,10 +88,10 @@
         <el-divider></el-divider>
          <el-row class='searchbox1'>
           <el-col :span='10' class="left">
-            <el-button class='stopBtn' @click="changes=true">生成账单</el-button>
-            <el-button class='stopBtn' @click="changes=true">批量导出Excle</el-button>
-            <el-button class='stopBtn' @click="changes=true">批量发送邮件</el-button>
-            <el-button class='stopBtn' @click="changes=true">批量确认费用</el-button>
+            <el-button class='stopBtn' @click="Generatebill = true">生成账单</el-button>
+            <el-button class='stopBtn' @click="Batchexport=true">批量导出Excle</el-button>
+            <el-button class='stopBtn' @click="Bulksendmail=true">批量发送邮件</el-button>
+            <el-button class='stopBtn' @click="confirmation=true">批量确认费用</el-button>
           </el-col>
             <el-col :span='12' class='right'>
                 <el-button class='whiteBtn '>查询条件设置</el-button>
@@ -107,6 +107,28 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
+    <!-- slot -->
+      <template v-slot:bianhao='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看</span>
+      </template>
+      <template v-slot:feiyong='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="see(slotData)">查看</span>
+      </template>
+      <template v-slot:youxiang='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="modify(slotData)">修改</span>
+      </template>
+      <template v-slot:jiesuan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="settlement(slotData)">查看</span>
+      </template>
+      <template v-slot:pinming='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Name(slotData)">查看</span>
+      </template>
+       <template v-slot:yewuyuan='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="salesman(slotData)">查看</span>
+      </template>
+      <template v-slot:zhouqi='slotData'>
+         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="screen(slotData)">自动筛选</span>
+      </template>
       <el-table-column
         slot="table_oper"
         align="center"
@@ -122,13 +144,51 @@
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="reject= true"> 导出excle </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="reject= true"> 查看确认单 </el-button>
+                <el-button type="text" @click="Expenseconfirmation"> 查看确认单 </el-button>
         </template>
       </el-table-column>
     </commonTable>
-
       </div>
     </div>
+       <!-- 生成账单 -->
+   <el-dialog title="无法生产账单" :visible.sync="Generatebill" width="30%">
+               <div class="input" >
+               <br><span><i class="el-icon-circle-close"></i>抱歉！运单AS2020121200001、AS2020121200003不属于同一个客户，无法生成账单</span><br>
+               </div>
+               <span slot="footer" class="Generatebill-footer">
+                 <el-button type="primary" @click="Generatebill = false" class='orangeBtn'>确 定</el-button>
+               </span>
+            </el-dialog>
+        <!-- 批量导出Excle -->
+   <el-dialog title="批量导出Excle" :visible.sync="Batchexport" width="30%">
+               <div class="input" >
+               <br><span>您确定批量导出这34笔费用确认单的Excle吗？</span><br>
+               </div>
+               <span slot="footer" class="Batchexport-footer">
+                 <el-button @click="account = false" class='wuBtn'>取 消</el-button>
+                 <el-button type="primary" @click="Batchexport = false" class='orangeBtn'>确 定</el-button>
+               </span>
+            </el-dialog>
+             <!-- 批量发送邮件 -->
+   <el-dialog title="批量发送邮件" :visible.sync="Bulksendmail" width="30%">
+               <div class="input" >
+               <br><span>您确定批量发送这34笔确认单的邮件吗？</span><br>
+               </div>
+               <span slot="footer" class="Bulksendmail-footer">
+                 <el-button @click="account = false" class='wuBtn'>取 消</el-button>
+                 <el-button type="primary" @click="Bulksendmail = false" class='orangeBtn'>确 定</el-button>
+               </span>
+            </el-dialog>
+             <!-- 批量确认费用 -->
+   <el-dialog title="批量确认费用" :visible.sync="confirmation" width="30%">
+               <div class="input" >
+               <br><span>您确定批量确认这34笔费用确认单的费用吗？</span><br>
+               </div>
+               <span slot="footer" class="confirmation-footer">
+                 <el-button @click="account = false" class='wuBtn'>取 消</el-button>
+                 <el-button type="primary" @click="confirmation = false" class='orangeBtn'>确 定</el-button>
+               </span>
+            </el-dialog>
   </div>
 </template>
 
@@ -148,29 +208,35 @@ export default {
       destination: '', // 目的地
       zipcode: '', // 目的地邮编
 
+      // 弹框
+      Generatebill: false, // 批量停用弹框
+      Batchexport: false, // 批量导出Excle
+      Bulksendmail: false, // 批量发送邮件
+      confirmation: false, // 批量确认费用
+
       columns: [
         { prop: 'data', label: '预报日期', width: '133', align: 'center' },
         { prop: 'name', label: '客户名称', width: '193', align: 'center', formatter: this.formatter },
         { prop: 'customerCode', label: '客户编号', width: '118', align: 'center', formatter: this.formatters },
         { prop: 'WaybillNo', label: '运单号', width: '139', align: 'center' },
-        { prop: 'Shipmentnumber', label: '货件编号', width: '171', align: 'center' },
+        { prop: 'Shipmentnumber', label: '货件编号', width: '171', align: 'center', type: 'slot', slotName: 'bianhao' },
         { prop: 'shipments', label: '货件件数', width: '84', align: 'center' },
         { prop: 'destination', label: '目的地', width: '70', align: 'center' },
         { prop: 'Confirmstatus', label: '确认状态', width: '127', align: 'center' },
-        { prop: 'Registration', label: '登记费用', width: '94', align: 'center' },
-        { prop: 'Customeremail', label: '客户邮箱', width: '189', align: 'center' },
+        { prop: 'Registration', label: '登记费用', width: '94', align: 'center', type: 'slot', slotName: 'feiyong' },
+        { prop: 'Customeremail', label: '客户邮箱', width: '189', align: 'center', type: 'slot', slotName: 'youxiang' },
         { prop: 'Accountstatus', label: '账户状态', width: '91', align: 'center' },
         { prop: 'accountdate', label: '内账单日', width: '133', align: 'center' },
-        { prop: 'Settlementweight', label: '结算重量', width: '103', align: 'center' },
+        { prop: 'Settlementweight', label: '结算重量', width: '103', align: 'center', type: 'slot', slotName: 'jiesuan' },
         { prop: 'channel', label: '渠道', width: '110', align: 'center' },
-        { prop: 'Name', label: '品名', width: '103', align: 'center' },
+        { prop: 'Name', label: '品名', width: '103', align: 'center', type: 'slot', slotName: 'pinming' },
         { prop: 'Settlementamount', label: '结算金额', width: '87', align: 'center' },
         { prop: 'Declaredvalue', label: '申报价值', width: '94', align: 'center' },
         { prop: 'publicity', label: '结算公示', width: '241', align: 'center' },
-        { prop: 'salesman', label: '业务员', width: '108', align: 'center' },
+        { prop: 'salesman', label: '业务员', width: '108', align: 'center', type: 'slot', slotName: 'yewuyuan' },
         { prop: 'confirmer', label: '费用确认员', width: '95', align: 'center' },
         { prop: 'Confirmationdate', label: '确认日期', width: '133', align: 'center' },
-        { prop: 'Settlementperiod', label: '结算周期', width: '145', align: 'center' }
+        { prop: 'Settlementperiod', label: '结算周期', width: '145', align: 'center', type: 'slot', slotName: 'zhouqi' }
       ],
       tableData: [],
       page: {
@@ -188,8 +254,8 @@ export default {
     this.page.total = 2
   },
   methods: {
-    detailspage () {
-      this.$router.push({ name: 'detailspage' })
+    Expenseconfirmation () {
+      this.$router.push({ name: 'Expenseconfirmation' })
     },
     handleClick (val) {
       console.log(val)
@@ -218,6 +284,13 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.sub_title{
+  margin:20px
+}
+/deep/ .title {
+  height: 56px;
+  font-size: 16px;
+}
 /deep/ .searchbox1{
   .stopBtn{
     height: 32px;
@@ -243,5 +316,39 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
   }
+}
+/deep/ .el-dialog{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  .el-dialog__header{
+    font-size: 16px;
+    font-family: PingFangSC-Medium, PingFang SC;
+    font-weight: 500;
+    color: rgba(0, 0, 0, 0.85);
+  }
+
+}
+/deep/ .el-dialog{
+  text-align: left;
+}
+//biankuang
+/deep/ .el-dialog__body {
+    padding: 20px 25px;
+    border-top:1px solid rgba(0, 0, 0, 0.06);
+    border-bottom:1px solid rgba(0, 0, 0, 0.06);
+}
+/deep/ .el-dialog__header {
+    padding: 10px 10px ;
+}
+/deep/ .el-dialog__footer{
+  padding: 5px 10px ;
+}
+.el-icon-circle-close{
+  width: 66px;
+  height: 58px;
+  font-size: 58px;
+  color: #FB4702;
 }
 </style>
