@@ -63,8 +63,8 @@ export default {
       ],
       tableData: [],
       page: {
-        pageNo: 1,
-        limit: 10,
+        pageNo: 1, // 当前页码
+        limit: 10, // 页容量
         sizes: [1, 5, 10],
         total: 0
       }
@@ -77,6 +77,7 @@ export default {
   methods: {
     // 获取列表数据
     getData () {
+      // 初始的表格数据清空
       this.tableData = []
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
       this.$api.configure.companyLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
