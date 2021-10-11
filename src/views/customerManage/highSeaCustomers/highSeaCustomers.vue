@@ -32,37 +32,36 @@
             <el-button class='batch' @click="batchStopis = true">批量指派客户</el-button>
           </el-col>
         </el-row>
-
-        <div class="table">
-          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
-            :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column  prop="name"  label="客户名称"  width="289"> </el-table-column>
-            <el-table-column  prop="address"  label="客户地址"  width="707"></el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="169">
-              <template slot-scoped="scoped">
+   <!-- 组件 -->
+    <commonTable
+      :columns="columns"
+      :data="tableData"
+      :pager="page"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
+      <el-table-column
+        slot="table_oper"
+        align="center"
+        fixed="right"
+        label="操作"
+        width="239"
+        :resizable="false"
+      >
+         <template slot-scoped="scoped">
                 <el-button type="text" @click="dialogVisible =true"> 转入私海
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgentis = true">
                   指派业务
                 </el-button>
+                 <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button v-if="activeName === '1'" type="text" @click="Deletecustomer = true">
+                  删除客户
+                </el-button>
               </template>
-            </el-table-column>
-          </el-table>
-
-          <!-- 分页 -->
-          <div class='block'>
-            <el-pagination
-              :current-page.sync='currentPage'
-              :pager-count='9'
-               :page-size='pageSize'
-               :page-sizes='[10, 20, 50, 100]'
-              layout='total, sizes, prev, pager, next, jumper'
-              :total='150'>
-              </el-pagination>
-          </div>
-        </div>
+      </el-table-column>
+    </commonTable>
       </div>
 
     </div>
@@ -86,6 +85,17 @@
                <span slot="footer" class="stopAgent-footer">
                  <el-button @click="stopAgentis = false" class='wuBtn'>取 消</el-button>
                  <el-button type="primary" @click="stopAgentis = false" class='orangeBtn'>确 定</el-button>
+               </span>
+            </el-dialog>
+            <!-- 删除客户 -->
+   <el-dialog title="删除客户" :visible.sync="Deletecustomer" width="30%">
+               <div class="input">
+               <span><i class="el-icon-circle-close"></i>您确认要删除公海客户
+                 <br>“深圳雷迈科技有限公司吗？”</span>
+               </div>
+               <span slot="footer" class="Deletecustomer-footer">
+                 <el-button @click="Deletecustomer = false" class='wuBtn'>返回</el-button>
+                 <el-button type="primary" @click="Deletecustomer = false" class='orangeBtn'>确认删除</el-button>
                </span>
             </el-dialog>
    <!-- 批量转入私海 -->
@@ -121,44 +131,56 @@ export default {
       intois: false,
       stopAgentis: false,
       batchStopis: false,
+      Deletecustomer: false,
       activeName: '1', // 标签绑定
-
-      pageSize: 10,
-      currentPage: 1,
-      total: 150,
-      a: 1,
-      b: 9,
       chooseArr: [],
       agentName: '',
       agentCode: '',
       agentAccount: '',
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小花',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      name: '',
+      columns: [
+        { prop: 'name', label: '客户名称', width: '218', align: 'center' },
+        { prop: 'contact', label: '客户联系人', width: '94', align: 'center' },
+        { prop: 'number', label: '客户联系电话', width: '117', align: 'center' },
+        { prop: 'address', label: '客户地址', align: 'center' }
+      ],
+      tableData: [],
+      page: {
+        pageNo: 1, // 当前页码
+        limit: 10, // 页容量
+        sizes: [1, 5, 10],
+        total: 0
+      }
     }
   },
+  mounted () {
+    // 在页面加载前调用获取列表数据函数
+    this.getData()
+  },
   methods: {
+    // 获取列表数据
+    getData () {
+      // 初始的表格数据清空
+      this.tableData = []
+      // limit: this.page.limit, page: this.page.pageNo 页码和页容量
+      this.$api.customer.publicLists({ limit: this.page.limit, page: this.page.pageNo, name: '' }).then(res => {
+        console.log(res.data) // res是接口返回的结果
+        res.data.list && res.data.list.forEach(ele => {
+          let obj = {
+            id: ele.id,
+            name: ele.name,
+            contact: ele.liaison,
+            number: ele.phone,
+            address: ele.address
+          }
+          this.tableData.push(obj)
+        })
+        this.page.total = res.data.total // 数据总量
+      })
+    },
+    // 添加客户
     add () {
-      this.$router.push({ name: 'addcustomerh' })
+      this.$router.push({ name: 'add' })
     },
     handleClose (done) {
       this.$confirm('确认转入')
@@ -188,29 +210,20 @@ export default {
         })
         .catch(_ => {})
     },
-    getData () {
-      let params = {
-        status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
-      }
-      this.$api.agent.settingAgentLists(params).then((res) => {
-        console.log(res)
-      })
+    // 改变页面大小处理
+    handleSizeChange (val) {
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
-    handleSelectionChange (val) {
-      console.log(val)
-      this.chooseArr = []
-      val && val.forEach((item) => {
-        this.chooseArr.push(item)
-      })
-    }
+    // 翻页处理
+    handleCurrentChange (val) {
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
+    },
+    // 操作按钮列表
+    editTableData (row) {}
   }
-
 }
-
 </script>
 <style lang="scss" scoped>
 /deep/ .searchbox1{
@@ -269,5 +282,10 @@ export default {
  height: 56px;
  font-size: 16px;
 }
-
+.el-icon-circle-close{
+ width: 66px;
+  height: 58px;
+  font-size: 58px;
+  color: #FB4702;
+}
 </style>

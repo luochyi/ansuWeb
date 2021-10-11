@@ -31,17 +31,23 @@
             <el-button class='stopBtn' @click="changes=true">批量转回公海</el-button>
           </el-col>
         </el-row>
-
-        <div class="table">
-          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
-            :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type="selection" width="55"></el-table-column>
-             <el-table-column prop="name" label="客户名称" width="218"></el-table-column>
-             <el-table-column prop="contacts" label="客户联系人" width="94"></el-table-column>
-             <el-table-column prop="number" label="客户联系电话" width="117"></el-table-column>
-             <el-table-column prop="address" label="客户地址" width="425"></el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="169">
-              <template slot-scope="scope">
+  <!-- 组件 -->
+    <commonTable
+      :columns="columns"
+      :data="tableData"
+      :pager="page"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
+      <el-table-column
+        slot="table_oper"
+        align="center"
+        fixed="right"
+        label="操作"
+        width="270"
+        :resizable="false"
+      >
+        <template slot-scope="scope">
                 <el-button type="text" @click="informationis = true"> 编辑</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="dialogVisible = true">转回公海</el-button>
@@ -50,21 +56,8 @@
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">开户</el-button>
               </template>
-            </el-table-column>
-          </el-table>
-
-          <!-- 分页 -->
-          <div class='block'>
-            <el-pagination
-              :current-page.sync='currentPage'
-              :pager-count='9'
-               :page-size='pageSize'
-               :page-sizes='[10, 20, 50, 100]'
-              layout='total, sizes, prev, pager, next, jumper'
-              :total='150'>
-              </el-pagination>
-          </div>
-        </div>
+      </el-table-column>
+    </commonTable>
       </div>
     </div>
     <!-- 转回公海 -->
@@ -123,30 +116,26 @@ export default {
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      columns: [
+        { prop: 'name', label: '客户名称', width: '218', align: 'center' },
+        { prop: 'contact', label: '客户联系人', width: '94', align: 'center' },
+        { prop: 'number', label: '客户联系电话', width: '117', align: 'center' },
+        { prop: 'address', label: '客户地址', align: 'center' },
+        { prop: 'salesman', label: '业务员', width: '91', align: 'center' }
+      ],
+      tableData: [],
+      page: {
+        pageNo: 1, // 当前页码
+        limit: 10, // 页容量
+        sizes: [1, 5, 10],
+        total: 0
+      }
 
     }
+  },
+  mounted () {
+    // 在页面加载前调用获取列表数据函数
+    this.getData()
   },
   methods: {
     add () {
@@ -176,21 +165,27 @@ export default {
         })
         .catch(_ => {})
     },
+    // 获取列表数据
     getData () {
-      let params = {
-        status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
-      }
-      this.$api.agent.settingAgentLists(params).then((res) => {
-        console.log(res)
+      // 初始的表格数据清空
+      this.tableData = []
+      // limit: this.page.limit, page: this.page.pageNo 页码和页容量
+      this.$api.customer.privateLists({ limit: this.page.limit, page: this.page.pageNo, name: '' }).then(res => {
+        console.log(res.data) // res是接口返回的结果
+        res.data.list && res.data.list.forEach(ele => {
+          let obj = {
+            id: ele.id,
+            name: ele.name,
+            contact: ele.liaison,
+            number: ele.phone,
+            address: ele.address
+          }
+          this.tableData.push(obj)
+        })
+        this.page.total = res.data.total // 数据总量
       })
     },
-    batchStop () {
 
-    },
     handleSelectionChange (val) {
       console.log(val)
       this.chooseArr = []

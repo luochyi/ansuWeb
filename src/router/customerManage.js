@@ -41,14 +41,14 @@ export default [
     component: () => import('@/views/customerManage/myCustomer/myCustomer')
   },
   {
-    path: '/addcustomerh',
-    name: 'addcustomerh',
+    path: '/add',
+    name: 'add',
     meta: {
       title: '添加客户',
-      icon: 'addcustomerh',
+      icon: 'add',
       hidden: false
     },
-    component: () => import('@/views/customerManage/highSeaCustomers/addcustomerh.vue')
+    component: () => import('@/views/customerManage/highSeaCustomers/add.vue')
   },
   {
     path: '/addcustomerp',

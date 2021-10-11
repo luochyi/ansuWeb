@@ -35,38 +35,27 @@
           <el-button @click="record" class='orangeBtn long3'>⊕ 新增拜访记录</el-button>
         </el-col>
       </el-row>
-      <!-- 表格 -->
-      <div>
-
-        <div class="table">
-          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
-            :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type="selection" width="55"></el-table-column>
-             <el-table-column prop="name" label="拜访时间" width="221"></el-table-column>
-             <el-table-column prop="contacts" label="拜访人" width="86"></el-table-column>
-             <el-table-column prop="number" label="随行人员" width="143"></el-table-column>
-             <el-table-column prop="address" label="拜访记录" width="323"></el-table-column>
-             <el-table-column prop="address" label="拜访总结" width="453"></el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="94">
-              <template slot-scope="scope">
+        <!-- 组件 -->
+    <commonTable
+      :columns="columns"
+      :data="tableData"
+      :pager="page"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
+      <el-table-column
+        slot="table_oper"
+        align="center"
+        fixed="right"
+        label="操作"
+        width="94"
+        :resizable="false"
+      >
+          <template slot-scope="scope">
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">查看详情</el-button>
               </template>
-            </el-table-column>
-          </el-table>
-
-          <!-- 分页 -->
-          <div class='block'>
-            <el-pagination
-              :current-page.sync='currentPage'
-              :pager-count='9'
-               :page-size='pageSize'
-               :page-sizes='[10, 20, 50, 100]'
-              layout='total, sizes, prev, pager, next, jumper'
-              :total='150'>
-              </el-pagination>
-          </div>
-        </div>
-      </div>
+      </el-table-column>
+    </commonTable>
     </div>
   </div>
 </template>
@@ -86,30 +75,25 @@ export default {
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
-
+      columns: [
+        { prop: 'Visittime', label: '拜访时间', width: '218', align: 'center' },
+        { prop: 'Visitor', label: '拜访人', width: '94', align: 'center' },
+        { prop: 'Entourage', label: '随行人员', width: '117', align: 'center' },
+        { prop: 'Visitrecord', label: '拜访记录', width: '117', align: 'center' },
+        { prop: 'Visitsummary', label: '拜访总结', align: 'center' }
+      ],
+      tableData: [],
+      page: {
+        pageNo: 1, // 当前页码
+        limit: 10, // 页容量
+        sizes: [1, 5, 10],
+        total: 0
+      }
     }
+  },
+  mounted () {
+    // 在页面加载前调用获取列表数据函数
+    this.getData()
   },
   methods: {
     record () {
@@ -118,18 +102,39 @@ export default {
     Visitrecord () {
       this.$router.push({ name: 'Visitrecord' })
     },
+    // 获取列表数据
     getData () {
-      let params = {
-        status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
-      }
-      this.$api.agent.settingAgentLists(params).then((res) => {
-        console.log(res)
+      // 初始的表格数据清空
+      this.tableData = []
+      // limit: this.page.limit, page: this.page.pageNo 页码和页容量
+      this.$api.customer.private.recordLists({ limit: this.page.limit, page: this.page.pageNo, customerId: 1 }).then(res => {
+        console.log(res.data) // res是接口返回的结果
+        res.data.list && res.data.list.forEach(ele => {
+          let obj = {
+            id: ele.id,
+            Visittime: ele.visit_time,
+            Visitor: ele.personnel_name,
+            Visitrecord: ele.record,
+            Entourage: ele.accompanies,
+            Visitsummary: ele.remark
+          }
+          this.tableData.push(obj)
+        })
+        this.page.total = res.data.total // 数据总量
       })
     },
+    // 改变页面大小处理
+    handleSizeChange (val) {
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
+    },
+    // 翻页处理
+    handleCurrentChange (val) {
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
+    },
+    // 操作按钮列表
+    editTableData (row) {},
     handleSelectionChange (val) {
       console.log(val)
       this.chooseArr = []
