@@ -18,29 +18,28 @@
               <span class='text'>司机名称</span>
             </el-col>
             <el-col :span='16'>
-              <el-input v-model='predictionNo' placeholder='请输入'></el-input>
+              <el-input v-model='search.driveName' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
               <span class='text'>车牌号</span>
             </el-col>
-           <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+            <el-col :span='16'>
+              <el-input v-model='search.licensePlate' placeholder='请输入'></el-input>
+            </el-col>
           </el-col>
            <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="reset">重 置</el-button>
           </el-col>
          </el-row>
            </div>
       <!-- 表格 -->
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button v-if ="activeName === '1'" class='batch' @click=" deactivation = true">批量停用</el-button>
-            <el-button v-else-if ="activeName === '2'" class='batch' @click=" enable">批量启用</el-button>
+            <el-button v-if ="activeName === '1'" class='batch' @click="disabled(carIds)">批量停用</el-button>
+            <el-button v-else-if ="activeName === '2'" class='batch' @click="enabled(carIds)">批量启用</el-button>
         </el-col>
         <el-col :span='12' class="right">
           <el-button @click="addTruck" class='orangeBtn long2' icon="el-icon-circle-plus-outline">新建车辆</el-button>
@@ -53,6 +52,7 @@
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
+      @handleSelectionChange="handleSelectionChange"
       >
       <el-table-column
         slot="table_oper"
@@ -62,11 +62,11 @@
         width="131"
         :resizable="false"
         >
-        <template slot-scoped="scoped">
+        <template slot-scope="scoped">
                 <el-button type="text" @click="edit"> 编辑</el-button>
                  <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="vehicle = true">停用车辆</el-button>
-                <el-button v-else-if="activeName === '2'" type="text" >启用车辆</el-button>
+                <el-button v-if="activeName === '1'" type="text" @click="disabled([scoped.row.id])">停用车辆</el-button>
+                <el-button v-else-if="activeName === '2'" type="text" @click="enabled([scoped.row.id])" >启用车辆</el-button>
         </template>
        </el-table-column>
        </commonTable>
@@ -96,113 +96,134 @@
 </template>
 
 <script>
+import api from '../../../api/api'
+
 export default {
   data () {
     return {
       dialogVisible: false, // 对话框可见
       activeName: '1', // 标签绑定
+      // 复选
+      carIds: [],
 
       // 弹框
       deactivation: false, // 批量停用
       vehicle: false, // 停用车辆
 
+      search: {
+        driveName: '',
+        licensePlate: ''
+      },
       agentName: '',
       agentCode: '',
       columns: [
         { prop: 'name', label: '车辆名称', width: '373', align: 'center' },
-        { prop: 'number', label: '车牌号', width: '102', align: 'center', formatter: this.formatter },
+        { prop: 'number', label: '车牌号', width: '102', align: 'center' },
         { prop: 'status', label: '账号状态', width: '122', align: 'center', formatter: this.formatter },
-        { prop: 'quantity', label: '车载数量', width: '154', align: 'center', formatter: this.formatter },
+        { prop: 'load', label: '车载数量', width: '154', align: 'center', formatter: this.formatter },
         { prop: 'Carsize', label: '车厢大小（米）', width: '205', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 10,
-        sizes: [1, 5, 10],
+        limit: 15,
+        sizes: [15, 50, 100],
         total: 0
       }
     }
   },
   mounted () {
-    this.tableData = [
-      { date: '2016-05-02', name: '王小虎', number: '上海市普陀区金沙江路 1518 弄', Carsize: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    // 在页面加载前调用获取列表数据函数
+    this.getData()
   },
   methods: {
     addTruck () {
       this.$router.push({ name: 'addTruck' })
     },
-    handleClick (val) {
-      console.log(val)
-    },
-    click (val) {
-      console.log(val)
-    },
-    stopAgent (val) {
-      this.stopAgent = true
-      this.stopAgent = '停用代理'
-      this.chooseAgent = val
-      this.$router.push({
-        name: 'stopAgent',
-        params: { }
-      })
-    },
-    passwordis (val) {
-      this.passwordis = true
-      this.passwordis = '重置密码'
-      this.chooseAgent = val
-      this.$router.push({
-        name: 'passwordis',
-        params: { }
-      })
-    },
-    into (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
+    handleClick () {
+      this.getData()
     },
     getData () {
       let params = {
         status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
+        name: this.search.driveName,
+        licensePlate: this.search.licensePlate,
+        page: this.page.pageNo,
+        limit: this.page.limit
       }
-      this.$api.agent.settingAgentLists(params).then((res) => {
+      api.configure.car.carLists(params).then((res) => {
+        this.tableData = []
+        res.data.list.forEach(item => {
+          this.tableData.push({
+            id: item.id,
+            name: item.name,
+            number: item.license_plate,
+            status: item.status,
+            load: item.load,
+            long: item.long,
+            wide: item.wide,
+            high: item.high
+          })
+          console.log(item)
+        })
+        this.page.total = res.data.total
         console.log(res)
       })
     },
-    handleSelectionChange (val) {
-      console.log(val)
-      this.chooseArr = []
-      val && val.forEach((item) => {
-        this.chooseArr.push(item)
-      })
+    reset  () {
+      this.search.licensePlate = ''
+      this.search.driveName = ''
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'load':
+          return row.load + '公斤'
+        case 'status':
+          return row.status === 1 ? '启用' : '停用'
+        case 'Carsize':
+          return '长' + row.long + '*宽' + row.wide + '*高' + row.high
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
-    // 操作按钮列表
-    editTableData (row) {}
+    // 复选
+    handleSelectionChange (val) {
+      console.log(val)
+      this.carIds = []
+      val && val.forEach((item) => {
+        this.carIds.push(item.id)
+      })
+    },
+    edit  () {},
+    enabled  (val) {
+      api.configure.car.carEnabled(val).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData() // 刷新数据
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    },
+    disabled  (val) {
+      api.configure.car.carDisabled(val).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData() // 刷新数据
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    }
   }
 
 }

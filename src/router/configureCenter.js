@@ -72,6 +72,16 @@ export default [
     component: () => import('@/views/configureCenter/menuManagement/menuManagement.vue')
   },
   {
+    path: '/apiManagement',
+    name: 'apiManagement',
+    meta: {
+      title: 'api管理',
+      icon: 'apiManagement',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/menuManagement/apiManagement.vue')
+  },
+  {
     path: '/driverManagement',
     name: 'driverManagement',
     meta: {

@@ -1,4 +1,8 @@
 import { GetAxios } from '@/utils/request'
+import * as car from './configure/car'
+import * as menu from './configure/menu'
+import * as api from './configure/api'
+
 const axios = GetAxios((config) => {
   // 在发送请求之前做些什么
   config.headers['Ansuex-Manage-Token'] = sessionStorage.getItem('token')
@@ -81,43 +85,9 @@ export const positionEdit = (params) => {
 }
 // 司机列表
 // driver/lists
-export const customerLevelLists = (params) => {
-  return axios({
-    url: '/setting/customerLevel/lists',
-    method: 'post',
-    data: params
-  })
-}
-// /setting/customerLevel/add
-export const customerLevelAdd = (params) => {
-  return axios({
-    url: '/setting/customerLevel/add',
-    method: 'post',
-    data: params
-  })
-}
-// /setting/customerLevel/del
-// 客户登记删除 customerLevelId
-export const customerLevelDel = (params) => {
-  return axios({
-    url: '/setting/customerLevel/del',
-    method: 'post',
-    data: params
-  })
-}
-// /setting/customerLevel/edit
-export const customerLevelEdit = (params) => {
-  return axios({
-    url: '/setting/customerLevel/edit',
-    method: 'post',
-    data: params
-  })
-}
-// 国家列表
-export const countryLists = (params) => {
-  return axios({
-    url: '/setting/country/lists',
-    method: 'post',
-    data: params
-  })
+
+export {
+  car, // 车辆
+  menu, // 菜单
+  api // api
 }
