@@ -10,7 +10,7 @@
       <!-- 搜索栏 -->
       <el-row  class='searchbox1'>
         <el-col :span='2' class='colboxx justify-center'>
-          <el-button @click="customer" class='orangeBtn long3'> 新增客户等级</el-button>
+          <el-button @click="addCustomerL" class='orangeBtn long3'> 新增客户等级</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -30,13 +30,39 @@
         :resizable="false"
         >
         <template slot-scope="scope">
-          <el-button type="text" @click="toDetail(scope.row.id)"> 编辑</el-button>
+          <el-button type="text" @click="toDetail(scope.row)"> 编辑</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="handleDelete= true"> 删除 </el-button>
+                <el-button type="text" @click="del(scope.row.id)"> 删除 </el-button>
         </template>
       </el-table-column>
       </commonTable>
     </div>
+    <el-dialog :title="digTitle" :visible.sync="diaShow" :before-close="addClose" width="30%">
+      <div class="input">
+        <el-row>
+          <span>客户名称&nbsp;<el-input
+                            v-model="name"
+                            style="width: 190px"
+                            placeholder="请输入客户名称"
+                        ></el-input
+                        ></span>
+        </el-row>
+        <el-row style="marginTop:20px">
+          <span>提醒天数&nbsp;<el-input
+                            v-model="warn_day"
+                            style="width: 190px"
+                            placeholder="请输入提醒天数"
+                        ></el-input
+                        ></span>
+        </el-row>
+      </div>
+      <span slot="footer" class="department-footer">
+        <el-button @click="addClose" class="wuBtn">取 消</el-button>
+        <el-button type="primary" @click="addSubmit()" class="orangeBtn"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -44,22 +70,19 @@
 export default {
   data () {
     return {
-      activeName: '1', // 标签绑定
-      pageSize: 10,
-      currentPage: 1,
-      total: 50,
-
-      agentName: '', // 代理名称
-      agentCode: '', // 代理编码
-      agentAccount: '', // 代理账期
+      diaShow: false,
+      digTitle: '',
+      name: '',
+      warn_day: null,
+      customerLevelId: null,
       columns: [
-        { prop: 'name', label: '客户名称', width: '200', align: 'center' },
-        { prop: 'days', label: 'X天未产生订单提醒', width: '795', align: 'center', formatter: this.formatter }
+        { prop: 'name', label: '客户名称', width: '400', align: 'center' },
+        { prop: 'warn_day', label: '提醒天数', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
       }
@@ -67,22 +90,104 @@ export default {
     }
   },
   mounted () {
-    this.tableData = [
-      { name: '普通客户', days: '90天' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
+    // 获取表格数据
     getData () {
+      this.tableData = []
       let params = {
-        status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
+        page: this.page.pageNo,
+        limit: this.page.limit
       }
-      this.$api.agent.settingAgentLists(params).then((res) => {
+      this.$api.configure.customerLevelLists(params).then((res) => {
         console.log(res)
+        res.data.list && res.data.list.forEach(ele => {
+          let obj = {
+            id: ele.id,
+            name: ele.name,
+            warn_day: ele.warn_day
+          }
+          this.tableData.push(obj)
+          this.page.total = res.data.total
+        })
+      })
+    },
+    // 新增
+    addCustomerL () {
+      this.diaShow = true
+      this.digTitle = '新增等级'
+    },
+    // 提交
+    addSubmit () {
+      // 判断调用新增接口还是修改接口
+      if (this.digTitle === '新增等级') {
+        let params = {
+          name: this.name,
+          warnDay: Number(this.warn_day)
+        }
+        this.$api.configure.customerLevelAdd(params).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.addClose()
+          } else {
+            this.$message.error(res.msg)
+            this.addClose()
+          }
+        })
+      } else if (this.digTitle === '修改客户等级') {
+        let params = {
+          customerLevelId: this.customerLevelId,
+          name: this.name,
+          warnDay: Number(this.warn_day)
+        }
+        this.$api.configure.customerLevelEdit(params).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.addClose()
+          } else {
+            this.$message.error(res.msg)
+            this.addClose()
+          }
+        })
+      }
+    },
+    // 关闭新增弹窗
+    addClose () {
+      this.diaShow = false
+      this.name = null
+      this.warn_day = null
+    },
+    // 修改
+    toDetail (data) {
+      this.name = data.name
+      this.warn_day = data.warn_day
+      this.customerLevelId = data.id
+      this.diaShow = true
+      this.digTitle = '修改客户等级'
+    },
+    // 删除
+    del (id) {
+      this.$confirm('删除该数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.configure.customerLevelDel({ customerLevelId: id }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
       })
     },
     handleSelectionChange (val) {
@@ -94,20 +199,17 @@ export default {
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      return row.warn_day + '天'
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val
+      this.getData()
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val
+      this.getData()
     },
     // 操作按钮列表
     editTableData (row) {}

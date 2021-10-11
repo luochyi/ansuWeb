@@ -81,3 +81,35 @@ export const positionEdit = (params) => {
 }
 // 司机列表
 // driver/lists
+export const customerLevelLists = (params) => {
+  return axios({
+    url: '/setting/customerLevel/lists',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/customerLevel/add
+export const customerLevelAdd = (params) => {
+  return axios({
+    url: '/setting/customerLevel/add',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/customerLevel/del
+// 客户登记删除 customerLevelId
+export const customerLevelDel = (params) => {
+  return axios({
+    url: '/setting/customerLevel/del',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/customerLevel/edit
+export const customerLevelEdit = (params) => {
+  return axios({
+    url: '/setting/customerLevel/edit',
+    method: 'post',
+    data: params
+  })
+}

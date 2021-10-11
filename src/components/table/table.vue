@@ -41,6 +41,7 @@
     </el-table>
     <div class="block">
       <el-pagination
+      v-if="paginationShow"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       style="text-align: center; margin: 20px 0"
@@ -59,6 +60,11 @@
 export default {
   name: 'commonTable',
   props: {
+    // 是否需要分页
+    paginationShow: {
+      type: Boolean,
+      default: true
+    },
     columns: Array,
     data: Array,
     pager: Object,
