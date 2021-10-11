@@ -113,3 +113,11 @@ export const customerLevelEdit = (params) => {
     data: params
   })
 }
+// 国家列表
+export const countryLists = (params) => {
+  return axios({
+    url: '/setting/country/lists',
+    method: 'post',
+    data: params
+  })
+}

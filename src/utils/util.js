@@ -2,9 +2,9 @@ import api from '../api/api'
 export default {
   install: function (Vue) {
     Vue.prototype.$api = api
-    // Vue.prototype.ImgUrl = (src) => {
-    //   return process.env.VUE_APP_CDN + src
-    // }
+    Vue.prototype.ImgUrl = (src) => {
+      return process.env.VUE_APP_CDN + src
+    }
     Vue.prototype.formatDate = (time, fmt) => {
       if (time > 0) {
         let date = new Date(time * 1000)

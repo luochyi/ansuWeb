@@ -7,18 +7,20 @@
     <!-- 内容 -->
     <div class="content">
         <el-row>
-            <el-col :span="8">目的国名称<div><el-input class="elipt" size="mini"></el-input></div></el-col>
-            <el-col :span="8">目的国电话区号<div><el-input class="elipt" size="mini"></el-input></div></el-col>
+            <el-col :span="8">目的国名称<div><el-input class="elipt" v-model="name" size="mini"></el-input></div></el-col>
+            <el-col :span="8">目的国电话区号<div><el-input class="elipt" v-model="areaCode" size="mini"></el-input></div></el-col>
         </el-row>
         <div class="item">
             <div style="margin:20px 0 10px 0">国家图标</div>
             <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="`${$baseUrl}/file/upload/image`"
+                :headers="uploadhead"
+                name="image"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <img v-if="icon" :src="ImgUrl(this.icon)" style="width:114px;height:76px" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
                 <div style="fontSize:14px;color:#000000A6;marginTop:10px">上传国家图标</div>
@@ -33,7 +35,19 @@
 export default {
   data () {
     return {
+      uploadhead: {
+        'Ansuex-Manage-Token': sessionStorage.getItem('token')
+      },
+      name: null,
+      areaCode: null,
+      icon: null
     }
+  },
+  methods: {
+    handleAvatarSuccess (res, file) {
+      this.icon = res.data.path
+    },
+    addSubmit () {}
   }
 }
 </script>

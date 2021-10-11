@@ -1,4 +1,5 @@
 import axios from 'axios'
+import ElementUI from 'element-ui'
 export const GetAxios = (config, login, baseUrl) => {
   let instance = axios.create({
     headers: {
@@ -25,8 +26,9 @@ export const GetAxios = (config, login, baseUrl) => {
           // 登录失败 跳转到登陆页面
           // 登录
           // 跳转到登录页
-          localStorage.removeItem('Student-Toknn')
-          login()
+          ElementUI.Message.error(response.data.msg)
+          sessionStorage.removeItem('token')
+          // login()
           console.log(response.data)
         } else {
           return response.data

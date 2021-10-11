@@ -20,6 +20,7 @@
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
+      @handleSelectionChange="handleSelectionChange"
       >
       <el-table-column
         slot="table_oper"
