@@ -9,10 +9,11 @@
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
         <el-col :span='24' class="right">
           <el-button @click="addMenu" class='orangeBtn long2' icon="el-icon-circle-plus-outline">新建菜单</el-button>
+          <el-button @click="apiManage" class='orangeBtn long2' icon="el-icon-circle-plus-outline">api管理</el-button>
         </el-col>
         </el-row>
       <el-table
-        :data="tableData"
+        :data="menuOptions"
         style="width: 100%; margin-bottom: 20px"
         row-key="id"
         :header-cell-style="{ background: '#F5F5F6', color: '#999999FF',fontSize:'14px' }"
@@ -21,11 +22,17 @@
         default-expand-all
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
-        <el-table-column prop="date" label="日期" width="180">
+        <el-table-column prop="id" label="Id" width="180">
         </el-table-column>
-        <el-table-column prop="name" label="姓名" width="180">
+        <el-table-column prop="name" label="路由名称" width="180">
         </el-table-column>
-        <el-table-column prop="address" label="地址"> </el-table-column>
+        <el-table-column prop="path" label="路由path" width="180">
+        </el-table-column>
+        <el-table-column prop="hidden" label="是否隐藏" width="180">
+        </el-table-column>
+        <el-table-column prop="component" label="文件路径"></el-table-column>
+        <el-table-column prop="type" label="类型"></el-table-column>
+        <el-table-column prop="title" label="展示名称"></el-table-column>
         <el-table-column label="操作" width="80">
       <template slot-scope="scope">
         <el-button
@@ -45,11 +52,10 @@
                 <el-col :span="6">
                     <span
                         >上级菜单&nbsp;<el-cascader
-                            :options="menuOptions"
+                            :options="tableData"
                             v-model="parentId"
-                            :props="{ checkStrictly: true }"
+                            :props="{ expandTrigger: 'hover', label: 'title', value: 'id' }"
                             @change="handleChange"
-                            clearable
                         ></el-cascader
                         ></span>
                 </el-col>
@@ -138,6 +144,17 @@
                         ></span>
                 </el-col>
             </el-row>
+        <el-row>
+          <el-col :span="24">
+            <el-transfer
+                filterable
+                filter-placeholder="请输入接口名称"
+                v-model="formData.apis"
+                :data="apis"
+                :props="{key:'id',label:'name'}">
+            </el-transfer>
+          </el-col>
+        </el-row>
       </div>
       <span slot="footer" class="department-footer">
         <el-button @click="addClose" class="wuBtn">取 消</el-button>
@@ -171,72 +188,65 @@ export default {
         { value: 3, label: '按钮' }
       ],
       menuOptions: [],
-      tableData: [{
-        id: 1,
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        id: 2,
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        id: 3,
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄',
-        children: [{
-          id: 31,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }, {
-          id: 32,
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        }]
-      }, {
-        id: 4,
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }],
-      tableData1: [{
-        id: 1,
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        id: 2,
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        id: 3,
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1519 弄',
-        hasChildren: true
-      }, {
-        id: 4,
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1516 弄'
-      }]
+      tableData: [],
+      apis: [],
+      formData: {
+        parentId: 0,
+        name: '',
+        path: '',
+        hidden: 0,
+        component: '',
+        sort: 100,
+        type: 1,
+        title: '',
+        icon: '',
+        apis: []
+      }
     }
   },
   mounted () {
     this.getData()
+    this.getApiSelect()
   },
   methods: {
-    getData () {},
+    getData () {
+      this.$api.configure.menu.all().then(res => {
+        this.tableData = res.data
+      })
+    },
+    getApiSelect () {
+      this.$api.configure.api.select().then(res => {
+        this.apis = res.data
+      })
+    },
     addMenu () {
       this.diaShow = true
       this.digTitle = '新增菜单'
+      this.menuOptions = this.tableData
     },
-    addSubmit () {},
+    apiManage () {
+      this.$router.push({ name: 'apiManagement' }) // 添加成功后返回子公司列表
+    },
+    addSubmit () {
+      this.$api.configure.menu.add({
+        parentId: this.formData.parentId,
+        name: this.formData.name,
+        path: this.formData.path,
+        hidden: this.formData.hidden,
+        component: this.formData.component,
+        sort: this.formData.sort,
+        type: this.formData.type,
+        title: this.formData.title,
+        icon: this.formData.icon
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData()
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    },
     addClose () { this.diaShow = false },
     handleChange (val) {},
     handleEdit () {}

@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     add () {
-      api.configure.carAdd({
+      api.configure.car.carAdd({
         name: this.formData.name,
         licensePlate: this.formData.licensePlate,
         load: Number(this.formData.load),

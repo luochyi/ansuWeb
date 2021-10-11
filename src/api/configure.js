@@ -1,4 +1,8 @@
 import { GetAxios } from '@/utils/request'
+import * as car from './configure/car'
+import * as menu from './configure/menu'
+import * as api from './configure/api'
+
 const axios = GetAxios((config) => {
   // 在发送请求之前做些什么
   config.headers['Ansuex-Manage-Token'] = sessionStorage.getItem('token')
@@ -82,51 +86,8 @@ export const positionEdit = (params) => {
 // 司机列表
 // driver/lists
 
-// 车辆列表
-export const carLists = (params) => {
-  return axios({
-    url: '/company/car/lists',
-    method: 'post',
-    data: params
-  })
-}
-
-// 添加车辆
-export const carAdd = (params) => {
-  return axios({
-    url: '/company/car/add',
-    method: 'post',
-    data: params
-  })
-}
-
-// 编辑车辆
-export const carEdit = (params) => {
-  return axios({
-    url: '/company/car/edit',
-    method: 'post',
-    data: params
-  })
-}
-
-// 编辑车辆
-export const carEnabled = (carIds) => {
-  return axios({
-    url: '/company/car/enabled',
-    method: 'post',
-    data: {
-      carIds: carIds
-    }
-  })
-}
-
-// 编辑车辆
-export const carDisabled = (carIds) => {
-  return axios({
-    url: '/company/car/disabled',
-    method: 'post',
-    data: {
-      carIds: carIds
-    }
-  })
+export {
+  car, // 车辆
+  menu, // 菜单
+  api // api
 }

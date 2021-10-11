@@ -151,7 +151,7 @@ export default {
         page: this.page.pageNo,
         limit: this.page.limit
       }
-      api.configure.carLists(params).then((res) => {
+      api.configure.car.carLists(params).then((res) => {
         this.tableData = []
         res.data.list.forEach(item => {
           this.tableData.push({
@@ -205,7 +205,7 @@ export default {
     },
     edit  () {},
     enabled  (val) {
-      api.configure.carEnabled(val).then(res => {
+      api.configure.car.carEnabled(val).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.getData() // 刷新数据
@@ -215,7 +215,7 @@ export default {
       })
     },
     disabled  (val) {
-      api.configure.carDisabled(val).then(res => {
+      api.configure.car.carDisabled(val).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.getData() // 刷新数据
