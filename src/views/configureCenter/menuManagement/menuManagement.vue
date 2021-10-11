@@ -44,7 +44,7 @@
           <el-row>
                 <el-col :span="6">
                     <span
-                        >上级菜单<el-cascader
+                        >上级菜单&nbsp;<el-cascader
                             :options="menuOptions"
                             v-model="parentId"
                             :props="{ checkStrictly: true }"
@@ -55,36 +55,28 @@
                 </el-col>
                 <el-col :span="6">
                     <span
-                        >路由名称<el-input
+                        >路由名称&nbsp;<el-input
                             v-model="routerName"
                             style="width: 190px"
                             placeholder="请输入路由名称"
                         ></el-input
                         ></span>
                 </el-col>
-                <el-col :span="6">
+                <el-col :span="12">
                     <span
-                        >路由地址<el-input
+                        >路由地址&nbsp;<el-input
                             v-model="path"
-                            style="width: 190px"
+                            style="width: 390px"
                             placeholder="请输入路由地址"
                         ></el-input
                         ></span>
                 </el-col>
-                <el-col :span="6">
-                    <span
-                        >是否隐藏<el-input
-                            v-model="hidden"
-                            style="width: 190px"
-                            placeholder="是否隐藏"
-                        ></el-input
-                        ></span>
-                </el-col>
+
             </el-row>
              <el-row style="marginTop:20px">
                 <el-col :span="12">
                     <span
-                        >前段文件路径<el-input
+                        >前段文件路径&nbsp;<el-input
                             v-model="component"
                             style="width: 390px"
                             placeholder="请输入文件路径"
@@ -93,7 +85,7 @@
                 </el-col>
                 <el-col :span="6">
                     <span
-                        >排序<el-input
+                        >排序&nbsp;<el-input
                             v-model="sort"
                             style="width: 190px"
                             placeholder="请输入排序"
@@ -102,7 +94,7 @@
                 </el-col>
                 <el-col :span="6">
                     <span
-                        >类型<el-select
+                        >类型&nbsp;<el-select
                             v-model="type"
                             style="width: 190px"
                             placeholder="请选择类型"
@@ -118,18 +110,27 @@
                 </el-col>
             </el-row>
             <el-row style="marginTop:20px">
-                <el-col :span="12">
+                <el-col :span="6">
                     <span
-                        >展示名称<el-input
+                        >展示名称&nbsp;<el-input
                             v-model="title"
                             style="width: 190px"
                             placeholder="请输入展示名称"
                         ></el-input
                         ></span>
                 </el-col>
+                <el-col :span="6">
+                    <span
+                        >是否隐藏&nbsp;<el-input
+                            v-model="hidden"
+                            style="width: 190px"
+                            placeholder="是否隐藏"
+                        ></el-input
+                        ></span>
+                </el-col>
                 <el-col :span="12">
                     <span
-                        >图标<el-input
+                        >图标&nbsp;<el-input
                             v-model="icon"
                             style="width: 390px"
                             placeholder="请输入图标路径"
