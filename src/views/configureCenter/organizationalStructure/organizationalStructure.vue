@@ -9,7 +9,7 @@
       <el-row>
         <el-col :span="6" style="marginRight: 10px">
           <span class="sub_title">部门</span
-          ><el-button class="whiteBtn" size="mini" @click="department = true"
+          ><el-button class="whiteBtn" size="mini" @click="department = true;digTitle='新增部门'"
             >新增部门</el-button
           >
           <el-tree
@@ -56,7 +56,7 @@
             >
               <span>{{ node.label }}</span>
               <span>
-                <el-button type="text" size="mini" @click="() => change(data)">
+                <el-button type="text" size="mini" @click="() => roleChange(data)">
                   修改名称
                 </el-button>
                 <el-button
@@ -111,7 +111,7 @@
       </div>
     </el-drawer>
     <!-- 新增部门 -->
-    <el-dialog title="新建部门" :visible.sync="department" width="30%">
+    <el-dialog :title="digTitle" :visible.sync="department" :before-close="departmentClose" width="30%">
       <div class="input">
         <span
           >部门名称<el-input
@@ -141,7 +141,7 @@
       </span>
     </el-dialog>
     <!-- 新增角色 -->
-    <el-dialog title="新增角色" :visible.sync="toAdd" width="30%">
+    <el-dialog :title="roleTitle" :visible.sync="toAdd" width="30%">
       <div class="input">
         <span
           >角色名称<el-input
@@ -177,6 +177,10 @@ export default {
     return {
       organizationName: null,
       parentId: [],
+      digTitle: '',
+      roleTitle: '',
+      editId: null,
+      roleId: null,
       department: false, // 新增部门
       isResouceShow: 0,
       isRoleShow: 0,
@@ -209,6 +213,7 @@ export default {
             let obj = {
               value: element.id,
               label: element.name,
+              parent_id: element.parent_id,
               children: []
             }
             if (obj.value === element.id) {
@@ -217,6 +222,7 @@ export default {
                   let objs = {
                     value: item.id,
                     label: item.name,
+                    parent_id: item.parent_id,
                     children: []
                   }
                   obj.children.push(objs)
@@ -225,7 +231,8 @@ export default {
                       item.children.forEach((e) => {
                         let objss = {
                           value: e.id,
-                          label: e.name
+                          label: e.name,
+                          parent_id: e.parent_id
                         }
                         objs.children.push(objss)
                       })
@@ -324,34 +331,65 @@ export default {
     },
     // 新增部门
     addSubmit () {
-      let pid
-      if (this.parentId.length === 0) {
-        pid = 0
-      }
-      if (this.parentId.length === 1) {
-        pid = this.parentId[0]
-      }
-      if (this.parentId.length === 2) {
-        pid = this.parentId[1]
-      }
-      if (this.parentId.length === 3) {
-        pid = this.parentId[2]
-      }
-
-      let resData = {
-        name: this.organizationName,
-        parentId: pid
-      }
-      this.$api.configure.departmentAdd(resData).then((res) => {
-        console.log(res)
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.departmentClose()
-          this.getData()
-        } else {
-          this.$message.error(res.msg)
+      if (this.digTitle === '新增部门') {
+        let pid
+        if (this.parentId.length === 0) {
+          pid = 0
         }
-      })
+        if (this.parentId.length === 1) {
+          pid = this.parentId[0]
+        }
+        if (this.parentId.length === 2) {
+          pid = this.parentId[1]
+        }
+        if (this.parentId.length === 3) {
+          pid = this.parentId[2]
+        }
+
+        let resData = {
+          name: this.organizationName,
+          parentId: pid
+        }
+        this.$api.configure.departmentAdd(resData).then((res) => {
+          console.log(res)
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.departmentClose()
+            this.getData()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else if (this.digTitle === '修改部门') {
+        let pid
+        if (this.parentId.length === 0) {
+          pid = 0
+        }
+        if (this.parentId.length === 1) {
+          pid = 0
+        }
+        if (this.parentId.length === 2) {
+          pid = this.parentId[0]
+        }
+        if (this.parentId.length === 3) {
+          pid = this.parentId[1]
+        }
+        let resData = {
+          departmentId: this.editId,
+          name: this.organizationName,
+          parentId: pid
+        }
+        this.$api.configure.departmentEdit(resData).then((res) => {
+          console.log(res)
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.departmentClose()
+            this.getData()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
     },
     departmentClose () {
       this.department = false
@@ -395,14 +433,63 @@ export default {
       })
     },
     // 修改部门名称
-    change () {},
+    change (data) {
+      this.parentId = []
+      console.log(data)
+      this.editId = data.value // 编辑ID
+      if (data.parent_id === 0) {
+        this.parentId = [0]
+      } else {
+        // this.parentId = [0]
+        // this.parentId.push(data.parent_id)
+        let pid = data.parent_id
+        this.$api.configure.departmentAll().then((res) => {
+          console.log(res)
+          res.data && res.data.forEach(element => {
+            // 第一级
+            let first = {
+              value: element.id,
+              label: element.name,
+              parent_id: element.parent_id,
+              children: element.children
+            }
+            first.children && first.children.forEach(item => {
+              // 第二级
+              let second = {
+                value: item.id,
+                label: item.name,
+                parent_id: item.parent_id,
+                children: item.children
+              }
+              console.log(second)
+              if (second.value === pid) {
+                console.log(second.parent_id)
+                this.parentId.push(second.parent_id)
+                this.parentId.push(data.parent_id)
+                // 这是选中第三级时
+                console.log(this.parentId)
+              } else if (pid === second.parent_id) {
+                this.parentId = []
+                this.parentId.push(first.value)
+                console.log(this.parentId)
+              }
+            })
+          })
+        })
+      }
+      console.log(this.parentId)
+      this.department = true
+      this.digTitle = '修改部门'
+      this.organizationName = data.label
+    },
+    roleChange (data) {
+    },
     handleChange (val) {
       console.log(val)
       console.log(this.organizationList)
     },
 
     handleNodeClick (val) {
-      console.log(val)
     },
     handleroleNodeClick (val) {},
     // 删除部门
