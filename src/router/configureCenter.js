@@ -62,6 +62,16 @@ export default [
     component: () => import('@/views/configureCenter/Employeeaccount/employeeaccounta.vue')
   },
   {
+    path: '/menuManagement',
+    name: 'menuManagement',
+    meta: {
+      title: '菜单管理',
+      icon: 'menuManagement',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/menuManagement/menuManagement.vue')
+  },
+  {
     path: '/driverManagement',
     name: 'driverManagement',
     meta: {

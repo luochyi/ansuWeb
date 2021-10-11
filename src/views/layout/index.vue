@@ -606,6 +606,18 @@ export default {
               path: 'Employeeaccount',
               parentId: '5'
             },
+            {
+              name: 'menuManagement',
+              meta: {
+                title: '菜单管理',
+                icon: 'menuManagement',
+                hidden: false
+              },
+              ID: 53,
+              menuId: '53',
+              path: 'menuManagement',
+              parentId: '5'
+            },
             // driverManagementIcon
             {
               name: 'driverManagement',
