@@ -8,53 +8,47 @@
     <!--  标签页 -->
    <el-descriptions class="margin-top" :column="4" direction="vertical">
    <el-descriptions-item label="员工姓名">
-       <el-input style="width: 200px" v-model="input" placeholder="请输入"></el-input>
+       <el-input style="width: 200px" v-model="formData.name" placeholder="请输入"></el-input>
    </el-descriptions-item>
    <el-descriptions-item label="员工手机">
-        <el-input style="width: 200px" v-model="inputa" placeholder="请输入"></el-input>
+        <el-input style="width: 200px" v-model="formData.phone" placeholder="请输入"></el-input>
         </el-descriptions-item>
          </el-descriptions>
         <el-descriptions class="margin" :column="4" direction="vertical">
    <el-descriptions-item label="部门" >
-    <el-select v-model="departmentOpts" placeholder="请选择">
-        <el-option v-for="item in department" :key="item.id" :label="item.name" :value="item.id">
-        </el-option>
-    </el-select>
+     <el-cascader
+         :options="departments"
+         v-model="formData.departmentId"
+         :show-all-levels="false"
+         :props="{  checkStrictly: true, expandTrigger: 'hover', label: 'name', value: 'id' }"
+         clearable filterable
+     ></el-cascader>
    </el-descriptions-item>
-   <el-descriptions-item label="角色" >
-    <el-select v-model="roleOpts" placeholder="请选择">
-        <el-option v-for="item in role" :key="item.id" :label="item.name" :value="item.id">
-        </el-option>
-    </el-select>
-   </el-descriptions-item>
-   <el-descriptions-item label="是否可见下级部门角色数据" >
-    <el-radio v-model="radio" label="1" >可见</el-radio>
-   <el-radio v-model="radio" label="2">不可见</el-radio>
+   <el-descriptions-item label="职位" >
+     <el-cascader
+         :options="positions"
+         v-model="formData.positionId"
+         :show-all-levels="false"
+         :props="{  checkStrictly: true, expandTrigger: 'hover', label: 'name', value: 'id' }"
+         clearable filterable
+     ></el-cascader>
    </el-descriptions-item>
    </el-descriptions>
          <el-descriptions class="margin-top" :column="4" direction="vertical">
    <el-descriptions-item label="登陆账号" >
-       <el-input style="width: 200px" v-model="inputd" placeholder="请输入"></el-input>
+       <el-input style="width: 200px" v-model="formData.username" placeholder="请输入"></el-input>
    </el-descriptions-item>
    <el-descriptions-item label="登陆密码">
-       <el-input style="width: 200px" placeholder="请输入" v-model="inpute" show-password></el-input>
+       <el-input style="width: 200px" placeholder="请输入" v-model="formData.password" show-password></el-input>
    </el-descriptions-item>
    <el-descriptions-item label="确认密码">
-       <el-input style="width: 200px" placeholder="请输入" v-model="inputf" show-password></el-input>
+       <el-input style="width: 200px" placeholder="请输入" v-model="formData.confirmPassword" show-password></el-input>
        <el-button class="whiteBtn" @click=" password = true">生成随机密码</el-button>
-   </el-descriptions-item>
-   </el-descriptions>
-    <el-descriptions class="margin-top" :column="1" direction="vertical">
-         <el-descriptions-item label="使用手机端" >
-    <el-select v-model="Notused" placeholder="不使用">
-        <el-option v-for="item in NotusedOpts" :key="item.id" :label="item.name" :value="item.id">
-        </el-option>
-    </el-select>
    </el-descriptions-item>
    </el-descriptions>
    <el-form >
     <el-form-item size="large">
-    <el-button type="primary" @click="determine" class="orangeBtn long2">确定</el-button>
+    <el-button type="primary" @click="add" class="orangeBtn long2">确定</el-button>
     <el-button class='whiteBtn long2' style="color:rgba(251, 71, 2, 1)">取消</el-button>
     </el-form-item>
    </el-form>
@@ -73,49 +67,65 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
       // 单选框
-      radio: '1',
-
       password: false, // 生成随机密码
-
-      value: '',
-      input: '',
-      inputa: '',
-      inputb: '',
-      inputc: '',
-      inputd: '',
-      inpute: '',
-      inputf: '',
-      options: '',
-      determine: '',
-      // 选择器
-      Notused: '', // 使用手机端
-      NotusedOpts: [{
-        id: '1',
-        name: '不使用'
-      }, {
-        id: '2',
-        name: '业务员端'
-      }, {
-        id: '3',
-        name: '司机端'
-      }, {
-        id: '4',
-        name: '司机主管'
-      }, {
-        id: '5',
-        name: '仓库端'
+      formData: {
+        name: '',
+        phone: '',
+        username: '',
+        password: '',
+        confirmPassword: '',
+        departmentId: [],
+        positionId: []
+      },
+      departments: [], // 部门信息
+      positions: [] // 职位信息
+    }
+  },
+  mounted () {
+    this.department()
+    this.position()
+  },
+  methods: {
+    department () {
+      this.$api.configure.departmentAll().then(res => {
+        this.departments = res.data
+      })
+    },
+    position () {
+      this.$api.configure.positionAll().then(res => {
+        this.positions = res.data
+      })
+    },
+    add () {
+      if (!this.formData.departmentId) {
+        this.$message.error('请选择部门') // 错误提示
+        return
       }
-      ],
-      methods: {
-        determine () {
-          console.log('ondetermine!')
+      if (!this.formData.positionId) {
+        this.$message.error('请选择职位') // 错误提示
+        return
+      }
+      this.$api.configure.personnel.add({
+        name: this.formData.name,
+        phone: this.formData.phone,
+        username: this.formData.username,
+        password: this.formData.password,
+        confirmPassword: this.formData.confirmPassword,
+        departmentId: Number(this.formData.departmentId.slice(-1)),
+        positionId: Number(this.formData.positionId.slice(-1))
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.$router.push({ name: 'Employeeaccount' }) // 添加成功后返回
+        } else {
+          this.$message.error(res.msg) // 错误提示
         }
-
-      }
+      })
     }
   }
 }

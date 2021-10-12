@@ -2,6 +2,9 @@ import { GetAxios } from '@/utils/request'
 import * as car from './configure/car'
 import * as menu from './configure/menu'
 import * as api from './configure/api'
+import * as personnel from './configure/personnel'
+import * as driver from './configure/driver'
+import * as warehouse from './configure/warehouse'
 
 const axios = GetAxios((config) => {
   // 在发送请求之前做些什么
@@ -89,5 +92,8 @@ export const positionEdit = (params) => {
 export {
   car, // 车辆
   menu, // 菜单
-  api // api
+  api, // api
+  personnel, // 员工管理
+  driver, // 司机
+  warehouse // 操作
 }

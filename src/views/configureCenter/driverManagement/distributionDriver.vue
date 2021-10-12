@@ -12,13 +12,19 @@
         </el-row>
        <div style="textAlign:left;paddingTop:20px;borderBottom:1px solid #E9E9E9;paddingBottom:20px">
             <div>收货区域</div>
-            <el-select size="mini" v-model="adressArea" style="width:265px;margin:20px 0px 20px 0px">
-                <el-option v-for="item in options" :key='item.value'></el-option>
-            </el-select>
-            <div><el-button icon="el-icon-circle-plus-outline" class='orangeBtn'>新增收货区域</el-button></div>
+            <div v-for="(item, index) in formData" :key="index">
+              <el-cascader
+                  :options="options"
+                  v-model="item.areaIds"
+                  :props="{ checkStrictly: true, expandTrigger: 'hover', label: 'title', value: 'id' }"
+                  filterable
+              ></el-cascader>
+              <el-button v-show="index > 0" @click="delArea(index)">删除</el-button>
+            </div>
+            <div><el-button icon="el-icon-circle-plus-outline" class='orangeBtn' @click="addArea">新增收货区域</el-button></div>
        </div>
        <div style="textAlign:left;paddingTop:20px;">
-           <el-button size="mini" class='orangeBtn submitbtn'>确认</el-button>
+           <el-button size="mini" class='orangeBtn submitbtn' @click="region">确认</el-button>
            <el-button size="mini" class='whiteBtn submitbtn'>取消</el-button>
        </div>
     </div>
@@ -26,18 +32,47 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
       adressArea: null,
       options: [],
       basicInfo: {
-        name: 'null',
-        role: 'null'
-      }
+        driverId: 0,
+        name: '',
+        role: ''
+      },
+      formData: [{}, {}]
     }
   },
+  mounted () {
+    this.basicInfo.driverId = this.$route.params.id
+    this.basicInfo.name = this.$route.params.name
+    this.basicInfo.role = this.$route.params.position_name
+  },
   methods: {
+    addArea () {
+      this.formData.push({})
+    },
+    delArea (index) {
+      this.formData.splice(index, 1)
+    },
+    region () {
+      let countyIds = []
+      this.formData.forEach(item => {})
+      this.$api.configure.driver.region({
+        driverId: this.basicInfo.driverId,
+        countyIds: countyIds
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.$router.push({ name: 'driverManagement' }) // 添加成功后返回列表
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    }
   }
 }
 

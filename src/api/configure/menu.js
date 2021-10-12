@@ -16,6 +16,14 @@ export const add = (params) => {
     data: params
   })
 }
+// 菜单详情
+export const info = (menuId) => {
+  return axios({
+    url: '/setting/menu/info',
+    method: 'post',
+    data: { menuId: menuId }
+  })
+}
 // 编辑菜单
 export const edit = (params) => {
   return axios({
