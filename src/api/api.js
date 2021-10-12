@@ -4,10 +4,12 @@
 import * as agent from './agent'
 import * as common from './public'
 import * as configure from './configure'
+import * as setting from './setting'
 // 默认全部导出
 
 export default {
   agent,
   common,
-  configure
+  configure,
+  setting
 }
