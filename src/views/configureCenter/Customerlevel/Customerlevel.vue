@@ -68,6 +68,7 @@
 </template>
 
 <script>
+// import { mapState } from 'vuex'
 export default {
   data () {
     return {
@@ -92,6 +93,7 @@ export default {
   },
   mounted () {
     this.getData()
+    console.log(this.$store.state.common.regiondata)
   },
   methods: {
     // 获取表格数据
@@ -125,13 +127,13 @@ export default {
       if (this.digTitle === '新增等级') {
         let params = {
           name: this.name,
-          warnDay: Number(this.warn_day)
+          warnDay: Number(this.warn_day) // warnDay只能为数字
         }
         this.$api.configure.customerLevelAdd(params).then(res => {
           if (res.code === 0) {
             this.$message.success(res.msg)
-            this.getData()
-            this.addClose()
+            this.getData() // 重新获取数据
+            this.addClose() // 关闭新增框
           } else {
             this.$message.error(res.msg)
             this.addClose()
@@ -158,6 +160,7 @@ export default {
     // 关闭新增弹窗
     addClose () {
       this.diaShow = false
+      // 清空表单
       this.name = null
       this.warn_day = null
     },

@@ -2,6 +2,7 @@ import { GetAxios } from '@/utils/request'
 import * as car from './configure/car'
 import * as menu from './configure/menu'
 import * as api from './configure/api'
+import * as milestone from './configure/milestone'
 
 const axios = GetAxios((config) => {
   // 在发送请求之前做些什么
@@ -131,5 +132,6 @@ export const countryAdd = (params) => {
 export {
   car, // 车辆
   menu, // 菜单
-  api // api
+  api, // api
+  milestone
 }

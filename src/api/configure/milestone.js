@@ -10,7 +10,6 @@ export const lists = (params) => {
   })
 }
 
-// 添加车辆
 export const add = (params) => {
   return axios({
     url: '/setting/milestone/add',
@@ -19,7 +18,6 @@ export const add = (params) => {
   })
 }
 
-// 编辑车辆
 export const edit = (params) => {
   return axios({
     url: '/setting/milestone/edit',
@@ -28,7 +26,6 @@ export const edit = (params) => {
   })
 }
 
-// 编辑车辆
 export const del = (params) => {
   return axios({
     url: '/setting/milestone/del',
