@@ -338,7 +338,7 @@ export default {
     // 查看
     detail (val) {
       console.log(val.data)
-      this.$route.push('name:sjmssqDetail')
+      this.$router.push('name:sjmssqDetail')
     },
     handleClick (tab, event) { console.log(tab, event) },
     // 操作按钮列表

@@ -83,6 +83,48 @@ export const positionEdit = (params) => {
     data: params
   })
 }
+export const customerLevelLists = (params) => {
+  return axios({
+    url: '/setting/customerLevel/lists',
+    method: 'post',
+    data: params
+  })
+}
+export const customerLevelAdd = (params) => {
+  return axios({
+    url: '/setting/customerLevel/add',
+    method: 'post',
+    data: params
+  })
+}
+export const customerLevelEdit = (params) => {
+  return axios({
+    url: '/setting/customerLevel/edit',
+    method: 'post',
+    data: params
+  })
+}
+export const customerLevelDel = (params) => {
+  return axios({
+    url: '/setting/customerLevel/del',
+    method: 'post',
+    data: params
+  })
+}
+export const countryLists = (params) => {
+  return axios({
+    url: '/setting/country/lists',
+    method: 'post',
+    data: params
+  })
+}
+export const countryAdd = (params) => {
+  return axios({
+    url: '/setting/country/add',
+    method: 'post',
+    data: params
+  })
+}
 // 司机列表
 // driver/lists
 
