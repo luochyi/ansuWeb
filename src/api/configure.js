@@ -5,6 +5,7 @@ import * as api from './configure/api'
 import * as personnel from './configure/personnel'
 import * as driver from './configure/driver'
 import * as warehouse from './configure/warehouse'
+import * as milestone from './configure/milestone'
 
 const axios = GetAxios((config) => {
   // 在发送请求之前做些什么
@@ -86,6 +87,48 @@ export const positionEdit = (params) => {
     data: params
   })
 }
+export const customerLevelLists = (params) => {
+  return axios({
+    url: '/setting/customerLevel/lists',
+    method: 'post',
+    data: params
+  })
+}
+export const customerLevelAdd = (params) => {
+  return axios({
+    url: '/setting/customerLevel/add',
+    method: 'post',
+    data: params
+  })
+}
+export const customerLevelEdit = (params) => {
+  return axios({
+    url: '/setting/customerLevel/edit',
+    method: 'post',
+    data: params
+  })
+}
+export const customerLevelDel = (params) => {
+  return axios({
+    url: '/setting/customerLevel/del',
+    method: 'post',
+    data: params
+  })
+}
+export const countryLists = (params) => {
+  return axios({
+    url: '/setting/country/lists',
+    method: 'post',
+    data: params
+  })
+}
+export const countryAdd = (params) => {
+  return axios({
+    url: '/setting/country/add',
+    method: 'post',
+    data: params
+  })
+}
 // 司机列表
 // driver/lists
 
@@ -95,5 +138,6 @@ export {
   api, // api
   personnel, // 员工管理
   driver, // 司机
-  warehouse // 操作
+  warehouse, // 操作
+  milestone
 }

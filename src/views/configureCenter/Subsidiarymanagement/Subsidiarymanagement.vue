@@ -18,8 +18,8 @@
         </el-col>
         <!--  -->
         <el-col :span='6' class='colboxa justify-center'>
-          <el-button class='orangeBtn long1'>查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
+          <el-button @click="search()" class='orangeBtn long1'>查 询</el-button>
+          <el-button @click="reset" class='wuBtn long1'>重 置</el-button>
         </el-col>
         <el-col :span='10' class='right'>
           <el-button @click="subsidiaries" class='orangeBtn long3' icon="el-icon-circle-plus-outline"> 新增子公司</el-button>
@@ -80,7 +80,7 @@ export default {
       // 初始的表格数据清空
       this.tableData = []
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
-      this.$api.configure.companyLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
+      this.$api.configure.companyLists({ limit: this.page.limit, page: this.page.pageNo, name: this.name }).then(res => {
         console.log(res.data) // res是接口返回的结果
         res.data.list && res.data.list.forEach(ele => {
           let obj = {
@@ -114,7 +114,14 @@ export default {
       this.getData() // 重新渲染表格
     },
     // 操作按钮列表
-    editTableData (row) {}
+    editTableData (row) {},
+    search () {
+      this.getData()
+    },
+    reset () {
+      this.name = ''
+      this.getData()
+    }
   }
 }
 </script>

@@ -18,6 +18,7 @@ import echarts from 'echarts'
 import util from '@/utils/util.js'
 
 Vue.prototype.echarts = echarts // echarts
+Vue.prototype.$baseUrl = process.env.VUE_APP_URL
 Vue.use(QuillEditor)
 
 Vue.config.productionTip = false

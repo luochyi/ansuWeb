@@ -6,8 +6,8 @@
        <span class='text'>目的国</span>
     </el-row>
       </div>
-      <input class="inputa" autocomplete="off" type="text" value="" placeholder="请输入目的国">
-     <el-button type="primary"  @click="addFBA2" icon="el-icon-circle-plus-outline" round>新建目的国</el-button>
+      <el-input class="inputa" autocomplete="off" type="text" value="" placeholder="请输入目的国" prefix-icon="el-icon-search" ></el-input>
+     <el-button type="primary"  @click="addFBA2" icon="el-icon-circle-plus-outline" round >新建目的国</el-button>
 <br>
 <br>
 <div class="first">
@@ -184,7 +184,7 @@ export default {
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
       }
@@ -311,12 +311,22 @@ border-radius: 4px;
 border: 1px solid #E8E8E8;
 text-align:center;
 }
-.inputa{
-  margin: 5px;
+// .inputa{
+//   margin: 5px;
+//   border-radius: 20px;
+//   height: 30px;
+//   width: 140px;
+// border: 2px solid #D9D9D9;
+// }
+.inputa /deep/.el-input__inner{
+margin: 5px;
   border-radius: 20px;
   height: 30px;
-  width: 140px;
+  // width: 140px;
 border: 2px solid #D9D9D9;
+}
+.left /deep/.el-input{
+   width: 140px;
 }
 .el-button orangeBtn el-button--primary{
   border-radius: 10px;

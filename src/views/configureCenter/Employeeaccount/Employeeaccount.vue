@@ -114,7 +114,6 @@
 
 <script>
 import api from '../../../api/api'
-import { resetPassword } from '../../../api/configure/personnel'
 
 export default {
   data () {

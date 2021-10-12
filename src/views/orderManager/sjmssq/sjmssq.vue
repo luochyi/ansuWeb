@@ -264,7 +264,7 @@ export default {
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
       }
@@ -338,7 +338,7 @@ export default {
     // 查看
     detail (val) {
       console.log(val.data)
-      this.$route.push('name:sjmssqDetail')
+      this.$router.push('name:sjmssqDetail')
     },
     handleClick (tab, event) { console.log(tab, event) },
     // 操作按钮列表
