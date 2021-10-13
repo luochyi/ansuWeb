@@ -40,7 +40,7 @@
           <el-col :span='4' class='colbox'>
             <el-button class='orangeBtn long1' @click="search">查 询</el-button>
           </el-col>
-         <el-button @click="status= true" class='whiteBtn'>新建状态 </el-button>
+         <el-button @click="show= true" class='whiteBtn'>新建状态 </el-button>
         </el-row>
        </div>
        <!-- 表格 -->
@@ -68,7 +68,7 @@
       </commonTable>
      </div>
       <!-- 新建状态 -->
-   <el-dialog title="新建状态" :visible.sync="status" width="30%">
+   <el-dialog title="新建状态" :visible.sync="show" width="30%">
                <div class="input">
                <span>名称<el-input v-model="input" style="width:190px" placeholder="请输入状态名称"></el-input></span>
                <br>
@@ -81,7 +81,7 @@
                  </el-select></span>
                </div>
                <span slot="footer" class="status-footer">
-                 <el-button @click="status = false" class='wuBtn'>取 消</el-button>
+                 <el-button @click="show = false" class='wuBtn'>取 消</el-button>
                  <el-button type="primary"  class='orangeBtn'>确 定</el-button>
                </span>
             </el-dialog>
@@ -131,7 +131,7 @@ export default {
       ],
       a: 1,
       b: 9,
-
+      show: false,
       status: 1,
       predictionNo: '',
       columns: [
