@@ -16,11 +16,11 @@
           </el-col>
         </el-col>
         <!--  -->
-        <el-col :span='6' class='colbox justify-center'>
+        <el-col :span='6' >
           <el-button @click="search()"  class='orangeBtn long1'>查 询</el-button>
           <el-button @click="reset()" class='wuBtn long1'>重 置</el-button>
         </el-col>
-        <el-col :span='12' class='colbox justify-center'>
+        <el-col :span='12' >
           <el-button @click="addcustomerp" class='orangeBtn long2'>⊕ 添加客户</el-button>
         </el-col>
       </el-row>
@@ -108,9 +108,6 @@ export default {
       dialogVisible: false,
       informationis: false,
       activeName: '1', // 标签绑定
-      pageSize: 10,
-      currentPage: 1,
-      total: 50,
       Uid: [],
       kehuname: '',
       agentName: '', // 代理名称
@@ -139,35 +136,11 @@ export default {
     this.getData()
   },
   methods: {
-    //     privatePublic({ customerIds: this.id}).then(res=>{
-    // if(res.code===0){}
-    // }),
     addcustomerp () {
       this.$router.push({ name: 'addcustomerp' })
     },
     recordLists () {
       this.$router.push({ name: 'recordLists' })
-    },
-    handleClose (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    change (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    information (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
     },
     // 获取列表数据
     getData () {
@@ -189,12 +162,25 @@ export default {
         this.page.total = res.data.total // 数据总量
       })
     },
+    // 改变页面大小处理
+    handleSizeChange (val) {
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
+    },
+    // 翻页处理
+    handleCurrentChange (val) {
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
+    },
+    // 操作按钮列表
+    editTableData (row) {},
     search () {
       this.getData()
     },
     reset () {
       this.name = ''
       this.getData()
+      console.log('111')
     },
     open (data) {
       console.log(data)
@@ -216,15 +202,6 @@ export default {
         } else {
           this.$message.success(res.msg)
         }
-      })
-    },
-    handleCurrentChange () {},
-    handleSizeChange () {},
-    handleSelectionChange (val) {
-      console.log(val)
-      this.chooseArr = []
-      val && val.forEach((item) => {
-        this.chooseArr.push(item)
       })
     }
   }
