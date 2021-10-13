@@ -12,13 +12,13 @@
         <el-col :span='6' class='colbox'>
           <span class='text'>客户名称</span>
           <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
+            <el-input  v-model='name' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <!--  -->
         <el-col :span='6' >
-          <el-button class='orangeBtn long1'>查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
+          <el-button @click="search()" class='orangeBtn long1'>查 询</el-button>
+          <el-button @click="reset()" class='wuBtn long1'>重 置</el-button>
         </el-col>
         <el-col :span='12' >
           <el-button @click="add" class='orangeBtn long2'>⊕ 添加客户</el-button>
@@ -48,15 +48,15 @@
         width="239"
         :resizable="false"
       >
-         <template slot-scoped="scoped">
+         <template slot-scope="scope">
                 <el-button type="text" @click="dialogVisible =true"> 转入私海
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="stopAgentis = true">
+                <el-button  type="text" @click="stopAgentis = true">
                   指派业务
                 </el-button>
                  <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="Deletecustomer = true">
+                <el-button  type="text"   @click.native.prevent="deleteRow(scope.$index, tableData)">
                   删除客户
                 </el-button>
               </template>
@@ -95,7 +95,7 @@
                </div>
                <span slot="footer" class="Deletecustomer-footer">
                  <el-button @click="Deletecustomer = false" class='wuBtn'>返回</el-button>
-                 <el-button type="primary" @click="Deletecustomer = false" class='orangeBtn'>确认删除</el-button>
+                 <el-button type="primary" @click="deleteRow($index)" class='orangeBtn'>确认删除</el-button>
                </span>
             </el-dialog>
    <!-- 批量转入私海 -->
@@ -158,12 +158,15 @@ export default {
     this.getData()
   },
   methods: {
+    deleteRow (index, rows) {
+      rows.splice(index, 1)
+    },
     // 获取列表数据
     getData () {
       // 初始的表格数据清空
       this.tableData = []
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
-      this.$api.customer.publicLists({ limit: this.page.limit, page: this.page.pageNo, name: '' }).then(res => {
+      this.$api.customer.publicLists({ limit: this.page.limit, page: this.page.pageNo, name: this.name }).then(res => {
         console.log(res.data) // res是接口返回的结果
         res.data.list && res.data.list.forEach(ele => {
           let obj = {
@@ -178,16 +181,16 @@ export default {
         this.page.total = res.data.total // 数据总量
       })
     },
+    search () {
+      this.getData()
+    },
+    reset () {
+      this.name = ''
+      this.getData()
+    },
     // 添加客户
     add () {
       this.$router.push({ name: 'add' })
-    },
-    handleClose (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
     },
     stopAgent (done) {
       this.$confirm('确认转入')

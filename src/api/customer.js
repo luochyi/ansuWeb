@@ -32,6 +32,22 @@ export const privateLists = (params) => {
     data: params
   })
 }
+// 添加私海海客户
+export const privateAdd = (params) => {
+  return axios({
+    url: '/company/customer/private/add',
+    method: 'post',
+    data: params
+  })
+}
+// 转回公海
+export const privatePublic = (params) => {
+  return axios({
+    url: '/company/customer/private/public',
+    method: 'post',
+    data: params
+  })
+}
 // 拜访公司列表
 export const recordLists = (params) => {
   return axios({
@@ -40,7 +56,7 @@ export const recordLists = (params) => {
     data: params
   })
 }
-// 拜访公司列表
+// 添加拜访记录
 export const recordAdd = (params) => {
   return axios({
     url: '/company/customer/private/record/add',

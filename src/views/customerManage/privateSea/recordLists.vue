@@ -51,8 +51,8 @@
         width="94"
         :resizable="false"
       >
-          <template slot-scope="scope">
-                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">查看详情</el-button>
+          <template slot-scoped="scoped">
+                <el-button  type="text" @click="stopAgent">查看详情</el-button>
               </template>
       </el-table-column>
     </commonTable>
@@ -76,13 +76,17 @@ export default {
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
       columns: [
-        { prop: 'Visittime', label: '拜访时间', width: '218', align: 'center' },
-        { prop: 'Visitor', label: '拜访人', width: '94', align: 'center' },
-        { prop: 'Entourage', label: '随行人员', width: '117', align: 'center' },
-        { prop: 'Visitrecord', label: '拜访记录', width: '117', align: 'center' },
-        { prop: 'Visitsummary', label: '拜访总结', align: 'center' }
+        { prop: 'visit_time', label: '拜访时间', width: '218', align: 'center' },
+        { prop: 'personnel_name', label: '拜访人', width: '94', align: 'center' },
+        { prop: 'accompanies', label: '随行人员', width: '117', align: 'center' },
+        { prop: 'record', label: '拜访记录', width: '117', align: 'center' },
+        { prop: 'remark', label: '拜访总结', align: 'center' }
       ],
-      tableData: [],
+      tableData: [{
+        visit_time: 1640072013,
+        record: '拜访记录',
+        remark: '拜访总结'
+      }],
       page: {
         pageNo: 1, // 当前页码
         limit: 10, // 页容量
@@ -93,33 +97,33 @@ export default {
   },
   mounted () {
     // 在页面加载前调用获取列表数据函数
-    this.getData()
+    // this.getData()
   },
   methods: {
     record () {
       this.$router.push({ name: 'record' })
     },
-    Visitrecord () {
-      this.$router.push({ name: 'Visitrecord' })
+    stopAgent () {
+      this.$router.push({ name: 'stopAgent' })
     },
     // 获取列表数据
     getData () {
       // 初始的表格数据清空
       this.tableData = []
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
-      this.$api.customer.private.recordLists({ limit: this.page.limit, page: this.page.pageNo, customerId: 1 }).then(res => {
+      this.$api.customer.recordLists({ limit: this.page.limit, page: this.page.pageNo, customerId: 1 }).then(res => {
         console.log(res.data) // res是接口返回的结果
-        res.data.list && res.data.list.forEach(ele => {
-          let obj = {
-            id: ele.id,
-            Visittime: ele.visit_time,
-            Visitor: ele.personnel_name,
-            Visitrecord: ele.record,
-            Entourage: ele.accompanies,
-            Visitsummary: ele.remark
-          }
-          this.tableData.push(obj)
-        })
+        // res.data.list && res.data.list.forEach(ele => {
+        //   let obj = {
+        //     id: ele.id,
+        //     visit_time: ele.visit_time,
+        //     personnel_name: ele.personnel_name,
+        //     record: ele.record,
+        //     accompanies: ele.accompanies,
+        //     remark: ele.remark
+        //   }
+        //   this.tableData.push(obj)
+        // })
         this.page.total = res.data.total // 数据总量
       })
     },

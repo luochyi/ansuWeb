@@ -5,15 +5,32 @@
     <span class='text'>客户名称</span>
       <el-input v-model="name" placeholder="请输入客户名称"></el-input>
       <span class='text'>客户联系人</span>
-      <el-input v-model="customer" placeholder="请输入客户名称"></el-input>
+      <el-input v-model="liaison" placeholder="请输入客户名称"></el-input>
       <span class='text'>客户联系电话</span>
-      <el-input v-model="Please" placeholder="请输入客户名称"></el-input>
-      <span class='text'>客户地址</span>
-      <el-input v-model="address" placeholder="客户地址"></el-input>
-      <br><br>
-      <el-input v-model="detailed" type="textarea" class="address" placeholder="详细地址" ></el-input>
-      <el-button @click="dialogVisible = false" class='orangeBtn long1'>确 定</el-button>
-      <el-button @click="dialogVisible = false" class='wuBtn long1'>取 消</el-button>
+      <el-input v-model="phone" placeholder="请输入客户名称"></el-input>
+       <el-descriptions class="margin-top" :column="1" direction="vertical">
+        <el-descriptions-item label="客户地址" :span="2">
+          <!-- 级联选择器 三级联动 -->
+          <el-cascader
+           :span="12"
+          v-model="countyId"
+          :options="provinceOptions"
+          placeholder="客户地址"
+          @change="handleChange"></el-cascader>
+        </el-descriptions-item>
+        <el-descriptions-item label="详细地址">
+          <el-input
+            style="width: 517px"
+            type="textarea"
+            :rows="2"
+            :column="8"
+            placeholder="请输入"
+            v-model="address"
+          ></el-input>
+        </el-descriptions-item>
+      </el-descriptions>
+      <el-button @click="submit" class='orangeBtn long1'>确 定</el-button>
+      <el-button @click="submit" class='wuBtn long1'>取 消</el-button>
   </div>
 </div>
 </div>
@@ -22,13 +39,14 @@
 export default {
   data () {
     return {
+      provinceOptions: [],
       dialogVisible: false,
       add: '',
       name: null,
-      customer: '',
-      Please: '',
-      address: '',
-      detailed: ''
+      liaison: '',
+      phone: '',
+      address: null,
+      countyId: null
 
     }
   },
@@ -36,13 +54,14 @@ export default {
     submit () {
       // 给请求参数赋值
       let resData = {
+        countyId: this.countyId,
         name: this.name,
-        customer: this.liaison,
-        Please: this.phone,
+        liaison: this.liaison,
+        phone: this.phone,
         address: this.address
       }
       // 把请求参数传输至后端，并且获取接口返回的结果res
-      this.$api.configure.publicAdd(resData).then(res => {
+      this.$api.customer.publicAdd(resData).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.$router.push({ name: 'add' }) // 添加成功后返回添加客户
@@ -50,9 +69,49 @@ export default {
           this.$message.error(res.msg) // 错误提示
         }
       })
+    },
+    // 级联选择器选择
+    handleChange (val) {
+      console.log(val)
+      console.log(this.provinceOptions) // 打印级联选择器的options
+      this.countyId = val[2] // 区域id
     }
+  },
+  mounted () {
+    // 省市区三级联动
+    this.$api.common.settingRegionAll().then(res => {
+      console.log(res)
+      res.data && res.data.forEach(ele => {
+        let province = {
+          value: ele.id,
+          label: ele.name,
+          children: []
+        }
+        if (province.value === ele.id) {
+          ele.children && ele.children.forEach(eles => {
+            let city = {
+              value: eles.id,
+              label: eles.name,
+              children: []
+            }
+            if (city.value === eles.id) {
+              eles.children && eles.children.forEach(item => {
+                let county = {
+                  value: item.id,
+                  label: item.name
+                }
+                city.children.push(county)
+              })
+            }
+            province.children.push(city)
+          })
+          province.children.push()
+        }
+        province.children.push()
+        this.provinceOptions.push(province)
+      })
+    })
   }
-
 }
 </script>
 
@@ -82,5 +141,16 @@ line-height: 22px;
   width: 392px;
   margin: 53px 124px ;
   text-align: left;
+}
+.el-input__inner{
+  width: 390px;
+}
+.el-textarea__inner{
+   width: 390px;
+}
+.el-descriptions {
+  font-size: 16px;
+  color: #303133;
+  line-height: 22px;
 }
 </style>

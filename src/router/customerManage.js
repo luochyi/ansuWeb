@@ -61,14 +61,14 @@ export default [
     component: () => import('@/views/customerManage/addcustomerp.vue')
   },
   {
-    path: '/Visitrecord',
-    name: 'Visitrecord',
+    path: '/recordLists',
+    name: 'recordLists',
     meta: {
       title: '拜访记录',
-      icon: 'Visitrecord',
+      icon: 'recordLists',
       hidden: false
     },
-    component: () => import('@/views/customerManage/privateSea/Visitrecord.vue')
+    component: () => import('@/views/customerManage/privateSea/recordLists.vue')
   },
   {
     path: '/record',
@@ -79,6 +79,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/customerManage/privateSea/record.vue')
+  },
+  {
+    path: '/stopAgent',
+    name: 'stopAgent',
+    meta: {
+      title: '拜访记录详情',
+      icon: 'stopAgent',
+      hidden: false
+    },
+    component: () => import('@/views/customerManage/privateSea/stopAgent.vue')
   },
   {
     path: '/Viewdetails',

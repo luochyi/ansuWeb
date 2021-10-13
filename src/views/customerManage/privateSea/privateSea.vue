@@ -12,16 +12,16 @@
         <el-col :span='6' class='colbox'>
           <span class='text'>客户名称</span>
           <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
+            <el-input v-model='name' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <!--  -->
         <el-col :span='6' class='colbox justify-center'>
-          <el-button class='orangeBtn long1'>查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
+          <el-button @click="search()"  class='orangeBtn long1'>查 询</el-button>
+          <el-button @click="reset()" class='wuBtn long1'>重 置</el-button>
         </el-col>
         <el-col :span='12' class='colbox justify-center'>
-          <el-button @click="add" class='orangeBtn long2'>⊕ 添加客户</el-button>
+          <el-button @click="addcustomerp" class='orangeBtn long2'>⊕ 添加客户</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -50,9 +50,9 @@
         <template slot-scope="scope">
                 <el-button type="text" @click="informationis = true"> 编辑</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="dialogVisible = true">转回公海</el-button>
+                <el-button v-if="activeName === '1'" type="text" @click="dialogVisible = true, Uid = scope.row.id">转回公海</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" class="visi" @click="Visitrecord"> 拜访记录</el-button>
+                <el-button type="text" class="visi" @click="recordLists"> 拜访记录</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">开户</el-button>
               </template>
@@ -72,7 +72,7 @@
   </div>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false" class='wuBtn'>取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false" class='orangeBtn'>确 定</el-button>
+    <el-button type="primary" @click="toG" class='orangeBtn'>确 定</el-button>
   </span>
 </el-dialog>
 <!-- 批量转回公海 -->
@@ -100,7 +100,6 @@
 </el-dialog>
   </div>
 </template>
-
 <script>
 export default {
   data () {
@@ -112,10 +111,12 @@ export default {
       pageSize: 10,
       currentPage: 1,
       total: 50,
+      Uid: '',
 
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
+      name: '',
       columns: [
         { prop: 'name', label: '客户名称', width: '218', align: 'center' },
         { prop: 'contact', label: '客户联系人', width: '94', align: 'center' },
@@ -138,11 +139,14 @@ export default {
     this.getData()
   },
   methods: {
-    add () {
+    //     privatePublic({ customerIds: this.id}).then(res=>{
+    // if(res.code===0){}
+    // }),
+    addcustomerp () {
       this.$router.push({ name: 'addcustomerp' })
     },
-    Visitrecord () {
-      this.$router.push({ name: 'Visitrecord' })
+    recordLists () {
+      this.$router.push({ name: 'recordLists' })
     },
     handleClose (done) {
       this.$confirm('确认转入')
@@ -170,7 +174,7 @@ export default {
       // 初始的表格数据清空
       this.tableData = []
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
-      this.$api.customer.privateLists({ limit: this.page.limit, page: this.page.pageNo, name: '' }).then(res => {
+      this.$api.customer.privateLists({ limit: this.page.limit, page: this.page.pageNo, name: this.name }).then(res => {
         console.log(res.data) // res是接口返回的结果
         res.data.list && res.data.list.forEach(ele => {
           let obj = {
@@ -184,6 +188,13 @@ export default {
         })
         this.page.total = res.data.total // 数据总量
       })
+    },
+    search () {
+      this.getData()
+    },
+    reset () {
+      this.name = ''
+      this.getData()
     },
 
     handleSelectionChange (val) {
