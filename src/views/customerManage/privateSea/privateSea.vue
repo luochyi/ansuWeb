@@ -50,7 +50,7 @@
         <template slot-scope="scope">
                 <el-button type="text" @click="informationis = true"> 编辑</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="dialogVisible = true, Uid = scope.row.id">转回公海</el-button>
+                <el-button v-if="activeName === '1'" type="text" @click="open(scope.row)">转回公海</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" class="visi" @click="recordLists"> 拜访记录</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
@@ -68,7 +68,7 @@
   :before-close="handleClose">
   <div class="input">
     <br>
-  <span>是否将客户“深圳市沙马家居有限公司”转回公海客户</span>
+  <span>是否将客户{{kehuname}}转回公海客户</span>
   </div>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false" class='wuBtn'>取 消</el-button>
@@ -111,8 +111,8 @@ export default {
       pageSize: 10,
       currentPage: 1,
       total: 50,
-      Uid: '',
-
+      Uid: [],
+      kehuname: '',
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
@@ -196,7 +196,30 @@ export default {
       this.name = ''
       this.getData()
     },
-
+    open (data) {
+      console.log(data)
+      this.Uid = []
+      this.Uid.push(data.id)
+      this.kehuname = data.name
+      this.dialogVisible = true
+    },
+    toG () {
+      // let obj = {
+      //   customerIds: this.Uid
+      // }
+      this.$api.customer.privatePublic({ customerIds: this.Uid }).then(res => {
+        console.log(res)
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.dialogVisible = false
+          this.getData()
+        } else {
+          this.$message.success(res.msg)
+        }
+      })
+    },
+    handleCurrentChange () {},
+    handleSizeChange () {},
     handleSelectionChange (val) {
       console.log(val)
       this.chooseArr = []
