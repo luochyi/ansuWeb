@@ -70,19 +70,16 @@
       <!-- 新建状态 -->
    <el-dialog title="新建状态" :visible.sync="show" width="30%">
                <div class="input">
-               <span>名称<el-input v-model="input" style="width:190px" placeholder="请输入状态名称"></el-input></span>
+               <span>名称<el-input v-model="statusname" style="width:190px" placeholder="请输入状态名称"></el-input></span>
                <br>
                <br>
-               <span>状态<el-select v-model="agentName" size="small" placeholder="请选择状态">
-                 <el-options v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value"></el-options>
+               <span>状态<el-select v-model="status" size="small" placeholder="请选择状态">
+                 <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
                  </el-select></span>
                </div>
                <span slot="footer" class="status-footer">
                  <el-button @click="show = false" class='wuBtn'>取 消</el-button>
-                 <el-button type="primary"  class='orangeBtn'>确 定</el-button>
+                 <el-button type="primary"  class='orangeBtn' @click="addSubmit">确 定</el-button>
                </span>
             </el-dialog>
                   <!-- 修改 -->
@@ -91,7 +88,9 @@
                <span>名称<el-input v-model="name" style="width:190px" placeholder="请输入状态名称"></el-input></span>
                <br>
                <br>
-               <span>状态<el-select v-model="status" size="small" placeholder="港前状态"></el-select></span>
+               <span>状态<el-select v-model="status" size="small" placeholder="港前状态">
+                  <el-options v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-options>
+                 </el-select></span>
                </div>
                <span slot="footer" class="modify-footer">
                  <el-button @click="modify = false" class='wuBtn'>取 消</el-button>
@@ -132,7 +131,21 @@ export default {
       a: 1,
       b: 9,
       show: false,
-      status: 1,
+      statusname: '',
+      name: '',
+      status: '1',
+      statusOptions: [
+        {
+          value: '1',
+          label: '港前'
+        }, {
+          value: '2',
+          label: '港后'
+        }, {
+          value: '3',
+          label: '派件'
+        }
+      ],
       predictionNo: '',
       columns: [
         { prop: 'name', label: '名称', width: '427', align: 'center' },
@@ -207,6 +220,22 @@ export default {
       console.log(i)
       this.isRed = i
       this.getData()
+    },
+    addSubmit () {
+      let params = {
+        name: this.statusname,
+        status: Number(this.status),
+        cate: this.isRed + 1
+      }
+      this.$api.configure.milestone.add(params).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.show = false
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     // 操作按钮列表
     editTableData (row) {}
