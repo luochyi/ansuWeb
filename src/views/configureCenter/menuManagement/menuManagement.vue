@@ -13,7 +13,7 @@
         </el-col>
         </el-row>
       <el-table
-        :data="menuOptions"
+        :data="tableData"
         style="width: 100%; margin-bottom: 20px"
         row-key="id"
         :header-cell-style="{ background: '#F5F5F6', color: '#999999FF',fontSize:'14px' }"
@@ -37,7 +37,7 @@
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+          @click="editMenu(scope.row)">编辑</el-button>
         <!-- <el-button
           size="mini"
           type="danger"
@@ -46,23 +46,23 @@
     </el-table-column>
       </el-table>
     </div>
-    <el-dialog :title="digTitle" :visible.sync="diaShow" :before-close="addClose" width="60%">
+    <el-dialog :title="digTitle" :visible.sync="diaShow" :before-close="close" width="60%">
       <div class="input">
           <el-row>
                 <el-col :span="6">
                     <span
                         >上级菜单&nbsp;<el-cascader
                             :options="tableData"
-                            v-model="parentId"
-                            :props="{ expandTrigger: 'hover', label: 'title', value: 'id' }"
-                            @change="handleChange"
-                        ></el-cascader
+                            v-model="formData.parentId"
+                            :props="{ checkStrictly: true, expandTrigger: 'hover', label: 'title', value: 'id' }"
+                            clearable filterable
+                    ></el-cascader
                         ></span>
                 </el-col>
                 <el-col :span="6">
                     <span
                         >路由名称&nbsp;<el-input
-                            v-model="routerName"
+                            v-model="formData.name"
                             style="width: 190px"
                             placeholder="请输入路由名称"
                         ></el-input
@@ -71,7 +71,7 @@
                 <el-col :span="12">
                     <span
                         >路由地址&nbsp;<el-input
-                            v-model="path"
+                            v-model="formData.path"
                             style="width: 390px"
                             placeholder="请输入路由地址"
                         ></el-input
@@ -83,7 +83,7 @@
                 <el-col :span="12">
                     <span
                         >前段文件路径&nbsp;<el-input
-                            v-model="component"
+                            v-model="formData.component"
                             style="width: 390px"
                             placeholder="请输入文件路径"
                         ></el-input
@@ -92,7 +92,7 @@
                 <el-col :span="6">
                     <span
                         >排序&nbsp;<el-input
-                            v-model="sort"
+                            v-model="formData.sort"
                             style="width: 190px"
                             placeholder="请输入排序"
                         ></el-input
@@ -101,7 +101,7 @@
                 <el-col :span="6">
                     <span
                         >类型&nbsp;<el-select
-                            v-model="type"
+                            v-model="formData.type"
                             style="width: 190px"
                             placeholder="请选择类型"
                         >
@@ -119,7 +119,7 @@
                 <el-col :span="6">
                     <span
                         >展示名称&nbsp;<el-input
-                            v-model="title"
+                            v-model="formData.title"
                             style="width: 190px"
                             placeholder="请输入展示名称"
                         ></el-input
@@ -127,17 +127,24 @@
                 </el-col>
                 <el-col :span="6">
                     <span
-                        >是否隐藏&nbsp;<el-input
-                            v-model="hidden"
-                            style="width: 190px"
-                            placeholder="是否隐藏"
-                        ></el-input
+                        >是否隐藏&nbsp;<el-select
+                        v-model="formData.hidden"
+                        style="width: 190px"
+                        placeholder="是否隐藏"
+                    >
+                            <el-option
+                                v-for="item in hiddenOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                        </el-select
                         ></span>
                 </el-col>
                 <el-col :span="12">
                     <span
                         >图标&nbsp;<el-input
-                            v-model="icon"
+                            v-model="formData.icon"
                             style="width: 390px"
                             placeholder="请输入图标路径"
                         ></el-input
@@ -157,8 +164,8 @@
         </el-row>
       </div>
       <span slot="footer" class="department-footer">
-        <el-button @click="addClose" class="wuBtn">取 消</el-button>
-        <el-button type="primary" @click="addSubmit()" class="orangeBtn"
+        <el-button @click="close" class="wuBtn">取 消</el-button>
+        <el-button type="primary" @click="submit()" class="orangeBtn"
           >确 定</el-button
         >
       </span>
@@ -172,26 +179,22 @@ export default {
     return {
       digTitle: '',
       diaShow: false,
+      diaType: 1, // 1=添加 2=编辑
 
-      parentId: null,
-      routerName: '',
-      path: '',
-      hidden: '',
-      component: '',
-      sort: null,
-      type: null,
-      title: '',
-      icon: '',
       typeOptions: [
         { value: 1, label: '目录' },
         { value: 2, label: '菜单' },
         { value: 3, label: '按钮' }
       ],
-      menuOptions: [],
+      hiddenOptions: [
+        { value: 0, label: '显示' },
+        { value: 1, label: '隐藏' }
+      ],
       tableData: [],
       apis: [],
       formData: {
-        parentId: 0,
+        menuId: 0,
+        parentId: [],
         name: '',
         path: '',
         hidden: 0,
@@ -222,14 +225,63 @@ export default {
     addMenu () {
       this.diaShow = true
       this.digTitle = '新增菜单'
-      this.menuOptions = this.tableData
+      this.diaType = 1
+
+      this.formData.menuId = 0
+      this.formData.parentId = []
+      this.formData.name = ''
+      this.formData.path = ''
+      this.formData.hidden = 0
+      this.formData.component = ''
+      this.formData.sort = 100
+      this.formData.type = 1
+      this.formData.title = ''
+      this.formData.icon = ''
+      this.formData.apis = []
+    },
+    editMenu (val) {
+      this.$api.configure.menu.info(val.id).then(res => {
+        if (res.code === 0) {
+          this.diaShow = true
+          this.digTitle = '编辑菜单'
+          this.diaType = 2
+
+          this.formData.menuId = val.id
+          this.formData.parentId = this.cascaderData(this.tableData, res.data.parent_id)
+          this.formData.name = res.data.name
+          this.formData.path = res.data.path
+          this.formData.hidden = res.data.hidden
+          this.formData.component = res.data.component
+          this.formData.sort = res.data.sort
+          this.formData.type = res.data.type
+          this.formData.title = res.data.title
+          this.formData.icon = res.data.icon
+          this.formData.apis = res.data.apis
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
     },
     apiManage () {
       this.$router.push({ name: 'apiManagement' }) // 添加成功后返回子公司列表
     },
-    addSubmit () {
+    submit () {
+      switch (this.diaType) {
+        case 1:
+          this.add()
+          break
+        case 2:
+          this.edit()
+          break
+      }
+    },
+    add () {
+      if (!this.formData.parentId) {
+        this.$message.error('请选择上级接口') // 错误提示
+        return
+      }
       this.$api.configure.menu.add({
-        parentId: this.formData.parentId,
+        parentId: Number(this.formData.parentId.slice(-1)),
         name: this.formData.name,
         path: this.formData.path,
         hidden: this.formData.hidden,
@@ -237,19 +289,61 @@ export default {
         sort: this.formData.sort,
         type: this.formData.type,
         title: this.formData.title,
-        icon: this.formData.icon
+        icon: this.formData.icon,
+        apis: this.formData.apis
       }).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.getData()
+          this.close()
         } else {
           this.$message.error(res.msg) // 错误提示
         }
       })
     },
-    addClose () { this.diaShow = false },
-    handleChange (val) {},
-    handleEdit () {}
+    edit () {
+      if (!this.formData.parentId) {
+        this.$message.error('请选择上级接口') // 错误提示
+        return
+      }
+      this.$api.configure.menu.edit({
+        menuId: this.formData.menuId,
+        parentId: Number(this.formData.parentId.slice(-1)),
+        name: this.formData.name,
+        path: this.formData.path,
+        hidden: this.formData.hidden,
+        component: this.formData.component,
+        sort: this.formData.sort,
+        type: this.formData.type,
+        title: this.formData.title,
+        icon: this.formData.icon,
+        apis: this.formData.apis
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData()
+          this.close()
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    },
+    close () { this.diaShow = false },
+    cascaderData (val, id) {
+      for (let i in val) {
+        if (val[i].id === id) {
+          return [id]
+        }
+        if (val[i].children) {
+          let res = this.cascaderData(val[i].children, id)
+          if (res.length > 0) {
+            res.unshift(val[i].id)
+            return res
+          }
+        }
+      }
+      return []
+    }
   }
 
 }
