@@ -2,16 +2,33 @@
 <div id="boxx">
 <div id="box">
   <div class="add">
-    <span class='text'>拜访时间</span>
-      <el-input v-model="visitTime" placeholder="请选择拜访时间"></el-input>
-      <span class='text'>随行人员</span>
-      <el-input v-model="personnelIds" placeholder="请选择随性人员"></el-input>
-      <span class='text'>拜访记录</span>
-      <el-input v-model="record" type="textarea" :rows="2" placeholder="请输入拜访记录"  >
-</el-input>
-      <span class='text'>拜访总结</span>
-      <el-input v-model="remark" type="textarea" :rows="2" placeholder="请输入拜访总结" >
-</el-input>
+    <span class='text'>客户名称</span>
+      <el-input v-model="name" placeholder="请输入客户名称"></el-input>
+      <span class='text'>客户联系人</span>
+      <el-input v-model="liaison" placeholder="请输入客户名称"></el-input>
+      <span class='text'>客户联系电话</span>
+      <el-input v-model="phone" placeholder="请输入客户名称"></el-input>
+       <el-descriptions class="margin-top" :column="1" direction="vertical">
+        <el-descriptions-item label="客户地址" :span="2">
+          <!-- 级联选择器 三级联动 -->
+          <el-cascader
+           :span="12"
+          v-model="countyId"
+          :options="provinceOptions"
+          placeholder="客户地址"
+          @change="handleChange"></el-cascader>
+        </el-descriptions-item>
+        <el-descriptions-item label="详细地址">
+          <el-input
+            style="width: 517px"
+            type="textarea"
+            :rows="2"
+            :column="8"
+            placeholder="请输入"
+            v-model="address"
+          ></el-input>
+        </el-descriptions-item>
+      </el-descriptions>
       <el-button @click="submit" class='orangeBtn long1'>确 定</el-button>
       <el-button @click="submit" class='wuBtn long1'>取 消</el-button>
   </div>
@@ -25,10 +42,10 @@ export default {
       provinceOptions: [],
       dialogVisible: false,
       add: '',
-      visitTime: '',
-      record: '',
-      remark: '',
-      personnelIds: '',
+      name: null,
+      liaison: '',
+      phone: '',
+      address: null,
       countyId: null
 
     }
@@ -38,13 +55,13 @@ export default {
       // 给请求参数赋值
       let resData = {
         countyId: this.countyId,
-        visitTime: this.visitTime,
-        record: this.record,
-        remark: this.remark,
-        personnelIds: this.personnelIds
+        name: this.name,
+        liaison: this.liaison,
+        phone: this.phone,
+        address: this.address
       }
       // 把请求参数传输至后端，并且获取接口返回的结果res
-      this.$api.customer.recordAdd(resData).then(res => {
+      this.$api.customer.publicAdd(resData).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.$router.push({ name: 'add' }) // 添加成功后返回添加客户

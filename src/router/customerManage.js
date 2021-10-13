@@ -41,14 +41,14 @@ export default [
     component: () => import('@/views/customerManage/myCustomer/myCustomer')
   },
   {
-    path: '/addcustomerh',
-    name: 'addcustomerh',
+    path: '/add',
+    name: 'add',
     meta: {
       title: '添加客户',
-      icon: 'addcustomerh',
+      icon: 'add',
       hidden: false
     },
-    component: () => import('@/views/customerManage/highSeaCustomers/addcustomerh.vue')
+    component: () => import('@/views/customerManage/highSeaCustomers/add.vue')
   },
   {
     path: '/addcustomerp',
@@ -61,14 +61,14 @@ export default [
     component: () => import('@/views/customerManage/addcustomerp.vue')
   },
   {
-    path: '/Visitrecord',
-    name: 'Visitrecord',
+    path: '/recordLists',
+    name: 'recordLists',
     meta: {
       title: '拜访记录',
-      icon: 'Visitrecord',
+      icon: 'recordLists',
       hidden: false
     },
-    component: () => import('@/views/customerManage/privateSea/Visitrecord.vue')
+    component: () => import('@/views/customerManage/privateSea/recordLists.vue')
   },
   {
     path: '/record',
@@ -79,6 +79,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/customerManage/privateSea/record.vue')
+  },
+  {
+    path: '/stopAgent',
+    name: 'stopAgent',
+    meta: {
+      title: '拜访记录详情',
+      icon: 'stopAgent',
+      hidden: false
+    },
+    component: () => import('@/views/customerManage/privateSea/stopAgent.vue')
   },
   {
     path: '/Viewdetails',

@@ -6,6 +6,7 @@ import * as common from './public'
 import * as configure from './configure'
 import * as setting from './setting'
 import * as company from './company'
+import * as customer from './customer'
 // 默认全部导出
 
 export default {
@@ -13,5 +14,6 @@ export default {
   common,
   configure,
   setting,
-  company
+  company,
+  customer
 }
