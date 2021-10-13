@@ -158,9 +158,6 @@ export default {
     this.getData()
   },
   methods: {
-    deleteRow (index, rows) {
-      rows.splice(index, 1)
-    },
     // 获取列表数据
     getData () {
       // 初始的表格数据清空
@@ -181,38 +178,6 @@ export default {
         this.page.total = res.data.total // 数据总量
       })
     },
-    search () {
-      this.getData()
-    },
-    reset () {
-      this.name = ''
-      this.getData()
-    },
-    // 添加客户
-    add () {
-      this.$router.push({ name: 'add' })
-    },
-    stopAgent (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    into (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    batchStop (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
     // 改变页面大小处理
     handleSizeChange (val) {
       this.page.limit = val // 设置当前页容量为val
@@ -224,7 +189,21 @@ export default {
       this.getData() // 重新渲染表格
     },
     // 操作按钮列表
-    editTableData (row) {}
+    editTableData (row) {},
+    search () {
+      this.getData()
+    },
+    reset () {
+      this.name = ''
+      this.getData()
+    },
+    deleteRow (index, rows) {
+      rows.splice(index, 1)
+    },
+    // 添加客户
+    add () {
+      this.$router.push({ name: 'add' })
+    }
   }
 }
 </script>
