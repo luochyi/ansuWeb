@@ -1,11 +1,11 @@
 import { axios } from '../auth/auth'
 
 // 全部菜单
-export const all = (params) => {
+export const all = () => {
   return axios({
     url: '/setting/menu/all',
     method: 'post',
-    data: params
+    data: { }
   })
 }
 // 添加菜单

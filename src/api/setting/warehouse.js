@@ -8,6 +8,14 @@ export const lists = (params) => {
     data: params
   })
 }
+// 添加仓库
+export const add = (params) => {
+  return axios({
+    url: '/setting/warehouse/add',
+    method: 'post',
+    data: params
+  })
+}
 // 启用仓库
 export const setDefault = (warehouseId) => {
   return axios({

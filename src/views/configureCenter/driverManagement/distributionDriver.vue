@@ -16,7 +16,8 @@
               <el-cascader
                   :options="options"
                   v-model="item.areaIds"
-                  :props="{ checkStrictly: true, expandTrigger: 'hover', label: 'title', value: 'id' }"
+                  :show-all-levels="false"
+                  :props="{ expandTrigger: 'hover' }"
                   filterable
               ></el-cascader>
               <el-button v-show="index > 0" @click="delArea(index)">删除</el-button>
@@ -43,13 +44,21 @@ export default {
         name: '',
         role: ''
       },
-      formData: [{}, {}]
+      formData: [{}]
     }
   },
   mounted () {
     this.basicInfo.driverId = this.$route.params.id
     this.basicInfo.name = this.$route.params.name
     this.basicInfo.role = this.$route.params.position_name
+    this.options = this.$store.state.common.regiondata
+    if (this.$route.params.regions && this.$route.params.regions.length > 0) {
+      this.formData = []
+      this.$route.params.regions.forEach(item => {
+        this.formData.push({ areaIds: [item.province_id, item.city_id, item.county_id] })
+      })
+    }
+    console.log(this.formData)
   },
   methods: {
     addArea () {
@@ -60,7 +69,11 @@ export default {
     },
     region () {
       let countyIds = []
-      this.formData.forEach(item => {})
+      this.formData.forEach(item => {
+        if (item.areaIds && item.areaIds.length === 3) {
+          countyIds.push(Number(item.areaIds.slice(-1)))
+        }
+      })
       this.$api.configure.driver.region({
         driverId: this.basicInfo.driverId,
         countyIds: countyIds

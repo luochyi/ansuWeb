@@ -24,3 +24,11 @@ export const set = (params) => {
     data: params
   })
 }
+// 仓库操作筛选
+export const select = () => {
+  return axios({
+    url: '/company/warehouse/select',
+    method: 'post',
+    data: {}
+  })
+}

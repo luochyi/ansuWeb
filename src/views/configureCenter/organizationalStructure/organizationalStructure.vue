@@ -62,7 +62,7 @@
                 <el-button
                   type="text"
                   size="mini"
-                  @click="() => (drawer = true)"
+                  @click="showAuth(data)"
                 >
                   权限
                 </el-button>
@@ -95,16 +95,20 @@
               </el-col>
               <el-col :span="10">
                 <!-- <el-input v-model="name" placeholder="请选择"></el-input> -->
+                <el-checkbox v-model="formData.hasManage">web管理端</el-checkbox>
+                <div v-show="formData.hasManage">
+                  <el-tree ref="menuTree" :data="menus" node-key="id" :props="{label: 'name'}" show-checkbox></el-tree>
+                </div>
+                <el-checkbox v-model="formData.hasDriver">司机端</el-checkbox>
+                <div v-show="formData.hasDriver">
+                  <el-checkbox v-model="formData.driver.isManage">司机主管</el-checkbox>
+                </div>
+                <el-checkbox v-model="formData.hasWarehouse">仓库端</el-checkbox>
+                <el-checkbox v-model="formData.hasSales">业务员端</el-checkbox>
               </el-col>
             </el-col>
             <el-col :span="1" class="colbox">
-              <el-button class="orangeBtn long1">确定</el-button>
-              <el-button @click="status = true" class="whiteBtn"
-                >保存配置
-              </el-button>
-              <el-button @click="status = true" class="whiteBtn"
-                >查看配置
-              </el-button>
+              <el-button @click="auth">确定</el-button>
             </el-col>
           </el-row>
         </div>
@@ -191,16 +195,31 @@ export default {
       roleOptions: [],
       roleList: [],
       roleName: null,
-      roleParentId: []
+      roleParentId: [],
       // defaultProps: {
       //   children: 'children',
       //   label: 'label'
       // }
+      formData: {
+        positionId: 0,
+        hasManage: false,
+        manage: {
+          menuIds: []
+        },
+        hasDriver: false,
+        driver: {
+          isManage: false
+        },
+        hasWarehouse: false,
+        hasSales: false
+      },
+      menus: []
     }
   },
   mounted () {
     this.getData()
     this.getRoleData()
+    this.menu()
   },
   methods: {
     getData () {
@@ -422,7 +441,6 @@ export default {
         parentId: pid
       }
       this.$api.configure.positionAdd(resData).then((res) => {
-        console.log(res)
         if (res.code === 0) {
           this.$message.success(res.msg)
           this.toAddClose()
@@ -496,6 +514,49 @@ export default {
     remove (node, data) {
       console.log(data)
       // 删除无接口
+    },
+    menu () {
+      this.$api.configure.menu.all().then(res => {
+        this.menus = res.data
+      })
+    },
+    showAuth (data) {
+      this.formData.positionId = data.value
+      this.$api.company.position.getSuth(data.value).then(res => {
+        this.formData.hasManage = res.data.has_manage === 1
+        this.formData.hasDriver = res.data.has_driver === 1
+        this.formData.hasDriver = res.data.has_driver === 1
+        this.formData.driver.isManage = res.data.driver.is_manage === 1
+        this.formData.hasSales = res.data.has_sales === 1
+        res.data.manage.menu_ids.forEach(menuId => {
+          this.$refs.menuTree.setChecked(menuId, true)
+        })
+      })
+      this.drawer = true
+    },
+    auth () {
+      this.$api.company.position.auth({
+        positionId: this.formData.positionId,
+        auth: {
+          hasManage: this.formData.hasManage ? 1 : 0,
+          manage: {
+            menuIds: this.$refs.menuTree.getCheckedKeys().concat(this.$refs.menuTree.getHalfCheckedKeys())
+          },
+          hasDriver: this.formData.hasDriver ? 1 : 0,
+          driver: {
+            isManage: this.formData.driver.isManage ? 1 : 0
+          },
+          hasWarehouse: this.formData.hasWarehouse ? 1 : 0,
+          hasSales: this.formData.hasSales ? 1 : 0
+        }
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.drawer = false
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   },
   watch: {
