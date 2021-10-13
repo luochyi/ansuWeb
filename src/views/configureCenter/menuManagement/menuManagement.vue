@@ -31,7 +31,13 @@
         <el-table-column prop="hidden" label="是否隐藏" width="180">
         </el-table-column>
         <el-table-column prop="component" label="文件路径"></el-table-column>
-        <el-table-column prop="type" label="类型"></el-table-column>
+        <el-table-column prop="type" label="类型">
+          <template slot-scope="scope">
+            <div v-if="scope.row.type===1">目录</div>
+            <div v-else-if="scope.row.type===2">菜单</div>
+            <div v-else>按钮</div>
+          </template>
+        </el-table-column>
         <el-table-column prop="title" label="展示名称"></el-table-column>
         <el-table-column label="操作" width="80">
       <template slot-scope="scope">
