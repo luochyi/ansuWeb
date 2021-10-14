@@ -1,9 +1,8 @@
 <template>
-  <div class="content">
+  <div>
     <div>
-    <!--  标签页 -->
-    <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span class='text'>子公司管理</span>
+     <el-row type="flex" justify="flex-start" class="title" align="middle">
+      <span class="text">子公司管理</span>
     </el-row>
     <!-- 主要内容 -->
     <div class='content'>
@@ -12,7 +11,7 @@
         <!-- 客户名称 -->
         <el-col :span='6' class='colbox'>
         <span class='text'>公司名称</span>
-          <el-col :span='16'>
+ <el-col :span='16'>
             <el-input v-model='name' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
@@ -25,10 +24,7 @@
           <el-button @click="subsidiaries" class='orangeBtn long3' icon="el-icon-circle-plus-outline"> 新增子公司</el-button>
         </el-col>
       </el-row>
-    </div>
-    </div>
-    <!-- 组件 -->
-    <commonTable
+       <commonTable
       :columns="columns"
       :data="tableData"
       :pager="page"
@@ -48,6 +44,8 @@
         </template>
       </el-table-column>
     </commonTable>
+    </div>
+    </div>
   </div>
 </template>
 
@@ -127,12 +125,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.adtitile {
-  color: #000000a6;
-  font-weight: 500;
-  font-size: 18px;
-  margin-left: -150px;
-  margin-bottom: 8px;
+/deep/ .title {
+  height: 56px;
+  font-size: 16px;
+}
+.content {
+  height: 600px;
 }
 .elipt {
   width: 287px;

@@ -57,90 +57,111 @@
         </el-row>
         <el-row class="table">
           <el-table :data="contactsData" border style="width: 100%" @selection-change="handleSelectionChange"  :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type="selection" width="55">
-            </el-table-column>
-            <el-table-column label="姓名" min-width="150">
-              <template v-slot='scope'>
-                <el-input v-model="scope.row.name" placeholder="请输入姓名"></el-input>
+            <el-table-column
+      type="selection"
+      width="55">
+    </el-table-column>
+            <el-table-column label="姓名" prop="name" min-width="150"></el-table-column>
+            <el-table-column label="职位" prop="type" min-width="150" :formatter="formatter"></el-table-column>
+            <el-table-column label="联系电话" prop="phone" min-width="150"></el-table-column>
+            <el-table-column label="微信" prop="wechat" min-width="150"></el-table-column>
+            <el-table-column label="QQ" prop="qq" min-width="150"></el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template slot-scope="scope">
+                <el-button type="text">编辑信息</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click.native.prevent="deleteRow(scope.$index, contactsData)">删除</el-button>
               </template>
             </el-table-column>
+          </el-table>
+            <!-- 添加 -->
+          <el-table :data="addContacts" v-if="contactAdd" border style="width: 100%"  :show-header="false">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column label="姓名" min-width="150">
+              <template slot-scope="scope"><el-input v-model="scope.row.name"></el-input></template>
+            </el-table-column>
             <el-table-column label="职位" min-width="150">
-              <template v-slot='scope'>
-                <el-select v-model="scope.row.position" placeholder="请选择职位">
-                  <el-option
-                    v-for="item in positionOpts"
-                    :key="item.id"
-                    :label="item.name"
-                    :value="item.id">
-                  </el-option>
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.type">
+                  <el-option v-for="item in positionOpts" :value="item.id" :key="item.id" :label="item.name"></el-option>
                 </el-select>
               </template>
             </el-table-column>
             <el-table-column label="联系电话" min-width="150">
-              <template v-slot='scope'>
-                <el-input v-model="scope.row.phone" placeholder="请输入联系电话"></el-input>
-              </template>
+              <template slot-scope="scope"><el-input v-model="scope.row.phone"></el-input></template>
             </el-table-column>
             <el-table-column label="微信" min-width="150">
-              <template v-slot='scope'>
-                <el-input v-model="scope.row.wechat" placeholder="请输入微信"></el-input>
-              </template>
+              <template slot-scope="scope"><el-input v-model="scope.row.wechat"></el-input></template>
             </el-table-column>
             <el-table-column label="QQ" min-width="150">
-              <template v-slot='scope'>
-                <el-input v-model="scope.row.qq" placeholder="请输入QQ"></el-input>
-              </template>
+              <template slot-scope="scope"><el-input v-model="scope.row.qq"></el-input></template>
             </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template v-slot="scope">
-                <el-button type="text">编辑信息</el-button>
+                <el-button @click="addlxr(scope.row)" type="text">确认</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="delete(scope.row)">删除</el-button>
+                <el-button type="text" @click="cancl(scope.row)">取消</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-row>
         <el-row class="left">
-          <el-button class="orangeBtn">新建联系人</el-button>
-          <el-button class="whiteBtn">批量删除</el-button>
+          <el-button @click="contactAdd=true" class="orangeBtn">新建联系人</el-button>
+          <!-- <el-button class="whiteBtn" @click="lotDel()">批量删除</el-button> -->
         </el-row>
       </div>
       <!-- 收货地址 -->
       <div class="infoBox">
         <el-row class="box_title left">
-          代理联系人资料
+          收货地址
         </el-row>
         <el-row class="table">
-          <el-table :data="receiveAddress" border style="width: 100%" @selection-change="handleSelectionChange2"  :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type="selection" width="55">
-            </el-table-column>
-            <el-table-column label="仓库负责人" min-width="100">
-              <template v-slot='scope'>
-                <el-input v-model="scope.row.name" placeholder="请输入姓名"></el-input>
+          <el-table :data="wareData" border style="width: 100%" @selection-change="handleSelectionChange2"  :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column
+      type="selection"
+      width="55">
+    </el-table-column>
+            <el-table-column label="仓库负责人" prop="name" min-width="80"></el-table-column>
+            <el-table-column label="负责人电话" prop="phone" min-width="90" ></el-table-column>
+            <el-table-column label="地址" prop="address" min-width="300"></el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template slot-scope="scope">
+                <el-button type="text">编辑信息</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click.native.prevent="deleteRowe(scope.$index, wareData)">删除</el-button>
               </template>
             </el-table-column>
-            <el-table-column label="负责人电话" min-width="120">
-              <template v-slot='scope'>
-                <el-input v-model="scope.row.phone" placeholder="请输入负责人电话"></el-input>
-              </template>
+          </el-table>
+            <!-- 添加 -->
+          <el-table :data="addWare" v-if="contactWare" border style="width: 100%"  :show-header="false">
+            <el-table-column type="selection" width="55"></el-table-column>
+            <el-table-column label="仓库负责人" min-width="70">
+              <template slot-scope="scope"><el-input v-model="scope.row.name"></el-input></template>
             </el-table-column>
-            <el-table-column label="仓库地址" min-width="150">
-              <template v-slot='scope'>
-                <el-input v-model="scope.row.address" placeholder="请输入仓库地址"></el-input>
-              </template>
+            <el-table-column label="负责人电话" min-width="90">
+              <template slot-scope="scope"><el-input v-model="scope.row.phone"></el-input></template>
+            </el-table-column>
+            <el-table-column label="地址" min-width="200">
+              <template slot-scope="scope"><el-cascader
+                v-model="warecountyId"
+                :options="options"
+                clearable
+                :props="{value: 'id', label: 'name'}"
+                @change="handleChange"></el-cascader>
+                <el-input v-model="scope.row.address" style="width:50%" placeholder="请输入详细地址"></el-input></template>
             </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template v-slot="scope">
-                <el-button type="text">编辑地址</el-button>
+                <el-button @click="addWaresubmit(scope.row)" type="text">确认</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="delete(scope.row)">删除</el-button>
+                <el-button type="text" @click="cancl1(scope.row)">取消</el-button>
               </template>
             </el-table-column>
           </el-table>
         </el-row>
         <el-row class="left">
-          <el-button class="orangeBtn">新建联系人</el-button>
-          <el-button class="whiteBtn">批量删除</el-button>
+          <el-button @click="contactWare=true" class="orangeBtn">新建收货地址</el-button>
+          <!-- <el-button class="whiteBtn" @click="lotDel()">批量删除</el-button> -->
         </el-row>
       </div>
       <!-- 代理账期 -->
@@ -183,8 +204,8 @@
       <!-- 按钮 -->
       <!-- 其他 -->
       <div class="infoBox">
-        <el-button class="orangeBtn">确 认</el-button>
-        <el-button class="whiteBtn">取 消</el-button>
+        <el-button @click="addSubmit" class="orangeBtn">确 认</el-button>
+        <el-button class="whiteBtn" @click="back">取 消</el-button>
       </div>
     </div>
   </div>
@@ -193,20 +214,34 @@
 export default {
   data () {
     return {
+      contactAdd: false,
+      contactWare: false,
+      index: 0,
+      arr: [],
+      edit: false,
+      warecountyId: null,
+      addContacts: [{
+        name: '',
+        type: '',
+        phone: '',
+        wechat: '',
+        qq: '',
+        id: null
+      }],
       agentName: '',
       agentCode: '', // 代理编码
-      companyAddres: '', // 公司地址
+      companyAddres: [], // 公司地址
       options: [], // 地址三级联动
       address: '', // 详细地址
       contactsData: [
-        {
-          name: '',
-          position: '',
-          phone: '',
-          wechata: '',
-          qq: ''
-        }
       ], // 代理联系人资料
+      wareData: [],
+      addWare: [{
+        name: '',
+        address: '',
+        phone: '',
+        countyId: null
+      }],
       selectContacts: [], // 选中的代理
       positionOpts: [
         {
@@ -237,6 +272,7 @@ export default {
   },
   created () {
     this.getRegion()
+    this.periodSelect()
   },
   methods: {
     getRegion () {
@@ -254,15 +290,126 @@ export default {
         }
       })
     },
+    formatter (row, col) {
+      switch (row.type) {
+        case 1:
+          return '业务联系人'
+        case 2:
+          return '仓库联系人'
+        case 3:
+          return '财务联系人'
+        default:
+          break
+      }
+    },
+    delete (row) {
+      console.log(row)
+    },
+    lotDel () {
+      this.arr && this.arr.forEach(ele => {
+        for (let i = 0; i < this.contactsData.length; i++) {
+          if (this.contactsData[i].name === ele.name) {
+            // this.contactsData.splice(ele, 1)
+            console.log(ele)
+          }
+        }
+      })
+    },
+    addlxr (data) {
+      let obj = {
+        name: data.name,
+        type: data.type,
+        phone: data.phone,
+        wechat: data.wechat,
+        qq: data.qq,
+        index: this.index
+      }
+      console.log(obj)
+      this.contactsData.push(obj)
+      this.addContacts = [{
+        index: '',
+        name: '',
+        type: '',
+        phone: '',
+        wechat: '',
+        qq: ''
+      }]
+      this.index += 1
+      this.contactAdd = false
+    },
+    addWaresubmit (data) {
+      console.log(data)
+      let obj = {
+        name: data.name,
+        address: data.address,
+        phone: data.phone,
+        countyId: this.warecountyId[2]
+      }
+      console.log(obj)
+      this.wareData.push(obj)
+      this.index += 1
+      this.cancl1()
+    },
+    cancl () {
+      this.addContacts = [{
+        name: '',
+        type: '',
+        phone: '',
+        wechat: '',
+        qq: '',
+        index: this.index
+      }]
+      this.contactAdd = false
+    },
+    cancl1 () {
+      this.addWare = [{
+        name: '',
+        address: '',
+        phone: '',
+        countyId: null
+      }]
+      this.contactWare = false
+    },
+    deleteRow (index, rows) {
+      rows.splice(index, 1)
+    },
+    deleteRowe (index, rows) {
+      rows.splice(index, 1)
+    },
+    periodSelect () {
+      this.$api.agent.periodSelect({ keyword: '' }).then(res => {
+        this.accountOpts = res.data
+      })
+    },
     handleChange (val) {
       console.log(val)
     },
     // 联系人选择
     handleSelectionChange (val) {
-      this.selectContacts = []
-      val && val.forEach((item) => {
-        this.selectContacts.push(item)
+      console.log(val)
+      console.log(this.contactsData)
+      this.selectContacts = val
+      this.arr = []
+      console.log(this.selectContacts)
+      this.selectContacts && this.selectContacts.forEach(ele => {
+        for (let i = 0; i < this.contactsData.length; i++) {
+          if (ele.index === this.contactsData[i].index) {
+            let obj = {
+              index: ele.index,
+              name: ele.name
+            }
+            this.arr.push(obj)
+          }
+        }
       })
+      // val && val.forEach((item) => {
+      //   this.selectContacts.push(item)
+      // })
+      // console.log(this.selectContacts)
+      // this.selectContacts.forEach(item => {
+      //
+      // })
+      console.log(this.arr)
     },
     // 收货地址选择
     handleSelectionChange2 (val) {
@@ -270,6 +417,29 @@ export default {
       val && val.forEach((item) => {
         this.selectContacts.push(item)
       })
+    },
+    addSubmit () {
+      let params = {
+        name: this.agentName,
+        code: this.agentCode,
+        countyId: this.companyAddres[2],
+        address: this.address,
+        periodId: this.agentAccount,
+        remark: this.remark,
+        contacts: this.contactsData,
+        agentAddresses: this.wareData
+      }
+      this.$api.agent.agentAdd(params).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.$router.push({ name: 'agentManage' })
+        } else {
+          this.$message.success(res.msg)
+        }
+      })
+    },
+    back () {
+      this.$router.push({ name: 'agentManage' })
     }
   }
 }

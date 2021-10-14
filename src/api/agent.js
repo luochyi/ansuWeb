@@ -15,3 +15,56 @@ export const settingAgentLists = (params) => {
     data: params
   })
 }
+export const agentAdd = (params) => {
+  return axios({
+    url: '/setting/agent/add',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/period/select
+export const periodSelect = (params) => {
+  return axios({
+    url: '/setting/period/select',
+    method: 'post',
+    data: params
+  })
+}
+export const enabled = (params) => {
+  return axios({
+    url: '/setting/agent/enabled',
+    method: 'post',
+    data: params
+  })
+}
+export const disabled = (params) => {
+  return axios({
+    url: '/setting/agent/disabled',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/agent/service/lists代理服务
+export const agentServiceLists = (params) => {
+  return axios({
+    url: '/setting/agent/service/lists',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/agent/service/disabled
+export const serviceDisabled = (params) => {
+  return axios({
+    url: '/setting/agent/service/disabled',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/agent/service/disabled
+export const serviceEnabled = (params) => {
+  return axios({
+    url: '/setting/agent/service/enabled',
+    method: 'post',
+    data: params
+  })
+}

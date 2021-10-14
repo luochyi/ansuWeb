@@ -158,11 +158,12 @@
                 </el-col>
             </el-row>
         <el-row>
-          <el-col :span="24">
+          <el-col :span="24" style="margin:40px">
             <el-transfer
                 filterable
                 filter-placeholder="请输入接口名称"
                 v-model="formData.apis"
+                 :titles="['所有api接口', '已选择api接口']"
                 :data="apis"
                 :props="{key:'id',label:'name'}">
             </el-transfer>
@@ -391,13 +392,14 @@ export default {
 }
 /deep/ .el-dialog {
   text-align: left;
+
 }
 //biankuang
 /deep/ .el-dialog__body {
   padding: 10px 15px;
   border-top: 1px solid rgba(0, 0, 0, 0.06);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
-  height: 200px;
+  height: 600px;
 }
 /deep/ .el-dialog__header {
   padding: 10px 10px;
@@ -412,6 +414,13 @@ export default {
   height: 56px;
   font-size: 16px;
 }
+/deep/.el-transfer-panel{
+  // height: 300px;
+  max-height: 400px;
+}
+/deep/.el-transfer{
+  margin: 20;
+  }
 .contenta {
   margin: 10px;
 }

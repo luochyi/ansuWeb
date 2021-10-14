@@ -525,7 +525,7 @@ export default {
       this.$api.company.position.getSuth(data.value).then(res => {
         this.formData.hasManage = res.data.has_manage === 1
         this.formData.hasDriver = res.data.has_driver === 1
-        this.formData.hasDriver = res.data.has_driver === 1
+        this.formData.hasWarehouse = res.data.has_warehouse === 1
         this.formData.driver.isManage = res.data.driver.is_manage === 1
         this.formData.hasSales = res.data.has_sales === 1
         res.data.manage.menu_ids.forEach(menuId => {

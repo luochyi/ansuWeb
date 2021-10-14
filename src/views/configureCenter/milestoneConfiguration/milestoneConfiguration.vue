@@ -62,7 +62,7 @@
         <template slot-scope="scope">
           <el-button type="text" @click="modify= true"  :disabled="scope.row.type===1"> 修改</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="deletea= true" :disabled="scope.row.type===1"> 删除 </el-button>
+                <el-button type="text" @click="del(scope.row)" :disabled="scope.row.type===1"> 删除 </el-button>
         </template>
       </el-table-column>
       </commonTable>
@@ -149,7 +149,7 @@ export default {
       predictionNo: '',
       columns: [
         { prop: 'name', label: '名称', width: '427', align: 'center' },
-        { prop: 'state', label: '状态', align: 'center', formatter: this.formatter }
+        { prop: 'status', label: '状态', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -172,9 +172,9 @@ export default {
         page: this.page.pageNo,
         limit: this.page.limit
       }
-      // if (this.activeName === '4') {
-      //   params.status = null
-      // }
+      if (this.activeName === '4') { // 全部
+        params.status = null
+      }
       this.$api.configure.milestone.lists(params).then(res => {
         console.log(res)
         res.data.list && res.data.list.forEach(ele => {
@@ -199,12 +199,44 @@ export default {
     handleClick (val) {
       this.getData()
     },
+    del (data) {
+      this.$confirm('是否删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        console.log(data.id)
+        this.$api.configure.milestone.del({ milestoneId: data.id }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消删除'
+        })
+      })
+      console.log(data.id)
+    },
     search () {
       this.getData()
     },
-    // 重新渲染name列
+    // 重新渲染列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
+      switch (row.status) {
+        case 1:
+          return '港前'
+        case 2:
+          return '港前'
+        case 3:
+          return '派件'
+        default:
+          break
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {

@@ -94,12 +94,12 @@ export default {
       agentCode: '',
       agentAccount: '',
       columns: [
-        { prop: 'name', label: '司机', width: '152', align: 'center' },
-        { prop: 'position_name', label: '职位', width: '151', align: 'center' },
-        { prop: 'distribution', label: '区域分配', width: '183', align: 'center', formatter: this.formatter },
+        { prop: 'name', label: '司机', width: '252', align: 'center' },
+        { prop: 'position_name', label: '职位', width: '251', align: 'center' },
+        { prop: 'distribution', label: '区域分配', align: 'center', formatter: this.formatter },
         { prop: 'city', label: '所属城市', width: '198', align: 'center', type: 'slot', slotName: 'city' },
         { prop: 'area', label: '收货区域', width: '198', align: 'center', type: 'slot', slotName: 'area' },
-        { prop: 'status', label: '账号状态', width: '171', align: 'center', formatter: this.formatter }
+        { prop: 'status', label: '账号状态', width: '271', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {

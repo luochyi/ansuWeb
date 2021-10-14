@@ -49,7 +49,7 @@
    <el-form >
     <el-form-item size="large">
     <el-button type="primary" @click="add" class="orangeBtn long2">确定</el-button>
-    <el-button class='whiteBtn long2' style="color:rgba(251, 71, 2, 1)">取消</el-button>
+    <el-button class='whiteBtn long2' @click="back" style="color:rgba(251, 71, 2, 1)">取消</el-button>
     </el-form-item>
    </el-form>
   </div>
@@ -101,6 +101,7 @@ export default {
         this.positions = res.data
       })
     },
+    back () { this.$router.push({ name: 'Employeeaccount' }) },
     add () {
       if (!this.formData.departmentId) {
         this.$message.error('请选择部门') // 错误提示

@@ -141,12 +141,12 @@ export default {
       },
 
       columns: [
-        { prop: 'name', label: '姓名', width: '143', align: 'center' },
+        { prop: 'name', label: '姓名', width: '243', align: 'center' },
         { prop: 'department', label: '部门', width: '157', align: 'center', formatter: this.formatter },
-        { prop: 'role', label: '角色', width: '158', align: 'center', formatter: this.formatter },
-        { prop: 'account', label: '登陆账号', width: '130', align: 'center' },
-        { prop: 'phone', label: '员工手机', width: '144', align: 'center' },
-        { prop: 'status', label: '账户状态', width: '123', align: 'center', formatter: this.formatter }
+        { prop: 'role', label: '角色', width: '258', align: 'center', formatter: this.formatter },
+        { prop: 'account', label: '登陆账号', width: '230', align: 'center' },
+        { prop: 'phone', label: '员工手机', width: '244', align: 'center' },
+        { prop: 'status', label: '账户状态', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -233,6 +233,7 @@ export default {
     reset () {
       this.search.name = ''
       this.search.phone = ''
+      this.getData()
     },
     // 操作按钮列表
     editTableData (row) {},

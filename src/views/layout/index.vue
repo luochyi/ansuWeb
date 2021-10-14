@@ -403,19 +403,19 @@ export default {
                   menuId: '231',
                   path: 'Losssheet',
                   parentId: '231'
-                },
-                {
-                  name: 'Deductgrossprofit',
-                  meta: {
-                    title: '扣毛利',
-                    icon: 'Deductgrossprofit',
-                    hidden: false
-                  },
-                  ID: 232,
-                  menuId: '232',
-                  path: 'Deductgrossprofit',
-                  parentId: '23'
                 }
+                // {
+                //   name: 'Deductgrossprofit',
+                //   meta: {
+                //     title: '扣毛利',
+                //     icon: 'Deductgrossprofit',
+                //     hidden: false
+                //   },
+                //   ID: 232,
+                //   menuId: '232',
+                //   path: 'Deductgrossprofit',
+                //   parentId: '23'
+                // }
               ]
             }
           ]
@@ -481,31 +481,31 @@ export default {
                   parentId: '31'
                 }
               ]
-            },
-            {
-              name: 'subsidiaryChannel',
-              meta: {
-                title: '子公司渠道',
-                icon: 'subsidiaryChannel',
-                hidden: false
-              },
-              ID: 32,
-              menuId: '32',
-              path: 'subsidiaryChannel',
-              parentId: '3'
-            },
-            {
-              name: 'invoiceTemplate',
-              meta: {
-                title: '发票模板',
-                icon: 'invoiceTemplate',
-                hidden: false
-              },
-              ID: 33,
-              menuId: '33',
-              path: 'invoiceTemplate',
-              parentId: '3'
             }
+            // {
+            //   name: 'subsidiaryChannel',
+            //   meta: {
+            //     title: '子公司渠道',
+            //     icon: 'subsidiaryChannel',
+            //     hidden: false
+            //   },
+            //   ID: 32,
+            //   menuId: '32',
+            //   path: 'subsidiaryChannel',
+            //   parentId: '3'
+            // },
+            // {
+            //   name: 'invoiceTemplate',
+            //   meta: {
+            //     title: '发票模板',
+            //     icon: 'invoiceTemplate',
+            //     hidden: false
+            //   },
+            //   ID: 33,
+            //   menuId: '33',
+            //   path: 'invoiceTemplate',
+            //   parentId: '3'
+            // }
           ]
         },
         {
