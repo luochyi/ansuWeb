@@ -14,9 +14,9 @@
             </el-col>
             <el-col :span='13'>
               <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -40,10 +40,10 @@
               <span class='text'>所属账单</span>
             </el-col>
             <el-col :span='13'>
-               <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
         </el-row>
@@ -54,10 +54,10 @@
               <span class='text'>账单状态</span>
             </el-col>
             <el-col :span='13'>
-            <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -66,20 +66,20 @@
             </el-col>
             <el-col :span='13'>
               <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
               <span class='text'>结算方式</span>
             </el-col>
-             <el-col :span='13'>
-                <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+            <el-col :span='13'>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -89,27 +89,27 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-          <!-- 组件 -->
-    <commonTable
-      :columns="columns"
-      :data="tableData"
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
-      <el-table-column
-        slot="table_oper"
-        align="center"
-        fixed="right"
-        label="操作"
-        width="87"
-        :resizable="false"
-      >
-         <template slot-scoped="scoped">
-          <el-button type="text" @click="detailspage"> 核销详情</el-button>
-        </template>
-      </el-table-column>
-    </commonTable>
+        <!-- 组件 -->
+        <commonTable
+            :columns="columns"
+            :data="tableData"
+            :pager="page"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+        >
+          <el-table-column
+              slot="table_oper"
+              align="center"
+              fixed="right"
+              label="操作"
+              width="87"
+              :resizable="false"
+          >
+            <template slot-scoped="scoped">
+              <el-button type="text" @click="detailspage"> 核销详情</el-button>
+            </template>
+          </el-table-column>
+        </commonTable>
       </div>
     </div>
   </div>
@@ -119,72 +119,59 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
-      pageSize: 10, // 默认当前条数
-      currentPage: 1, // 当前页码
-
-      activeName: '1',
-      waybillNo: '', // 运单号
-      customerName: '', // 客户名称
-      customerCode: '', // 客户编码
-      predictionChannel: '', // 预报渠道
-      destination: '', // 目的地
-      zipcode: '', // 目的地邮编
-
       columns: [
-        { prop: 'WriteoffdocNo', label: '核销单号', width: '165', align: 'center' },
-        { prop: 'name', label: '客户名称', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'Customernumber', label: '客户编号', width: '87', align: 'center', formatter: this.formatters },
-        { prop: 'Affiliatedbill', label: '所属账单', width: '165', align: 'center' },
-        { prop: 'Includewaybill', label: '包含运单', width: '89', align: 'center' },
-        { prop: 'Writeoffwaybill', label: '核销运单', width: '89', align: 'center' },
-        { prop: 'Includingexpenses', label: '包含费用', width: '89', align: 'center' },
-        { prop: 'Writeoffexpenses', label: '核销费用', width: '89', align: 'center' },
-        { prop: 'Billamount', label: '账单金额', width: '127', align: 'center' },
-        { prop: 'Writeoffamount', label: '核销金额', width: '99', align: 'center' },
-        { prop: 'Billingstatus', label: '账单状态', width: '99', align: 'center' },
-        { prop: 'Writeoffdate', label: '核销日期', width: '127', align: 'center' },
-        { prop: 'accountdate', label: '外账单日', width: '127', align: 'center' },
-        { prop: 'Settlementmethod', label: '结算方式', width: '85', align: 'center' }
+        { prop: 'write_off_no', label: '核销单号', width: '165', align: 'center' },
+        { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
+        { prop: 'customer_code', label: '客户编号', width: '87', align: 'center' },
+        { prop: 'cost_count', label: '核销费用', width: '165', align: 'center', formatter: this.formatter },
+        { prop: 'amount', label: '核销金额', width: '89', align: 'center', formatter: this.formatter },
+        { prop: 'created_at', label: '核销日期', width: '89', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
         limit: 10,
-        sizes: [1, 5, 10],
+        sizes: [15, 50, 100],
         total: 0
       }
     }
   },
   mounted () {
-    this.tableData = [
-      { OrderNo: 'AS123123423412313', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
-    detailspage () {
-      this.$router.push({ name: 'detailspage' })
-    },
-    handleClick (val) {
-      console.log(val)
+    getData () {
+      this.$api.finance.fare.writeOff.customer.history({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
+      switch (column.property) {
+        case 'cost_count':
+          return row.cost_count + '笔'
+        case 'amount':
+          return row.amount + '元'
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd')
+      }
     },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+    detailspage () {
+      this.$router.push({ name: 'detailspage' })
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // 操作按钮列表
     editTableData (row) {}

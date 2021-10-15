@@ -98,51 +98,6 @@
       @handleCurrentChange="handleCurrentChange"
     >
     <!-- slot -->
-      <template v-slot:jianshu='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="list(slotData)">装箱清单</span>
-      </template>
-      <template v-slot:guiji='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="track(slotData)">更新轨迹</span>
-      </template>
-      <template v-slot:fapiao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Print(slotData)">打印|修改</span>
-      </template>
-      <template v-slot:jiesuan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">详情</span>
-      </template>
-       <template v-slot:gaihuo='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="modify(slotData)">修改</span>
-      </template>
-      <template v-slot:bianhao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="whole(slotData)">全部</span>
-      </template>
-      <template v-slot:rucang='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Warehousing(slotData)">修改</span>
-      </template>
-      <template v-slot:chucang='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Outwarehouse(slotData)">修改</span>
-      </template>
-      <template v-slot:daili='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="agent(slotData)">修改</span>
-      </template>
-      <template v-slot:dailijiesuan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="settlement(slotData)">详情</span>
-      </template>
-      <template v-slot:zhuandanhao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="website(slotData)">查看官网|修改</span>
-      </template>
-       <template v-slot:jiedanhao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Receipt(slotData)">修改</span>
-      </template>
-      <template v-slot:pinming='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Name(slotData)">查看</span>
-      </template>
-      <template v-slot:neibu='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="inside(slotData)">查看</span>
-      </template>
-      <template v-slot:yewuyuan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="salesman(slotData)">查看</span>
-      </template>
       <el-table-column
         slot="table_oper"
         align="center"
@@ -151,10 +106,10 @@
         width="226"
         :resizable="false"
       >
-         <template slot-scoped="scoped">
-          <el-button type="text" @click="registration"> 费运登记</el-button>
+         <template slot-scope="scoped">
+          <el-button type="text" @click="registration(scoped.row)"> 费运登记</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="adopt= true"> 修改尺寸 </el-button>
+                <el-button type="text" @click="adopt= true" > 修改尺寸 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="reject= true"> 查看详情 </el-button>
         </template>
@@ -245,81 +200,45 @@ export default {
       drawerTitle: '装箱清单', // 抽屉标题
 
       columns: [
-        { prop: 'WaybillNo', label: '运单号', width: '140', align: 'center' },
-        { prop: 'OrderNo', label: '预报单号', width: '133', align: 'center' },
-        { prop: 'ForecastNo', label: '客户名称', width: '193', align: 'center', formatter: this.formatter },
-        { prop: 'customerCode', label: '客户编号', width: '118', align: 'center', formatter: this.formatters },
-        { prop: 'Waybillstatus', label: '运单状态', width: '90', align: 'center' },
-        { prop: 'Chargeablefreight', label: '应收费运', width: '90', align: 'center' },
-        { prop: 'registration', label: '应收登级', width: '84', align: 'center' },
-        { prop: 'Collectionconfirmation', label: '收款账单确认', width: '109', align: 'center' },
-        { prop: 'Collectionbill', label: '收款账单收款', width: '107', align: 'center' },
-        { prop: 'Freightpayable', label: '应付费运', width: '89', align: 'center' },
-        { prop: 'registration', label: '应付登记', width: '84', align: 'center' },
-        { prop: 'Paymentbillconfirmation', label: '付款账单确认', width: '109', align: 'center' },
-        { prop: 'Paymentbillpayment', label: '付款账单付款', width: '107', align: 'center' },
-        { prop: 'Singleticketprofit', label: '单票利润', width: '82', align: 'center' },
-        { prop: 'Duedate', label: '应收日期', width: '137', align: 'center' },
-        { prop: 'duedate', label: '应付日期', width: '137', align: 'center' },
-        { prop: 'ReceivingNumber', label: '收货件数', width: '88', align: 'center' },
-        { prop: 'Forecastnumber', label: '预报件数', width: '164', align: 'center', type: 'slot', slotName: 'jianshu' },
-        { prop: 'Problempiece', label: '问题件', width: '89', align: 'center' },
-        { prop: 'Transportationtrack', label: '运输轨迹', width: '133', align: 'center', type: 'slot', slotName: 'guiji' },
-        { prop: 'invoice', label: '发票', width: '188', align: 'center', type: 'slot', slotName: 'fapiao' },
-        { prop: 'Forecasttime', label: '预报时间', width: '179', align: 'center' },
-        { prop: 'Sendingmethod', label: '寄件方式', width: '81', align: 'center' },
-        { prop: 'Squarenumber', label: '方数', width: '70', align: 'center' },
-        { prop: 'Realweight', label: '实重', width: '70', align: 'center' },
-        { prop: 'Volumeweight', label: '材积重', width: '70', align: 'center' },
-        { prop: 'Settlementweight', label: '结算重', width: '111', align: 'center', type: 'slot', slotName: 'jiesuan' },
-        { prop: 'Predictedweight', label: '预报重量', width: '80', align: 'center' },
-        { prop: 'Predictionsquare', label: '预报方数', width: '80', align: 'center' },
-        { prop: 'goodschanged', label: '改货方数', width: '95', align: 'center' },
-        { prop: 'Modifiedweight', label: '改货重量', width: '95', align: 'center' },
-        { prop: 'Modifiedvolumeweight', label: '改货材积重', width: '95', align: 'center' },
-        { prop: 'Changesettlementweight', label: '改货结算重', width: '115', align: 'center', type: 'slot', slotName: 'gaihuo' },
-        { prop: 'Shipmentnumber', label: '货件编号', width: '165', align: 'center', type: 'slot', slotName: 'bianhao' },
-        { prop: 'Ordertype', label: '订单类型', width: '89', align: 'center' },
-        { prop: 'Destinationcountry', label: '目的国', width: '66', align: 'center' },
-        { prop: 'destination', label: '目的地', width: '66', align: 'center' },
-        { prop: 'Destinationzipcode', label: '目的地邮编', width: '123', align: 'center' },
-        { prop: 'Forecastchannel', label: '预报渠道', width: '179', align: 'center' },
-        { prop: 'Warehousingchannel', label: '入仓渠道', width: '179', align: 'center', type: 'slot', slotName: 'rucang' },
-        { prop: 'Exitchannel', label: '出仓渠道', width: '178', align: 'center', type: 'slot', slotName: 'chucang' },
-        { prop: 'Outboundagent', label: '出仓代理', width: '206', align: 'center', type: 'slot', slotName: 'daili' },
-        { prop: 'Agencysettlement', label: '代理结算重', width: '111', align: 'center', type: 'slot', slotName: 'dailijiesuan' },
-        { prop: 'Dispatchtype', label: '派送类型', width: '80', align: 'center' },
-        { prop: 'Dispatchstatus', label: '派送状态', width: '80', align: 'center' },
-        { prop: 'TransferorderNo', label: '转单号', width: '260', align: 'center', type: 'slot', slotName: 'zhuandanhao' },
-        { prop: 'ReceiptNo', label: '接单号', width: '145', align: 'center', type: 'slot', slotName: 'jiedanhao' },
-        { prop: 'declarationtype', label: '报关类型', width: '122', align: 'center' },
-        { prop: 'customs clearance', label: '单独清关', width: '115', align: 'center' },
-        { prop: 'ProductName', label: '品名', width: '103', align: 'center', type: 'slot', slotName: 'pinming' },
-        { prop: 'Declaredvalue', label: '申报价值', width: '81', align: 'center' },
-        { prop: 'Ordertime', label: '下单时间', width: '182', align: 'center' },
-        { prop: 'Customercomments', label: '客户备注', width: '110', align: 'center' },
-        { prop: 'Internalremarks', label: '内部备注', width: '152', align: 'center', type: 'slot', slotName: 'neibu' },
-        { prop: 'Isthereinsurance', label: '是否有保险', width: '92', align: 'center' },
-        { prop: 'salesman', label: '业务员', width: '108', align: 'center', type: 'slot', slotName: 'yewuyuan' }
+        { prop: 'waybill_no', label: '运单号', width: '140', align: 'center' },
+        { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
+        { prop: 'customer_code', label: '客户编号', width: '118', align: 'center' },
+        { prop: 'type', label: '订单类型', width: '90', align: 'center', formatter: this.formatter },
+        { prop: 'status', label: '运单状态', width: '90', align: 'center', formatter: this.formatter },
+        { prop: 'cargoes_num', label: '件数', width: '90', align: 'center' },
+        { prop: 'channel_name', label: '渠道名称', width: '84', align: 'center' },
+        { prop: 'channel_code', label: '渠道编码', width: '109', align: 'center' },
+        { prop: 'created_at', label: '下单时间', width: '89', align: 'center', formatter: this.formatter },
+        { prop: 'trade_type', label: '贸易类型', width: '84', align: 'center', formatter: this.formatter },
+        { prop: 'is_separate_customs_clearance', label: '单独清关', width: '109', align: 'center', formatter: this.formatter },
+        { prop: 'bill_weight', label: '客户结算重', width: '107', align: 'center' },
+        { prop: 'agent_delivery_bill_weight', label: '代理结算重', width: '82', align: 'center' },
+        { prop: 'have_safe', label: '是否投保', width: '137', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
         limit: 10,
-        sizes: [1, 5, 10],
+        sizes: [15, 50, 100],
         total: 0
       }
     }
   },
   mounted () {
-    this.tableData = [
-      { OrderNo: 'AS123123423412313', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
-    registration () {
-      this.$router.push({ name: 'registration' })
+    getData () {
+      this.$api.finance.fare.waybill.lists({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
+    registration (row) {
+      this.$router.push({ name: 'registration', params: row })
     },
     Batchregistration () {
       this.$router.push({ name: 'Batchregistration' })
@@ -329,20 +248,42 @@ export default {
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'type':
+          return row.type === 1 ? 'FBA运单' : '非FBA运单'
+        case 'status':
+          switch (row.status) {
+            case 2:
+              return '已入仓'
+            case 3:
+              return '已出库'
+            case 4:
+              return '已出仓'
+            case 5:
+              return '运输'
+            case 6:
+              return '已签收'
+          }
+          return ''
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd hh:mm:ss')
+        case 'trade_type':
+          return row.created_at === 2 ? '非一般贸易报关' : '一般贸易报关'
+        case 'is_separate_customs_clearance':
+          return row.is_separate_customs_clearance === 1 ? '单独清关' : '非单独清关'
+        case 'have_safe':
+          return row.have_safe === 1 ? '投保' : '不投保'
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // 操作按钮列表
     editTableData (row) {},
