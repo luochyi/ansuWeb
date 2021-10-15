@@ -37,10 +37,10 @@
               <span class='text'>确认状态</span>
             </el-col>
             <el-col :span='13'>
-               <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
         </el-row>
@@ -51,7 +51,7 @@
               <span class='text'>所属公司</span>
             </el-col>
             <el-col :span='13'>
-            <el-input v-model='destination' placeholder='请输入'></el-input>
+              <el-input v-model='destination' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -60,20 +60,20 @@
             </el-col>
             <el-col :span='13'>
               <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
               <span class='text'>确认员</span>
             </el-col>
-             <el-col :span='13'>
-                <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+            <el-col :span='13'>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -83,91 +83,91 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-         <el-row class='tableBtn'>
-             <el-col :span='10' class="left">
+        <el-row class='tableBtn'>
+          <el-col :span='10' class="left">
             <el-button class='stopBtn' @click="Batchexport=true">批量导出Excle</el-button>
             <el-button class='stopBtn' @click="Bulksendmail=true">批量发送邮件</el-button>
-             <el-button class='stopBtn' @click="confirmation=true">批量确认费用</el-button>
+            <el-button class='stopBtn' @click="confirmation=true">批量确认费用</el-button>
           </el-col>
-            <el-col :span='10' class='right'>
-                <el-button class='whiteBtn '>查询条件设置</el-button>
-              <el-button class='whiteBtn '>列表显示设置</el-button>
-            </el-col>
-          </el-row>
-          <br>
-          <!-- 组件 -->
-    <commonTable
-      :columns="columns"
-      :data="tableData"
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
-     <template v-slot:youxiang='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="modify(slotData)">修改</span>
-      </template>
-       <template v-slot:changgui='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">查看详情</span>
-      </template>
-      <template v-slot:shihou='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="View(slotData)">查看详情</span>
-      </template>
-      <template v-slot:yundan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="see(slotData)">查看详情</span>
-      </template>
-       <template v-slot:yewuyuan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看</span>
-      </template>
-      <el-table-column
-        slot="table_oper"
-        align="center"
-        fixed="right"
-        label="操作"
-        width="242"
-        :resizable="false"
-      >
-         <template slot-scoped="scoped">
-          <el-button type="text" @click="detailspage"> 查看详情</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="password= true"> 发送账单 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="password= true"> 导出Excle </el-button>
-        </template>
-      </el-table-column>
-    </commonTable>
+          <el-col :span='10' class='right'>
+            <el-button class='whiteBtn '>查询条件设置</el-button>
+            <el-button class='whiteBtn '>列表显示设置</el-button>
+          </el-col>
+        </el-row>
+        <br>
+        <!-- 组件 -->
+        <commonTable
+            :columns="columns"
+            :data="tableData"
+            :pager="page"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+        >
+          <template v-slot:youxiang='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="modify(slotData)">修改</span>
+          </template>
+          <template v-slot:changgui='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">查看详情</span>
+          </template>
+          <template v-slot:shihou='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="View(slotData)">查看详情</span>
+          </template>
+          <template v-slot:yundan='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="see(slotData)">查看详情</span>
+          </template>
+          <template v-slot:yewuyuan='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看</span>
+          </template>
+          <el-table-column
+              slot="table_oper"
+              align="center"
+              fixed="right"
+              label="操作"
+              width="242"
+              :resizable="false"
+          >
+            <template slot-scoped="scoped">
+              <el-button type="text" @click="detailspage"> 查看详情</el-button>
+              <span style="color: #0084FF; margin: 0px 5px">|</span>
+              <el-button type="text" @click="password= true"> 发送账单</el-button>
+              <span style="color: #0084FF; margin: 0px 5px">|</span>
+              <el-button type="text" @click="password= true"> 导出Excle</el-button>
+            </template>
+          </el-table-column>
+        </commonTable>
 
       </div>
     </div>
-     <!-- 批量导出Excle -->
-   <el-dialog title="批量导出Excle" :visible.sync="Batchexport" width="30%">
-               <div class="input" >
-               <br><span>您确认批量导出这34笔账单的Excle吗？</span><br>
-               </div>
-               <span slot="footer" class="Batchexport-footer">
+    <!-- 批量导出Excle -->
+    <el-dialog title="批量导出Excle" :visible.sync="Batchexport" width="30%">
+      <div class="input">
+        <br><span>您确认批量导出这34笔账单的Excle吗？</span><br>
+      </div>
+      <span slot="footer" class="Batchexport-footer">
                  <el-button class='wuBtn long1'>取消</el-button>
                  <el-button type="primary" @click="Batchexport = false" class='orangeBtn'>确 定</el-button>
                </span>
-            </el-dialog>
-             <!-- 批量发送邮件 -->
-   <el-dialog title="批量发送邮件" :visible.sync="Bulksendmail" width="30%">
-               <div class="input" >
-               <br><span>您确认批量发送这34笔账单的邮件吗？</span><br>
-               </div>
-               <span slot="footer" class="Bulksendmail-footer">
+    </el-dialog>
+    <!-- 批量发送邮件 -->
+    <el-dialog title="批量发送邮件" :visible.sync="Bulksendmail" width="30%">
+      <div class="input">
+        <br><span>您确认批量发送这34笔账单的邮件吗？</span><br>
+      </div>
+      <span slot="footer" class="Bulksendmail-footer">
                  <el-button class='wuBtn long1'>取消</el-button>
                  <el-button type="primary" @click="Bulksendmail = false" class='orangeBtn'>确 定</el-button>
                </span>
-            </el-dialog>
-              <!-- 批量确认费用 -->
-   <el-dialog title="批量确认费用" :visible.sync="confirmation" width="30%">
-               <div class="input" >
-               <br><span>您确认批量确认这34笔账单的费用吗？</span><br>
-               </div>
-               <span slot="footer" class="confirmation-footer">
+    </el-dialog>
+    <!-- 批量确认费用 -->
+    <el-dialog title="批量确认费用" :visible.sync="confirmation" width="30%">
+      <div class="input">
+        <br><span>您确认批量确认这34笔账单的费用吗？</span><br>
+      </div>
+      <span slot="footer" class="confirmation-footer">
                  <el-button class='wuBtn long1'>取消</el-button>
                  <el-button type="primary" @click="confirmation = false" class='orangeBtn'>确 定</el-button>
                </span>
-            </el-dialog>
+    </el-dialog>
   </div>
 </template>
 
@@ -193,20 +193,12 @@ export default {
       confirmation: false, // 批量确认费用
 
       columns: [
-        { prop: 'receivableNo', label: '应收账单号', width: '155', align: 'center' },
-        { prop: 'name', label: '客户名称', width: '193', align: 'center', formatter: this.formatter },
-        { prop: 'Customernumber', label: '客户编号', width: '118', align: 'center', formatter: this.formatters },
-        { prop: 'Openingbalance', label: '期初余额', width: '82', align: 'center' },
-        { prop: 'Settlementperiod', label: '结算周期', width: '220', align: 'center' },
-        { prop: 'Reconciliationstatus', label: '对账确认状态', width: '126', align: 'center' },
-        { prop: 'Customeremail', label: '客户邮箱', width: '189', align: 'center', type: 'slot', slotName: 'youxiang' },
-        { prop: 'Conventionalwaybill', label: '常规运单', width: '126', align: 'center', type: 'slot', slotName: 'changgui' },
-        { prop: 'Expostwaybill', label: '事后运单', width: '114', align: 'center', type: 'slot', slotName: 'shihou' },
-        { prop: 'Totalwaybill', label: '合计运单', width: '126', align: 'center', type: 'slot', slotName: 'yundan' },
-        { prop: 'Settlementamount', label: '结算金额', width: '95', align: 'center' },
-        { prop: 'Affiliatedcompany', label: '所属公司', width: '123', align: 'center' },
-        { prop: 'salesman', label: '业务员', width: '95', align: 'center', type: 'slot', slotName: 'yewuyuan' },
-        { prop: 'Reconciliation', label: '对账确定员', width: '95', align: 'center' }
+        { prop: 'bill_no', label: '应收账单号', width: '155', align: 'center' },
+        { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
+        { prop: 'customer_code', label: '客户编号', width: '118', align: 'center' },
+        { prop: 'created_at', label: '账单日期', width: '82', align: 'center', formatter: this.formatter },
+        { prop: 'wayill_count', label: '运单', width: '220', align: 'center', formatter: this.formatter },
+        { prop: 'amount', label: '结算金额', width: '126', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -218,34 +210,41 @@ export default {
     }
   },
   mounted () {
-    this.tableData = [
-      { OrderNo: 'AS123123423412313', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
+    getData () {
+      this.$api.finance.fare.bill.customer.lists({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
     detailspage () {
       this.$router.push({ name: 'detailspage' })
     },
-    handleClick (val) {
-      console.log(val)
-    },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd')
+        case 'wayill_count':
+          return row.wayill_count + '票'
+        case 'amount':
+          return row.amount + '元'
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // 操作按钮列表
     editTableData (row) {}

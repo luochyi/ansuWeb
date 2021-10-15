@@ -7,6 +7,7 @@ import * as configure from './configure'
 import * as setting from './setting'
 import * as company from './company'
 import * as customer from './customer'
+import * as finance from './finance'
 // 默认全部导出
 
 export default {
@@ -15,5 +16,6 @@ export default {
   configure,
   setting,
   company,
-  customer
+  customer,
+  finance
 }
