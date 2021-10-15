@@ -133,30 +133,30 @@ export default {
               path: 'historyOrder',
               parentId: '1'
             },
-            {
-              name: 'portissues',
-              meta: {
-                title: '港前问题件',
-                icon: 'portissuesIcon',
-                hidden: false
-              },
-              ID: 13,
-              menuId: '13',
-              path: 'portissues',
-              parentId: '1'
-            },
-            {
-              name: 'Postportissues',
-              meta: {
-                title: '港后问题件',
-                icon: 'PostportissuesIcon',
-                hidden: false
-              },
-              ID: 14,
-              menuId: '14',
-              path: 'Postportissues',
-              parentId: '1'
-            },
+            // {
+            //   name: 'portissues',
+            //   meta: {
+            //     title: '港前问题件',
+            //     icon: 'portissuesIcon',
+            //     hidden: false
+            //   },
+            //   ID: 13,
+            //   menuId: '13',
+            //   path: 'portissues',
+            //   parentId: '1'
+            // },
+            // {
+            //   name: 'Postportissues',
+            //   meta: {
+            //     title: '港后问题件',
+            //     icon: 'PostportissuesIcon',
+            //     hidden: false
+            //   },
+            //   ID: 14,
+            //   menuId: '14',
+            //   path: 'Postportissues',
+            //   parentId: '1'
+            // },
             {
               name: 'sjmssq',
               meta: {

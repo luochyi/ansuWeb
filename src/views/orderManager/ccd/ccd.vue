@@ -142,7 +142,7 @@ export default {
       fenquzhongliang: true,
       columns: [
         {
-          prop: 'code',
+          prop: 'eject_no',
           label: '预报单号',
           width: '200',
           align: 'center'
@@ -163,13 +163,13 @@ export default {
           slotName: 'piaoshu'
         },
         {
-          prop: 'name',
+          prop: 'channel_name',
           label: '客户名称',
           width: '250',
           align: 'center'
         },
         {
-          prop: 'khbh',
+          prop: 'agent_name',
           label: '客户编号',
           width: '100',
           align: 'center'
@@ -201,7 +201,7 @@ export default {
           slotName: 'diver'
         },
         {
-          prop: 'js',
+          prop: 'item_count',
           label: '预报件数',
           width: '100',
           align: 'center'
@@ -213,13 +213,13 @@ export default {
           align: 'center'
         },
         {
-          prop: 'ybzl',
+          prop: 'bill_weight',
           label: '预报重量',
           width: '100',
           align: 'center'
         },
         {
-          prop: 'ybfs',
+          prop: 'volume',
           label: '预报方数',
           width: '100',
           align: 'center'
@@ -231,7 +231,7 @@ export default {
           align: 'center'
         },
         {
-          prop: 'hhsj',
+          prop: 'eject_time',
           label: '货好时间',
           width: '100',
           align: 'center'
@@ -254,46 +254,69 @@ export default {
       }
     }
   },
-  created () {
-    this.tableData = [
-      {
-        code: 'YBSZ213232232',
-        type: '已建计划',
-        num: '2票',
-        name: 'sz沙马家具毛衣公司',
-        khbh: 'smjj',
-        status: '通过审批',
-        spr: '张三',
-        diver: '王师傅',
-        js: '2件',
-        address: '上海市普陀区金沙江路 1518 弄',
-        ybzl: '80公斤',
-        ybfs: '90立方',
-        time: '2020年12月9日',
-        hhsj: '14.50',
-        ywy: '张三'
-      },
-      {
-        code: 'YBSZ213232232',
-        type: '已建计划',
-        num: '2票',
-        name: 'sz沙马家具毛衣公司',
-        khbh: 'smjj',
-        status: '通过审批',
-        spr: '张三',
-        diver: '王师傅',
-        js: '2件',
-        address: '上海市普陀区金沙江路 1518 弄',
-        ybzl: '80公斤',
-        ybfs: '90立方',
-        time: '2020年12月9日',
-        hhsj: '14.50',
-        ywy: '张三'
-      }
-    ]
-    this.page.total = 2
+  // created () {
+  //   this.tableData = [
+  //     {
+  //       code: 'YBSZ213232232',
+  //       type: '已建计划',
+  //       num: '2票',
+  //       name: 'sz沙马家具毛衣公司',
+  //       khbh: 'smjj',
+  //       status: '通过审批',
+  //       spr: '张三',
+  //       diver: '王师傅',
+  //       js: '2件',
+  //       address: '上海市普陀区金沙江路 1518 弄',
+  //       ybzl: '80公斤',
+  //       ybfs: '90立方',
+  //       time: '2020年12月9日',
+  //       hhsj: '14.50',
+  //       ywy: '张三'
+  //     },
+  //     {
+  //       code: 'YBSZ213232232',
+  //       type: '已建计划',
+  //       num: '2票',
+  //       name: 'sz沙马家具毛衣公司',
+  //       khbh: 'smjj',
+  //       status: '通过审批',
+  //       spr: '张三',
+  //       diver: '王师傅',
+  //       js: '2件',
+  //       address: '上海市普陀区金沙江路 1518 弄',
+  //       ybzl: '80公斤',
+  //       ybfs: '90立方',
+  //       time: '2020年12月9日',
+  //       hhsj: '14.50',
+  //       ywy: '张三'
+  //     }
+  //   ]
+  //   this.page.total = 2
+  // },
+  mounted () {
+    // 在页面加载前调用获取列表数据函数
+    this.getData()
   },
   methods: {
+    getData () {
+      this.$api.Ordermanagement.ejectLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
+        console.log(res.data) // res是接口返回的结果
+        res.data.list && res.data.list.forEach(ele => {
+          let obj = {
+            id: ele.id,
+            eject_no: ele.eject_no,
+            channel_name: ele.channel_name,
+            agent_name: ele.agent_name,
+            eject_time: ele.eject_time,
+            item_count: ele.item_count,
+            volume: ele.volume,
+            bill_weight: ele.bill_weight
+          }
+          this.tableData.push(obj)
+        })
+        this.page.total = res.data.total // 数据总量
+      })
+    },
     // 重新渲染name列
     formatter (row, column, cellValue) {
       return row.name + '测试'

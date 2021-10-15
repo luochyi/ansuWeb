@@ -4,6 +4,8 @@
       :title="drawerTitle"
       :visible.sync="isVisibleDrawe"
       :with-header="true"
+      :before-close="handleClose"
+      :size="drawerSize"
     >
       <div class="dra-body">
         <slot></slot>
@@ -20,14 +22,22 @@ export default {
   name: 'commonDrawer',
   props: {
     drawerVrisible: Boolean,
-    drawerTitle: String
+    drawerTitle: String,
+    drawerSize: {
+      type: String,
+      default: '30%'
+    }
   },
   data () {
     return {
       isVisibleDrawe: false
     }
   },
-  methods: {},
+  methods: {
+    handleClose () {
+      this.$emit('handleClose', 'Close')
+    }
+  },
   watch: {
     drawerVrisible: {
       handler (newValue) {

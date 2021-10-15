@@ -68,3 +68,35 @@ export const serviceEnabled = (params) => {
     data: params
   })
 }
+export const agentServiceAdd = (params) => {
+  return axios({
+    url: '/setting/agent/service/add',
+    method: 'post',
+    data: params
+  })
+}
+
+// setting/agent/service/price/add
+export const priceAdd = (params) => {
+  return axios({
+    url: '/setting/agent/service/price/add',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/storehouse/fba/select/country
+export const selectFba = (params) => {
+  return axios({
+    url: '/setting/storehouse/fba/select/country',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/country/select
+export const selectCountry = (params) => {
+  return axios({
+    url: '/setting/country/select',
+    method: 'post',
+    data: params
+  })
+}

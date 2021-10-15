@@ -220,7 +220,7 @@ export default {
         obj.push(this.chooseAgent.id)
       }
       if (this.activeName === '1') {
-        this.$api.agent.disabled({ agentServiceIds: obj }).then(res => {
+        this.$api.agent.disabled({ agentIds: obj }).then(res => {
           if (res.code === 0) {
             this.$message.success(res.msg)
             this.getData()
@@ -230,7 +230,7 @@ export default {
           }
         })
       } else if (this.activeName === '2') {
-        this.$api.agent.enabled({ agentServiceIds: obj }).then(res => {
+        this.$api.agent.enabled({ agentIds: obj }).then(res => {
           if (res.code === 0) {
             this.$message.success(res.msg)
             this.getData()
@@ -246,7 +246,8 @@ export default {
     },
     channelService (val) {
       // 根据id查询代理服务
-      this.$router.push({ name: 'channelService', params: { id: val.id } })
+      sessionStorage.setItem('agentId', val.id)
+      this.$router.push({ name: 'channelService' })
     },
     toDetail (val) {
       console.log(val)
