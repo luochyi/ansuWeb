@@ -68,9 +68,9 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <span @click="editZone(scope.row)" class="blue" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span>
+              <!-- <span @click="editZone(scope.row)" class="blue" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span> -->
               <span @click="fqjg(scope.row)" class="blue">分区价格<span style="margin:0px 5px 0px">|</span></span>
-              <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span>
+              <!-- <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span> -->
               <span  v-if="activeName === '1'" @click="stopAgent(scope.row)" class="blue">停用<span style="margin:0px 5px 0px">|</span></span>
               <span v-else-if="activeName === '2'" @click="stopAgent(scope.row)" class="blue">
                   启用<span style="margin:0px 5px 0px">|</span>
@@ -92,11 +92,11 @@
         <div class="iconfont" style="font-size: 58px; color: #FB4702;margin-right: 20px">
           &#xe77d;
         </div>
-        <div v-if="dialogTitle === '停用代理'" class="left">
+        <div v-if="dialogTitle === '停用服务'" class="left">
           <el-row>你是否确认停用</el-row>
           <el-row>代理'{{chooseAgent.name}}'</el-row>
         </div>
-        <div v-else-if="dialogTitle === '启用代理'" class="left">
+        <div v-else-if="dialogTitle === '启用服务'" class="left">
           <el-row>你是否确认启用</el-row>
           <el-row>代理'{{chooseAgent.name}}'</el-row>
         </div>
@@ -110,6 +110,203 @@
         <el-button class="orangeBtn" @click="stopOK">确 定</el-button>
       </span>
     </el-dialog>
+    <commonDrawer :drawerVrisible="drawerVrisible" :drawerSize="drawerSize" @handleClose='addClose' :drawerTitle="drawerTitle" @click="check(slotData)">
+      <div class="dra-content">
+        <!-- 内容区域 -->
+        <div class="circleBox">
+          <el-row style="display:flex;align-items:center">
+            <el-col :span="3" style="display:flex;">
+              <div style="display:flex;flex-direction: column;align-items:center">
+                <div class="circle">1</div>
+                <div>渠道分区</div>
+              </div>
+            </el-col>
+            <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control !== 2 && control !== 3">
+              <div class="circle1">2</div>
+              <div>重量段设置</div>
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control === 2 || control === 3">
+              <div class="circle">2</div>
+              <div>重量段设置</div>
+            </el-col>
+             <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control !== 3">
+              <div class="circle1">3</div>
+              <div>价格维护</div>
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control === 3">
+              <div class="circle">3</div>
+              <div>价格维护</div>
+            </el-col>
+          </el-row>
+        </div>
+        <el-row style="marginTop:10px;textAlign:left">
+          <!-- <el-col :span="6">代理:{{agentName}}</el-col>
+          <el-col :span="6">渠道服务:{{agentServiceName}}</el-col> -->
+        </el-row>
+        <el-row style="marginTop:10px;textAlign:left;">国家/分区名称：<el-input size="mini" style="width:200px" v-model="zonename"></el-input></el-row>
+         <el-row style="marginTop:10px;textAlign:left" v-if="control===1">
+   <!-- 新增分区 -->
+          <el-table :data="zoneData" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column label="国家" prop="countryId" min-width="80"  :formatter="countryformatter"></el-table-column>
+            <el-table-column label="区域类型" prop="scopeType" min-width="90" >
+              <template slot-scope="scope">
+                <span v-if="scope.row.scopeType===1">按国家</span>
+                <span v-else-if="scope.row.scopeType===2">按区域</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="邮编前缀" prop="prefixes" v-if="zoneType===1" min-width="200">
+              <template slot-scope="scope">
+                <span v-for="item,index in scope.row.prefixes" :key="index">{{item}},</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="fba仓库" prop="fbaIds" v-else min-width="200" :formatter="fbaformatter">
+            </el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template slot-scope="scope">
+                <!-- <el-button type="text">修改</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span> -->
+                <el-button type="text" @click.native.prevent="deleteRowe(scope.$index, zoneData)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+            <!-- 添加 -->
+          <el-table :data="addZone" v-if="addTable" border style="width: 100%"  :show-header="false">
+            <el-table-column label="国家" min-width="80">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.countryId" @change='countrychange'>
+                  <el-option v-for="item in countryOptions" :key="item.value" :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="区域类型" min-width="90">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.scopeType" @change='scopeTypechange'>
+                  <el-option v-for="item in areaOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="邮编前缀" min-width="200" v-if="zoneType===1&&scopeType">
+              <template slot-scope="scope">
+                  <el-select
+                  v-model="scope.row.prefixes"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="请输入邮编前缀">
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="fba仓库" min-width="200" v-else-if="zoneType===2&&scopeType">
+               <template slot-scope="scope">
+                  <el-select
+                  v-model="scope.row.fbaIds"
+                  multiple
+                  placeholder="请选择fba仓">
+                  <el-option v-for="item in FbaOptions" :key='item.id' :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template v-slot="scope">
+                <el-button @click="addZoneSubmit(scope.row)" type="text">确认</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click="cancl1(scope.row)">取消</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button @click="addTable=true" style="marginTop:10px" class="orangeBtn">新建分区</el-button>
+        </el-row>
+  <!-- 设置重量区间 -->
+        <el-row style="marginTop:10px;textAlign:left" v-if="control===2">
+          <el-table :data="weights" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column label="序号" min-width="80">
+              <template slot-scope="scope">
+                区间{{scope.$index+1}}
+              </template>
+            </el-table-column>
+            <el-table-column label="最小重量" prop="minWeight" min-width="80" ></el-table-column>
+            <el-table-column label="最大重量" prop="maxWeight" min-width="90" ></el-table-column>
+
+            <el-table-column label="计价方式" prop="priceType" min-width="200" :formatter="priceTypeformatter"></el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template slot-scope="scope">
+                <!-- <el-button type="text" @click="edidewdd(scope)">修改</el-button> -->
+                <!-- <span style="color: #0084FF; margin: 0px 5px">|</span> -->
+                <el-button type="text" @click.native.prevent="deleteRowe(scope.$index, weights)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+            <!-- 添加 -->
+          <el-table :data="addweights" v-if="addweightsTable" border style="width: 100%"  :show-header="false">
+            <el-table-column label="区间" min-width="80">新区间</el-table-column>
+            <el-table-column label="最低重量" min-width="90">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.minWeight"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="最高重量" min-width="90">
+              <template slot-scope="scope">
+                 <el-input v-model="scope.row.maxWeight"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="计价方式" min-width="200">
+              <template slot-scope="scope">
+                  <el-select
+                  v-model="scope.row.priceType"
+                  placeholder="请输入计价方式">
+                  <el-option v-for="item in priceTypeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template v-slot="scope">
+                <el-button @click="addWSubmit(scope.row)" type="text">确认</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click="cancl(scope.row)">取消</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button @click="addweightsTable=true" style="marginTop:10px" class="orangeBtn">新建重量段</el-button>
+        </el-row>
+ <!-- 价格维护 -->
+        <el-row style="marginTop:10px;textAlign:left" v-if="control===3">
+          <span class="tips">价格按金额</span>
+          <el-table :data="amounts" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+
+          </el-table>
+          <span class="tips">价格首续重</span>
+          <el-table :data="firstPrices" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+
+          </el-table>
+          <span class="tips">价格按单价</span>
+          <el-table :data="unitPrices" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+
+          </el-table>
+        </el-row>
+      </div>
+      <!-- 抽屉底部按钮 -->
+      <div slot="footer">
+        <button class="btn-orange" @click="nextPrev(1)" v-if="control===1||control===2">
+          下一步
+        </button>
+        <button class="btn-orange" @click="submit()" v-else>
+          <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button>
+        <button class="whiteBtn" @click="nextPrev(-1)" v-if="control!==1" style="marginRight:10px">
+          上一步
+        </button>
+        <button class="btn-gray" @click="addClose">
+          <span>取消</span>
+        </button>
+      </div>
+    </commonDrawer>
   </div>
 </template>
 
@@ -117,7 +314,60 @@
 export default {
   data () {
     return {
+      zoneType: null, // 派件类型 1快递 2卡派
+      control: 1,
+      firstPrices: [], // 首续重
+      amounts: [], // 金额
+      unitPrices: [], // 单价
+      addTable: false,
+      drawerSize: '50%',
+      drawerVrisible: false,
+      drawerTitle: '设置分区',
+      agentName: '',
+      agentServiceName: '',
+      priceTypeOptions: [
+        // 计价方式
+        {
+          value: 1,
+          label: '单价'
+        },
+        {
+          value: 2,
+          label: '金额'
+        }, {
+          value: 3,
+          label: '首续重'
+        }
+      ],
+      zoneData: [],
+      weights: [], // 重量数组
+      addweights: [ // 新增重量段
+        { minWeight: '', maxWeight: '', priceType: null }
+      ],
+      addweightsTable: false,
+      addZone: [
+        {
+          countryId: '',
+          scopeType: null,
+          prefixes: [],
+          fbaIds: []
+        }
+      ],
+      countryOptions: [],
+      FbaOptions: [],
+      areaOptions: [
+        {
+          value: 1,
+          label: '按国家'
+        },
+        {
+          value: 2,
+          label: '按区域'
+        }
+      ],
       id: null,
+      scopeType: true,
+      zonename: '',
       dialogStop: false,
       dialogTitle: '停用代理',
       activeName: '1', // 标签绑定
@@ -158,8 +408,12 @@ export default {
     }
   },
   created () {
-    this.id = this.$route.params.id
+    this.id = Number(sessionStorage.getItem('agentId'))
     this.getData()
+    //
+    this.$api.agent.selectCountry().then(res => {
+      this.countryOptions = res.data
+    })
   },
   methods: {
     getData () {
@@ -184,6 +438,16 @@ export default {
           this.tableData.push(obj)
         })
       })
+    },
+    fqjg (data) {
+      console.log(data)
+      // let id = data.id
+      this.drawerVrisible = true
+      if (data.type === 1) {
+        this.zoneType = 1
+      } else if (data.type === 2) {
+        this.zoneType = 2
+      }
     },
     batchStop () {
       if (this.chooseArr.length < 1) {
@@ -211,6 +475,16 @@ export default {
         this.dialogTitle = '启用服务'
       }
     },
+    scopeTypechange (data) {
+      console.log(data)
+      if (data === 1) {
+        this.scopeType = false
+        console.log(this.scopeType)
+      } else if (data === 2) {
+        this.scopeType = true
+        console.log(this.scopeType)
+      }
+    },
     stopOK () {
       let obj = []
       if (this.chooseArr.length !== 0) {
@@ -221,7 +495,7 @@ export default {
         obj.push(this.chooseAgent.id)
       }
       if (this.activeName === '1') {
-        this.$api.agent.disabled({ agentIds: obj }).then(res => {
+        this.$api.agent.serviceDisabled({ agentServiceIds: obj }).then(res => {
           if (res.code === 0) {
             this.$message.success(res.msg)
             this.getData()
@@ -231,7 +505,7 @@ export default {
           }
         })
       } else if (this.activeName === '2') {
-        this.$api.agent.enabled({ agentIds: obj }).then(res => {
+        this.$api.agent.serviceEnabled({ agentServiceIds: obj }).then(res => {
           if (res.code === 0) {
             this.$message.success(res.msg)
             this.getData()
@@ -242,7 +516,51 @@ export default {
         })
       }
     },
-    toAdd () {},
+    nextPrev (data) {
+      this.control += data
+    },
+    toAdd () {
+      this.$router.push({ name: 'addAgentService' })
+    },
+    // 国家id类型 只传国家和区域类型
+    addZoneSubmit (data) {
+      console.log(data)
+      let obj = {
+        countryId: data.countryId,
+        scopeType: data.scopeType,
+        prefixes: data.prefixes,
+        fbaIds: data.fbaIds
+      }
+      this.zoneData.push(obj)
+      this.cancl1()
+    },
+    cancl1 () {
+      this.addZone = [
+        {
+          countryId: '',
+          scopeType: null,
+          prefixes: [],
+          fbaIds: []
+        }
+      ]
+      this.addTable = false
+    },
+    addWSubmit (data) {
+      console.log(data)
+      let obj = {
+        minWeight: data.minWeight,
+        maxWeight: data.maxWeight,
+        priceType: data.priceType
+      }
+      this.weights.push(obj)
+      this.cancl()
+    },
+    cancl () {
+      this.addweights = [ // 新增重量段
+        { minWeight: '', maxWeight: '', priceType: null }
+      ]
+      this.addweightsTable = false
+    },
     // 重新渲染name列
     formatter (row, column, cellValue) {
       switch (row.cate) {
@@ -265,7 +583,7 @@ export default {
       this.getData()
     },
     formatters (row, column, cellValue) {
-      switch (row.cate) {
+      switch (row.type) {
         case 1:
           return '快递'
         case 2:
@@ -273,6 +591,12 @@ export default {
         default:
           break
       }
+    },
+    countrychange (data) {
+      console.log(data)
+      this.$api.agent.selectFba({ countryId: data }).then(res => {
+        this.FbaOptions = res.data
+      })
     },
     // 改变页面大小处理
     handleSizeChange (val) {
@@ -286,15 +610,38 @@ export default {
     handleSelectionChange (val) {
       console.log(val)
     },
+    deleteRowe (index, rows) {
+      rows.splice(index, 1)
+    },
+    // indexformatter (row, col) {
+    //   console.log(row)
+    //   return '区间' + row.index
+    // },
+    priceTypeformatter (row, col) {
+      switch (row.priceType) {
+        case 1:
+          return '单价'
+        case 2:
+          return '金额'
+        case 3:
+          return '首续重'
+        default:
+          break
+      }
+    },
     // 查看
     check (val) {
       console.log(val.data)
+    },
+    indexMethod (index) {
+      return index * 2
     },
     // 操作按钮列表
     editTableData (row) {},
     // 关闭抽屉
     addClose () {
       this.drawerVrisible = false
+      this.control = 1
     },
     handleClose () {
       this.dialogStop = false
@@ -305,11 +652,37 @@ export default {
     handleClick (val) {
       // this.activeName = val
       this.getData()
+    },
+    fbaformatter (row, col) {
+      console.log(row.fbaIds)
+      let arr = []
+      row.fbaIds.forEach(element => {
+        for (let i = 0; i < this.FbaOptions.length; i++) {
+          if (this.FbaOptions[i].id === element) {
+            arr.push(this.FbaOptions[i].name)
+          }
+        }
+      })
+      let string = arr.toString()
+      console.log(string)
+      return string
+    },
+    countryformatter (row, col) {
+      console.log(row.countryId)
+      for (let i = 0; i < this.countryOptions.length; i++) {
+        if (this.countryOptions[i].id === row.countryId) {
+          return this.countryOptions[i].name
+        }
+      }
     }
   }
 }
 </script>
 <style lang="scss" scoped>
+.dra-content{
+  padding-top:10px ;
+  padding-left:10px ;
+}
 .blue{
     color: #0084FFFF;
     font-size: 14px;
@@ -321,5 +694,40 @@ export default {
   font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.circleBox{
+  margin: 20px 0 0 10px;
+  padding-bottom: 30px;
+  border-bottom:1px solid #E8EBF2;
+}
+.circle1{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.35);
+}
+.circle{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  background: #FB4702;
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+.tips{
+  color:#FB6024;
+  font-size: 14px;
 }
 </style>
