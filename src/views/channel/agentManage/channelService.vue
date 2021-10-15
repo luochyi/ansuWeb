@@ -147,9 +147,23 @@
         </div>
         <el-row style="marginTop:10px;textAlign:left">
           <!-- <el-col :span="6">代理:{{agentName}}</el-col>
-          <el-col :span="6">渠道服务:{{agentServiceName}}</el-col> -->
+          <del-col :span="6">渠道服务:{{agentServiceName}}</del-col> -->
         </el-row>
-        <el-row style="marginTop:10px;textAlign:left;">国家/分区名称：<el-input size="mini" style="width:200px" v-model="zonename"></el-input></el-row>
+        <div v-if="inhere&&control===1">
+          <el-table :data="fenquData" :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column label="国家/分区" prop="fenqu"></el-table-column>
+              <el-table-column label="操作" width="150" fixed="right">
+              <template slot-scope="scope">
+                <!-- <el-button type="text">修改</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span> -->
+                <el-button type="text" @click.native.prevent="deleteRowa(scope.$index, fenquData)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button @click="addfenqu" style="marginTop:10px" class="orangeBtn">新建分区</el-button>
+        </div>
+        <div v-else-if="!inhere">
+        <el-row style="marginTop:10px;textAlign:left;" >国家/分区名称：<el-input size="mini" style="width:200px" v-model="zonename"></el-input></el-row>
          <el-row style="marginTop:10px;textAlign:left" v-if="control===1">
    <!-- 新增分区 -->
           <el-table :data="zoneData" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
@@ -223,6 +237,7 @@
           </el-table>
           <el-button @click="addTable=true" style="marginTop:10px" class="orangeBtn">新建分区</el-button>
         </el-row>
+        </div>
   <!-- 设置重量区间 -->
         <el-row style="marginTop:10px;textAlign:left" v-if="control===2">
           <el-table :data="weights" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
@@ -279,30 +294,54 @@
         <el-row style="marginTop:10px;textAlign:left" v-if="control===3">
           <span class="tips">价格按金额</span>
           <el-table :data="amounts" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
-
+            <el-table-column  min-width="100" prop="fenqu"></el-table-column>
+            <el-table-column v-for="item,index in weights" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.price"></el-input>
+              </template>
+            </el-table-column>
           </el-table>
           <span class="tips">价格首续重</span>
           <el-table :data="firstPrices" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
-
+            <el-table-column  min-width="100" prop="fenqu"></el-table-column>
+            <el-table-column v-for="item,index in weights" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.price"></el-input>
+              </template>
+            </el-table-column>
           </el-table>
           <span class="tips">价格按单价</span>
           <el-table :data="unitPrices" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
-
+            <el-table-column  min-width="100" prop="fenqu"></el-table-column>
+            <el-table-column v-for="item,index in weights" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.price"></el-input>
+              </template>
+            </el-table-column>
           </el-table>
         </el-row>
       </div>
       <!-- 抽屉底部按钮 -->
       <div slot="footer">
-        <button class="btn-orange" @click="nextPrev(1)" v-if="control===1||control===2">
+        <button class="btn-orange" @click="nextPrev(1)" v-if="control===1&&inhere">
           下一步
         </button>
-        <button class="btn-orange" @click="submit()" v-else>
+        <button class="btn-orange" @click="submitfenqu" v-else-if="!inhere">
+          确定
+        </button>
+        <button class="btn-orange" @click="nextPrev(1)" v-else-if="control===2">
+          下一步
+        </button>
+        <button class="btn-orange" @click="submit()" v-else-if="control===3">
           <span> <i class="el-icon-circle-check"></i>提交</span>
         </button>
         <button class="whiteBtn" @click="nextPrev(-1)" v-if="control!==1" style="marginRight:10px">
           上一步
         </button>
-        <button class="btn-gray" @click="addClose">
+        <button class="btn-gray" @click="addClose" v-if="inhere">
+          <span>取消</span>
+        </button>
+        <button class="btn-gray" @click="addCancl" v-else>
           <span>取消</span>
         </button>
       </div>
@@ -315,16 +354,19 @@ export default {
   data () {
     return {
       zoneType: null, // 派件类型 1快递 2卡派
+      saveData: [],
       control: 1,
       firstPrices: [], // 首续重
       amounts: [], // 金额
       unitPrices: [], // 单价
+      inhere: true,
       addTable: false,
       drawerSize: '50%',
       drawerVrisible: false,
       drawerTitle: '设置分区',
       agentName: '',
       agentServiceName: '',
+      fenquData: [], // 分区
       priceTypeOptions: [
         // 计价方式
         {
@@ -408,9 +450,10 @@ export default {
     }
   },
   created () {
+    // 获取代理id
     this.id = Number(sessionStorage.getItem('agentId'))
     this.getData()
-    //
+    // 国家
     this.$api.agent.selectCountry().then(res => {
       this.countryOptions = res.data
     })
@@ -439,6 +482,7 @@ export default {
         })
       })
     },
+    // 分区价格
     fqjg (data) {
       console.log(data)
       // let id = data.id
@@ -449,6 +493,7 @@ export default {
         this.zoneType = 2
       }
     },
+    // 停用
     batchStop () {
       if (this.chooseArr.length < 1) {
         return this.$message({
@@ -465,6 +510,7 @@ export default {
       }
       this.dialogStop = true
     },
+    // 停用
     stopAgent (val) {
       this.dialogStop = true
       this.chooseAgent = val
@@ -475,6 +521,7 @@ export default {
         this.dialogTitle = '启用服务'
       }
     },
+    // 区域类型切换
     scopeTypechange (data) {
       console.log(data)
       if (data === 1) {
@@ -485,6 +532,36 @@ export default {
         console.log(this.scopeType)
       }
     },
+    // 添加分区（子集菜单）
+    addfenqu () {
+      this.inhere = false
+    },
+    // 添加分区
+    submitfenqu () {
+      this.inhere = true
+      this.fenquData.push({ fenqu: this.zonename })
+      this.addZone = [
+        {
+          countryId: '',
+          scopeType: null,
+          prefixes: [],
+          fbaIds: []
+        }
+      ]
+      this.zoneData.forEach(ele => {
+        let obj = {
+          countryId: ele.countryId,
+          scopeType: ele.scopeType,
+          prefixes: ele.prefixes,
+          fbaIds: ele.fbaIds
+        }
+        this.saveData.push(obj)
+        this.zoneData = []
+        this.zonename = ''
+        console.log(this.saveData)
+      })
+    },
+    // 停用启用
     stopOK () {
       let obj = []
       if (this.chooseArr.length !== 0) {
@@ -516,8 +593,29 @@ export default {
         })
       }
     },
+    // 下一步
     nextPrev (data) {
       this.control += data
+      if (this.control === 3) {
+        this.amounts = []
+        this.firstPrices = []
+        this.unitPrices = []
+        for (let i = 0; i < this.weights.length; i++) {
+          this.fenquData.forEach(ele => {
+            let obj = {
+              fenqu: ele.fenqu,
+              price: ''
+            }
+            if (this.weights[i].priceType === 1) {
+              this.unitPrices.push(obj)
+            } else if (this.weights[i].priceType === 2) {
+              this.amounts.push(obj)
+            } else if (this.weights[i].priceType === 3) {
+              this.firstPrices.push(obj)
+            }
+          })
+        }
+      }
     },
     toAdd () {
       this.$router.push({ name: 'addAgentService' })
@@ -534,6 +632,12 @@ export default {
       this.zoneData.push(obj)
       this.cancl1()
     },
+    addCancl () {
+      this.inhere = true
+      this.cancl1()
+      this.zoneData = []
+    },
+    // 取消
     cancl1 () {
       this.addZone = [
         {
@@ -545,6 +649,7 @@ export default {
       ]
       this.addTable = false
     },
+    // 重量提交
     addWSubmit (data) {
       console.log(data)
       let obj = {
@@ -555,6 +660,7 @@ export default {
       this.weights.push(obj)
       this.cancl()
     },
+    // 取消新增重量
     cancl () {
       this.addweights = [ // 新增重量段
         { minWeight: '', maxWeight: '', priceType: null }
@@ -613,6 +719,9 @@ export default {
     deleteRowe (index, rows) {
       rows.splice(index, 1)
     },
+    deleteRowa (index, rows) {
+      rows.splice(index, 1)
+    },
     // indexformatter (row, col) {
     //   console.log(row)
     //   return '区间' + row.index
@@ -642,6 +751,11 @@ export default {
     addClose () {
       this.drawerVrisible = false
       this.control = 1
+      this.zoneData = []
+      this.inhere = true
+      this.zonename = ''
+      this.saveData = []
+      this.fenquData = []
     },
     handleClose () {
       this.dialogStop = false
