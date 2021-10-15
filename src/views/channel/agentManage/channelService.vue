@@ -295,7 +295,7 @@
           <span class="tips">价格按金额</span>
           <el-table :data="amounts" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column  min-width="100" prop="fenqu"></el-table-column>
-            <el-table-column v-for="item,index in weights" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
+            <el-table-column v-for="item,index in amounts" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
               <template slot-scope="scope">
                 <el-input v-model="scope.row.price"></el-input>
               </template>
@@ -304,7 +304,7 @@
           <span class="tips">价格首续重</span>
           <el-table :data="firstPrices" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column  min-width="100" prop="fenqu"></el-table-column>
-            <el-table-column v-for="item,index in weights" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
+            <el-table-column v-for="item,index in firstPrices" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
               <template slot-scope="scope">
                 <el-input v-model="scope.row.price"></el-input>
               </template>
@@ -313,7 +313,7 @@
           <span class="tips">价格按单价</span>
           <el-table :data="unitPrices" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column  min-width="100" prop="fenqu"></el-table-column>
-            <el-table-column v-for="item,index in weights" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
+            <el-table-column v-for="item,index in unitPrices" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
               <template slot-scope="scope">
                 <el-input v-model="scope.row.price"></el-input>
               </template>
@@ -604,7 +604,9 @@ export default {
           this.fenquData.forEach(ele => {
             let obj = {
               fenqu: ele.fenqu,
-              price: ''
+              price: '',
+              minWeight: ele.minWeight,
+              maxWeight: ele.maxWeight
             }
             if (this.weights[i].priceType === 1) {
               this.unitPrices.push(obj)
