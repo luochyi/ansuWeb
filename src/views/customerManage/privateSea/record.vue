@@ -29,7 +29,7 @@ export default {
       record: '',
       remark: '',
       personnelIds: '',
-      countyId: null
+      countyId: 4
 
     }
   },
@@ -47,7 +47,7 @@ export default {
       this.$api.customer.recordAdd(resData).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
-          this.$router.push({ name: 'add' }) // 添加成功后返回添加客户
+          this.$router.push({ name: 'recordLists' }) // 添加成功后返回拜访记录
         } else {
           this.$message.error(res.msg) // 错误提示
         }
@@ -59,41 +59,6 @@ export default {
       console.log(this.provinceOptions) // 打印级联选择器的options
       this.countyId = val[2] // 区域id
     }
-  },
-  mounted () {
-    // 省市区三级联动
-    this.$api.common.settingRegionAll().then(res => {
-      console.log(res)
-      res.data && res.data.forEach(ele => {
-        let province = {
-          value: ele.id,
-          label: ele.name,
-          children: []
-        }
-        if (province.value === ele.id) {
-          ele.children && ele.children.forEach(eles => {
-            let city = {
-              value: eles.id,
-              label: eles.name,
-              children: []
-            }
-            if (city.value === eles.id) {
-              eles.children && eles.children.forEach(item => {
-                let county = {
-                  value: item.id,
-                  label: item.name
-                }
-                city.children.push(county)
-              })
-            }
-            province.children.push(city)
-          })
-          province.children.push()
-        }
-        province.children.push()
-        this.provinceOptions.push(province)
-      })
-    })
   }
 }
 </script>
