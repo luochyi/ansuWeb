@@ -191,6 +191,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/Financialexpensesicon/Payablemanagement/Payablemanagement/Payablemanagement.vue')
+  }, // createAccountsReceivable
+  {
+    path: '/createAccountsReceivable',
+    name: 'createAccountsReceivable',
+    meta: {
+      title: '应付管理',
+      icon: 'Payablemanagement',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Payablemanagement/Payablemanagement/createAccountsReceivable.vue')
   },
   {
     path: '/Payablemanagement',

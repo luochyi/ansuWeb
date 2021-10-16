@@ -29,7 +29,7 @@
             <el-button class='stopBtn' @click="changes=true">批量申请付款</el-button>
           </el-col>
           </el-row>
-          <br>
+          <br />
           <!-- 组件 -->
     <commonTable
       :columns="columns"
@@ -62,8 +62,8 @@
         :resizable="false"
       >
          <template slot-scoped="scoped">
-            <el-button type="text" @click="password= true"> 导出Excle </el-button>
-            <span style="color: #0084FF; margin: 0px 5px">|</span>
+            <!-- <el-button type="text" @click="password= true"> 导出Excle </el-button> -->
+            <!-- <span style="color: #0084FF; margin: 0px 5px">|</span> -->
           <el-button type="text" @click="detailspage"> 撤销确认</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="password= true"> 申请付款 </el-button>
@@ -75,6 +75,48 @@
 
       </div>
     </div>
+    <el-dialog
+      title="上传代理对账单"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <div>
+        <el-row>
+          <el-col>对账代理：<el-input
+          style="width:40%"
+                    placeholder="请输入内容"
+                    prefix-icon="el-icon-search"
+                    v-model="agent">
+                  </el-input></el-col>
+        </el-row>
+        <el-row>
+          <el-upload
+          class="upload-demo"
+          :headers="uploadhead"
+          :action="`${$baseUrl}/file/upload/file`"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          :on-success="handleAvatarSuccess"
+          name="file"
+          multiple
+          :limit="1"
+          :on-exceed="handleExceed"
+          :file-list="fileList">
+          <span>选择Excel</span>
+        </el-upload>
+        </el-row>
+        <el-row class="diabox2">
+          <span @click="download">下载对账Excel</span>
+          <div>请下载对账专用对Excel</div>
+          <div>如用其他Excel会发生对账数据错误</div>
+        </el-row>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -82,6 +124,12 @@
 export default {
   data () {
     return {
+      uploadhead: {
+        'Ansuex-Manage-Token': sessionStorage.getItem('token')
+      },
+      fileList: [],
+      dialogVisible: false,
+      agent: '', // 对账代理
       total: 50, // 数据数量
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码
@@ -127,10 +175,34 @@ export default {
     detailspage () {
       this.$router.push({ name: 'detailspage' })
     },
-    import () {},
+    download () {
+      // 下载模板
+    },
+    handleAvatarSuccess (res, file) {
+      // this.path = res.data.path 上传成功的回调函数
+    },
+    submit () {
+      this.$router.push({ name: 'createAccountsReceivable' })
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview (file) {
+      console.log(file)
+    },
+    handleExceed (files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove (file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    importBill () {
+      this.dialogVisible = true
+    },
     handleClick (val) {
       console.log(val)
     },
+
     // 重新渲染name列
     formatter (row, column, cellValue) {
       return row.name + '测试'
@@ -149,7 +221,10 @@ export default {
       ]
     },
     // 操作按钮列表
-    editTableData (row) {}
+    editTableData (row) {},
+    handleClose (done) {
+      this.dialogVisible = false
+    }
   }
 }
 </script>
@@ -158,9 +233,27 @@ export default {
 .sub_title{
   margin:20px
 }
+.diabox2{
+border-top:1px solid #E8EBF2;
+padding-top: 20px;
+  span{
+    color: #0091FF;
+    cursor: pointer;
+  }
+  div{
+    color:#FF4D4F;
+  }
+}
+/deep/.el-dialog{
+  text-align: left;
+}
 /deep/ .title {
   height: 56px;
   font-size: 16px;
+}
+/deep/.el-upload{
+  width: 61px;
+  color: #0091FF;
 }
 /deep/ .tableBtn{
   .stopBtn{
