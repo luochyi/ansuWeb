@@ -48,7 +48,7 @@
               <span class='text'>目的地</span>
             </el-col>
             <el-col :span='13'>
-            <el-input v-model='destination' placeholder='请输入'></el-input>
+              <el-input v-model='destination' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -57,17 +57,17 @@
             </el-col>
             <el-col :span='13'>
               <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='7'>
               <span class='text'>目的地邮编</span>
             </el-col>
-             <el-col :span='13'>
-                <el-input v-model='zipcode' placeholder='请输入'></el-input>
+            <el-col :span='13'>
+              <el-input v-model='zipcode' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -77,64 +77,64 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-         <el-row class='tableBtn'>
-            <el-col :span='20' class='right'>
-                <el-button class='whiteBtn '>查询条件设置</el-button>
-              <el-button class='whiteBtn '>列表显示设置</el-button>
-            </el-col>
-          </el-row>
-          <br>
-          <!-- 组件 -->
-     <commonTable
-      :columns="columns"
-      :data="tableData"
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-     >
-     <!-- slot -->
-      <template v-slot:chakan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看</span>
-      </template>
-      <template v-slot:jianshu='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="list(slotData)">装箱清单</span>
-      </template>
-      <template v-slot:feiyong='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="see(slotData)">查看</span>
-      </template>
-      <template v-slot:jiesuan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">详情</span>
-      </template>
-      <template v-slot:neibu='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="remarks(slotData)">查看</span>
-      </template>
-      <el-table-column
-        slot="table_oper"
-        align="center"
-        fixed="right"
-        label="操作"
-        width="152"
-        :resizable="false"
-      >
-         <template slot-scoped="scoped">
-          <el-button type="text" @click="detailspage"> 查看详情</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="password= true"> 查看运单 </el-button>
-        </template>
-      </el-table-column>
-     </commonTable>
+        <el-row class='tableBtn'>
+          <el-col :span='20' class='right'>
+            <el-button class='whiteBtn '>查询条件设置</el-button>
+            <el-button class='whiteBtn '>列表显示设置</el-button>
+          </el-col>
+        </el-row>
+        <br>
+        <!-- 组件 -->
+        <commonTable
+            :columns="columns"
+            :data="tableData"
+            :pager="page"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+        >
+          <!-- slot -->
+          <template v-slot:chakan='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看</span>
+          </template>
+          <template v-slot:jianshu='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="list(slotData)">装箱清单</span>
+          </template>
+          <template v-slot:feiyong='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="see(slotData)">查看</span>
+          </template>
+          <template v-slot:jiesuan='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">详情</span>
+          </template>
+          <template v-slot:neibu='slotData'>
+            {{ slotData.data.info }}<span style="color: #0084FF;cursor:pointer" @click="remarks(slotData)">查看</span>
+          </template>
+          <el-table-column
+              slot="table_oper"
+              align="center"
+              fixed="right"
+              label="操作"
+              width="152"
+              :resizable="false"
+          >
+            <template slot-scoped="scoped">
+              <el-button type="text" @click="detailspage"> 查看详情</el-button>
+              <span style="color: #0084FF; margin: 0px 5px">|</span>
+              <el-button type="text" @click="password= true"> 查看运单</el-button>
+            </template>
+          </el-table-column>
+        </commonTable>
       </div>
     </div>
     <!-- 清单抽屉组件 -->
     <commonDrawer :drawerVrisible="drawerVrisible" :drawerTitle="drawerTitle">
-       <!-- 内容区域 -->
+      <!-- 内容区域 -->
       <div class="dra-content">
         <div class="top">
-              <span class='texta'>箱子：FBA1342342525001</span>
-              <br>
-              <span class='text'>产品：</span>
-              <br>
-              <span class='text'>保温杯2020款
+          <span class='texta'>箱子：FBA1342342525001</span>
+          <br>
+          <span class='text'>产品：</span>
+          <br>
+          <span class='text'>保温杯2020款
                 <el-button class='whiteBtn '>12件</el-button>
                  <el-button type="text" size="mini" @click="() => change(data)">
                   隐藏详情
@@ -142,32 +142,34 @@
               </span>
         </div>
         <div class="biaodan">
-      <el-descriptions class="margin-top"  :column="2" :size="size">
-<el-descriptions-item label="产品中文名">保温杯</el-descriptions-item>
-    <el-descriptions-item label="产品英文名">vacuum cup</el-descriptions-item>
-    <el-descriptions-item label="材质中文名">不锈钢、塑料</el-descriptions-item>
-     <el-descriptions-item label="材质英文名">Stainless steel、 plastic</el-descriptions-item>
-    <el-descriptions-item label="用途中文名">容器、杯子</el-descriptions-item>
-    <el-descriptions-item label="用途英文名">Container、 cup</el-descriptions-item>
-    <el-descriptions-item label="海关编码">14234231</el-descriptions-item>
-    <el-descriptions-item label="申报价格">30$</el-descriptions-item>
-    <el-descriptions-item label="产品品牌">TIGER</el-descriptions-item>
-    <el-descriptions-item label="产品型号">ATX660-2020</el-descriptions-item>
-    <el-descriptions-item label="产品重量">70KG</el-descriptions-item>
-  </el-descriptions>
-   <el-descriptions >
-    <el-descriptions-item label="亚马逊店铺商店">http://www.amazon.cn/dp/B072MKVS7F/ref=Ip-1488436071-1-1？s=shoes&ie=UTF&&qid=1605232976&sr</el-descriptions-item>
-</el-descriptions>
+          <el-descriptions class="margin-top" :column="2" :size="size">
+            <el-descriptions-item label="产品中文名">保温杯</el-descriptions-item>
+            <el-descriptions-item label="产品英文名">vacuum cup</el-descriptions-item>
+            <el-descriptions-item label="材质中文名">不锈钢、塑料</el-descriptions-item>
+            <el-descriptions-item label="材质英文名">Stainless steel、 plastic</el-descriptions-item>
+            <el-descriptions-item label="用途中文名">容器、杯子</el-descriptions-item>
+            <el-descriptions-item label="用途英文名">Container、 cup</el-descriptions-item>
+            <el-descriptions-item label="海关编码">14234231</el-descriptions-item>
+            <el-descriptions-item label="申报价格">30$</el-descriptions-item>
+            <el-descriptions-item label="产品品牌">TIGER</el-descriptions-item>
+            <el-descriptions-item label="产品型号">ATX660-2020</el-descriptions-item>
+            <el-descriptions-item label="产品重量">70KG</el-descriptions-item>
+          </el-descriptions>
+          <el-descriptions>
+            <el-descriptions-item label="亚马逊店铺商店">
+              http://www.amazon.cn/dp/B072MKVS7F/ref=Ip-1488436071-1-1？s=shoes&ie=UTF&&qid=1605232976&sr
+            </el-descriptions-item>
+          </el-descriptions>
         </div>
-         <div class="foot">
+        <div class="foot">
            <span class='text'>保温杯2019款
                 <el-button class='whiteBtn'>10件</el-button>
                  <el-button type="text" size="mini" @click="() => change(data)">
                   查看详情
                 </el-button>
               </span>
-              <br>
-              <span class='text'>保温杯漫威联名版
+          <br>
+          <span class='text'>保温杯漫威联名版
                 <el-button class='whiteBtn '>10件</el-button>
                  <el-button type="text" size="mini" @click="() => change(data)">
                   查看详情
@@ -185,35 +187,35 @@
         </button>
       </div>
     </commonDrawer>
-     <!-- 内部备注抽屉组件 -->
+    <!-- 内部备注抽屉组件 -->
     <commonDrawer :drawerVrisible="drawerVrisibla" :drawerTitle="drawerTitla">
-       <!-- 内容区域 -->
+      <!-- 内容区域 -->
       <div class="dra-content">
         <div class="biaodan">
-      <el-descriptions class="margin-top"  :column="2" :size="size">
-<el-descriptions-item label="所属公司">安速深圳分公司</el-descriptions-item>
-    <el-descriptions-item label="客户名称">深圳爱因美贸易科技有限公司</el-descriptions-item>
-    <el-descriptions-item label="预报单号">YB202012120001</el-descriptions-item>
-     <el-descriptions-item label="运单号">AS202012120001</el-descriptions-item>
-    <el-descriptions-item label="业务员">张三</el-descriptions-item>
-    <el-descriptions-item label="收货司机">李四</el-descriptions-item>
-  </el-descriptions>
-  <el-divider></el-divider>
-   <div class="neibu">
-              <span class='texta'>内部备注</span>
-             <el-descriptions title="货物走以星"  :column="3">
-    <el-descriptions-item>2020年10月11日 14:00</el-descriptions-item>
-    <el-descriptions-item label="备注人">张三-业务</el-descriptions-item>
-    </el-descriptions>
-    <el-descriptions title="以走以星"  :column="3">
-     <el-descriptions-item>2020年10月11日 14:00</el-descriptions-item>
-    <el-descriptions-item label="备注人">李四-操作</el-descriptions-item>
-</el-descriptions>
- <el-descriptions title="已走以星"  :column="3">
-     <el-descriptions-item>2020年10月11日 14:00</el-descriptions-item>
-    <el-descriptions-item label="备注人">王武-操作</el-descriptions-item>
-</el-descriptions>
-        </div>
+          <el-descriptions class="margin-top" :column="2" :size="size">
+            <el-descriptions-item label="所属公司">安速深圳分公司</el-descriptions-item>
+            <el-descriptions-item label="客户名称">深圳爱因美贸易科技有限公司</el-descriptions-item>
+            <el-descriptions-item label="预报单号">YB202012120001</el-descriptions-item>
+            <el-descriptions-item label="运单号">AS202012120001</el-descriptions-item>
+            <el-descriptions-item label="业务员">张三</el-descriptions-item>
+            <el-descriptions-item label="收货司机">李四</el-descriptions-item>
+          </el-descriptions>
+          <el-divider></el-divider>
+          <div class="neibu">
+            <span class='texta'>内部备注</span>
+            <el-descriptions title="货物走以星" :column="3">
+              <el-descriptions-item>2020年10月11日 14:00</el-descriptions-item>
+              <el-descriptions-item label="备注人">张三-业务</el-descriptions-item>
+            </el-descriptions>
+            <el-descriptions title="以走以星" :column="3">
+              <el-descriptions-item>2020年10月11日 14:00</el-descriptions-item>
+              <el-descriptions-item label="备注人">李四-操作</el-descriptions-item>
+            </el-descriptions>
+            <el-descriptions title="已走以星" :column="3">
+              <el-descriptions-item>2020年10月11日 14:00</el-descriptions-item>
+              <el-descriptions-item label="备注人">王武-操作</el-descriptions-item>
+            </el-descriptions>
+          </div>
         </div>
       </div>
       <!-- 抽屉底部按钮 -->
@@ -223,30 +225,30 @@
         </button>
       </div>
     </commonDrawer>
-     <!-- 结算重抽屉组件 -->
+    <!-- 结算重抽屉组件 -->
     <commonDrawer :drawerVrisible="drawerVrisiblb" :drawerTitle="drawerTitlb">
-       <!-- 内容区域 -->
+      <!-- 内容区域 -->
       <div class="dra-content">
-   <div class="jiesuan">
-        <span class='texta'>AS2012090001</span>
-        <br>
-        <el-descriptions >
-        <el-descriptions-item label="客户名称">深圳大成亚马逊贸易科技有限公司</el-descriptions-item>
-        </el-descriptions>
-        <el-divider></el-divider>
-             <el-descriptions :column="1">
-    <el-descriptions-item label="预报渠道">香港UPS红单5000</el-descriptions-item>
-     <el-descriptions-item label="件数">6件</el-descriptions-item>
-      <el-descriptions-item label="备注">走以星</el-descriptions-item>
-    </el-descriptions>
-     <commonTable
-      :columna="columna"
-      :data="tableData"
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-     >
-     </commonTable>
+        <div class="jiesuan">
+          <span class='texta'>AS2012090001</span>
+          <br>
+          <el-descriptions>
+            <el-descriptions-item label="客户名称">深圳大成亚马逊贸易科技有限公司</el-descriptions-item>
+          </el-descriptions>
+          <el-divider></el-divider>
+          <el-descriptions :column="1">
+            <el-descriptions-item label="预报渠道">香港UPS红单5000</el-descriptions-item>
+            <el-descriptions-item label="件数">6件</el-descriptions-item>
+            <el-descriptions-item label="备注">走以星</el-descriptions-item>
+          </el-descriptions>
+          <commonTable
+              :columna="columna"
+              :data="tableData"
+              :pager="page"
+              @handleSizeChange="handleSizeChange"
+              @handleCurrentChange="handleCurrentChange"
+          >
+          </commonTable>
         </div>
       </div>
       <!-- 抽屉底部按钮 -->
@@ -263,27 +265,6 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
-      pageSize: 10, // 默认当前条数
-      currentPage: 1, // 当前页码
-
-      drawerVrisible: false, // 控制抽屉显示隐藏
-      drawerVrisibla: false, // 控制抽屉显示隐藏
-      drawerVrisiblb: false, // 控制抽屉显示隐藏
-      drawerTitle: '装箱清单', // 抽屉标题
-      drawerTitla: '内部备注', // 抽屉标题
-      drawerTitlb: '结算重', // 抽屉标题
-
-      activeName: '1',
-      value: '',
-      options: '',
-      waybillNo: '', // 运单号
-      customerName: '', // 客户名称
-      customerCode: '', // 客户编码
-      predictionChannel: '', // 预报渠道
-      destination: '', // 目的地
-      zipcode: '', // 目的地邮编
-
       columns: [
         { prop: 'OrderNo', label: '安速单号', width: '176', align: 'center' },
         { prop: 'name', label: '客户名称', width: '193', align: 'center', formatter: this.formatter },
@@ -318,7 +299,7 @@ export default {
       page: {
         pageNo: 1,
         limit: 10,
-        sizes: [1, 5, 10],
+        sizes: [15, 50, 100],
         total: 0
       },
       columna: [
@@ -329,17 +310,22 @@ export default {
         { prop: 'Square', label: '方数（㎡）', width: '90', align: 'center' },
         { prop: 'weight', label: '实重（kg）', width: '90', align: 'center' },
         { prop: 'Volume', label: '材积重（kg）', width: '90', align: 'center' }
-
       ]
     }
   },
   mounted () {
-    this.tableData = [
-      { OrderNo: 'AS123123423412313', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
+    getData () {
+      this.$api.finance.fare.confirm.lists({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
     detailspage () {
       this.$router.push({ name: 'detailspage' })
     },
@@ -350,18 +336,15 @@ export default {
     formatter (row, column, cellValue) {
       return row.name + '测试'
     },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
-    },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // 操作按钮列表
     editTableData (row) {},
