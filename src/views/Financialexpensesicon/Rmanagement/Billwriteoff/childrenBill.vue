@@ -3,42 +3,58 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>应收账单</span>
+        <span class='text'>账单核销</span>
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
+        <el-row class="infobox">
+          <el-col :span="6">应付金额：</el-col>
+          <el-col :span="6">账户余额：</el-col>
+          <el-col :span="6"></el-col>
+        </el-row>
         <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
+          <el-col :span='4' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>客户名称</span>
+              <span class='text'>账单号</span>
             </el-col>
-            <el-col :span='13'>
+            <el-col :span='12'>
               <el-select v-model="value" placeholder="请选择">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-col>
           </el-col>
-          <el-col :span='6' class='colbox'>
+          <el-col :span='4' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>客户编码</span>
+              <span class='text'>核销状态</span>
             </el-col>
-            <el-col :span='13'>
+            <el-col :span='12'>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-col>
+          <el-col :span='4' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>外账单日</span>
+            </el-col>
+            <el-col :span='12'>
               <el-input v-model='destination' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
-          <el-col :span='6' class='colbox'>
+          <el-col :span='4' class='colbox'>
             <el-col :span='6'>
               <span class='text'>结算方式</span>
             </el-col>
-            <el-col :span='13'>
+            <el-col :span='12'>
               <el-select v-model="value" placeholder="请选择">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
                 </el-option>
               </el-select>
             </el-col>
           </el-col>
-          <el-col :span='6' class='colbox'>
+          <el-col :span='4' class='colbox' style="float: right;">
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
           </el-col>
@@ -56,11 +72,11 @@
               align="center"
               fixed="right"
               label="操作"
-              width="165"
+              width="86"
               :resizable="false"
           >
-            <template slot-scope="scoped">
-              <el-button type="text" @click="bill(scoped.row)"> 核销账单</el-button>
+            <template slot-scoped="scoped">
+              <el-button type="text" @click="bill"> 核销账单</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -73,40 +89,36 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
-      pageSize: 10, // 默认当前条数
-      currentPage: 1, // 当前页码
-      options: [],
       value: '',
-      activeName: '1',
-      waybillNo: '', // 运单号
-      customerName: '', // 客户名称
-      customerCode: '', // 客户编码
-      predictionChannel: '', // 预报渠道
-      destination: '', // 目的地
-      zipcode: '', // 目的地邮编
-
+      options: [],
+      destination: '',
       columns: [
-        { prop: 'name', label: '客户名称', align: 'center' },
-        { prop: 'code', label: '客户编码', align: 'center' },
-        { prop: 'bill_amount', label: '未核销账单', align: 'center' },
-        { prop: 'amount', label: '账户余额', align: 'center' }
+        { prop: 'bill_no', label: '账单号', width: '193', align: 'center' },
+        { prop: 'write_off_status', label: '核销状态', width: '118', align: 'center', formatter: this.formatter },
+        { prop: 'wayill_count', label: '包含运单', width: '82', align: 'center' },
+        { prop: 'amount', label: '应核销金额', width: '220', align: 'center' },
+        { prop: 'write_off_amount', label: '已核销金额', width: '126', align: 'center' }
       ],
       tableData: [],
       page: {
         pageNo: 1,
         limit: 10,
-        sizes: [15, 50, 100],
+        sizes: [1, 5, 10],
         total: 0
-      }
+      },
+      customerId: 0,
+      billIds: []
     }
   },
   mounted () {
+    this.customerId = this.$route.params.id
+    console.log(this.customerId)
     this.getData()
   },
   methods: {
     getData () {
-      this.$api.finance.fare.writeOff.customer.lists({
+      this.$api.finance.fare.writeOff.customer.bill({
+        customerId: this.customerId,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
@@ -114,18 +126,19 @@ export default {
         this.page.total = res.data.total
       })
     },
-    bill (row) {
-      this.$router.push({ name: 'bill', params: row })
+    bill () {
+      this.$router.push({ name: 'bill' })
     },
     handleClick (val) {
       console.log(val)
     },
+    test () {},
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'write_off_status':
+          return row.write_off_status === 1 ? '未核销' : row.write_off_status === 2 ? '部分核销' : '核销完成'
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
@@ -136,6 +149,13 @@ export default {
     handleCurrentChange (val) {
       this.page.pageNo = val // 设置当前页码为val
       this.getData() // 重新渲染表格
+    },
+    // 复选
+    handleSelectionChange (val) {
+      this.billIds = []
+      val && val.forEach((item) => {
+        this.billIds.push(item.id)
+      })
     },
     // 操作按钮列表
     editTableData (row) {}

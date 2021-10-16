@@ -10,73 +10,16 @@
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>来款时间</span>
-            </el-col>
-            <el-col :span='12'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>收款账号</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
               <span class='text'>来款客户</span>
             </el-col>
             <el-col :span='12'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='4'>
-              <span class='text'>客户编码</span>
-            </el-col>
-            <el-col :span='12'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>操作人</span>
-            </el-col>
-            <el-col :span='12'>
-              <el-input v-model='destination' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>来款状态</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='destination' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>收款单号</span>
-            </el-col>
-            <el-col :span='12'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
+              <el-input></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
-            <el-button class='wuBtn long1'>展 开</el-button>
+            <!-- <el-button class='wuBtn long1'>展 开</el-button> -->
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -86,8 +29,8 @@
           </el-col>
           <el-col :span='10' class='right'>
             <el-button class='whiteBtn' @click="showAdd">新增来款登记</el-button>
-            <el-button class='whiteBtn'>查询条件设置</el-button>
-            <el-button class='whiteBtn'>列表显示设置</el-button>
+            <!-- <el-button class='whiteBtn'>查询条件设置</el-button>
+            <el-button class='whiteBtn'>列表显示设置</el-button> -->
           </el-col>
         </el-row>
         <br>
@@ -108,8 +51,8 @@
               :resizable="false"
           >
             <template slot-scope="scoped">
-              <el-button type="text" @click="detailspage"> 修改</el-button>
-              <span style="color: #0084FF; margin: 0px 5px">|</span>
+              <!-- <el-button type="text" @click="detailspage"> 修改</el-button> -->
+              <!-- <span style="color: #0084FF; margin: 0px 5px">|</span> -->
               <el-button type="text" @click="confirm([scoped.row.id])"> 确认来款</el-button>
               <span style="color: #0084FF; margin: 0px 5px">|</span>
               <el-button type="text" @click="deleted(scoped.row.id)"> 删除</el-button>
@@ -118,6 +61,37 @@
         </commonTable>
       </div>
     </div>
+    <el-dialog
+      title="来款登记"
+      :visible.sync="dialogVisible"
+      width="20%"
+      :before-close="handleClose">
+      <div class="diaContent">
+        <el-form label-position="right" label-width="80px" :model="form">
+          <el-form-item label="来款金额">
+            <el-input v-model="form.amount"></el-input>
+          </el-form-item>
+          <el-form-item label="来款渠道">
+            <el-input v-model="form.channel"></el-input>
+          </el-form-item>
+          <el-form-item label="来款时间">
+            <el-date-picker
+              v-model="form.amountAt"
+              type="date"
+              placeholder="选择日期">
+            </el-date-picker>
+          </el-form-item>
+          <el-form-item label="来款客户">
+            <el-input v-model="form.customerId"></el-input>
+          </el-form-item>
+        </el-form>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="add">提 交</el-button>
+        <!-- <el-button type="primary" @click="editSubmit" v-else>提交修改</el-button> -->
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -125,15 +99,23 @@
 export default {
   data () {
     return {
+      dialogVisible: false,
+      id: null,
+      form: {
+        amount: null,
+        channel: '',
+        amountAt: '',
+        customerId: null
+      },
       columns: [
-        { prop: 'channel', label: '收款渠道', width: '95', align: 'center' },
+        { prop: 'channel', label: '收款渠道', width: '100', align: 'center' },
         { prop: 'amount', label: '来款金额', width: '117', align: 'center' },
-        { prop: 'is_confirm', label: '来款状态', width: '84', align: 'center', formatter: this.formatter },
+        { prop: 'is_confirm', label: '来款状态', width: '100', align: 'center', formatter: this.formatter },
         { prop: 'customer_name', label: '来款客户', width: '214', align: 'center' },
-        { prop: 'customer_code', label: '客户编码', width: '84', align: 'center' },
-        { prop: 'user_name', label: '操作人', width: '79', align: 'center' },
+        { prop: 'customer_code', label: '客户编码', width: '130', align: 'center' },
+        { prop: 'user_name', label: '操作人', width: '100', align: 'center' },
         { prop: 'amount_at', label: '来款时间', width: '184', align: 'center', formatter: this.formatter },
-        { prop: 'created_at', label: '登记时间', width: '193', align: 'center', formatter: this.formatter }
+        { prop: 'created_at', label: '登记时间', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -148,6 +130,35 @@ export default {
     this.getData()
   },
   methods: {
+    handleClose () {
+      this.dialogVisible = false
+      this.form = {
+        amount: null,
+        channel: '',
+        amountAt: '',
+        customerId: null
+      }
+    },
+    showAdd () {
+      this.dialogVisible = true
+    },
+    add () {
+      this.$api.finance.charge.payment.add({
+        amount: Number(this.form.amount),
+        channel: this.form.channel,
+        amountAt: this.form.amountAt,
+        customerId: Number(this.form.customerId)
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+          this.handleClose()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    // editSubmit () {},
     getData () {
       this.$api.finance.charge.payment.lists({}).then(res => {
         this.tableData = res.data.list
@@ -214,6 +225,15 @@ export default {
 /deep/ .title {
   height: 56px;
   font-size: 16px;
+}
+/deep/.el-date-editor.el-input, .el-date-editor.el-input__inner{
+  width: 200px;
+}
+
+.diaContent{
+  /deep/.el-input__inner{
+  width: 200px;
+}
 }
 /deep/ .tableBtn{
   .stopBtn{

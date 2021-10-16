@@ -162,6 +162,16 @@ export default [
     component: () => import('@/views/Financialexpensesicon/Rmanagement/Billwriteoff/bill.vue')
   },
   {
+    path: '/childrenBill',
+    name: 'childrenBill',
+    meta: {
+      title: '账单核销',
+      icon: 'childrenBill',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Rmanagement/Billwriteoff/childrenBill.vue')
+  },
+  {
     path: '/Writeoffrecord',
     name: 'Writeoffrecord',
     meta: {

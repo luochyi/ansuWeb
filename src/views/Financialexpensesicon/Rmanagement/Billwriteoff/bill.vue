@@ -53,9 +53,13 @@
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox' style="float: right;">
-            <el-button @click="test">批量核销</el-button>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
+          </el-col>
+        </el-row>
+        <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
+          <el-col :span='12' class="left">
+            <el-button class='orangeBtn' @click="test">批量核销</el-button>
           </el-col>
         </el-row>
         <!-- 组件 -->
@@ -88,6 +92,9 @@
 export default {
   data () {
     return {
+      value: '',
+      options: [],
+      destination: '',
       columns: [
         { prop: 'bill_no', label: '账单号', width: '193', align: 'center' },
         { prop: 'write_off_status', label: '核销状态', width: '118', align: 'center', formatter: this.formatter },
@@ -123,11 +130,12 @@ export default {
       })
     },
     bill () {
-      this.$router.push({ name: 'bill' })
+      this.$router.push({ name: 'childrenBill' })
     },
     handleClick (val) {
       console.log(val)
     },
+    test () {},
     // 重新渲染name列
     formatter (row, column, cellValue) {
       switch (column.property) {

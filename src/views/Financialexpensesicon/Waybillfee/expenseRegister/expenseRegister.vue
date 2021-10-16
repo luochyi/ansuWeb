@@ -3,7 +3,7 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>运单费用</span>
+        <span class='text'>费用登记</span>
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
@@ -17,66 +17,9 @@
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>客户编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>收据单号</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='waybillNo' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>对账状态</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>结算方式</span>
-            </el-col>
-            <el-col :span='13'>
-            <el-input v-model='destination' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>结算周期</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>业务员</span>
-            </el-col>
-             <el-col :span='13'>
-                <el-input v-model='zipcode' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
-            <el-button class='wuBtn long1'>展开全部</el-button>
+            <!-- <el-button class='wuBtn long1'>展开全部</el-button> -->
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -84,8 +27,8 @@
           <el-col :span='10' class="left">
             <el-button class='stopBtn' @click="Batchregistration">批量登记费用</el-button></el-col>
             <el-col :span='12' class='right'>
-                <el-button class='whiteBtn '>查询条件设置</el-button>
-              <el-button class='whiteBtn '>列表显示设置</el-button>
+                <!-- <el-button class='whiteBtn '>查询条件设置</el-button>
+              <el-button class='whiteBtn '>列表显示设置</el-button> -->
             </el-col>
           </el-row>
           <br>

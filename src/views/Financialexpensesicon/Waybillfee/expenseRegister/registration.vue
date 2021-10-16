@@ -1,109 +1,11 @@
 <template>
   <div class='main'>
-    <div class="two">
-      <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>运单信息</span>
-      </el-row>
-      <el-descriptions class="margin-top" title="AS202012120001" :column="2" :size="size">
-        <el-descriptions-item label="客户名称">深圳沙马家具贸易有限公司</el-descriptions-item>
-        <el-descriptions-item label="业务员">张三</el-descriptions-item>
-      </el-descriptions>
-      <el-descriptions class="margin-top" column="4" :size="size">
-        <el-descriptions-item label="目的国">美国</el-descriptions-item>
-        <el-descriptions-item label="目的国邮编">19999</el-descriptions-item>
-        <el-descriptions-item label="申报价值">1000美元</el-descriptions-item>
-        <el-descriptions-item label="品名">玩具</el-descriptions-item>
-        <el-descriptions-item label="报关类型">一般贸易</el-descriptions-item>
-        <el-descriptions-item label="清关类型">单独清关</el-descriptions-item>
-        <el-descriptions-item label="是否有保险">有保险</el-descriptions-item>
-        <el-descriptions-item label="货物">带电</el-descriptions-item>
-        <el-descriptions-item label="预报渠道">以星特快UPS派送</el-descriptions-item>
-        <el-descriptions-item label="入仓渠道">以星特快UPS派送</el-descriptions-item>
-        <el-descriptions-item label="出仓渠道">以星特快UPS派送</el-descriptions-item>
-        <el-descriptions-item label="入仓代理">天图供应链有限公司</el-descriptions-item>
-        <el-descriptions-item label="结算重">80公斤</el-descriptions-item>
-        <el-descriptions-item label="改货重">10公斤</el-descriptions-item>
-        <el-descriptions-item label="出仓重">70公斤</el-descriptions-item>
-        <el-descriptions-item label="代理结算重">80公斤</el-descriptions-item>
-        <el-descriptions-item label="货物数量">12件</el-descriptions-item>
-      </el-descriptions>
-      <el-descriptions>
-        <el-descriptions-item label="备注">走以星</el-descriptions-item>
-      </el-descriptions>
-      <el-descriptions>
-        <el-descriptions-item label="内部备注">走以星报美森</el-descriptions-item>
-      </el-descriptions>
-    </div>
-    <br>
-    <br>
-    <div class="three">
-      <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>登记费用</span>
-      </el-row>
-      <div class="infoBox">
-        <el-row>
-          <el-col :span='2'>
-            <el-select v-model="formData.amountType">
-              <el-option v-for="item in options.amountType" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span='4'>
-            <el-input v-model='formData.name' placeholder='费用名称'></el-input>
-          </el-col>
-          <el-col :span='2'>
-            <el-input v-model='formData.num' placeholder='数量' type="number"></el-input>
-          </el-col>
-          <el-col :span='3'>
-            <el-input v-model='formData.formula' placeholder='公式'></el-input>
-          </el-col>
-          <el-col :span='2'>
-            <el-input v-model='formData.price' placeholder='单价' type="number"></el-input>
-          </el-col>
-          <el-col :span='2'>
-            <el-select v-model="formData.unit">
-              <el-option v-for="item in options.unit" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span='2'>
-            <el-select v-model="formData.taxType" >
-              <el-option v-for="item in options.taxType" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span='2' v-show="formData.taxType === 1">
-            <el-select v-model="formData.taxRate">
-              <el-option v-for="item in options.taxRate" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span='7'>
-            <el-select v-model="formData.type" placeholder="费用名称">
-              <el-option v-for="item in options.type" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span='7'>
-            <el-select v-model="formData.billTarget" placeholder="结算对象">
-              <el-option v-for="item in options.billTarget" :key="item.value" :label="item.label" :value="item.value">
-              </el-option>
-            </el-select>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1' @click="add">确定</el-button>
-            <el-button class='whiteBtn long1'>重 置</el-button>
-          </el-col>
-        </el-row>
-      </div>
-    </div>
-    <br>
+    <Info :data="waybillData"></Info>
     <div class="four">
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>费用登记单</span>
-        <el-button @click="gen">生成确认单</el-button>
+        <span class='text'>&nbsp;&nbsp;费用登记单</span>
+              <el-button class='whiteBtn ' @click="gen">生成确认单</el-button>
+              <el-button class='orangeBtn long1'  @click="newRegistration">新增费用登记</el-button>
       </el-row>
       <commonTable
           :columns="columns"
@@ -120,7 +22,7 @@
         >
           <template slot-scope="scoped">
             <template v-if="scoped.row.source_type === 3 && scoped.row.is_confirm === 0">
-              <el-button type="text" @click="detailspage"> 修改</el-button>
+              <el-button type="text" @click="edit(scoped.row)"> 修改</el-button>
               <span style="color: #0084FF; margin: 0px 5px">|</span>
               <el-button type="text" @click="deleted(scoped.row)"> 删除</el-button>
             </template>
@@ -128,13 +30,125 @@
         </el-table-column>
       </commonTable>
     </div>
+    <el-dialog
+      title="费用登记"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <div>
+          <div class="infoBox">
+        <el-row class="elrow">
+
+          <el-col :span='12' ><span>类型：</span>
+            <el-select v-model="formData.amountType">
+              <el-option v-for="item in options.amountType" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+        <el-row class="elrow">
+          <el-col :span='12'>
+            <span>费用名称：</span><el-input v-model='formData.name' placeholder='请输入费用名称'></el-input>
+          </el-col>
+        </el-row>
+        <el-row class="elrow">
+          <el-col :span='4'>
+            <span>数量：</span>
+            <el-input v-model='formData.num' placeholder='请输入数量' type="number"></el-input>
+          </el-col>
+          <el-col :span='4'>
+            <span>公式：</span>
+            <el-input v-model='formData.formula' placeholder='请输入公式'></el-input>
+          </el-col>
+        </el-row>
+        <el-row class="elrow">
+          <el-col :span='6'>
+            <span>单价：</span>
+            <el-input v-model='formData.price' placeholder='请输入单价' type="number"></el-input>
+          </el-col>
+          <el-col :span='6'>
+            <span>类型：</span>
+            <el-select v-model="formData.unit">
+              <el-option v-for="item in options.unit" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+        <el-row class="elrow">
+          <el-col :span='4'>
+            <el-select v-model="formData.taxType" >
+              <el-option v-for="item in options.taxType" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-col>
+          <el-col :span='4' v-show="formData.taxType === 1">
+            <el-select v-model="formData.taxRate">
+              <el-option v-for="item in options.taxRate" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+        <el-row class="elrow">
+          <el-col :span='12'>
+            <span>费用类型：</span>
+            <el-select v-model="formData.type" placeholder="请选择费用类型">
+              <el-option v-for="item in options.type" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-col>
+          <el-col :span='12'>
+            <span>结算对象：</span>
+            <el-select v-model="formData.billTarget" placeholder="请选择结算对象">
+              <el-option v-for="item in options.billTarget" :key="item.value" :label="item.label" :value="item.value">
+              </el-option>
+            </el-select>
+          </el-col>
+        </el-row>
+      </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="handleClose">取 消</el-button>
+        <el-button type="primary" @click="add" v-if="costId===null">提 交</el-button>
+        <el-button type="primary" @click="editSubmit" v-else>提交修改</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import Info from '@/views/Financialexpensesicon/component/waybillInfo.vue'
 export default {
+  components: {
+    Info
+  },
   data () {
     return {
+      waybillData: {
+        code: 'AS20201111',
+        customerName: 'XXX公司', // 客户名称
+        salesman: '张三', // 业务员
+        country: '中国', // 目的国
+        postalCode: '11111', // 目的国邮编
+        price: '2000美元', // 申报价值
+        cate: '玩具', // 品名
+        declareType: '一般贸易', // 报关类型
+        clearanceType: '单独清关', // 清关类型
+        isInsurance: 1, // 是否保险 0否1是
+        goods: '带电', // 货物
+        prediction: '以星特快UPS派送', // 预报渠道
+        warehousing: '以星特快UPS派送', // 入仓渠道
+        outwarehouse: '以星特快UPS派送', // 出仓渠道
+        WarehousingAgent: '以星特快UPS派送', // 入仓代理
+        settlementWeight: '100公斤', // 结算重
+        changeWeight: '100公斤', // 改货重
+        outWeight: '100公斤', // 出仓重
+        agentWeight: '100公斤', // 代理结算重
+        num: '10', // 货物数量
+        remarks: '走以星', // 备注
+        inRemarks: '走以星报美森'// 内部备注
+      },
+      dialogVisible: false, // 新增费用登记
+      costId: null,
       basicInfo: {
         waybillId: 0
       },
@@ -159,19 +173,19 @@ export default {
         billTarget: null
       },
       columns: [
-        { prop: 'amount_type', label: '类型', width: '56', align: 'center', formatter: this.formatter },
-        { prop: 'name', label: '费用名称', width: '56', align: 'center' },
-        { prop: 'type', label: '费用类型', width: '56', align: 'center', formatter: this.formatter },
-        { prop: 'bill_target_name', label: '结算对象', width: '56', align: 'center' },
-        { prop: 'price', label: '单价', width: '56', align: 'center' },
-        { prop: 'unit', label: '单位', width: '56', align: 'center', formatter: this.formatter },
-        { prop: 'unit_num', label: '数量', width: '56', align: 'center' },
-        { prop: 'amount', label: '费用', width: '56', align: 'center' },
-        { prop: 'tax_amount', label: '税金', width: '56', align: 'center' },
-        { prop: 'bill_amount', label: '结算费用', width: '56', align: 'center' },
-        { prop: 'user_name', label: '登记员', width: '56', align: 'center' },
-        { prop: 'is_confirm', label: '是否生成确认', width: '56', align: 'center', formatter: this.formatter },
-        { prop: 'is_write_off', label: '是否核销', width: '56', align: 'center', formatter: this.formatter }
+        { prop: 'amount_type', label: '类型', align: 'center', formatter: this.formatter },
+        { prop: 'name', label: '费用名称', align: 'center' },
+        { prop: 'type', label: '费用类型', align: 'center', formatter: this.formatter },
+        { prop: 'bill_target_name', label: '结算对象', align: 'center' },
+        { prop: 'price', label: '单价', align: 'center' },
+        { prop: 'unit', label: '单位', align: 'center', formatter: this.formatter },
+        { prop: 'unit_num', label: '数量', align: 'center' },
+        { prop: 'amount', label: '费用', align: 'center' },
+        { prop: 'tax_amount', label: '税金', align: 'center' },
+        { prop: 'bill_amount', label: '结算费用', align: 'center' },
+        { prop: 'user_name', label: '登记员', align: 'center' },
+        { prop: 'is_confirm', label: '是否生成确认', align: 'center', formatter: this.formatter },
+        { prop: 'is_write_off', label: '是否核销', align: 'center', formatter: this.formatter }
       ],
       tableData: []
     }
@@ -211,6 +225,21 @@ export default {
         this.tableData = res.data
       })
     },
+    edit (data) {
+      // console.log(data)
+      this.costId = data.id
+      this.formData.amountType = data.amount_type
+      this.formData.name = data.name
+      this.formData.num = data.unit_num
+      this.formData.formula = data.formula
+      this.formData.price = data.price
+      this.formData.unit = data.unit
+      this.formData.type = data.type
+      this.formData.taxType = data.tax_type
+      this.formData.taxRate = data.tax_rate
+      this.formData.billTarget = data.bill_target
+      this.dialogVisible = true
+    },
     add () {
       this.$api.finance.fare.enrolment.add({
         waybillId: Number(this.basicInfo.waybillId),
@@ -235,6 +264,30 @@ export default {
         }
       })
     },
+    editSubmit () {
+      this.$api.finance.fare.enrolment.edit({
+        waybillId: Number(this.basicInfo.waybillId),
+        costId: Number(this.costId),
+        amountType: Number(this.formData.amountType),
+        name: this.formData.name,
+        unitNum: Number(this.formData.num),
+        formula: this.formData.formula,
+        price: Number(this.formData.price),
+        unit: Number(this.formData.unit),
+        type: Number(this.formData.type),
+        taxType: Number(this.formData.taxType),
+        taxRate: Number(this.formData.taxRate),
+        billTarget: Number(this.formData.billTarget)
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData()
+          this.handleClose()
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    },
     deleted (row) {
       this.$api.finance.fare.enrolment.deleted({
         waybillId: Number(this.basicInfo.waybillId),
@@ -243,6 +296,7 @@ export default {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.getData()
+          this.handleClose()
         } else {
           this.$message.error(res.msg) // 错误提示
         }
@@ -257,6 +311,25 @@ export default {
           this.$message.error(res.msg) // 错误提示
         }
       })
+    },
+    handleClose () {
+      this.dialogVisible = false
+      this.costId = null
+      this.formData = {
+        amountType: 1,
+        name: '',
+        num: null,
+        formula: '',
+        price: null,
+        unit: 2,
+        type: 2,
+        taxType: 1,
+        taxRate: 3,
+        billTarget: null
+      }
+    },
+    newRegistration () {
+      this.dialogVisible = true
     }
   }
 }
@@ -277,34 +350,22 @@ export default {
   border: 1px solid #E8E8E8;
   text-align: left;
 }
-
+.elrow{
+  margin: 20px;
+}
 .first {
   width: 159px;
   height: 67px;
   border: 1px solid #D9D9D9;
   margin: 20px;
 }
-
-.right {
-  float: left;
-  width: 1028px;
-  height: 988px;
-  background: #E8EBF2;
-  border-radius: 4px;
-  border: 1px solid #E8E8E8;
-  margin: auto 20px;
+/deep/.el-dialog__body{
+  height: 400px;
 }
-
 .one {
   background: #FFFFFF;
   width: 988px;
   height: 63px;
-}
-
-.two {
-  height: 371px;
-  background: #FFFFFF;
-  width: 988px;
 }
 
 .el-descriptions {
@@ -318,7 +379,7 @@ export default {
 .three {
   height: 520px;
   background: #FFFFFF;
-  width: 988px;
+  // width: 988px;
 }
 
 .infoBox {
@@ -368,13 +429,13 @@ export default {
 .three {
   height: 195px;
   background: #FFFFFF;
-  width: 988px;
+  // width: 988px;
 }
 
 .four {
   height: 402px;
   background: #FFFFFF;
-  width: 988px;
+  // width: 988px;
 }
 
 /deep/ .el-dialog {
@@ -397,7 +458,9 @@ export default {
   text-align: left;
   width: 988px;
 }
-
+.long1{
+  width: 120px;
+}
 //biankuang
 /deep/ .el-dialog__body {
   padding: 10px 15px;
