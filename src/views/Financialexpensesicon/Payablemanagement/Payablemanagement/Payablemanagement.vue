@@ -17,80 +17,17 @@
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>客户编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>运单号</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='waybillNo' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>预报日期</span>
-            </el-col>
-            <el-col :span='13'>
-               <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>转单号</span>
-            </el-col>
-            <el-col :span='13'>
-            <el-input v-model='Transfer' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>渠道</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>目的地</span>
-            </el-col>
-             <el-col :span='13'>
-                <el-input v-model='destination' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
-            <el-button class='wuBtn long1'>展开全部</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
          <el-row class='tableBtn'>
              <el-col :span='10' class="left">
-               <el-button class='stopBtn' @click="changes=true">导入对账单</el-button>
-            <el-button class='stopBtn' @click="changes=true">批量导出Excle</el-button>
+               <el-button class='stopBtn' @click="importBill">导入对账单</el-button>
+            <!-- <el-button class='stopBtn' @click="changes=true">批量导出Excle</el-button> -->
             <el-button class='stopBtn' @click="changes=true">批量申请付款</el-button>
           </el-col>
-            <el-col :span='10' class='right'>
-              <el-button class='whiteBtn '>操作日志</el-button>
-                <el-button class='whiteBtn '>查询条件设置</el-button>
-              <el-button class='whiteBtn '>列表显示设置</el-button>
-            </el-col>
           </el-row>
           <br>
           <!-- 组件 -->
@@ -190,6 +127,7 @@ export default {
     detailspage () {
       this.$router.push({ name: 'detailspage' })
     },
+    import () {},
     handleClick (val) {
       console.log(val)
     },

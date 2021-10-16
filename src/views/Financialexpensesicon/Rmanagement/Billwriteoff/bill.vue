@@ -78,8 +78,8 @@
               width="86"
               :resizable="false"
           >
-            <template slot-scoped="scoped">
-              <el-button type="text" @click="bill"> 核销账单</el-button>
+            <template slot-scope="scope">
+              <el-button type="text" @click="bill(scope.row)"> 核销账单</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -129,8 +129,9 @@ export default {
         this.page.total = res.data.total
       })
     },
-    bill () {
-      this.$router.push({ name: 'childrenBill' })
+    bill (row) {
+      console.log(row)
+      this.$router.push({ name: 'childrenBill', params: row })
     },
     handleClick (val) {
       console.log(val)
