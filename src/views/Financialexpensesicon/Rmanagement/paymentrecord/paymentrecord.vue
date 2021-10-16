@@ -55,7 +55,7 @@
               <!-- <span style="color: #0084FF; margin: 0px 5px">|</span> -->
               <el-button type="text" @click="confirm([scoped.row.id])" v-if="scoped.row.is_confirm===0"> 确认来款</el-button>
               <span style="color: #0084FF; margin: 0px 5px" v-if="scoped.row.is_confirm===0">|</span>
-              <el-button type="text" @click="deleted(scoped.row.id)"> 删除</el-button>
+              <el-button type="text" @click="deleted(scoped.row.id)" v-if="scoped.row.is_confirm===0"> 删除</el-button>
             </template>
           </el-table-column>
         </commonTable>
