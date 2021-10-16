@@ -21,7 +21,7 @@
               <el-table-column label="金额"></el-table-column>
           </el-table-column>
           <el-table-column>
-              <el-table-column label="日期"></el-table-column>
+              <el-table-column label="日期" width="200"></el-table-column>
               <el-table-column label="渠道"></el-table-column>
               <el-table-column label="目的地"></el-table-column>
               <el-table-column label="邮编"></el-table-column>
