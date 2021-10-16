@@ -8,9 +8,11 @@
       <!-- 主要内容 -->
       <div class='content'>
         <el-row class="infobox">
-          <el-col :span="6">应付金额：</el-col>
-          <el-col :span="6">账户余额：</el-col>
-          <el-col :span="6"></el-col>
+          <el-col :span="6">应付金额：<span>{{amountPayable}}元</span></el-col>
+          <el-col :span="6">账户余额：<span>{{balance}}元</span></el-col>
+          <el-col :span="6">
+            <el-button class="orangeBtn">核 销</el-button>
+          </el-col>
         </el-row>
         <el-row class='searchbox1'>
           <el-col :span='4' class='colbox'>
@@ -64,21 +66,10 @@
             :columns="columns"
             :data="tableData"
             :pager="page"
+            :paginationShow='false'
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
         >
-          <el-table-column
-              slot="table_oper"
-              align="center"
-              fixed="right"
-              label="操作"
-              width="86"
-              :resizable="false"
-          >
-            <template slot-scoped="scoped">
-              <el-button type="text" @click="bill"> 核销账单</el-button>
-            </template>
-          </el-table-column>
         </commonTable>
       </div>
     </div>
@@ -90,14 +81,17 @@ export default {
   data () {
     return {
       value: '',
+      amountPayable: '',
+      balance: '',
       options: [],
       destination: '',
       columns: [
-        { prop: 'bill_no', label: '账单号', width: '193', align: 'center' },
-        { prop: 'write_off_status', label: '核销状态', width: '118', align: 'center', formatter: this.formatter },
-        { prop: 'wayill_count', label: '包含运单', width: '82', align: 'center' },
-        { prop: 'amount', label: '应核销金额', width: '220', align: 'center' },
-        { prop: 'write_off_amount', label: '已核销金额', width: '126', align: 'center' }
+        { prop: 'bill_no', label: '运单号', width: '200', align: 'center' },
+        { prop: 'feeName', label: '费用名称', width: '200', align: 'center' },
+        { prop: 'type', label: '费用类型', width: '200', align: 'center', formatter: this.formatter },
+        { prop: 'amount', label: '应付金额', width: '220', align: 'center' },
+        { prop: 'affiliatedBill', label: '所属账单', width: '200', align: 'center' },
+        { prop: 'status', label: '核销状态', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -167,9 +161,22 @@ export default {
 .sub_title{
   margin:20px
 }
+.infobox{
+  text-align: left;
+  border-bottom: 1px solid #D8D8D8;
+  padding-bottom: 20px;
+  margin-bottom:20px ;
+  font-size: 14px;
+  span{
+    color: #FB4702;
+  }
+}
 /deep/ .title {
   height: 56px;
   font-size: 16px;
+}
+/deep/.el-table{
+  width: 80%;
 }
 /deep/ .tableBtn{
   .stopBtn{

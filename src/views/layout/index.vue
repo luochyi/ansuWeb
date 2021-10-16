@@ -543,19 +543,19 @@ export default {
               menuId: '41',
               path: 'privateSea',
               parentId: '4'
-            },
-            {
-              name: 'myCustomer',
-              meta: {
-                title: '我的客户',
-                icon: 'predictionIcon',
-                hidden: false
-              },
-              ID: 42,
-              menuId: '42',
-              path: 'myCustomer',
-              parentId: '4'
             }
+            // {
+            //   name: 'myCustomer',
+            //   meta: {
+            //     title: '我的客户',
+            //     icon: 'predictionIcon',
+            //     hidden: false
+            //   },
+            //   ID: 42,
+            //   menuId: '42',
+            //   path: 'myCustomer',
+            //   parentId: '4'
+            // }
           ]
         },
         {
