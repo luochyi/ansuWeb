@@ -64,3 +64,21 @@ export const recordAdd = (params) => {
     data: params
   })
 }
+
+// 客户列表
+export const customerLists = (params) => {
+  return axios({
+    url: '/customer/lists',
+    method: 'post',
+    data: params
+  })
+}
+
+// 客户筛选
+export const customerSelect = () => {
+  return axios({
+    url: '/customer/select',
+    method: 'post',
+    data: { }
+  })
+}

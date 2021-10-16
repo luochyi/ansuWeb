@@ -60,7 +60,7 @@
               :resizable="false"
           >
             <template slot-scope="scoped">
-              <el-button type="text" @click="bill(scoped.row)"> 核销账单</el-button>
+              <el-button type="text" @click="bill(scoped.row.id)"> 核销账单</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -73,19 +73,6 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
-      pageSize: 10, // 默认当前条数
-      currentPage: 1, // 当前页码
-      options: [],
-      value: '',
-      activeName: '1',
-      waybillNo: '', // 运单号
-      customerName: '', // 客户名称
-      customerCode: '', // 客户编码
-      predictionChannel: '', // 预报渠道
-      destination: '', // 目的地
-      zipcode: '', // 目的地邮编
-
       columns: [
         { prop: 'name', label: '客户名称', align: 'center' },
         { prop: 'code', label: '客户编码', align: 'center' },
@@ -114,18 +101,8 @@ export default {
         this.page.total = res.data.total
       })
     },
-    bill (row) {
-      this.$router.push({ name: 'bill', params: row })
-    },
-    handleClick (val) {
-      console.log(val)
-    },
-    // 重新渲染name列
-    formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+    bill (customerId) {
+      this.$router.push({ name: 'bill', params: { customerId: customerId } })
     },
     // 改变页面大小处理
     handleSizeChange (val) {

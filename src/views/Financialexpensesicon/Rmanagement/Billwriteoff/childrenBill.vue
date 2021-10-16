@@ -11,7 +11,7 @@
           <el-col :span="6">应付金额：<span>{{amountPayable}}元</span></el-col>
           <el-col :span="6">账户余额：<span>{{balance}}元</span></el-col>
           <el-col :span="6">
-            <el-button class="orangeBtn">核 销</el-button>
+            <el-button class="orangeBtn" @click="handle">核 销</el-button>
           </el-col>
         </el-row>
         <el-row class='searchbox1'>
@@ -66,9 +66,9 @@
             :columns="columns"
             :data="tableData"
             :pager="page"
-            :paginationShow='false'
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
+            @handleSelectionChange="handleSelectionChange"
         >
         </commonTable>
       </div>
@@ -80,18 +80,13 @@
 export default {
   data () {
     return {
-      value: '',
-      amountPayable: '',
-      balance: '',
-      options: [],
-      destination: '',
       columns: [
-        { prop: 'bill_no', label: '运单号', width: '200', align: 'center' },
-        { prop: 'feeName', label: '费用名称', width: '200', align: 'center' },
+        { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
+        { prop: 'name', label: '费用名称', width: '200', align: 'center' },
         { prop: 'type', label: '费用类型', width: '200', align: 'center', formatter: this.formatter },
         { prop: 'amount', label: '应付金额', width: '220', align: 'center' },
-        { prop: 'affiliatedBill', label: '所属账单', width: '200', align: 'center' },
-        { prop: 'status', label: '核销状态', align: 'center', formatter: this.formatter }
+        { prop: 'bill_no', label: '所属账单', width: '200', align: 'center' },
+        { prop: 'is_write_off', label: '核销状态', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -101,18 +96,19 @@ export default {
         total: 0
       },
       customerId: 0,
-      billIds: []
+      billIds: [],
+      cosIds: []
     }
   },
   mounted () {
-    this.customerId = this.$route.params.id
-    console.log(this.customerId)
+    this.billIds = this.$route.params.billIds
+    this.customerId = this.$route.params.customerId
     this.getData()
   },
   methods: {
     getData () {
-      this.$api.finance.fare.writeOff.customer.bill({
-        customerId: this.customerId,
+      this.$api.finance.fare.writeOff.customer.cost({
+        billIds: this.billIds,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
@@ -123,15 +119,13 @@ export default {
     bill () {
       this.$router.push({ name: 'bill' })
     },
-    handleClick (val) {
-      console.log(val)
-    },
-    test () {},
     // 重新渲染name列
     formatter (row, column, cellValue) {
       switch (column.property) {
-        case 'write_off_status':
-          return row.write_off_status === 1 ? '未核销' : row.write_off_status === 2 ? '部分核销' : '核销完成'
+        case 'type':
+          return row.type === 1 ? '基础运费' : row.type === 2 ? '附加费' : '其他'
+        case 'is_write_off':
+          return row.is_write_off === 1 ? '已核销' : '未核销'
       }
     },
     // 改变页面大小处理
@@ -146,13 +140,24 @@ export default {
     },
     // 复选
     handleSelectionChange (val) {
-      this.billIds = []
+      this.cosIds = []
       val && val.forEach((item) => {
-        this.billIds.push(item.id)
+        this.cosIds.push(item.id)
       })
     },
-    // 操作按钮列表
-    editTableData (row) {}
+    handle () {
+      this.$api.finance.fare.writeOff.customer.handle({
+        customerId: this.customerId,
+        costIds: this.cosIds
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData()
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    }
   }
 }
 </script>
@@ -174,9 +179,6 @@ export default {
 /deep/ .title {
   height: 56px;
   font-size: 16px;
-}
-/deep/.el-table{
-  width: 80%;
 }
 /deep/ .tableBtn{
   .stopBtn{

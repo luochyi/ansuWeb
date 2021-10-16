@@ -59,7 +59,7 @@
         </el-row>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button class='orangeBtn' @click="test">批量核销</el-button>
+            <el-button class='orangeBtn' @click="bill(billIds)">批量核销</el-button>
           </el-col>
         </el-row>
         <!-- 组件 -->
@@ -69,6 +69,7 @@
             :pager="page"
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
+            @handleSelectionChange="handleSelectionChange"
         >
           <el-table-column
               slot="table_oper"
@@ -79,7 +80,7 @@
               :resizable="false"
           >
             <template slot-scope="scope">
-              <el-button type="text" @click="bill(scope.row)"> 核销账单</el-button>
+              <el-button type="text" @click="bill([scope.row.id])"> 核销账单</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -96,10 +97,10 @@ export default {
       options: [],
       destination: '',
       columns: [
-        { prop: 'bill_no', label: '账单号', width: '193', align: 'center' },
-        { prop: 'write_off_status', label: '核销状态', width: '118', align: 'center', formatter: this.formatter },
-        { prop: 'wayill_count', label: '包含运单', width: '82', align: 'center' },
-        { prop: 'amount', label: '应核销金额', width: '220', align: 'center' },
+        { prop: 'bill_no', label: '账单号', align: 'center' },
+        { prop: 'write_off_status', label: '核销状态', align: 'center', formatter: this.formatter },
+        { prop: 'wayill_count', label: '包含运单', align: 'center' },
+        { prop: 'amount', label: '应核销金额', align: 'center' },
         { prop: 'write_off_amount', label: '已核销金额', width: '126', align: 'center' }
       ],
       tableData: [],
@@ -114,8 +115,7 @@ export default {
     }
   },
   mounted () {
-    this.customerId = this.$route.params.id
-    console.log(this.customerId)
+    this.customerId = this.$route.params.customerId
     this.getData()
   },
   methods: {
@@ -129,9 +129,8 @@ export default {
         this.page.total = res.data.total
       })
     },
-    bill (row) {
-      console.log(row)
-      this.$router.push({ name: 'childrenBill', params: row })
+    bill (billIds) {
+      this.$router.push({ name: 'childrenBill', params: { billIds: billIds, customerId: this.customerId } })
     },
     handleClick (val) {
       console.log(val)

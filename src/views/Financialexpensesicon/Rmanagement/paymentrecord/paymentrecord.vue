@@ -53,9 +53,9 @@
             <template slot-scope="scoped">
               <!-- <el-button type="text" @click="detailspage"> 修改</el-button> -->
               <!-- <span style="color: #0084FF; margin: 0px 5px">|</span> -->
-              <el-button type="text" @click="confirm([scoped.row.id])"> 确认来款</el-button>
-              <span style="color: #0084FF; margin: 0px 5px">|</span>
-              <el-button type="text" @click="deleted(scoped.row.id)"> 删除</el-button>
+              <el-button type="text" @click="confirm([scoped.row.id])" v-if="scoped.row.is_confirm===0"> 确认来款</el-button>
+              <span style="color: #0084FF; margin: 0px 5px" v-if="scoped.row.is_confirm===0">|</span>
+              <el-button type="text" @click="deleted(scoped.row.id)" v-if="scoped.row.is_confirm===0"> 删除</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -77,12 +77,20 @@
           <el-form-item label="来款时间">
             <el-date-picker
               v-model="form.amountAt"
-              type="date"
+              type="datetime"
+              value-format="yyyy-MM-dd HH:mm:ss"
               placeholder="选择日期">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="来款客户">
-            <el-input v-model="form.customerId"></el-input>
+            <el-select v-model="form.customerId" filterable placeholder="请选择">
+              <el-option
+                  v-for="item in customers"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-form>
       </div>
@@ -123,11 +131,13 @@ export default {
         limit: 10,
         sizes: [15, 50, 100],
         total: 0
-      }
+      },
+      customers: []
     }
   },
   mounted () {
     this.getData()
+    this.customerSelect()
   },
   methods: {
     handleClose () {
@@ -138,6 +148,11 @@ export default {
         amountAt: '',
         customerId: null
       }
+    },
+    customerSelect () {
+      this.$api.customer.customerSelect().then(res => {
+        this.customers = res.data
+      })
     },
     showAdd () {
       this.dialogVisible = true
