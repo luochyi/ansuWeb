@@ -51,8 +51,7 @@
         >
           <!-- slot -->
           <template v-slot:chakan="slotData">
-            {{ slotData.data.info
-            }}<span
+            {{ slotData.data.info }}<span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
               >查看</span
@@ -150,23 +149,23 @@
           <del-col :span="6">渠道服务:{{agentServiceName}}</del-col> -->
         </el-row>
         <div v-if="inhere&&control===1">
-          <el-table :data="fenquData" :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column label="国家/分区" prop="fenqu"></el-table-column>
+          <el-table :data="formData.zones" :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column label="国家/分区" prop="name"></el-table-column>
               <el-table-column label="操作" width="150" fixed="right">
               <template slot-scope="scope">
-                <!-- <el-button type="text">修改</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span> -->
-                <el-button type="text" @click.native.prevent="deleteRowa(scope.$index, fenquData)">删除</el-button>
+                <el-button type="text" @click="zoneEdit(scope.$index)">修改</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click.native.prevent="zoneDel(scope.$index)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
-          <el-button @click="addfenqu" style="marginTop:10px" class="orangeBtn">新建分区</el-button>
+          <el-button @click="zoneAdd()" style="marginTop:10px" class="orangeBtn">新建分区</el-button>
         </div>
         <div v-else-if="!inhere">
-        <el-row style="marginTop:10px;textAlign:left;" >国家/分区名称：<el-input size="mini" style="width:200px" v-model="zonename"></el-input></el-row>
+        <el-row style="marginTop:10px;textAlign:left;" >国家/分区名称：<el-input size="mini" style="width:200px" v-model="tempData.zone.name"></el-input></el-row>
          <el-row style="marginTop:10px;textAlign:left" v-if="control===1">
    <!-- 新增分区 -->
-          <el-table :data="zoneData" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+          <el-table :data="tempData.zone.areas" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column label="国家" prop="countryId" min-width="80"  :formatter="countryformatter"></el-table-column>
             <el-table-column label="区域类型" prop="scopeType" min-width="90" >
               <template slot-scope="scope">
@@ -176,16 +175,16 @@
             </el-table-column>
             <el-table-column label="邮编前缀" prop="prefixes" v-if="zoneType===1" min-width="200">
               <template slot-scope="scope">
-                <span v-for="item,index in scope.row.prefixes" :key="index">{{item}},</span>
+                <span> {{ scope.row.prefixes.join(',') }} </span>
               </template>
             </el-table-column>
             <el-table-column label="fba仓库" prop="fbaIds" v-else min-width="200" :formatter="fbaformatter">
             </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template slot-scope="scope">
-                <!-- <el-button type="text">修改</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span> -->
-                <el-button type="text" @click.native.prevent="deleteRowe(scope.$index, zoneData)">删除</el-button>
+<!--                <el-button type="text" @click="areaEdit(scope.$index)">修改</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+                <el-button type="text" @click.native.prevent="areaDel(scope.$index)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -240,26 +239,25 @@
         </div>
   <!-- 设置重量区间 -->
         <el-row style="marginTop:10px;textAlign:left" v-if="control===2">
-          <el-table :data="weights" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+          <el-table :data="formData.weights" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column label="序号" min-width="80">
               <template slot-scope="scope">
                 区间{{scope.$index+1}}
               </template>
             </el-table-column>
             <el-table-column label="最小重量" prop="minWeight" min-width="80" ></el-table-column>
-            <el-table-column label="最大重量" prop="maxWeight" min-width="90" ></el-table-column>
-
-            <el-table-column label="计价方式" prop="priceType" min-width="200" :formatter="priceTypeformatter"></el-table-column>
+            <el-table-column label="最大重量" prop="maxWeight" min-width="90" :formatter="columnFormat"></el-table-column>
+            <el-table-column label="计价方式" prop="priceType" min-width="200" :formatter="columnFormat"></el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template slot-scope="scope">
-                <!-- <el-button type="text" @click="edidewdd(scope)">修改</el-button> -->
-                <!-- <span style="color: #0084FF; margin: 0px 5px">|</span> -->
-                <el-button type="text" @click.native.prevent="deleteRowe(scope.$index, weights)">删除</el-button>
+<!--                 <el-button type="text" @click="weightEdit(scope.$index)">修改</el-button>
+                 <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+                <el-button type="text" @click.native.prevent="weightDel(scope.$index)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
             <!-- 添加 -->
-          <el-table :data="addweights" v-if="addweightsTable" border style="width: 100%"  :show-header="false">
+          <el-table :data="tempData.weights" v-if="addweightsTable" border style="width: 100%"  :show-header="false">
             <el-table-column label="区间" min-width="80">新区间</el-table-column>
             <el-table-column label="最低重量" min-width="90">
               <template slot-scope="scope">
@@ -282,40 +280,57 @@
             </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template v-slot="scope">
-                <el-button @click="addWSubmit(scope.row)" type="text">确认</el-button>
+                <el-button @click="weightSubmit(scope.$index)" type="text">确认</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="cancl(scope.row)">取消</el-button>
               </template>
             </el-table-column>
           </el-table>
-          <el-button @click="addweightsTable=true" style="marginTop:10px" class="orangeBtn">新建重量段</el-button>
+          <el-button @click="weightAdd" style="marginTop:10px" class="orangeBtn">新建重量段</el-button>
         </el-row>
  <!-- 价格维护 -->
         <el-row style="marginTop:10px;textAlign:left" v-if="control===3">
-          <span class="tips">价格按金额</span>
-          <el-table :data="amounts" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column  min-width="100" prop="fenqu"></el-table-column>
-            <el-table-column v-for="item,index in amounts" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
+          <span class="tips" v-show="tempData.unitPrices.length > 0">价格按金额</span>
+          <el-table :data="tempData.unitPrices" v-show="tempData.unitPrices.length > 0" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column  min-width="100" prop="name" :formatter="columnFormat"></el-table-column>
+            <el-table-column v-for="(item, index) in tempData.unitWeights" :key="index" :label="item.weight.minWeight+'-'+(item.weight.maxWeight === 99999999 ? 'MAX' : item.weight.maxWeight)+'公斤'" min-width="150" >
               <template slot-scope="scope">
-                <el-input v-model="scope.row.price"></el-input>
+                <el-input v-model="scope.row.cols[item.weightIndex].price"></el-input>
               </template>
             </el-table-column>
           </el-table>
-          <span class="tips">价格首续重</span>
-          <el-table :data="firstPrices" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column  min-width="100" prop="fenqu"></el-table-column>
-            <el-table-column v-for="item,index in firstPrices" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
-              <template slot-scope="scope">
-                <el-input v-model="scope.row.price"></el-input>
-              </template>
+          <span class="tips" v-show="tempData.firstPrices.length > 0">价格首续重</span>
+          <el-table :data="tempData.firstPrices" v-show="tempData.firstPrices.length > 0" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column  min-width="100" prop="name" :formatter="columnFormat"></el-table-column>
+            <el-table-column v-for="(item,index) in tempData.firstWeights" :key="index" :label="item.weight.minWeight+'-'+(item.weight.maxWeight === 99999999 ? 'MAX' : item.weight.maxWeight)+'公斤'" min-width="150" >
+              <el-table-column label="首重重量">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.cols[item.weightIndex].firstWeight"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="首重价格">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.cols[item.weightIndex].firstWeightPrice"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="续重重量">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.cols[item.weightIndex].additionalWeight"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="续重价格">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.cols[item.weightIndex].additionalWeightPrice"></el-input>
+                </template>
+              </el-table-column>
             </el-table-column>
           </el-table>
-          <span class="tips">价格按单价</span>
-          <el-table :data="unitPrices" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column  min-width="100" prop="fenqu"></el-table-column>
-            <el-table-column v-for="item,index in unitPrices" :key="index" :label="item.minWeight+'-'+item.maxWeight+'公斤'" min-width="150" >
+          <span class="tips" v-show="tempData.amountPrices.length > 0">价格按单价</span>
+          <el-table :data="tempData.amountPrices" v-show="tempData.amountPrices.length > 0" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column  min-width="100" prop="name" :formatter="columnFormat"></el-table-column>
+            <el-table-column v-for="(item,index) in tempData.amountWeights" :key="index" :label="item.weight.minWeight+'-'+(item.weight.maxWeight === 99999999 ? 'MAX' : item.weight.maxWeight)+'公斤'" min-width="150" >
               <template slot-scope="scope">
-                <el-input v-model="scope.row.price"></el-input>
+                <el-input v-model="scope.row.cols[item.weightIndex].price"></el-input>
               </template>
             </el-table-column>
           </el-table>
@@ -446,6 +461,25 @@ export default {
         limit: 10,
         sizes: [1, 5, 10],
         total: 0
+      },
+      tempData: {
+        zone: { zoneIndex: -1, name: '', areas: [] },
+        weights: [{ weightIndex: -1, maxWeight: 0, priceType: null }],
+        unitWeights: [],
+        unitPrices: [],
+        amountWeights: [],
+        amountPrices: [],
+        firstWeights: [],
+        firstPrices: []
+      },
+      formData: {
+        agentServiceId: 1,
+        zones: [],
+        weights: [],
+        unitPrices: [],
+        amounts: [],
+        firstPrices: [],
+        planTime: ''
       }
     }
   },
@@ -485,7 +519,7 @@ export default {
     // 分区价格
     fqjg (data) {
       console.log(data)
-      // let id = data.id
+      this.formData.agentServiceId = data.id
       this.drawerVrisible = true
       if (data.type === 1) {
         this.zoneType = 1
@@ -560,6 +594,11 @@ export default {
         this.zonename = ''
         console.log(this.saveData)
       })
+      if (this.tempData.zone.zoneIndex !== -1) {
+        this.formData.zones[this.tempData.zone.zoneIndex] = this.tempData.zone
+      } else {
+        this.formData.zones.push(this.tempData.zone)
+      }
     },
     // 停用启用
     stopOK () {
@@ -617,6 +656,50 @@ export default {
             }
           })
         }
+
+        this.tempData.unitWeights = []
+        this.tempData.amountWeights = []
+        this.tempData.firstWeights = []
+        this.formData.weights.forEach((weight, weightIndex) => {
+          switch (weight.priceType) {
+            case 1: // 单价
+              this.tempData.unitWeights.push({ weightIndex: weightIndex, weight: weight })
+              break
+            case 2: // 金额
+              this.tempData.amountWeights.push({ weightIndex: weightIndex, weight: weight })
+              break
+            case 3: // 首续重
+              this.tempData.firstWeights.push({ weightIndex: weightIndex, weight: weight })
+              break
+          }
+        })
+
+        this.tempData.unitPrices = []
+        this.tempData.amountPrices = []
+        this.tempData.firstPrices = []
+        this.formData.zones.forEach((zone, zoneIndex) => {
+          if (this.tempData.unitWeights.length > 0) {
+            let cols = {}
+            this.tempData.unitWeights.forEach(item => {
+              cols[item.weightIndex] = { price: null }
+            })
+            this.tempData.unitPrices.push({ zoneIndex: zoneIndex, cols: cols })
+          }
+          if (this.tempData.amountWeights.length > 0) {
+            let cols = {}
+            this.tempData.amountWeights.forEach(item => {
+              cols[item.weightIndex] = { price: null }
+            })
+            this.tempData.amountPrices.push({ zoneIndex: zoneIndex, cols: cols })
+          }
+          if (this.tempData.firstWeights.length > 0) {
+            let cols = {}
+            this.tempData.firstWeights.forEach(item => {
+              cols[item.weightIndex] = { firstWeight: null, firstWeightPrice: null, additionalWeight: null, additionalWeightPrice: null }
+            })
+            this.tempData.firstPrices.push({ zoneIndex: zoneIndex, cols: cols })
+          }
+        })
       }
     },
     toAdd () {
@@ -632,6 +715,7 @@ export default {
         fbaIds: data.fbaIds
       }
       this.zoneData.push(obj)
+      this.tempData.zone.areas.push(obj)
       this.cancl1()
     },
     addCancl () {
@@ -724,20 +808,14 @@ export default {
     deleteRowa (index, rows) {
       rows.splice(index, 1)
     },
-    // indexformatter (row, col) {
-    //   console.log(row)
-    //   return '区间' + row.index
-    // },
-    priceTypeformatter (row, col) {
-      switch (row.priceType) {
-        case 1:
-          return '单价'
-        case 2:
-          return '金额'
-        case 3:
-          return '首续重'
-        default:
-          break
+    columnFormat (row, col) {
+      switch (col.property) {
+        case 'maxWeight':
+          return row.maxWeight === 99999999 ? 'MAX' : row.maxWeight
+        case 'priceType':
+          return row.priceType === 1 ? '单价' : row.priceType === 2 ? '金额' : '首续重'
+        case 'name':
+          return this.formData.zones[row.zoneIndex].name
       }
     },
     // 查看
@@ -790,6 +868,72 @@ export default {
           return this.countryOptions[i].name
         }
       }
+    },
+    zoneAdd () {
+      this.inhere = false
+      this.tempData.zone = { zoneIndex: -1, name: '', areas: [] }
+    },
+    zoneDel (index) {
+      this.formData.zones.splice(index, 1)
+    },
+    zoneEdit (index) {
+      this.inhere = false
+      this.tempData.zone = this.formData.zones[index]
+      this.tempData.zone.zoneIndex = index
+    },
+    areaDel (index) {
+      this.tempData.zone.areas.splice(index, 1)
+    },
+    weightDel (index) {
+      this.formData.weights.splice(index, 1)
+    },
+    weightAdd () {
+      this.addweightsTable = true
+      this.tempData.weight = [{ weightIndex: -1, maxWeight: 0, priceType: null }]
+    },
+    weightSubmit (index) {
+      this.addweightsTable = false
+      let weight = this.tempData.weights[index]
+      if (weight.weightIndex !== -1) {
+        this.formData.weights[weight.weightIndex] = weight
+      } else {
+        this.formData.weights.push(weight)
+      }
+      this.tempData.weights = [{ weightIndex: -1, maxWeight: 0, priceType: null }]
+    },
+    submit () {
+      this.formData.unitPrices = []
+      if (this.tempData.unitPrices.length > 0) {
+        this.tempData.unitPrices.forEach(item => {
+          for (let weightIndex in item.cols) {
+            this.formData.unitPrices.push({ zoneIndex: item.zoneIndex, weightIndex: Number(weightIndex), price: item.cols[weightIndex].price })
+          }
+        })
+      }
+      this.formData.amounts = []
+      if (this.tempData.amountPrices.length > 0) {
+        this.tempData.amountPrices.forEach(item => {
+          for (let weightIndex in item.cols) {
+            this.formData.amounts.push({ zoneIndex: item.zoneIndex, weightIndex: Number(weightIndex), price: item.cols[weightIndex].price })
+          }
+        })
+      }
+      this.formData.firstPrices = []
+      if (this.tempData.firstPrices.length > 0) {
+        this.tempData.firstPrices.forEach(item => {
+          for (let weightIndex in item.cols) {
+            this.formData.firstPrices.push({ zoneIndex: item.zoneIndex, weightIndex: Number(weightIndex), firstWeight: item.cols[weightIndex].firstWeight, firstWeightPrice: item.cols[weightIndex].firstWeightPrice, additionalWeight: item.cols[weightIndex].additionalWeight, additionalWeightPrice: item.cols[weightIndex].additionalWeightPrice })
+          }
+        })
+      }
+      this.$api.agent.priceAdd(this.formData).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.drawerVrisible = false
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
     }
   }
 }
