@@ -181,7 +181,17 @@ export default [
     },
     component: () => import('@/views/Financialexpensesicon/Rmanagement/Writeoffrecord/Writeoffrecord.vue')
   },
-
+  // WriteoffDetail
+  {
+    path: '/WriteoffDetail',
+    name: 'WriteoffDetail',
+    meta: {
+      title: '核销记录',
+      icon: 'Writeoffrecord',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Rmanagement/Writeoffrecord/WriteoffDetail.vue')
+  },
   {
     path: '/Payablemanagement',
     name: 'Payablemanagement',
