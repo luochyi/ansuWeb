@@ -44,6 +44,13 @@ export const disabled = (params) => {
     data: params
   })
 }
+export const select = () => {
+  return axios({
+    url: '/setting/agent/select',
+    method: 'post',
+    data: { }
+  })
+}
 // /setting/agent/service/lists代理服务
 export const agentServiceLists = (params) => {
   return axios({
