@@ -6,6 +6,7 @@ import * as personnel from './configure/personnel'
 import * as driver from './configure/driver'
 import * as warehouse from './configure/warehouse'
 import * as milestone from './configure/milestone'
+import * as FBA from './configure/FBA'
 
 const axios = GetAxios((config) => {
   // 在发送请求之前做些什么
@@ -139,5 +140,6 @@ export {
   personnel, // 员工管理
   driver, // 司机
   warehouse, // 操作
-  milestone
+  milestone,
+  FBA
 }

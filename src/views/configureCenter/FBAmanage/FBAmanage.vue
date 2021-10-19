@@ -1,250 +1,314 @@
-<template>
+ <template>
   <div>
-  <div class="left" >
-      <div class="lefta">
-            <el-row type='flex' justify='flex-start' class='title' align='middle'>
-       <span class='text'>目的国</span>
-    </el-row>
-      </div>
-      <el-input class="inputa" autocomplete="off" type="text" value="" placeholder="请输入目的国" prefix-icon="el-icon-search" ></el-input>
-     <el-button type="primary"  @click="addFBA2" icon="el-icon-circle-plus-outline" round >新建目的国</el-button>
-<br>
-<br>
-<div class="first">
-<span class='text'>美国</span>
-<br>
-<el-button type="text" @click="Deletedestination= true"> 删除 </el-button>
-</div>
-<br>
-<div class="second">
-  <span class='text'>英国</span>
-  <br>
-  <el-button type="text" @click="Deletedestination= true"> 删除 </el-button>
-</div>
-<br>
-<div class="third">
-  <span class='text'>日本</span>
-  <br>
-  <el-button type="text" @click="Deletedestination= true"> 删除 </el-button>
-</div>
-  </div>
-      <!--  标签页 -->
-      <div class="right">
-      <el-row type='flex' justify='flex-start' class='title' align='middle'>
+    <!--  标签页 -->
+    <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:10px 0px">
       <span class='text'>FBA仓管理</span>
-       <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
+       <!-- <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
         <el-tab-pane label='正常仓库' name='1'></el-tab-pane>
-        <el-tab-pane label='不正常仓库' name='2'></el-tab-pane>
-      </el-tabs>
-     </el-row>
-      <!-- 主要内容 -->
-     <div class='content'>
-      <!-- 搜索栏 -->
-        <div class='content'>
-        <el-row class='searchbox1'>
-          <el-col :span='10' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>FBA仓</span>
+        <el-tab-pane label='港后状态' name='2'></el-tab-pane>
+      </el-tabs> -->
+    </el-row>
+    <el-row class="box-block flex">
+      <el-col :span="6" style="border: 1px solid #D9D9D9;box-shadow: 8px 0px 0px -5px rgba(0, 0, 0, 0.9);border-top:none">
+        <div style="height:100%;background:#fff">
+          <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
+            <el-col :span="3" style="margin-top:-2px">
+            <span style="font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;font-weight: 500;color: #000000;">国家</span>
             </el-col>
-            <el-col :span='15'>
-              <el-input v-model='predictionNo' placeholder='请输入FBA仓名称/邮编'></el-input>
+            <el-col :span="14" type="flex">
             </el-col>
+          </el-row>
+          <el-row class="search-box">
+          </el-row>
+          <el-row style="padding:0px 30px 12px 40px;display:flex;align-items:center;"  v-for="item,index in countryList" :key="index" @click.native="changecountry(item.id,index)">
+            <el-row :class="index===red?'active':''" style="padding:12px;margin-bottom:20px;background: #F9F9F9;
+          border-radius: 3px;width: 88%;height: 68px;font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;color: rgba(0, 0, 0, 0.8);cursor: pointer;">
+          <div style="display:flex;align-items:center;margin-bottom:4px" >
+            <span>目的国：</span><span>{{item.name}}</span>
+          </div>
+          <div style="display:flex;align-items:center;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;
+          color: rgba(0, 0, 0, 0.45);justify-content:space-between">
+          </div>
+          </el-row>
+          </el-row>
+        </div>
+      </el-col>
+      <el-col :span="18">
+        <!-- 主要内容 -->
+    <div class='content'>
+        <!-- 搜索栏 -->
+      <el-row class='searchbox1'>
+        <el-col :span='8' class='colbox'>
+          <span class='text'>FBA仓</span>
+          <el-col :span='16'>
+            <el-input v-model='keyword' placeholder='请输入名称/邮编'></el-input>
           </el-col>
-          <el-col :span='4' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重置</el-button>
+        </el-col>
+        <!--  -->
+        <el-col :span='6' class='colbox'>
+          <el-button class='orangeBtn long1' @click="search">查 询</el-button>
+          <el-button class='wuBtn long1' @click="reset">重 置</el-button>
+        </el-col>
+      </el-row>
+         <!-- 表格 -->
+      <div>
+        <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
+          <el-col :span='12' class="left">
+            <!-- <el-button class='stopBtn' @click="batchDel">批量删除</el-button> -->
           </el-col>
-         <el-button @click="addFBA" class='whiteBtn'>新建FBA仓 </el-button>
+          <el-col :span='12' class="right">
+            <el-button class='whiteBtn' @click="dialogVisible = true;diatitle='新增'">添加FBA仓</el-button>
+          </el-col>
         </el-row>
-       </div>
-       <!-- 表格 -->
-     <commonTable
-      :columns="columns"
-      :data="tableData"
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-      >
-      <el-table-column
-        slot="table_oper"
-        align="center"
-        fixed="right"
-        label="操作"
-        width="176"
-        :resizable="false"
-        >
-        <template slot-scoped="scoped">
-          <el-button type="text" @click="edit= true"> 编辑</el-button>
-            <span style="color: #0084FF; margin: 0px 5px">|</span>
-           <el-button type="text" @click="modifystate= true"> 修改状态 </el-button>
-             <span style="color: #0084FF; margin: 0px 5px">|</span>
-           <el-button type="text" @click="deletea= true"> 删除 </el-button>
-        </template>
-      </el-table-column>
-      </commonTable>
-     </div>
-      <!-- 新建目的国 -->
-   <el-dialog title="新建目的国" :visible.sync="country" width="30%" >
-               <div class="input">
-               <span>目的国名称<el-input v-model="input" style="width:190px" placeholder="请输入目的国名称"></el-input></span>
-               <br>
-               <br>
-               <span>目的国目标<div>
-            <el-upload action="https://jsonplaceholder.typicode.com/posts/" list-type="picture-card" :on-preview="handlePictureCardPreview" :on-remove="handleRemove">
-            <i class="el-icon-plus"></i>
-            </el-upload>
-              <el-dialog :visible.sync="dialogVisible">
-             <img width="100%" :src="dialogImageUrl" alt="">
-            </el-dialog>
-            </div></span>
-               </div>
-               <span slot="footer" class="country-footer">
-                 <el-button @click="country = false" class='wuBtn'>取 消</el-button>
-                 <el-button type="primary" @click="country = false" class='orangeBtn'>确 定</el-button>
-               </span>
-            </el-dialog>
-                  <!-- 修改 -->
-   <el-dialog title="修改状态" :visible.sync="modify" width="30%">
-               <div class="input">
-               <span>名称<el-input v-model="input" style="width:190px" placeholder="请输入状态名称"></el-input></span>
-               <br>
-               <br>
-               <span>状态<el-select v-model="agentName" size="small" placeholder="港前状态"></el-select></span>
-               </div>
-               <span slot="footer" class="modify-footer">
-                 <el-button @click="modify = false" class='wuBtn'>取 消</el-button>
-                 <el-button type="primary" @click="modify = false" class='orangeBtn'>确 定</el-button>
-               </span>
-            </el-dialog>
-             <!-- 删除 -->
-   <el-dialog title="删除状态" :visible.sync="deletea" width="30%">
-               <div class="input">
-               <br><span>你确认删除“港前状态”“以出关”吗？</span><br>
-               </div>
-               <span slot="footer" class="deletea-footer">
-                 <el-button @click="deletea = false" class='wuBtn'>取 消</el-button>
-                 <el-button type="primary" @click="deletea = false" class='orangeBtn'>确 定</el-button>
-               </span>
-            </el-dialog>
-             <!-- 删除目的国 -->
-   <el-dialog title="删除状态" :visible.sync="Deletedestination" width="30%">
-               <div class="input">
-               <br><span>你是否确定删除目的地“美国”</span><br>
-               </div>
-               <span slot="footer" class="Deletedestination-footer">
-                 <el-button @click="Deletedestination = false" class='wuBtn'>取 消</el-button>
-                 <el-button type="primary" @click="Deletedestination = false" class='orangeBtn'>确 定</el-button>
-               </span>
-            </el-dialog>
-           <!--修改状态 -->
-   <el-dialog title="修改状态" :visible.sync="modifystate" width="30%">
-               <div class="input">
-              <span>您是否将FBA仓“ONTB”修改为不正常状态</span>
-               <br><span>请输入原因</span><br>
-               <el-input type="textarea" :rows="2" placeholder="请输入不正常原因"  v-model="textarea"></el-input>
-               </div>
-               <span slot="footer" class="modifystate-footer">
-                 <el-button @click="modifystate = false" class='wuBtn'>取 消</el-button>
-                 <el-button type="primary" @click="modifystate = false" class='orangeBtn'>确 定</el-button>
-               </span>
-            </el-dialog>
+
+        <div class="table">
+          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
+            :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="name" label="仓库名"></el-table-column>
+            <el-table-column prop="zip_code" label="邮编"></el-table-column>
+            <el-table-column prop="address" label="地址"></el-table-column>
+            <el-table-column fixed="right" label="操作" width="300">
+              <template slot-scope="scope">
+                <el-button type="text" @click="edit(scope.row.id)">
+                  修改
+                </el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click="del(scope.row.id)">
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <!-- 分页 -->
+          <div class='block'>
+            <el-pagination
+              :current-page.sync='currentPage'
+              :pager-count='9'
+              :page-size='pageSize'
+              :page-sizes='[10, 20, 50, 100]'
+              layout='total, prev, pager, next, sizes, jumper'
+              :total='total'
+            ></el-pagination>
+          </div>
+        </div>
+      </div>
     </div>
+    </el-col>
+    </el-row>
+      <el-dialog
+        title="提示"
+        :visible.sync="dialogVisible"
+        width="30%"
+        :before-close="handleClose">
+        <span>这是一段信息</span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="addSubmit">确 定</el-button>
+        </span>
+      </el-dialog>
   </div>
 </template>
-
 <script>
 export default {
   data () {
     return {
-      dialogVisible: false, // 对话框可见
-      deletea: false, // 删除状态
-      modifystate: false, // 无法删除
-      Deletedestination: false, // 删除目的国
-      country: false, // 新增目的国
-      modify: false, // 修改状态
-      activeName: '1', // 标签绑定
-
-      textarea: '', // 文本域
-      pageSize: 10,
+      dialogVisible: false,
+      countryList: [],
+      keyword: '',
+      visible: false,
+      red: null,
+      countryId: null,
+      chooseArr: [],
+      total: null, // 数据总条数
       currentPage: 1,
-      total: 150,
-      a: 1,
-      b: 9,
-
-      input: '',
-      agentName: '',
+      pageSize: 15,
       agentCode: '',
-      agentAccount: '',
-      predictionNo: '',
-      columns: [
-        { prop: 'name', label: 'FBA仓库名', width: '112', align: 'center' },
-        { prop: 'code', label: 'FBA仓编码', width: '118', align: 'center', formatter: this.formatter },
-        { prop: 'address', label: '地址', width: '611', align: 'center', formatter: this.formatter }
-      ],
-      tableData: [],
-      page: {
-        pageNo: 1,
-        limit: 10,
-        sizes: [1, 5, 10],
-        total: 0
-      }
+      agentName: '',
+      tableData: [], // 表格数据
+      Class: 1 // 分类
     }
   },
   mounted () {
-    this.tableData = [
-      { date: '2016-05-02', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
-    addFBA () {
-      this.$router.push({ name: 'addFBA' })
-    },
-    addFBA2 () {
-      this.$router.push({ name: 'addFBA2' })
-    },
-    handleSelectionChange (val) {
-      console.log(val)
-      this.chooseArr = []
-      val && val.forEach((item) => {
-        this.chooseArr.push(item)
+    getData () {
+      this.channelList = []
+      this.$api.agent.selectCountry().then(res => {
+        this.countryList = res.data
+      })
+      this.$api.configure.FBA.lists({
+        page: this.currentPage,
+        limit: this.pageSize,
+        countryId: this.countryId,
+        keyword: this.keyword
+      }).then(res => {
+        this.tableData = res.data.list
+        this.total = res.data.total
       })
     },
-    handleClick (val) {
-      console.log(val)
+    changecountry (id, index) {
+      this.red = index
+      this.countryId = id
+      this.getData()
     },
-    // 重新渲染name列
-    formatter (row, column, cellValue) {
-      return row.name + '测试'
+    handleSelectionChange (arr) {},
+    search () {
+      this.getData()
     },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+    reset () {
+      this.keyword = ''
+      this.getData()
     },
-    // 改变页面大小处理
-    handleSizeChange (val) {
-
+    del (id) {
+      this.$confirm('确认删除')
+        .then(_ => {
+          this.$api.configure.FBA.del({ channelServiceId: id }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        })
+        .catch(_ => {})
     },
-    // 翻页处理
-    handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
-    },
-    // 操作按钮列表
-    editTableData (row) {}
+    toAdd () {
+    }
   }
-
 }
-
 </script>
 <style lang="scss" scoped>
+.active{
+  border:3px solid #FB4702
+}
+.search-font{
+  width: 60px;
+  height: 36px;
+  background: #FB4702;
+  border: 1px solid #979797;
+  border-left: 0;
+  border-bottom-right-radius: 18px;
+  border-top-right-radius: 18px;
+  text-align:center;
+  line-height:36px;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;color: #FFFFFF;
+}
+.input-box{
+  width: 67%;
+  height: 36px;
+  background: #FFFFFF;
+  border-top-left-radius: 18px;
+  border-bottom-left-radius: 18px;
+  border: 1px solid #979797;
+  display:flex;
+  justify-content:flex-start;
+  padding-left:10px;
+  align-items:center;
+}
+.search-box{
+  padding:0px 30px 12px 40px;
+  display:flex;
+  align-items:center;
+  margin-bottom:8px
+}
+/deep/ .changebox{
+    display: flex;
+    align-items: center;
+    height: 34px;
+    background: #FFFFFF;
+    border-radius: 4px;
+    border: 1px solid #E7E7E7;
+    .el-input__inner{
+        border:none
+    }
+}
+/deep/ .el-dialog{
+  text-align: start;
+}
+.item-box{
+  display: flex;
+  align-items: center;
+}
+.title-item{
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.85);
+}
+.daili1{
+  display: flex;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
+}
+.title-dai{
+  font-size: 16px;
+  font-family: PingFangSC-Semibold, PingFang SC;
+  font-weight: 600;
+  color: rgba(0, 0, 0, 0.85);
+}
+.circle1{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.35);
+}
+.circle{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  background: #FB4702;
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+/deep/ .el-drawer{
+  background: #E8EBF2;
+    .el-drawer__header{
+      padding: 30px 20px;
+      text-align: left;
+      background: #FFFFFF;
+      font-size: 16px;
+      font-family: PingFangSC-Medium, PingFang SC;
+      font-weight: 500;color: #333333;
+}
+}
+/deep/ .elin  {
+  .el-input__inner{
+    border: none;
+  }
+}
+.num{
+  font-size: 14px;
+  font-family: PingFangSC-Medium, PingFang SC;
+  font-weight: 500;
+  color: #FFBD32;
+}
 /deep/ .searchbox1{
-  .batch{
+  .stopBtn{
     height: 32px;
     line-height: 32px;
     padding: 0px 15px;
     background: #FEF4E1;
     border-radius: 4px;
+
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
@@ -270,93 +334,13 @@ export default {
     font-weight: 500;
     color: rgba(0, 0, 0, 0.85);
   }
+  .el-dialog__body{
+    border-top: 1px solid rgba(0,0,0,0.06);
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
 
-}
-/deep/ .el-dialog{
-  text-align: left;
-}
-//biankuang
-/deep/ .el-dialog__body {
-    padding: 10px 15px;
-    border-top:1px solid rgba(0, 0, 0, 0.06);
-    border-bottom:1px solid rgba(0, 0, 0, 0.06);
-}
-/deep/ .el-dialog__header {
-    padding: 10px 10px ;
-}
-/deep/ .input{
-  height: 90px;
-}
-/deep/ .title{
- height: 56px;
- font-size: 16px;
-}
-.right{
-float: left;
-width: 960px;
-background: #FFFFFF;
-border-radius: 4px;
-border: 1px solid #E8E8E8;
-margin: auto 20px;
-}
-.top{
-    margin: 10px auto;
-}
-.left{
-  float: left;
-  width: 209px;
-  height: 616px;
-  background: #FFFFFF;
-border-radius: 4px;
-border: 1px solid #E8E8E8;
-text-align:center;
-}
-// .inputa{
-//   margin: 5px;
-//   border-radius: 20px;
-//   height: 30px;
-//   width: 140px;
-// border: 2px solid #D9D9D9;
-// }
-.inputa /deep/.el-input__inner{
-margin: 5px;
-  border-radius: 20px;
-  height: 30px;
-  // width: 140px;
-border: 2px solid #D9D9D9;
-}
-.left /deep/.el-input{
-   width: 140px;
-}
-.el-button orangeBtn el-button--primary{
-  border-radius: 10px;
-  height: 40px;
-  width: 140px;
-}
-.el-dialog{
-  height: 514px;
-  width: 30%;
-}
-.el-upload{
-  width: 114px;
-  height: 76px;
-}
-.first{
-  width: 159px;
-  height: 67px;
-  border: 1px solid #D9D9D9;
-margin: 0 auto;
-}
-.second{
-  width: 159px;
-  height: 67px;
-  border: 1px solid #D9D9D9;
-  margin: 0 auto;
-}
-.third{
-  width: 159px;
-  height: 67px;
-  border: 1px solid #D9D9D9;
-  margin: 0 auto;
+  }
 }
 </style>

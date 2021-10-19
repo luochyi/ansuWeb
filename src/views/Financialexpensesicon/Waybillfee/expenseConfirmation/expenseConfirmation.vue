@@ -3,8 +3,8 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'></span>
-      </el-row>
+         <span>费用登记单</span>
+        </el-row>
       <!-- 主要内容 -->
       <div class='content'>
         <el-row class='searchbox1'>
