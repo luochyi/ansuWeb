@@ -1,0 +1,202 @@
+<template>
+  <div>
+    <div class='main'>
+      <!--  标签页 -->
+      <el-row type='flex' justify='flex-start' class='title' align='middle'>
+        <span class='text'>亏损票</span>
+      </el-row>
+      <!-- 主要内容 -->
+      <div class='content'>
+        <el-row class='searchbox1'>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>客户名称</span>
+            </el-col>
+            <el-col :span='13'>
+              <el-input v-model='customerName' placeholder='请输入'></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>客户编码</span>
+            </el-col>
+            <el-col :span='13'>
+              <el-input v-model='customerCode' placeholder='请输入'></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>运单号</span>
+            </el-col>
+            <el-col :span='13'>
+              <el-input v-model='waybillNo' placeholder='请输入'></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>情况登记</span>
+            </el-col>
+            <el-col :span='13'>
+               <el-select v-model="value" placeholder="请选择">
+         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+         </el-option>
+         </el-select>
+            </el-col>
+          </el-col>
+        </el-row>
+        <!--  -->
+        <el-row class='searchbox1'>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>扣毛利状态</span>
+            </el-col>
+            <el-col :span='13'>
+             <el-select v-model="value" placeholder="请选择">
+         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+         </el-option>
+         </el-select>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>目的地</span>
+            </el-col>
+            <el-col :span='13'>
+              <el-select v-model="valuea" placeholder="请选择">
+         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+         </el-option>
+         </el-select>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>渠道</span>
+            </el-col>
+             <el-col :span='13'>
+                <el-input v-model='destination' placeholder='请输入'></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-button class='orangeBtn long1'>查 询</el-button>
+            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='wuBtn long1'>展开全部</el-button>
+          </el-col>
+        </el-row>
+        <el-divider></el-divider>
+         <el-row class='tableBtn'>
+             <el-col :span='10' class="left">
+               <el-button class='stopBtn' @click="changes=true">批量扣毛利</el-button>
+          </el-col>
+            <el-col :span='10' class='right'>
+              <el-button class='whiteBtn '>操作日志</el-button>
+                <el-button class='whiteBtn '>查询条件设置</el-button>
+              <el-button class='whiteBtn '>列表显示设置</el-button>
+            </el-col>
+          </el-row>
+          <br>
+          <!-- 组件 -->
+    <commonTable
+      :columns="columns"
+      :data="tableData"
+      :pager="page"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+    >
+      <el-table-column
+        slot="table_oper"
+        align="center"
+        fixed="right"
+        label="操作"
+        width="101"
+        :resizable="false"
+      >
+         <template slot-scoped="scoped">
+            <el-button type="text" @click="password= true"> 查看详情 </el-button>
+        </template>
+      </el-table-column>
+    </commonTable>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  data () {
+    return {
+      columns: [
+        { prop: 'waybill_no', label: '运单号', width: '212', align: 'center' },
+        { prop: 'customer_name', label: '客户名称', width: '82', align: 'center' },
+        { prop: 'customer_code', label: '客户编码', width: '255', align: 'center' },
+        { prop: 'channel_name', label: '渠道', width: '142', align: 'center' },
+        { prop: 'cargoes_num', label: '件数', width: '95', align: 'center' },
+        { prop: 'customer_bill_weight', label: '客户结算重', width: '129', align: 'center' },
+        { prop: 'agent_bill_weight', label: '代理结算重', width: '73', align: 'center' },
+        { prop: 'salesman_name', label: '业务员', width: '82', align: 'center' },
+        { prop: 'created_at', label: '下单日', width: '255', align: 'center', formatter: this.formatter }
+      ],
+      tableData: [],
+      page: {
+        pageNo: 1,
+        limit: 10,
+        sizes: [10, 50, 100],
+        total: 0
+      }
+    }
+  },
+  mounted () {
+    this.getData()
+  },
+  methods: {
+    getData () {
+      this.$api.finance.other.profit.lists({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
+    // 重新渲染name列
+    formatter (row, column, cellValue) {
+      switch (column.property) {
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd')
+      }
+    },
+    // 改变页面大小处理
+    handleSizeChange (val) {
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
+    },
+    // 翻页处理
+    handleCurrentChange (val) {
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
+    }
+  }
+}
+</script>
+
+<style lang='scss' scoped>
+.sub_title{
+  margin:20px
+}
+/deep/ .title {
+  height: 56px;
+  font-size: 16px;
+}
+/deep/ .tableBtn{
+  .stopBtn{
+    height: 32px;
+    line-height: 32px;
+    padding: 0px 15px;
+    background: #FEF4E1;
+    border-radius: 4px;
+
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+  }
+}
+</style>

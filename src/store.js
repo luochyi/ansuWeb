@@ -4,7 +4,9 @@
 // Vue.use(Vuex)
 
 // export default new Vuex.Store({
-//   state: {},
+//   state: {
+//     xxx: 1
+//   },
 //   mutations: {},
 //   actions: {}
 // })

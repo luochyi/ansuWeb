@@ -31,6 +31,26 @@ export default [
     },
     component: () => import('@/views/channel/agentManage/addAgent.vue')
   },
+  {
+    path: '/agentManage/channelService',
+    name: 'channelService',
+    meta: {
+      title: '渠道服务',
+      icon: 'channelService',
+      hidden: false
+    },
+    component: () => import('@/views/channel/agentManage/channelService.vue')
+  },
+  {
+    path: '/agentManage/addAgentService',
+    name: 'addAgentService',
+    meta: {
+      title: '添加代理服务',
+      icon: 'addAgentService',
+      hidden: false
+    },
+    component: () => import('@/views/channel/agentManage/addAgentService.vue')
+  },
   // 渠道设置
   {
     path: '/channelSetting',
