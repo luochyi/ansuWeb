@@ -100,3 +100,66 @@ export const selectCountry = (params) => {
     data: params
   })
 }
+// /setting/channel/lists  渠道列表
+export const channelLists = (params) => {
+  return axios({
+    url: '/setting/channel/lists',
+    method: 'post',
+    data: params
+  })
+}
+
+// /setting/channel/disabled      channelId /setting/channel/enabled
+export const channelDisabled = (params) => {
+  return axios({
+    url: '/setting/channel/disabled',
+    method: 'post',
+    data: params
+  })
+}
+export const channelEnabled = (params) => {
+  return axios({
+    url: '/setting/channel/enabled',
+    method: 'post',
+    data: params
+  })
+}
+// channelPriceAdd 添加价格计划
+export const channelPriceAdd = (params) => {
+  return axios({
+    url: '/setting/channel/price/add',
+    method: 'post',
+    data: params
+  })
+}
+
+export const channelAdd = (params) => {
+  return axios({
+    url: '/setting/channel/add',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/channel/service/lists渠道服务列表
+export const channelServiceLists = (params) => {
+  return axios({
+    url: '/setting/channel/service/lists',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/channel/service/del
+export const channelServiceDel = (params) => {
+  return axios({
+    url: '/setting/channel/service/del',
+    method: 'post',
+    data: params
+  })
+}
+export const channelServiceMaster = (params) => {
+  return axios({
+    url: '/setting/channel/service/master',
+    method: 'post',
+    data: params
+  })
+}
