@@ -72,6 +72,14 @@ export const irikuraLists = (params) => {
     data: params
   })
 }
+// 出库列表
+export const Ejectlists = (params) => {
+  return axios({
+    url: '/order/waybill/eject/lists',
+    method: 'post',
+    data: params
+  })
+}
 // 出仓列表
 export const checkoutLists = (params) => {
   return axios({
@@ -80,4 +88,51 @@ export const checkoutLists = (params) => {
     data: params
   })
 }
-// ABCDEFGHIJKLMNOPQRSTUVWXYZ
+// 出运列表
+export const shipmentLists = (params) => {
+  return axios({
+    url: '/order/waybill/shipment/lists',
+    method: 'post',
+    data: params
+  })
+}
+// 签收列表
+export const signLists = (params) => {
+  return axios({
+    url: '/order/waybill/sign/lists',
+    method: 'post',
+    data: params
+  })
+}
+// 出库
+export const irikuraEject = (params) => {
+  return axios({
+    url: '/order/waybill/irikura/eject',
+    method: 'post',
+    data: params
+  })
+}
+// 出仓
+export const ejectJheckout = (params) => {
+  return axios({
+    url: '/order/waybill/eject/checkout',
+    method: 'post',
+    data: params
+  })
+}
+// 出运
+export const checkoutShipment = (params) => {
+  return axios({
+    url: '/order/waybill/checkout/shipment',
+    method: 'post',
+    data: params
+  })
+}
+// 签收
+export const shipmentSign = (params) => {
+  return axios({
+    url: '/order/waybill/shipment/sign',
+    method: 'post',
+    data: params
+  })
+}

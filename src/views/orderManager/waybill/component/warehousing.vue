@@ -1409,6 +1409,7 @@ export default {
       total: 50, // 表格数据总条数
       currentPage: 1,
       pageSize: 10,
+      Uid: [],
       // 表格数据
       type: '', // 运单类型
       customer_name: '', // 客户名称
@@ -1437,7 +1438,7 @@ export default {
   },
   mounted () {
     // 在页面加载前调用获取列表数据函数
-    this.getData()
+    // this.getData()
   },
   methods: {
     // 获取列表数据
@@ -1447,23 +1448,23 @@ export default {
       this.tableData = []
       this.$api.Ordermanagement.irikuraLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
         console.log(res.data) // res是接口返回的结果
-        res.data.list && res.data.list.forEach(ele => {
-          let obj = {
-            // status: Number(this.activeName),
-            type: ele.type,
-            customer_name: ele.customer_name,
-            customer_code: ele.customer_code,
-            waybill_no: ele.waybill_no,
-            forecast_no: ele.forecast_no,
-            channel_id: ele.channel_id,
-            has_invoice: ele.has_invoice,
-            irikura_time: ele.irikura_time,
-            created_at: ele.created_at,
-            remark: ele.remark,
-            interior_remark: ele.interior_remark
-          }
-          this.tableData.push(obj)
-        })
+        // res.data.list && res.data.list.forEach(ele => {
+        //   let obj = {
+        //     // status: Number(this.activeName),
+        //     type: ele.type,
+        //     customer_name: ele.customer_name,
+        //     customer_code: ele.customer_code,
+        //     waybill_no: ele.waybill_no,
+        //     forecast_no: ele.forecast_no,
+        //     channel_id: ele.channel_id,
+        //     has_invoice: ele.has_invoice,
+        //     irikura_time: ele.irikura_time,
+        //     created_at: ele.created_at,
+        //     remark: ele.remark,
+        //     interior_remark: ele.interior_remark
+        //   }
+        //   this.tableData.push(obj)
+        // })
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
@@ -1562,7 +1563,9 @@ export default {
       this.visibleChanel = true
     },
     // 出库
-    Delivery () {
+    Delivery: function (event) {
+      console.log(event)
+      this.$api.Ordermanagement.irikuraEject({ directId: Number(event) }).then((res) => {})
       this.visibleOutletChanel = true
       this.dialogStop = true
     },
