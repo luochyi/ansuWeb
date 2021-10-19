@@ -464,7 +464,7 @@
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button class="wuBtn" @click="dialogStop = false">部分入仓</el-button>
-                <el-button class="orangeBtn" @click="dialogStop = false">确 定</el-button>
+                <el-button class="orangeBtn" @click="determine ">确 定</el-button>
             </span>
             </el-dialog>
             <!-- 批量搜索 -->
@@ -925,6 +925,7 @@ export default {
       total: 50, // 表格数据总条数
       currentPage: 1,
       pageSize: 10,
+      Uid: '',
 
       // 表格数据
       type: '', // 运单类型
@@ -941,8 +942,9 @@ export default {
       interior_remark: '', // 最新内部备注
       tableData: [
         {
-          name: '史蒂夫',
-          forecastNum: '21件'
+          customer_name: '史蒂夫',
+          interior_remark: '21件',
+          remark: '王成虎'
         }
       ],
       page: {
@@ -953,33 +955,33 @@ export default {
   },
   mounted () {
     // 在页面加载前调用获取列表数据函数
-    this.getData()
+    // this.getData()
   },
   methods: {
     // 获取列表数据
     getData () {
-      console.log('1221')
+      console.log('12244551')
       // 初始的表格数据清空
       this.tableData = []
-      this.$api.Ordermanagement.checkoutLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
+      this.$api.Ordermanagement.Ejectlists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
         console.log(res.data) // res是接口返回的结果
-        res.data.list && res.data.list.forEach(ele => {
-          let obj = {
-            // status: Number(this.activeName),
-            type: ele.type,
-            customer_name: ele.customer_name,
-            customer_code: ele.customer_code,
-            waybill_no: ele.waybill_no,
-            forecast_no: ele.forecast_no,
-            channel_id: ele.channel_id,
-            has_invoice: ele.has_invoice,
-            irikura_time: ele.irikura_time,
-            created_at: ele.created_at,
-            remark: ele.remark,
-            interior_remark: ele.interior_remark
-          }
-          this.tableData.push(obj)
-        })
+        // res.data.list && res.data.list.forEach(ele => {
+        //   let obj = {
+        //     // status: Number(this.activeName),
+        //     type: ele.type,
+        //     customer_name: ele.customer_name,
+        //     customer_code: ele.customer_code,
+        //     waybill_no: ele.waybill_no,
+        //     forecast_no: ele.forecast_no,
+        //     channel_id: ele.channel_id,
+        //     has_invoice: ele.has_invoice,
+        //     irikura_time: ele.irikura_time,
+        //     created_at: ele.created_at,
+        //     remark: ele.remark,
+        //     interior_remark: ele.interior_remark
+        //   }
+        //   this.tableData.push(obj)
+        // })
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
@@ -1000,7 +1002,9 @@ export default {
     // 批量修改入仓渠道
     batchModifyChannel () {},
     // 表格出仓
-    outWarehouse () {
+    outWarehouse: function (event) {
+      console.log(event)
+      this.$api.Ordermanagement.ejectJheckout({ directId: Number(event) }).then((res) => {})
       this.dialogStop = true
     },
     // 查询搜索条件

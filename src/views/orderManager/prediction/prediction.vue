@@ -159,8 +159,12 @@
               </template>
             </el-table-column>
             <!-- 预报时间 -->
+<<<<<<< HEAD
              <el-table-column prop='created_at' label='预报时间' min-width='182'>
                <template slot-scope="scope">{{getDate(scope.row.created_at)}}</template>
+=======
+             <el-table-column prop='created_at' :formatter='formatters' label='预报时间' min-width='182'>
+>>>>>>> 1018order
             </el-table-column>
               <!-- 收货时间 -->
              <el-table-column prop='received_at' label='收货时间' min-width='182' v-if="activeName === '2'">
@@ -340,6 +344,19 @@ export default {
         return '无计划下单'
       }
     },
+    formatters (row, column, cellValue) {
+      return this.tableData(row.created_at, 'yyyy-MM-dd hh:mm:ss')
+    },
+    // formatter (row, column) {
+    //   // console.log(row)
+    //   if (row.status === 1) {
+    //     return '待收货'
+    //   } else if (row.status === 2) {
+    //     return '以收货'
+    //   } else if (row.status === 3) {
+    //     return '以收货'
+    //   }
+    // },
     // 操作按钮列表
     editTableData (row) {},
     search () {
