@@ -159,12 +159,8 @@
               </template>
             </el-table-column>
             <!-- 预报时间 -->
-<<<<<<< HEAD
              <el-table-column prop='created_at' label='预报时间' min-width='182'>
                <template slot-scope="scope">{{getDate(scope.row.created_at)}}</template>
-=======
-             <el-table-column prop='created_at' :formatter='formatters' label='预报时间' min-width='182'>
->>>>>>> 1018order
             </el-table-column>
               <!-- 收货时间 -->
              <el-table-column prop='received_at' label='收货时间' min-width='182' v-if="activeName === '2'">
