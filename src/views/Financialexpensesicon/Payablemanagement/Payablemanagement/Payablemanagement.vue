@@ -38,21 +38,6 @@
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
-       <template v-slot:yundanhao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="see(slotData)">查看</span>
-      </template>
-       <template v-slot:bianhao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看</span>
-      </template>
-      <template v-slot:querendan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="lookup(slotData)">查看</span>
-      </template>
-      <template v-slot:changgui='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="waybill(slotData)">查看运单</span>
-      </template>
-       <template v-slot:shihou='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">查看详情</span>
-      </template>
       <el-table-column
         slot="table_oper"
         align="center"
@@ -61,14 +46,8 @@
         width="314"
         :resizable="false"
       >
-         <template slot-scoped="scoped">
-            <!-- <el-button type="text" @click="password= true"> 导出Excle </el-button> -->
-            <!-- <span style="color: #0084FF; margin: 0px 5px">|</span> -->
-          <el-button type="text" @click="detailspage"> 撤销确认</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="password= true"> 申请付款 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-               <el-button type="text" @click="password= true"> 查看运单 </el-button>
+         <template slot-scope="scoped">
+          <el-button type="text" @click="audit([scoped.row.id])" v-if="scoped.row.audit_status === 0 || scoped.row.audit_status === 3">申请付款</el-button>
         </template>
       </el-table-column>
     </commonTable>
@@ -82,12 +61,16 @@
       :before-close="handleClose">
       <div>
         <el-row>
-          <el-col>对账代理：<el-input
-          style="width:40%"
-                    placeholder="请输入内容"
-                    prefix-icon="el-icon-search"
-                    v-model="agent">
-                  </el-input></el-col>
+          <el-col>对账代理：
+            <el-select v-model="formData.agentId" filterable placeholder="请选择">
+              <el-option
+                  v-for="item in agents"
+                  :key="item.id"
+                  :label="item.name"
+                  :value="item.id">
+              </el-option>
+            </el-select>
+          </el-col>
         </el-row>
         <el-row>
           <el-upload
@@ -129,32 +112,13 @@ export default {
       },
       fileList: [],
       dialogVisible: false,
-      agent: '', // 对账代理
-      total: 50, // 数据数量
-      pageSize: 10, // 默认当前条数
-      currentPage: 1, // 当前页码
-
-      activeName: '1',
-      waybillNo: '', // 运单号
-      customerName: '', // 客户名称
-      customerCode: '', // 客户编码
-      predictionChannel: '', // 预报渠道
-      Transfer: '', // 转单号
-      destination: '', // 目的地
-
       columns: [
-        { prop: 'receivableNo', label: '应收账单号', width: '155', align: 'center' },
-        { prop: 'name', label: '代理名称', width: '193', align: 'center', formatter: this.formatter },
-        { prop: 'number', label: '代理编号', width: '118', align: 'center', formatter: this.formatters },
-        { prop: 'Openingbalance', label: '期初余额', width: '83', align: 'center' },
-        { prop: 'WaybillNo', label: '运单号', width: '171', align: 'center', type: 'slot', slotName: 'yundanhao' },
-        { prop: 'Shipmentnumber', label: '货件编号', width: '171', align: 'center', type: 'slot', slotName: 'bianhao' },
-        { prop: 'Settlementperiod', label: '结算周期', width: '220', align: 'center' },
-        { prop: 'Reconciliationstatus', label: '对账确认状态', width: '126', align: 'center', type: 'slot', slotName: 'querendan' },
-        { prop: 'Conventionalwaybill', label: '常规运单', width: '126', align: 'center', type: 'slot', slotName: 'changgui' },
-        { prop: 'Expostwaybill', label: '事后运单', width: '114', align: 'center', type: 'slot', slotName: 'shihou' },
-        { prop: 'Settlementamount', label: '结算金额', width: '95', align: 'center' },
-        { prop: 'Reconciliation', label: '对账确定员', width: '95', align: 'center' }
+        { prop: 'pay_no', label: '应收账单号', width: '155', align: 'center' },
+        { prop: 'agent_name', label: '代理名称', width: '193', align: 'center' },
+        { prop: 'agent_code', label: '代理编号', width: '118', align: 'center' },
+        { prop: 'created_at', label: '账单生成时间', width: '83', align: 'center', formatter: this.formatter },
+        { prop: 'created_user_name', label: '对账确认人', width: '171', align: 'center' },
+        { prop: 'audit_status', label: '审核状态', width: '171', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -162,16 +126,34 @@ export default {
         limit: 10,
         sizes: [1, 5, 10],
         total: 0
-      }
+      },
+      agents: [],
+      formData: {
+        agentId: null,
+        path: ''
+      },
+      billAgentIds: []
     }
   },
   mounted () {
-    this.tableData = [
-      { OrderNo: 'AS123123423412313', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.getData()
+    this.getAgent()
   },
   methods: {
+    getAgent () {
+      this.$api.agent.select().then(res => {
+        this.agents = res.data
+      })
+    },
+    getData () {
+      this.$api.finance.payabble.agent.lists({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
     detailspage () {
       this.$router.push({ name: 'detailspage' })
     },
@@ -179,10 +161,10 @@ export default {
       // 下载模板
     },
     handleAvatarSuccess (res, file) {
-      // this.path = res.data.path 上传成功的回调函数
+      this.formData.path = res.data.path // 上传成功的回调函数
     },
     submit () {
-      this.$router.push({ name: 'createAccountsReceivable' })
+      this.$router.push({ name: 'createAccountsReceivable', params: this.formData })
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -202,28 +184,38 @@ export default {
     handleClick (val) {
       console.log(val)
     },
-
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd')
+        case 'audit_status':
+          return row.audit_status === 0 ? '未申请' : row.audit_status === 1 ? '审核中' : row.audit_status === 2 ? '审核通过' : '审核驳回'
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // 操作按钮列表
-    editTableData (row) {},
     handleClose (done) {
       this.dialogVisible = false
+    },
+    audit (billAgentIds) {
+      this.$api.finance.payabble.agent.audit(billAgentIds).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData()
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
     }
   }
 }

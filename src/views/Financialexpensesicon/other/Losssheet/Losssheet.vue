@@ -123,75 +123,56 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
-      pageSize: 10, // 默认当前条数
-      currentPage: 1, // 当前页码
-
-      activeName: '1',
-      customerName: '', // 客户名称
-      customerCode: '', // 客户编号
-      waybillNo: '', // 运单号
-      destination: '', // 渠道
-      value: '',
-      valuea: '',
-
       columns: [
-        { prop: 'WaybillNo', label: '运单号', width: '212', align: 'center' },
-        { prop: 'Grossprofit', label: '单票毛利', width: '82', align: 'center' },
-        { prop: 'Situation', label: '情况登记', width: '255', align: 'center' },
-        { prop: 'deductionstatus', label: '扣毛利状态', width: '142', align: 'center' },
-        { prop: 'customer', label: '客户', width: '95', align: 'center' },
-        { prop: 'Customercode', label: '客户编码', width: '129', align: 'center' },
-        { prop: 'destination', label: '目的地', width: '73', align: 'center' },
-        { prop: 'channel', label: '渠道', width: '82', align: 'center' },
-        { prop: 'number', label: '件数', width: '255', align: 'center' },
-        { prop: 'weight', label: '结算重', width: '142', align: 'center' },
-        { prop: 'settlement', label: '代理结算重', width: '95', align: 'center' },
-        { prop: 'salesman', label: '业务员', width: '129', align: 'center' },
-        { prop: 'Orderdate', label: '下单日期', width: '73', align: 'center' },
-        { prop: 'registration', label: '登记日期', width: '129', align: 'center' }
+        { prop: 'waybill_no', label: '运单号', width: '212', align: 'center' },
+        { prop: 'customer_name', label: '客户名称', width: '82', align: 'center' },
+        { prop: 'customer_code', label: '客户编码', width: '255', align: 'center' },
+        { prop: 'channel_name', label: '渠道', width: '142', align: 'center' },
+        { prop: 'cargoes_num', label: '件数', width: '95', align: 'center' },
+        { prop: 'customer_bill_weight', label: '客户结算重', width: '129', align: 'center' },
+        { prop: 'agent_bill_weight', label: '代理结算重', width: '73', align: 'center' },
+        { prop: 'salesman_name', label: '业务员', width: '82', align: 'center' },
+        { prop: 'created_at', label: '下单日', width: '255', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
         limit: 10,
-        sizes: [1, 5, 10],
+        sizes: [10, 50, 100],
         total: 0
       }
     }
   },
   mounted () {
-    this.tableData = [
-      { PaymentNo: 'AS123123423412313', apply: '王小虎', code: '上海市普陀区金沙江路 1518 弄' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
-    detailspage () {
-      this.$router.push({ name: 'detailspage' })
-    },
-    handleClick (val) {
-      console.log(val)
+    getData () {
+      this.$api.finance.other.profit.lists({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd')
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
-    },
-    // 操作按钮列表
-    editTableData (row) {}
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
+    }
   }
 }
 </script>

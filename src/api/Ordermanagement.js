@@ -32,6 +32,16 @@ export const waybillLists = (params) => {
     data: params
   })
 }
+// 运单详情
+export const waybillInfo = waybillId => {
+  return axios({
+    url: '/order/waybill/info',
+    method: 'post',
+    data: {
+      waybillId: waybillId
+    }
+  })
+}
 // 运单列表
 export const ejectLists = (params) => {
   return axios({
