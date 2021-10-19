@@ -704,6 +704,18 @@ export default {
               parentId: '5'
             },
             {
+              name: 'materialCate',
+              meta: {
+                title: '材质分类',
+                icon: 'materialCate',
+                hidden: false
+              },
+              ID: 60,
+              menuId: '60',
+              path: 'materialCate',
+              parentId: '5'
+            },
+            {
               name: 'countryManagement',
               meta: {
                 title: '目的国管理',
