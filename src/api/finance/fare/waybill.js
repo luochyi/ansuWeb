@@ -7,3 +7,14 @@ export const lists = (params) => {
     data: params
   })
 }
+
+// 运单运费信息
+export const amount = waybillId => {
+  return axios({
+    url: '/finance/fare/waybill/amount',
+    method: 'post',
+    data: {
+      waybillId: waybillId
+    }
+  })
+}

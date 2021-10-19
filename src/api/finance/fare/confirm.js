@@ -10,6 +10,15 @@ export const lists = (params) => {
   })
 }
 
+// 费用确认列表
+export const offer = (params) => {
+  return axios({
+    url: '/finance/fare/confirm/offer',
+    method: 'post',
+    data: params
+  })
+}
+
 export {
   customer
 }
