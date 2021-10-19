@@ -18,7 +18,7 @@
               <span class='text'>预报单号</span>
             </el-col>
             <el-col :span='12'>
-              <el-input v-model='ForecastNo' placeholder='请输入'></el-input>
+              <el-input v-model='forecast_no' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -26,7 +26,7 @@
               <span class='text'>预报类型</span>
             </el-col>
             <el-col :span='13'>
-                        <el-select v-model="value" placeholder="请选择">
+             <el-select v-model="type" placeholder="请选择">
          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
          </el-option>
          </el-select>
@@ -37,7 +37,7 @@
               <span class='text'>客户名称</span>
             </el-col>
             <el-col :span='11'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
+              <el-input v-model='customer_name' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -45,7 +45,7 @@
               <span class='text'>客户编码</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
+              <el-input v-model='customer_code' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
         </el-row>
@@ -55,7 +55,7 @@
               <span class='text'>业务员</span>
             </el-col>
             <el-col :span='13'>
-              <el-select v-model="valuea" placeholder="请输入">
+              <el-select v-model='salesman_name' placeholder="请输入">
          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
          </el-option>
          </el-select>
@@ -77,7 +77,7 @@
               <span class='text'>收货司机</span>
             </el-col>
             <el-col :span='13'>
-                       <el-select v-model="valuec" placeholder="请选择">
+                       <el-select v-model="driver_name" placeholder="请选择">
          <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
          </el-option>
          </el-select>
@@ -101,7 +101,7 @@
           </el-row>
           <br>
           <!-- 表格 -->
-          <el-table ref="multipleTable" :data="tableData"  border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
+          <el-table ref="multipleTable" :data="tableData"  border  tooltip-effect="dark" style="width: 100%" @handleSelectionChange="handleSelectionChange"
             :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column type='selection' min-width='50'> </el-table-column>
             <!-- 预报单号 -->
@@ -249,6 +249,8 @@ export default {
       currentPage: 1, // 当前页码
       total: 50, // 数据数量
 
+      valueb: '',
+
       activeName: '1', // 默认第一项‘已下单’
 
       forecast_no: '', // 预报单号
@@ -316,7 +318,7 @@ export default {
         // this.tableData.push(obj)
         this.tableData = res.data.list
         // })
-        this.page.total = res.data.total // 数据总量
+        // this.page.total = res.data.total // 数据总量
       })
     },
     // 改变页面大小处理
@@ -362,6 +364,9 @@ export default {
           done()
         })
         .catch(_ => {})
+    },
+    handleSelectionChange () {
+
     }
   }
 }
