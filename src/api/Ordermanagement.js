@@ -40,3 +40,44 @@ export const ejectLists = (params) => {
     data: params
   })
 }
+// 直接收货列表
+export const forecastDirect = (params) => {
+  return axios({
+    url: '/order/forecast/direct',
+    method: 'post',
+    data: params
+  })
+}
+// 同意收货申请
+export const directAgree = (params) => {
+  return axios({
+    url: '/order/forecast/direct/agree',
+    method: 'post',
+    data: params
+  })
+}
+// 驳回直接收货申请
+export const directReject = (params) => {
+  return axios({
+    url: '/order/forecast/direct/reject',
+    method: 'post',
+    data: params
+  })
+}
+// 入仓列表
+export const irikuraLists = (params) => {
+  return axios({
+    url: '/order/waybill/irikura/lists',
+    method: 'post',
+    data: params
+  })
+}
+// 出仓列表
+export const checkoutLists = (params) => {
+  return axios({
+    url: '/order/waybill/checkout/lists',
+    method: 'post',
+    data: params
+  })
+}
+// ABCDEFGHIJKLMNOPQRSTUVWXYZ

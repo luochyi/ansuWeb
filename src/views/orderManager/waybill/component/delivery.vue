@@ -197,9 +197,9 @@
             @selection-change="handleSelectionChange"
                 :header-cell-style="{background: '#F5F5F6'}">
                 <el-table-column type="selection" width="50" key="1"></el-table-column>
-                <el-table-column prop="orderType" label="订单类型" min-width="150" key="2"></el-table-column>
-                <el-table-column prop="name" label="客户名称" min-width="100" key="3"></el-table-column>
-                <el-table-column prop="customerNo" label="客户编号" min-width="80" key="4"></el-table-column>
+                <el-table-column prop=" type" label="订单类型" min-width="150" key="2"></el-table-column>
+                <el-table-column prop="customer_name" label="客户名称" min-width="100" key="3"></el-table-column>
+                <el-table-column prop="customer_code" label="客户编号" min-width="80" key="4"></el-table-column>
                 <el-table-column prop="driver" label="收货司机" min-width="150" key="5">
                     <template slot-scope="scope">
                         <div class="Flexcenter">
@@ -228,8 +228,8 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="orderNo" label="运单号" min-width="150" key="6"></el-table-column>
-                <el-table-column prop="forecastNo" label="预报单号" min-width="160" key="7">
+                <el-table-column prop="waybill_no" label="运单号" min-width="150" key="6"></el-table-column>
+                <el-table-column prop="forecast_no" label="预报单号" min-width="160" key="7">
                     <template slot-scope="scope">
                         <span>{{scope.row.forecastNo}}</span>
                         <el-button type="text" @click="forecastNoCheck(scope.row)">查看</el-button>
@@ -275,13 +275,13 @@
                         <el-button type="text" @click="changeGoodsWeight(scope.row)">修改</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column prop="warehousingChannel" label="入仓渠道" min-width="80" key="18">
+                <el-table-column prop="channel_id" label="入仓渠道" min-width="80" key="18">
                     <template slot-scope="scope">
                         <span class="Right">{{scope.row.warehousingChannel}}</span>
                         <el-button type="text" @click="modifyChanel(scope.row)">修改</el-button>
                     </template>
                 </el-table-column>
-                <el-table-column label="发票" min-width="180" key="19">
+                <el-table-column prop="has_invoice" label="发票" min-width="180" key="19">
                     <template slot-scope="scope">
                         <div class="Flexchannel">
                                 <div class="dot"></div>
@@ -302,7 +302,7 @@
                 <el-table-column prop="storekeeper" label="入库员" min-width="80" key="23"></el-table-column>
                 <el-table-column prop="storageNum" label="入库件数" min-width="80" key="24"></el-table-column>
                 <el-table-column prop="receivingTime" label="收货时间" min-width="140" key="25"></el-table-column>
-                <el-table-column prop="storageTime" label="入库时间" min-width="80" key="26"></el-table-column>
+                <el-table-column prop="irikura_time" label="入库时间" min-width="80" key="26"></el-table-column>
                 <el-table-column prop="warehousingTime" label="入仓时间" min-width="80" key="27"></el-table-column>
                 <el-table-column prop="packingList" label="装箱清单" min-width="160" key="28">
                     <template>
@@ -336,7 +336,7 @@
                 <el-table-column prop="destinationCountry" label="目的国" min-width="80" key="32"></el-table-column>
                 <el-table-column prop="destination" label="目的地" min-width="80" key="33"></el-table-column>
                 <el-table-column prop="destinationPostcode" label="目的地邮编" min-width="100" key="34"></el-table-column>
-                <el-table-column prop="forecastChannel" label="预报渠道" min-width="80" key="35"></el-table-column>
+                <el-table-column prop="channel_name" label="预报渠道" min-width="80" key="35"></el-table-column>
                 <el-table-column prop="customsType" label="报关类型" min-width="80" key="36"></el-table-column>
                 <el-table-column prop="aloneClearance" label="单独清关" min-width="80" key="37"></el-table-column>
                 <el-table-column prop="deferral" label="递延" min-width="80" key="38"></el-table-column>
@@ -356,9 +356,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="declarationTime" label="申报价值" min-width="80" key="40"></el-table-column>
-                <el-table-column prop="orderTime" label="下单时间" min-width="80" key="41"></el-table-column>
-                <el-table-column prop="customerNote" label="客户备注" min-width="80" key="42"></el-table-column>
-                <el-table-column prop="innerRemarks" label="内部备注" min-width="80" key="43">
+                <el-table-column prop="created_at" label="下单时间" min-width="80" key="41"></el-table-column>
+                <el-table-column prop="remark" label="客户备注" min-width="80" key="42"></el-table-column>
+                <el-table-column prop="interior_remark" label="内部备注" min-width="80" key="43">
                     <template slot-scope="scope">
                         <span class="Right">{{scope.row.innerRemarks}}</span>
                         <el-button type="text" @click="innerRemarksCheck(scope.row)">修改</el-button>
@@ -927,17 +927,68 @@ export default {
       pageSize: 10,
 
       // 表格数据
+      type: '', // 运单类型
+      customer_name: '', // 客户名称
+      customer_code: '', // 客户编码
+      waybill_no: '', // 运单号
+      forecast_no: '', // 预报单号
+      channel_id: '', // 渠道id
+      channel_name: '', // 渠道名称
+      has_invoice: '', // 是否制作发票
+      irikura_time: '', // 入库时间
+      created_at: '', // 下单时间
+      remark: '', // 客户备注
+      interior_remark: '', // 最新内部备注
       tableData: [
         {
           name: '史蒂夫',
           forecastNum: '21件'
         }
-      ]
+      ],
+      page: {
+        limit: 10,
+        pageNo: 1
+      }
     }
   },
+  mounted () {
+    // 在页面加载前调用获取列表数据函数
+    this.getData()
+  },
   methods: {
+    // 获取列表数据
+    getData () {
+      console.log('1221')
+      // 初始的表格数据清空
+      this.tableData = []
+      this.$api.Ordermanagement.checkoutLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
+        console.log(res.data) // res是接口返回的结果
+        res.data.list && res.data.list.forEach(ele => {
+          let obj = {
+            // status: Number(this.activeName),
+            type: ele.type,
+            customer_name: ele.customer_name,
+            customer_code: ele.customer_code,
+            waybill_no: ele.waybill_no,
+            forecast_no: ele.forecast_no,
+            channel_id: ele.channel_id,
+            has_invoice: ele.has_invoice,
+            irikura_time: ele.irikura_time,
+            created_at: ele.created_at,
+            remark: ele.remark,
+            interior_remark: ele.interior_remark
+          }
+          this.tableData.push(obj)
+        })
+        this.page.total = res.data.total // 数据总量
+        this.tableData = res.data.list
+      })
+    },
     // 表格选择
-    handleSelectionChange () {},
+    handleSelectionChange (val) {
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
+    },
     // 导出配置删除弹框
     Delete () {
       this.dialogDelete = true
