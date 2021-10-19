@@ -2,14 +2,14 @@
   <div>
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span class='text'>货币汇率</span>
+      <span class='text'>材质分类</span>
     </el-row>
     <!-- 主要内容 -->
     <div class='content'>
       <!-- 搜索栏 -->
       <el-row  class='searchbox1'>
         <el-col :span='2' class='colboxx justify-center'>
-          <el-button @click="dialogVisible=true;dialogTitile='新增货币'" class='orangeBtn long3'> 新增货币</el-button>
+          <el-button @click="dialogVisible=true;dialogTitile='新增材质'" class='orangeBtn long3'> 新增材质</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -29,7 +29,7 @@
         :resizable="false"
         >
         <template slot-scope="scope">
-          <el-button type="text" @click="changeDefault(scope.row.id)"> 设置默认</el-button>
+          <!-- <el-button type="text" @click="changeDefault(scope.row.id)"> 设置默认</el-button> -->
           <el-button type="text" @click="edit(scope.row.id)"> 修改</el-button>
         </template>
       </el-table-column>
@@ -40,7 +40,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
-      币种名称：
+      材质名称：
       <el-input v-model="currencyName"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
@@ -67,8 +67,7 @@ export default {
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
       columns: [
-        { prop: 'name', label: '货币名称', align: 'center' },
-        { prop: 'is_default', label: '是否默认', width: '795', align: 'center', formatter: this.formatter }
+        { prop: 'name', label: '材质名称', align: 'center' }
       ],
       tableData: [],
       page: {
@@ -85,7 +84,7 @@ export default {
   },
   methods: {
     getData () {
-      this.$api.setting.currency.lists({ page: this.page.pageNo, limit: this.page.limit }).then((res) => {
+      this.$api.setting.material.lists({ page: this.page.pageNo, limit: this.page.limit }).then((res) => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
@@ -104,12 +103,12 @@ export default {
     },
     edit (id) {
       this.dialogVisible = true
-      this.dialogTitile = '修改货币'
+      this.dialogTitile = '修改名称'
       this.editId = id
     },
     addcurrency () {
-      if (this.dialogTitile === '新增货币') {
-        this.$api.setting.currency.add({ name: this.currencyName }).then((res) => {
+      if (this.dialogTitile === '新增材质') {
+        this.$api.setting.material.add({ name: this.currencyName }).then((res) => {
           if (res.code === 0) {
             this.$message.success(res.msg)
             this.getData()
@@ -118,8 +117,8 @@ export default {
             this.$message.error(res.msg)
           }
         })
-      } else if (this.dialogTitile === '修改货币') {
-        this.$api.setting.currency.edit({ name: this.currencyName, currencyId: this.editId }).then((res) => {
+      } else if (this.dialogTitile === '修改名称') {
+        this.$api.setting.material.edit({ name: this.currencyName, materialCateId: this.editId }).then((res) => {
           if (res.code === 0) {
             this.$message.success(res.msg)
             this.getData()

@@ -197,9 +197,6 @@ export default {
     formatter (row, column, cellValue) {
       return row.name + '测试'
     },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
-    },
     // 改变页面大小处理
     handleSizeChange (val) {
 

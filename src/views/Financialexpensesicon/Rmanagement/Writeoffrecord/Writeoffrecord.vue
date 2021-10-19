@@ -19,73 +19,11 @@
               </el-select>
             </el-col>
           </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>客户名称</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>客户编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>所属账单</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>账单状态</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>核销日期</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>结算方式</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-col>
+
           <el-col :span='6' class='colbox'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
-            <el-button class='wuBtn long1'>展 开</el-button>
+            <!-- <el-button class='wuBtn long1'>展 开</el-button> -->
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -97,18 +35,6 @@
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
         >
-          <el-table-column
-              slot="table_oper"
-              align="center"
-              fixed="right"
-              label="操作"
-              width="87"
-              :resizable="false"
-          >
-            <template slot-scoped="scoped">
-              <el-button type="text" @click="detailspage"> 核销详情</el-button>
-            </template>
-          </el-table-column>
         </commonTable>
       </div>
     </div>
@@ -122,10 +48,10 @@ export default {
       columns: [
         { prop: 'write_off_no', label: '核销单号', width: '165', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
-        { prop: 'customer_code', label: '客户编号', width: '87', align: 'center' },
+        { prop: 'customer_code', label: '客户编号', width: '187', align: 'center' },
         { prop: 'cost_count', label: '核销费用', width: '165', align: 'center', formatter: this.formatter },
-        { prop: 'amount', label: '核销金额', width: '89', align: 'center', formatter: this.formatter },
-        { prop: 'created_at', label: '核销日期', width: '89', align: 'center', formatter: this.formatter }
+        { prop: 'amount', label: '核销金额', width: '189', align: 'center', formatter: this.formatter },
+        { prop: 'created_at', label: '核销日期', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -141,13 +67,13 @@ export default {
   },
   methods: {
     getData () {
-      this.$api.finance.fare.writeOff.customer.history({
-        page: this.page.pageNo,
-        limit: this.page.limit
-      }).then(res => {
-        this.tableData = res.data.list
-        this.page.total = res.data.total
-      })
+      // this.$api.finance.fare.writeOff.customer.history({
+      //   page: this.page.pageNo,
+      //   limit: this.page.limit
+      // }).then(res => {
+      //   this.tableData = res.data.list
+      //   this.page.total = res.data.total
+      // })
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
@@ -161,7 +87,7 @@ export default {
       }
     },
     detailspage () {
-      this.$router.push({ name: 'detailspage' })
+      this.$router.push({ name: 'WriteoffDetail' })
     },
     // 改变页面大小处理
     handleSizeChange (val) {

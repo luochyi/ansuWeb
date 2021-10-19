@@ -213,6 +213,16 @@ export default [
     component: () => import('@/views/configureCenter/currencyExchangerate/currencyExchangerate.vue')
   },
   {
+    path: '/materialCate',
+    name: 'materialCate',
+    meta: {
+      title: '材质分类',
+      icon: 'materialCate',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/materialCate/materialCate.vue')
+  },
+  {
     path: '/countryManagement',
     name: 'countryManagement',
     meta: {
