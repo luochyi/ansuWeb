@@ -59,22 +59,24 @@
             </el-col>
           </el-col>
         </el-row>
-        <!-- <el-row class="info">
+        <el-row class="info">
           <el-col :span="6" class="flex align-center">
             <div class="name">营业执照</div>
             <el-col :span="16">
               <el-upload
                 class="avatar-uploader"
-                action="https://jsonplaceholder.typicode.com/posts/"
+                :action="`${$baseUrl}/file/upload/image`"
+                :headers="uploadhead"
+                name="image"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload">
-                <img v-if="imageUrl" :src="imageUrl" class="avatar">
+                <img v-if="form.certificatePhoto" :src="ImgUrl(this.form.certificatePhoto)" class="avatar">
                 <i v-else class="el-icon-camera-solid uploadIcon"></i>
                 </el-upload>
             </el-col>
           </el-col>
-        </el-row> -->
+        </el-row>
         <!--  -->
         <el-row class="info">
           <el-col :span="12" class="flex align-center">
@@ -119,10 +121,10 @@
             <el-table-column label="QQ" min-width="150" prop="qq">
             </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
-              <template v-slot="scope">
+              <template slot-scope="scope">
                 <!-- <el-button type="text">编辑信息</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span> -->
-                <el-button type="text" @click="delete(scope.row)">删除</el-button>
+                <el-button type="text" @click="deleterow(scope.$index, contactsData)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -255,6 +257,9 @@
 export default {
   data () {
     return {
+      uploadhead: {
+        'Ansuex-Manage-Token': sessionStorage.getItem('token')
+      },
       form: {
         name: '',
         code: '',
@@ -262,7 +267,6 @@ export default {
         password: '',
         confirmPassword: '',
         personnelId: null, // 业务员id
-        salesOptions: [],
         certificatePhoto: '',
         countyId: null,
         address: '',
@@ -292,8 +296,9 @@ export default {
           qq: ''
         }
       ],
-      contactsData: [{}],
+      contactsData: [],
       regiondata: [],
+      salesOptions: [],
       options1: [
         {
           value: 1,
@@ -349,7 +354,49 @@ export default {
     back () {
       this.$router.go(-1)
     },
-    addSubmit () {},
+    addSubmit () {
+      this.$api.customer.customerAdd({
+        name: this.form.name,
+        code: this.form.code,
+        username: this.form.username,
+        password: this.form.password,
+        confirmPassword: this.form.confirmPassword,
+        certificatePhoto: this.form.certificatePhoto,
+        countyId: this.form.countyId[2],
+        address: this.form.address,
+        levelId: this.form.levelId,
+        periodId: this.form.periodId,
+        personnelId: this.form.personnelId,
+        bigGoodsType: this.form.bigGoodsType,
+        bigGoodsAmount: this.form.bigGoodsAmount,
+        smallGoodsType: this.form.smallGoodsType,
+        smallGoodsAmount: this.form.smallGoodsAmount,
+        contacts: this.contactsData
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.$router.push({ name: 'customerAccount' })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    handleAvatarSuccess (res, file) {
+      this.form.certificatePhoto = res.data.path
+    },
+    // 上传前的钩子函数，设置上传限制
+    beforeAvatarUpload (file) {
+      const isLt2M = file.size / 1024 / 1024 < 2
+      const isJPG = file.type === 'image/png'
+      const isPNG = file.type === 'image/jpeg'
+      if (!isJPG && !isPNG) {
+        this.$message.error('上传图片只能是 JPG/PNG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传图片大小不能超过 2MB!')
+      }
+      return (isJPG || isPNG) && isLt2M
+    },
     addclose () {
       this.addcontact = false
       this.addContactInfo = [{
@@ -362,6 +409,10 @@ export default {
     },
     pushInfo (row) {
       this.contactsData.push(row)
+      this.addclose()
+    },
+    deleterow (index, rows) {
+      rows.splice(index, 1)
     }
   }
 }
@@ -424,5 +475,9 @@ export default {
 .uploadIcon{
     width: 30px;
     height: 26px;
+}
+.avatar{
+  width: 75px;
+    height: 77px;
 }
 </style>

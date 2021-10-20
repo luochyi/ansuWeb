@@ -42,43 +42,6 @@ export default {
           sessionStorage.setItem('id', res.data.personnel.id)
           sessionStorage.setItem('name', res.data.personnel.name)
           this.$router.push({ name: 'orderManager' })
-
-          this.provinceOptions = []
-          this.$api.common.settingRegionAll().then(res => {
-            console.log(res)
-            res.data && res.data.forEach(ele => {
-              let province = {
-                value: ele.id,
-                label: ele.name,
-                children: []
-              }
-              if (province.value === ele.id) {
-                ele.children && ele.children.forEach(eles => {
-                  let city = {
-                    value: eles.id,
-                    label: eles.name,
-                    children: []
-                  }
-                  if (city.value === eles.id) {
-                    eles.children && eles.children.forEach(item => {
-                      let county = {
-                        value: item.id,
-                        label: item.name
-                      }
-                      city.children.push(county)
-                    })
-                  }
-                  province.children.push(city)
-                })
-                province.children.push()
-              }
-              province.children.push()
-              this.provinceOptions.push(province)
-            })
-          })
-          console.log(this.provinceOptions)
-          this.$store.commit('common/setPrint', this.provinceOptions)
-          console.log(this.$store)
         } else {
           this.$message.error('账号密码错误')
         }
