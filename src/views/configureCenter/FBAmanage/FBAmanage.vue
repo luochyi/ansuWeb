@@ -58,7 +58,7 @@
             <!-- <el-button class='stopBtn' @click="batchDel">批量删除</el-button> -->
           </el-col>
           <el-col :span='12' class="right">
-            <el-button class='whiteBtn' @click="dialogVisible = true;diatitle='新增'">添加FBA仓</el-button>
+            <el-button class='whiteBtn' @click="dialogVisible = true;diatitle='新增FBA仓'">添加FBA仓</el-button>
           </el-col>
         </el-row>
 
@@ -70,7 +70,7 @@
             <el-table-column prop="address" label="地址"></el-table-column>
             <el-table-column fixed="right" label="操作" width="300">
               <template slot-scope="scope">
-                <el-button type="text" @click="edit(scope.row.id)">
+                <el-button type="text" @click="edit(scope.row)">
                   修改
                 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
@@ -97,11 +97,17 @@
     </el-col>
     </el-row>
       <el-dialog
-        title="提示"
+        :title="diatitle"
         :visible.sync="dialogVisible"
         width="30%"
         :before-close="handleClose">
-        <span>这是一段信息</span>
+        <div>
+          <el-row>
+            仓库名<el-input v-model="form.name"></el-input>
+            邮编<el-input v-model="form.zipCode"></el-input>
+            地址<el-input v-model="form.address" type="textarea"></el-input>
+          </el-row>
+        </div>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="addSubmit">确 定</el-button>
@@ -113,12 +119,19 @@
 export default {
   data () {
     return {
+      diatitle: '',
       dialogVisible: false,
       countryList: [],
+      form: {
+        name: '',
+        zipCode: '',
+        address: ''
+      },
       keyword: '',
       visible: false,
       red: null,
       countryId: null,
+      storehouseFbaId: null,
       chooseArr: [],
       total: null, // 数据总条数
       currentPage: 1,
@@ -164,7 +177,7 @@ export default {
     del (id) {
       this.$confirm('确认删除')
         .then(_ => {
-          this.$api.configure.FBA.del({ channelServiceId: id }).then(res => {
+          this.$api.configure.FBA.del({ storehouseFbaId: id, countryId: this.countryId }).then(res => {
             if (res.code === 0) {
               this.$message.success(res.msg)
               this.getData()
@@ -175,7 +188,59 @@ export default {
         })
         .catch(_ => {})
     },
-    toAdd () {
+    addSubmit () {
+      if (this.countryId === null) {
+        this.$message.error('请选择国家')
+        return
+      }
+      if (this.diatitle === '新增FBA仓') {
+        this.$api.configure.FBA.add({
+          name: this.form.name,
+          address: this.form.address,
+          zipCode: this.form.zipCode,
+          countryId: this.countryId
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.handleClose()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else if (this.diatitle === '修改FBA仓') {
+        this.$api.configure.FBA.edit({
+          name: this.form.name,
+          address: this.form.address,
+          zipCode: this.form.zipCode,
+          countryId: this.countryId,
+          storehouseFbaId: this.storehouseFbaId
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.handleClose()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+    },
+    edit (data) {
+      this.diatitle = '修改FBA仓'
+      this.dialogVisible = true
+      this.storehouseFbaId = data.id
+      this.form.name = data.name
+      this.form.zipCode = data.zip_code
+      this.form.address = data.address
+    },
+    handleClose () {
+      this.form = {
+        name: '',
+        zipCode: '',
+        address: ''
+      }
+      this.dialogVisible = false
     }
   }
 }

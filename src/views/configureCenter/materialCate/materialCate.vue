@@ -30,7 +30,7 @@
         >
         <template slot-scope="scope">
           <!-- <el-button type="text" @click="changeDefault(scope.row.id)"> 设置默认</el-button> -->
-          <el-button type="text" @click="edit(scope.row.id)"> 修改</el-button>
+          <el-button type="text" @click="edit(scope.row)"> 修改</el-button>
         </template>
       </el-table-column>
       </commonTable>
@@ -101,10 +101,11 @@ export default {
       this.page.limit = val
       this.getData()
     },
-    edit (id) {
+    edit (data) {
       this.dialogVisible = true
       this.dialogTitile = '修改名称'
-      this.editId = id
+      this.editId = data.id
+      this.currencyName = data.name
     },
     addcurrency () {
       if (this.dialogTitile === '新增材质') {
