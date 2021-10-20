@@ -941,11 +941,6 @@ export default {
       remark: '', // 客户备注
       interior_remark: '', // 最新内部备注
       tableData: [
-        {
-          customer_name: '史蒂夫',
-          interior_remark: '21件',
-          remark: '王成虎'
-        }
       ],
       page: {
         limit: 10,
@@ -955,12 +950,11 @@ export default {
   },
   mounted () {
     // 在页面加载前调用获取列表数据函数
-    // this.getData()
+    this.getData()
   },
   methods: {
     // 获取列表数据
     getData () {
-      console.log('12244551')
       // 初始的表格数据清空
       this.tableData = []
       this.$api.Ordermanagement.Ejectlists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {

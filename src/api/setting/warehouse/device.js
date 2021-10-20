@@ -24,3 +24,12 @@ export const disabled = (params) => {
     data: params
   })
 }
+// waybillId
+export const select = (params) => {
+  return axios({
+    url: '/setting/warehouse/device/select/waybill',
+    method: 'post',
+    data: params
+  })
+}
+export const scanUrl = process.env.VUE_APP_WS + '/order/waybill/scan'

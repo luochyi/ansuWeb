@@ -1424,11 +1424,6 @@ export default {
       remark: '', // 客户备注
       interior_remark: '', // 最新内部备注
       tableData: [
-        {
-          customer_name: '史蒂夫',
-          interior_remark: '21件',
-          remark: '王成虎'
-        }
       ],
       page: {
         limit: 10,
