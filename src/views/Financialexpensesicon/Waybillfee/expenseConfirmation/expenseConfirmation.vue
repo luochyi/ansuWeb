@@ -83,6 +83,14 @@
 export default {
   data () {
     return {
+      waybillNo: '', // 运单号
+      customerName: '', // 客户名称
+      customerCode: '', // 客户编号
+      predictionChannel: '', // 预报渠道
+      destination: '', // 目的地
+      value: '',
+      options: '',
+      zipcode: '',
       columns: [
         { prop: 'waybill_no', label: '安速单号', width: '176', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
@@ -184,6 +192,20 @@ export default {
   height: 56px;
   font-size: 16px;
 }
+/deep/ .searchbox1{
+  .stopBtn{
+    height: 32px;
+    line-height: 32px;
+    padding: 0px 15px;
+    background: #FEF4E1;
+    border-radius: 4px;
+
+    font-size: 14px;
+    font-family: PingFangSC-Regular, PingFang SC;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.65);
+  }
+}
 /deep/ .tableBtn{
   .batch{
     float: right;
@@ -232,13 +254,5 @@ color: #FB4E0C;
 line-height: 25px;
 float: left;
 }
-.text{
-width: 42px;
-height: 20px;
-font-size: 14px;
-font-family: PingFangSC-Medium, PingFang SC;
-font-weight: 500;
-color: #333333;
-line-height: 20px;
-}
+
 </style>
