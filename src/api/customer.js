@@ -73,7 +73,13 @@ export const customerLists = (params) => {
     data: params
   })
 }
-
+export const customerAdd = (params) => {
+  return axios({
+    url: '/customer/add',
+    method: 'post',
+    data: params
+  })
+}
 // 客户筛选
 export const customerSelect = () => {
   return axios({
