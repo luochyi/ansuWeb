@@ -6,6 +6,7 @@ import * as personnel from './configure/personnel'
 import * as driver from './configure/driver'
 import * as warehouse from './configure/warehouse'
 import * as milestone from './configure/milestone'
+import * as FBA from './configure/FBA'
 
 const axios = GetAxios((config) => {
   // 在发送请求之前做些什么
@@ -115,6 +116,13 @@ export const customerLevelDel = (params) => {
     data: params
   })
 }
+export const customerLevelSelect = (params) => {
+  return axios({
+    url: '/setting/customerLevel/select',
+    method: 'post',
+    data: params
+  })
+}
 export const countryLists = (params) => {
   return axios({
     url: '/setting/country/lists',
@@ -139,5 +147,6 @@ export {
   personnel, // 员工管理
   driver, // 司机
   warehouse, // 操作
-  milestone
+  milestone,
+  FBA
 }

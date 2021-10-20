@@ -143,106 +143,61 @@ export default {
       columns: [
         {
           prop: 'eject_no',
-          label: '预报单号',
+          label: '出仓单号',
           width: '200',
           align: 'center'
         },
         // 定义表格列的类型为slot，slot插槽名字为 slotbtn
         {
-          prop: 'type',
-          label: '预报类型',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'num',
-          label: '票数',
-          width: '100',
-          align: 'center',
-          type: 'slot',
-          slotName: 'piaoshu'
-        },
-        {
           prop: 'channel_name',
-          label: '客户名称',
+          label: '渠道名称',
           width: '250',
           align: 'center'
         },
         {
           prop: 'agent_name',
-          label: '客户编号',
-          width: '100',
+          label: '代理名称',
+          width: '200',
           align: 'center'
 
         },
-        // 已处理才有
-        // {
-        //   prop: 'status',
-        //   label: '处理状态',
-        //   width: '200',
-        //   align: 'center',
-        //   type: 'slot',
-        //   slotName: 'status'
-        // },
-        // {
-        //   prop: 'spr',
-        //   label: '审批人',
-        //   width: '200',
-        //   align: 'center',
-        //   type: 'slot',
-        //   slotName: 'spr'
-        // },
         {
-          prop: 'diver',
-          label: '收货司机',
-          width: '100',
+          prop: 'eject_time',
+          label: '出仓时间',
+          width: '200',
           align: 'center',
-          type: 'slot',
-          slotName: 'diver'
+          formatter: this.formatters
         },
         {
-          prop: 'item_count',
-          label: '预报件数',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'address',
-          label: '收货地址',
-          width: '300',
-          align: 'center'
-        },
-        {
-          prop: 'bill_weight',
-          label: '预报重量',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'volume',
-          label: '预报方数',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'time',
-          label: '预报时间',
+          prop: 'waybill_count',
+          label: '运单数',
           width: '200',
           align: 'center'
         },
         {
-          prop: 'eject_time',
-          label: '货好时间',
+          prop: 'item_count',
+          label: '货件数',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'volume',
+          label: '体积',
           width: '100',
           align: 'center'
         },
         {
-          prop: 'ywy',
-          label: '业务员',
+          prop: 'bill_weight',
+          label: '结算重',
+          width: '100',
+          align: 'center'
+        },
+        {
+          prop: 'has_assign_drivers',
+          label: '是否配置司机',
           width: '100',
           align: 'center',
-          type: 'slot',
-          slotName: 'yewuyuan'
+          formatter: this.formatter
         }
       ],
       tableData: [],
@@ -300,43 +255,30 @@ export default {
   methods: {
     getData () {
       this.$api.Ordermanagement.ejectLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
-        console.log(res.data) // res是接口返回的结果
-        res.data.list && res.data.list.forEach(ele => {
-          let obj = {
-            id: ele.id,
-            eject_no: ele.eject_no,
-            channel_name: ele.channel_name,
-            agent_name: ele.agent_name,
-            eject_time: ele.eject_time,
-            item_count: ele.item_count,
-            volume: ele.volume,
-            bill_weight: ele.bill_weight
-          }
-          this.tableData.push(obj)
-        })
+        this.tableData = res.data.list
         this.page.total = res.data.total // 数据总量
       })
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
+      if (row.has_assign_drivers === 1) {
+        return '是'
+      } else {
+        return '否'
+      }
     },
     formatters (row, column, cellValue) {
-      return row.address + '测试'
+      return this.formatDate(row.eject_time, 'yyyy-MM-dd hh:mm:ss')
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-      console.log(val)
+      this.page.limit = val
+      this.getData()
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        {
-          date: '2016-05-03',
-          name: '王小虎111',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-      ]
+      this.page.pageNo = val
+      this.getData()
     },
     // checkbox选中获取数据
     handleSelectionChange (val) {

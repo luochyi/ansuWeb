@@ -77,8 +77,8 @@
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left" v-if="activeName==='1'">
-            <el-button class='stopBtn'>批量通过审核</el-button>
-            <el-button class='stopBtn'>批量拒绝审核</el-button>
+            <!-- <el-button class='stopBtn'>批量通过审核</el-button>
+            <el-button class='stopBtn'>批量拒绝审核</el-button> -->
           </el-col>
           <!-- <el-col :span='12' class="right">
             <el-button class='whiteBtn' @click="toAdd">新增渠道</el-button>
@@ -137,9 +137,7 @@
           >
             <template slot-scope="scope">
                <el-button type="text" @click="detail(scope.row)">查看详情</el-button>
-               <span style="color: #0084FF; margin: 0px 5px">|</span>
                <el-button type="text" v-if="activeName==='1'" @click="adopt(scope.row.id)" >通过</el-button>
-               <span style="color: #0084FF; margin: 0px 5px">|</span>
                <el-button type="text" v-if="activeName==='1'" @click="refuse(scope.row.id)">拒绝</el-button>
             </template>
           </el-table-column>
@@ -276,10 +274,7 @@ export default {
           slotName: 'yewuyuan'
         }
       ],
-      tableData: [{
-        forecast_no: 1640072013,
-        customer_code: 1640072021
-      }],
+      tableData: [],
       page: {
         pageNo: 1,
         limit: 10,
@@ -290,7 +285,7 @@ export default {
   },
   mounted () {
     // 在页面加载前调用获取列表数据函数
-    // this.getData()
+    this.getData()
   },
   methods: {
     // 获取列表数据
@@ -328,12 +323,19 @@ export default {
     // 通过
     adopt: function (event) {
       console.log(event)
-      this.$api.Ordermanagement.directAgree({ directId: Number(event) }).then((res) => {})
+      this.$api.Ordermanagement.directAgree({ directId: Number(event) }).then((res) => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     // 拒绝
     refuse: function (event) {
       console.log(event)
-      this.$api.Ordermanagement.directReject({ directId: 3 }).then((res) => {})
+      this.$api.Ordermanagement.directReject({ directId: Number(event) }).then((res) => {})
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
@@ -361,7 +363,9 @@ export default {
       console.log(val.data)
       this.$router.push('name:sjmssqDetail')
     },
-    handleClick (tab, event) { console.log(tab, event) },
+    handleClick (tab, event) {
+      this.getData()
+    },
     // 操作按钮列表
     editTableData (row) {}
     // 关闭抽屉

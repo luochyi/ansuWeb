@@ -93,10 +93,10 @@
           <el-row class='tableBtn'>
             <el-col :span='12' class='left'>
               <el-button class='batch'>批量导出Excel</el-button>
-              <el-button class='batch'>协调订单</el-button>
+              <!-- <el-button class='batch'>协调订单</el-button> -->
             </el-col>
             <el-col :span='20' class='right'>
-              <el-button class='whiteBtn '>列表显示设置</el-button>
+              <!-- <el-button class='whiteBtn '>列表显示设置</el-button> -->
             </el-col>
           </el-row>
           <br>
@@ -112,7 +112,7 @@
             <el-table-column prop='waybill_count' label='票数' min-width='107'   >
                <template v-slot='scope'>
                 <span style='margin-right: 5px'>  {{ scope.row.waybill_count }}  </span>
-                <el-button @click="waybill" type='text'>查看</el-button>
+                <!-- <el-button @click="waybill" type='text'>查看</el-button> -->
               </template>
             </el-table-column>
              <!-- 客户名称 -->
@@ -124,96 +124,90 @@
             <el-table-column label='收货司机' min-width='107' prop='driver_name'>
               <template v-slot='scope'>
                 <span style='margin-right: 5px'>
-                  {{ scope.row.Receivingdriver }}
+                  {{ scope.row.driver_name }}
                 </span>
-                <el-button type='text'>查看</el-button>
+                <!-- <el-button type='text'>查看</el-button> -->
               </template>
             </el-table-column>
             <!-- 预报件数 -->
-            <el-table-column prop='Forecastnumber' label='预报件数' min-width='86'>  </el-table-column>
+            <el-table-column prop='box_count' label='预报件数' min-width='86'>  </el-table-column>
             <!-- 预报重量 -->
             <el-table-column prop='weight' label='预报重量' min-width='80'>  </el-table-column>
             <!-- 预报方数 -->
              <el-table-column prop='volume' label='预报方数' min-width='80'>  </el-table-column>
              <!-- 收货件数 -->
-            <el-table-column label='收货件数' min-width='107' prop='box_count' v-if="activeName === '2'">
-              <template v-slot='scope' >
+            <!-- <el-table-column label='收货件数' min-width='107' prop='box_count' v-if="activeName !== '1'">
+              <template slot-scope='scope' >
                 <span style='margin-right: 5px'>
                   {{ scope.row.goodsreceived }}
                 </span>
                 <el-button type='text'>查看</el-button>
               </template>
             </el-table-column>
-             <!-- 收货件数 -->
-            <el-table-column label='收货件数' min-width='107' prop='box_count' v-if="activeName === '3'">
-              <template v-slot='scope' >
-                <span style='margin-right: 5px'>
-                  {{ scope.row.goodsreceived }}
-                </span>
-                <el-button type='text'>查看</el-button>
-              </template>
-            </el-table-column>
-             <!-- 入库件数 -->
-             <el-table-column prop='warehousedpieces' label='入库件数' min-width='182' v-if="activeName === '3'">
-            </el-table-column>
+             <el-table-column prop='warehousedpieces' label='入库件数' min-width='182' v-else-if="activeName === '3'">
+            </el-table-column> -->
             <!-- 货好时间 -->
             <el-table-column label='货好时间' min-width='157' prop='good_time'>
-              <template v-slot='scope'>
-                {{ scope.row.completeTime }}
+              <template slot-scope='scope'>
+                {{getDate(scope.row.good_time)}}
               </template>
             </el-table-column>
             <!-- 寄件方式 -->
-            <el-table-column label='寄件方式' min-width='81'>
-              <template v-slot='scope'>
-                {{ scope.row.mailingMethod }}
+            <el-table-column label='收件方式' min-width='81' prop="receive_type">
+              <template slot-scope='scope'>
+                {{ scope.row.receive_type ===1?'上门取件':'自送入仓'}}
               </template>
             </el-table-column>
             <!-- 预报时间 -->
              <el-table-column prop='created_at' label='预报时间' min-width='182'>
+               <template slot-scope="scope">{{getDate(scope.row.created_at)}}</template>
             </el-table-column>
               <!-- 收货时间 -->
              <el-table-column prop='received_at' label='收货时间' min-width='182' v-if="activeName === '2'">
+               <template slot-scope="scope">{{getDate(scope.row.received_at)}}</template>
             </el-table-column>
               <!-- 收货时间 -->
              <el-table-column prop='received_at' label='收货时间' min-width='182' v-if="activeName === '3'">
+               <template slot-scope="scope">{{getDate(scope.row.received_at)}}</template>
             </el-table-column>
               <!-- 入库时间 -->
              <el-table-column prop='already_at' label='入库时间' min-width='182' v-if="activeName === '3'">
+               <template slot-scope="scope">{{getDate(scope.row.already_at)}}</template>
             </el-table-column>
             <!-- 业务员 -->
             <el-table-column label='业务员' min-width='110'  prop='salesman_name'>
               <template v-slot='scope'>
                 <span style='margin-right: 5px'>
-                  {{ scope.row.salesman }}
+                  {{ scope.row.salesman_name }}
                 </span>
-                <el-button type='text'>查看</el-button>
+                <!-- <el-button type='text'>查看</el-button> -->
               </template>
             </el-table-column>
             <!-- 协同 -->
-             <el-table-column prop='coordination' label='协同' min-width='124'>
-            </el-table-column>
+             <!-- <el-table-column prop='coordination' label='协同' min-width='124'>
+            </el-table-column> -->
             <!-- 操作 -->
             <el-table-column label='操作' fixed='right' min-width='199'>
               <template slot-scope="scope">
                  <el-button type="text" @click="Orderdetails(scope.row.id)"> 查看详情</el-button>
                  <span v-if="scope.row.Forecasttype == '未建计划'" style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="scope.row.Forecasttype == '未建计划'" type="text" @click="drawer= true" style="margin-left: 16px;"> 发货 </el-button>
-                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="Coordinated"> 协同运单 </el-button>
+                 <!-- <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click="Coordinated"> 协同运单 </el-button> -->
               </template>
             </el-table-column>
           </el-table>
           <!-- 分页 -->
          <div class='block'>
             <el-pagination
-            @handleSizeChange="handleSizeChange"
-            @handleCurrentChange="handleCurrentChange"
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
               :current-page.sync='currentPage'
               :pager-count='9'
                :page-size='pageSize'
                :page-sizes='[5, 20, 50, 100]'
               layout='total, sizes, prev, pager, next, jumper'
-              :total='50'>
+              :total='total'>
               </el-pagination>
           </div>
         </div>
@@ -301,7 +295,9 @@ export default {
       // 初始的表格数据清空
       this.tableData = []
       let params = {
-        status: Number(this.activeName)
+        status: Number(this.activeName),
+        page: this.currentPage,
+        limit: this.pageSize
       }
       console.log('getget')
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
@@ -317,18 +313,23 @@ export default {
         // }
         // this.tableData.push(obj)
         this.tableData = res.data.list
+        this.total = res.data.total
         // })
         // this.page.total = res.data.total // 数据总量
       })
     },
+    getDate (val) {
+      return this.formatDate(val, 'yyyy-MM-dd hh:mm:ss')
+    },
     // 改变页面大小处理
     handleSizeChange (val) {
-      this.page.limit = val // 设置当前页容量为val
+      console.log(1)
+      this.pageSize = val // 设置当前页容量为val
       this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.page.pageNo = val // 设置当前页码为val
+      this.currentPage = val // 设置当前页码为val
       this.getData() // 重新渲染表格
     },
     formatter (row, column) {
@@ -339,6 +340,19 @@ export default {
         return '无计划下单'
       }
     },
+    formatters (row, column, cellValue) {
+      return this.tableData(row.created_at, 'yyyy-MM-dd hh:mm:ss')
+    },
+    // formatter (row, column) {
+    //   // console.log(row)
+    //   if (row.status === 1) {
+    //     return '待收货'
+    //   } else if (row.status === 2) {
+    //     return '以收货'
+    //   } else if (row.status === 3) {
+    //     return '以收货'
+    //   }
+    // },
     // 操作按钮列表
     editTableData (row) {},
     search () {
