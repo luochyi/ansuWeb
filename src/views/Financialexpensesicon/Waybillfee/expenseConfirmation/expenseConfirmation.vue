@@ -3,7 +3,7 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-         <span>费用登记单</span>
+         <span style="marginLeft:40px">费用登记单</span>
         </el-row>
       <!-- 主要内容 -->
       <div class='content'>

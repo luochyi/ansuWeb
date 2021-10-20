@@ -7,7 +7,7 @@
     <el-header class='head'>
       <el-row class='tilte' align='middle' type='flex'>
         <el-col :span='3'>
-          <!-- <img alt class='logoimg' src='@/assets/logo.png' /> -->
+          <img alt class='logoimg' src='@/assets/logo.png' />
           <span class='tit-text'>安速货运</span>
         </el-col>
         <el-col :span='18' class='firstMenu'>
@@ -829,3 +829,14 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.logoimg{
+  width: 52.5px;
+  height: 25px;
+  margin-right: 10px;
+}
+.tit-text{
+  font-size: 20px;
+  font-weight: 500;
+}
+</style>

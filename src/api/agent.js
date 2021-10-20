@@ -170,3 +170,19 @@ export const channelServiceMaster = (params) => {
     data: params
   })
 }
+
+export const agentServiceAll = (params) => {
+  return axios({
+    url: '/setting/agent/service/all',
+    method: 'post',
+    data: params
+  })
+}
+// /setting/channel/service/add
+export const channelServiceAdd = (params) => {
+  return axios({
+    url: '/setting/channel/service/add',
+    method: 'post',
+    data: params
+  })
+}
