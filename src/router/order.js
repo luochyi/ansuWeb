@@ -54,7 +54,7 @@ export default [
     path: '/management',
     name: 'management',
     meta: {
-      title: '订单详情',
+      title: '运单管理',
       icon: 'management',
       hidden: false
     },

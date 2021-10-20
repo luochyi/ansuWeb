@@ -339,9 +339,9 @@ export default {
         return '无计划下单'
       }
     },
-    formatters (row, column, cellValue) {
-      return this.tableData(row.created_at, 'yyyy-MM-dd hh:mm:ss')
-    },
+    // formatters (row, column, cellValue) {
+    //   return this.tableData(row.created_at, 'yyyy-MM-dd hh:mm:ss')
+    // },
     // formatter (row, column) {
     //   // console.log(row)
     //   if (row.status === 1) {

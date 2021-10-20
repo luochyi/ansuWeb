@@ -1085,21 +1085,73 @@ export default {
       pageSize: 10,
 
       // 表格数据
+      type: '', // 运单类型
+      customer_name: '', // 客户名称
+      customer_code: '', // 客户编码
+      waybill_no: '', // 运单号
+      forecast_no: '', // 预报单号
+      channel_id: '', // 渠道id
+      channel_name: '', // 渠道名称
+      has_invoice: '', // 是否制作发票
+      irikura_time: '', // 入库时间
+      created_at: '', // 下单时间
+      remark: '', // 客户备注
+      interior_remark: '', // 最新内部备注
       tableData: [
         {
-          name: '史蒂夫',
-          forecastNum: '21件'
+          customer_name: '史蒂夫',
+          interior_remark: '21件',
+          remark: '王成虎'
         }
-      ]
+      ],
+      page: {
+        limit: 10,
+        pageNo: 1
+      }
     }
   },
+  mounted () {
+    // 在页面加载前调用获取列表数据函数
+    // this.getData()
+  },
   methods: {
+    // 获取列表数据
+    getData () {
+      console.log('1221')
+      // 初始的表格数据清空
+      this.tableData = []
+      this.$api.Ordermanagement.checkoutLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
+        console.log(res.data) // res是接口返回的结果
+        //   res.data.list && res.data.list.forEach(ele => {
+        //     let obj = {
+        //       // status: Number(this.activeName),
+        //       type: ele.type,
+        //       customer_name: ele.customer_name,
+        //       customer_code: ele.customer_code,
+        //       waybill_no: ele.waybill_no,
+        //       forecast_no: ele.forecast_no,
+        //       channel_id: ele.channel_id,
+        //       has_invoice: ele.has_invoice,
+        //       irikura_time: ele.irikura_time,
+        //       created_at: ele.created_at,
+        //       remark: ele.remark,
+        //       interior_remark: ele.interior_remark
+        //     }
+        //     this.tableData.push(obj)
+        //   })
+        this.page.total = res.data.total // 数据总量
+        this.tableData = res.data.list
+      })
+    },
     // 批量设置转单号
     batchSetTransfer () {
       this.dialogBatchSetTransfer = true
     },
     // 表格选择
-    handleSelectionChange () {},
+    handleSelectionChange (val) {
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
+    },
     // 转单号查看官网
     checkWebsite () {},
     // 转单号修改
@@ -1123,7 +1175,9 @@ export default {
     // 批量修改入仓渠道
     batchModifyChannel () {},
     // 表格出仓
-    outWarehouse () {
+    outWarehouse: function (event) {
+      console.log(event)
+      this.$api.Ordermanagement.checkoutShipment({ directId: Number(event) }).then((res) => {})
       this.dialogShipment = true
     },
     // 查询搜索条件
