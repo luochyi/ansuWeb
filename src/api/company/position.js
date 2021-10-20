@@ -19,3 +19,11 @@ export const auth = (params) => {
     data: params
   })
 }
+// /company/sales/select
+export const salesSelect = (params) => {
+  return axios({
+    url: '/company/sales/select',
+    method: 'post',
+    data: params
+  })
+}

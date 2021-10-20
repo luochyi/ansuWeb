@@ -494,7 +494,7 @@ export default {
         firstPrices: []
       },
       formData: {
-        channelId: 1,
+        channelId: null,
         zones: [],
         weights: [],
         unitPrices: [],
@@ -528,7 +528,7 @@ export default {
     // 分区价格
     fqjg (data) {
       console.log(data)
-      this.formData.agentServiceId = data.id
+      this.formData.channelId = data.id
       this.drawerVrisible = true
       if (data.type === 1) {
         this.zoneType = 1
