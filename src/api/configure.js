@@ -116,6 +116,13 @@ export const customerLevelDel = (params) => {
     data: params
   })
 }
+export const customerLevelSelect = (params) => {
+  return axios({
+    url: '/setting/customerLevel/select',
+    method: 'post',
+    data: params
+  })
+}
 export const countryLists = (params) => {
   return axios({
     url: '/setting/country/lists',
