@@ -75,7 +75,7 @@
         </div>
       </div>
     </div>
-    <commonDrawer :drawerVrisible="drawerVrisible" @handleClose='addClose' :drawerTitle="drawerTitle" @click="check(slotData)">
+    <commonDrawer :drawerVrisible="drawerVrisible" :drawerTitle="drawerTitle" :drawerSize='drawerSize'>
       <div class="dra-content" style="textAlign:left;padding:10px">
         <!-- 内容区域 -->
         <el-row style="fontSize:20px;color:#FB4702">{{info.code}}</el-row>
@@ -132,10 +132,18 @@
 export default {
   data () {
     return {
+      // websocket
       socket: null,
+      lockReconnect: false, // 是否真正建立连接
+      timeout: 40 * 1000, // 40秒一次心跳
+      timeoutObj: null, // 心跳心跳倒计时
+      serverTimeoutObj: null, // 心跳倒计时
+      timeoutnum: null, // 断开 重连倒计时
       header: this.$api.common.loginHeader(),
+      //
       activeName: '1',
       drawerVrisible: false,
+      drawerSize: '50%',
       drawerTitle: '入仓',
       dialog: false,
       waybillId: null, // 运单id
@@ -270,7 +278,6 @@ export default {
     }
   },
   mounted () {
-    // 在页面加载前调用获取列表数据函数
     this.getData()
   },
   methods: {
@@ -318,6 +325,8 @@ export default {
     addClose () {
       this.drawerVrisible = false
       this.close()
+      this.deviceId = null
+      this.deviceName = null
     },
     formatter (row, col) {
       switch (col.property) {
@@ -344,6 +353,10 @@ export default {
       this.getData()
     },
     deviceSubmit () {
+      if (this.deviceId === null) {
+        this.$message.error('请选择入仓设备')
+        return
+      }
       this.$message.success('选择成功')
       this.dialog = false
       this.init(this.deviceId)
@@ -378,32 +391,85 @@ export default {
         this.socket.onmessage = this.getMessage
       }
     },
+    reconnect () {
+      // 重新连接
+      var that = this
+      if (that.lockReconnect) {
+        return
+      }
+      that.lockReconnect = true
+      // 没连接上会一直重连，设置延迟避免请求过多
+      that.timeoutnum && clearTimeout(that.timeoutnum)
+      that.timeoutnum = setTimeout(function () {
+        // 新连接
+        that.init()
+        that.lockReconnect = false
+      }, 5000)
+    },
+    reset () {
+      // 重置心跳
+      var that = this
+      // 清除时间
+      clearTimeout(that.timeoutObj)
+      clearTimeout(that.serverTimeoutObj)
+      // 重启心跳
+      that.start()
+    },
+    start () {
+      // 开启心跳
+      console.log('ping')
+      var self = this
+      self.timeoutObj && clearTimeout(self.timeoutObj)
+      self.serverTimeoutObj && clearTimeout(self.serverTimeoutObj)
+      self.timeoutObj = setTimeout(function () {
+        // 这里发送一个心跳，后端收到后，返回一个心跳消息，
+        if (self.socket.readyState === 1) {
+          // 如果连接正常
+          self.socket.send('ping') // 这里可以自己跟后端约定
+        } else {
+          // 否则重连
+          self.reconnect()
+        }
+        self.serverTimeoutObj = setTimeout(function () {
+          // 超时关闭
+          self.socket.close()
+        }, self.timeout)
+      }, self.timeout)
+    },
     open () {
       console.log('socket连接成功')
+      this.start()
     },
     error () {
       console.log('连接错误')
     },
     getMessage (msg) {
-      var data = JSON.parse(msg.data)
-      for (let index in this.goodslist) {
-        console.log(this.goodslist[index].cargoNo === data.orderNo, this.goodslist[index].cargoNo, data.data.orderNo, data)
-        if (this.goodslist[index].cargoNo === data.data.orderNo) {
-          this.goodslist[index].length = data.data.length
-          this.goodslist[index].width = data.data.width
-          this.goodslist[index].height = data.data.height
-          this.goodslist[index].weight = data.data.weight
+      if (msg.data === 'pong') {
+        console.log(msg)
+      } else {
+        var data = JSON.parse(msg.data)
+        for (let index in this.goodslist) {
+          console.log(this.goodslist[index].cargoNo === data.orderNo, this.goodslist[index].cargoNo, data.data.orderNo, data)
+          if (this.goodslist[index].cargoNo === data.data.orderNo) {
+            this.goodslist[index].length = data.data.length
+            this.goodslist[index].width = data.data.width
+            this.goodslist[index].height = data.data.height
+            this.goodslist[index].weight = data.data.weight
+          }
         }
+        console.log(this.goodslist)
       }
-      console.log(this.goodslist)
+      this.reset()
     },
-    send () {
-      // this.socket.send(params)
+    send (data) {
+      this.socket.send(data)
     },
     close () {
       if (this.socket && this.socket.close !== undefined) {
         this.socket.close()
       }
+      console.log('socket已经关闭')
+      this.reconnect()
     }
   }
 }

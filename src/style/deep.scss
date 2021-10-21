@@ -24,7 +24,13 @@ background: #1890ff;
 border-radius: 2px;
 @include frontsmall(#ffffff);
 }
-
+// 固定分页
+/deep/.el-pagination{
+    position:fixed;
+    bottom: 50px;
+    background: #ffffff;
+    z-index: 999;
+}
 // 分页
 /deep/ .block {
 margin-top: 100px;
@@ -70,4 +76,5 @@ justify-content: flex-end;
     height: 32px;
     line-height: 32px;
 }
+
 }

@@ -111,6 +111,7 @@ export default {
 .pagination-item p {
     color: #999999;
 }
+
 .el-pagination.is-background .el-pager li:not(.disabled).active {
     background-color: #fb4702 !important;
     color: #fff;
