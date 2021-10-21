@@ -1,62 +1,73 @@
-设备列表<template>
-<div id='boxx'>
+<template>
+  <div id='boxx'>
     <div class="box">
-    <!--  top -->
-    <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span class='text'>设备列表</span>
-      <el-tabs v-model='activeName' type='card' @tab-click='getData'>
-        <el-tab-pane label='使用中' name='1'></el-tab-pane>
-        <el-tab-pane label='停用' name='2'></el-tab-pane>
-      </el-tabs>
-    </el-row>
-     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span class='texta'>{{ basicInfo.name }}设配列表</span>
-    </el-row>
+      <!--  top -->
+      <el-row type='flex' justify='flex-start' class='title' align='middle'>
+        <span class='text'>设备列表</span>
+        <el-tabs v-model='activeName' type='card' @tab-click='getData'>
+          <el-tab-pane label='使用中' name='1'></el-tab-pane>
+          <el-tab-pane label='停用' name='2'></el-tab-pane>
+        </el-tabs>
+      </el-row>
+      <el-row type='flex' justify='flex-start' class='title' align='middle'>
+        <span class='texta'>{{ basicInfo.name }}设配列表</span>
+      </el-row>
     </div>
     <div class='content'>
-        <el-row class='searchbox1'>
-          <el-col :span='8' class='colbox'>
-            <el-col :span='7'>
-              <span class='text'>设备名称</span>
-            </el-col>
-            <el-col :span='16'>
-              <el-input v-model='search.name' placeholder='请输入'></el-input>
-            </el-col>
+      <el-row class='searchbox1'>
+        <el-col :span='8' class='colbox'>
+          <el-col :span='7'>
+            <span class='text'>设备名称</span>
           </el-col>
-          <el-col :span='8' class='colbox'>
-            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+          <el-col :span='16'>
+            <el-input v-model='search.name' placeholder='请输入'></el-input>
           </el-col>
-          <el-col :span='8' class="left">
-          <el-button @click="device" class='orangeBtn long2' icon="el-icon-circle-plus-outline">添加设备</el-button>
         </el-col>
-        </el-row>
- <commonTable
-      :columns="columns"
-      :data="tableData"
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
+        <el-col :span='8' class='colbox'>
+          <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+          <el-button class='wuBtn long1'>重 置</el-button>
+        </el-col>
+        <el-col :span='8' class="left">
+          <el-button @click="showAdd" class='orangeBtn long2' icon="el-icon-circle-plus-outline">添加设备</el-button>
+        </el-col>
+      </el-row>
+      <commonTable
+          :columns="columns"
+          :data="tableData"
+          :pager="page"
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
       >
-      <el-table-column
-        slot="table_oper"
-        fixed="right"
-        label="操作"
-        width="231"
-        :resizable="false"
+        <el-table-column
+            slot="table_oper"
+            fixed="right"
+            label="操作"
+            width="231"
+            :resizable="false"
         >
-        <template slot-scope="scope">
-          <el-button type="text" @click="toDetail(scope.row.id)"> 修改名称</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="password= true"> 复制链接 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="disabled([scope.row.id])"> 停用设备 </el-button>
-                <el-button v-if="activeName === '2'" type="text" @click="enabled([scope.row.id])"> 启用设备 </el-button>
-        </template>
-      </el-table-column>
+          <template slot-scope="scope">
+            <el-button type="text" @click="showEdit(scope.row)"> 编辑</el-button>
+            <span style="color: #0084FF; margin: 0px 5px">|</span>
+            <el-button v-if="activeName === '1'" type="text" @click="disabled([scope.row.id])"> 停用设备</el-button>
+            <el-button v-if="activeName === '2'" type="text" @click="enabled([scope.row.id])"> 启用设备</el-button>
+          </template>
+        </el-table-column>
       </commonTable>
-</div>
-</div>
+    </div>
+
+    <el-dialog
+        :title="dialog.titile"
+        :visible.sync="dialog.visible"
+        width="30%"
+        :before-close="dialogClose">
+      设备名称：
+      <el-input v-model="formData.name"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialog.visible = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -84,6 +95,15 @@ export default {
         limit: 15,
         sizes: [15, 50, 100],
         total: 0
+      },
+      dialog: {
+        type: 1,
+        titile: '',
+        visible: false
+      },
+      formData: {
+        deviceId: null,
+        name: ''
       }
     }
   },
@@ -142,6 +162,39 @@ export default {
           this.$message.error(res.msg) // 错误提示
         }
       })
+    },
+    showAdd () {
+      this.dialog.titile = '新建设备'
+      this.dialog.visible = true
+      this.dialog.type = 1
+    },
+    showEdit (row) {
+      this.formData.deviceId = row.id
+      this.formData.name = row.name
+      this.dialog.titile = '编辑设备'
+      this.dialog.visible = true
+      this.dialog.type = 2
+    },
+    submit () {
+      switch (this.dialog.type) {
+        case 1: // 添加设备
+          this.$api.setting.warehouse.device.add({
+            warehouseId: this.basicInfo.id,
+            name: this.formData.name
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg) // 成功提示
+              this.dialogClose()
+              this.getData() // 刷新数据
+            } else {
+              this.$message.error(res.msg) // 错误提示
+            }
+          })
+      }
+    },
+    dialogClose () {
+      this.dialog.visible = false
+      this.formData.name = ''
     }
   }
 }
