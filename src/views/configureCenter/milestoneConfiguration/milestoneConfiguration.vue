@@ -16,7 +16,7 @@
       <!--  标签页 -->
       <div class="right">
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span class='text'>里程碑配置</span>
+      <span style="marginLeft:40px">里程碑配置</span>
        <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
         <el-tab-pane label='港前状态' name='1'></el-tab-pane>
         <el-tab-pane label='港后状态' name='2'></el-tab-pane>
@@ -27,7 +27,7 @@
       <!-- 主要内容 -->
      <div class='content'>
       <!-- 搜索栏 -->
-        <div class='content'>
+        <div>
         <el-row class='searchbox1'>
           <el-col :span='10' class='colbox'>
             <el-col :span='6'>

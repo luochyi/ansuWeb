@@ -11,7 +11,9 @@
 
         </el-tabs>
       </el-row>
-      <component :is="componentsName"></component>
+      <div class="content">
+        <component :is="componentsName"></component>
+      </div>
   </div>
 </template>
 <script>
