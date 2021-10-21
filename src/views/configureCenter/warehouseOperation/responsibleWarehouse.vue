@@ -12,8 +12,17 @@
         </el-row>
         <div class="item">
             <div style="margin:20px 0 10px 0">负责仓库</div>
-            <div><el-input class="elipt" size="mini"><i slot="suffix" class="el-input__icon el-icon-search"></i></el-input></div>
-            <el-button class="orangeBtn">确 认</el-button>
+            <div>
+              <el-select v-model="formData.warehouseId" filterable placeholder="请选择">
+                <el-option
+                    v-for="item in warehouses"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                </el-option>
+              </el-select>
+            </div>
+            <el-button class="orangeBtn" @click="set">确 认</el-button>
             <el-button class="whiteBtn">取 消</el-button>
         </div>
     </div>
@@ -27,19 +36,30 @@ export default {
         id: 0,
         name: '',
         position_name: ''
-      }
+      },
+      formData: {
+        warehouseId: null
+      },
+      warehouses: []
     }
   },
   mounted () {
     this.basicInfo.id = this.$route.params.id
     this.basicInfo.name = this.$route.params.name
     this.basicInfo.position_name = this.$route.params.position_name
+    this.formData.warehouseId = this.$route.params.warehouse_id === 0 ? null : this.$route.params.warehouse_id
+    this.getWarehouseSelect()
   },
   methods: {
+    getWarehouseSelect () {
+      this.$api.setting.warehouse.select().then(res => {
+        this.warehouses = res.data
+      })
+    },
     set () {
       this.$api.configure.warehouse.set({
         userId: this.basicInfo.id,
-        warehouseId: 0
+        warehouseId: this.formData.warehouseId
       }).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
