@@ -6,6 +6,7 @@
       :with-header="true"
       :before-close="handleClose"
       :size="drawerSize"
+      :showClose="false"
     >
       <div class="dra-body">
         <slot></slot>

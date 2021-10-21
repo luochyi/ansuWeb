@@ -9,6 +9,22 @@ export const lists = (params) => {
   })
 }
 // 启用设备
+export const add = (params) => {
+  return axios({
+    url: '/setting/warehouse/device/add',
+    method: 'post',
+    data: params
+  })
+}
+// 启用设备
+export const edit = (params) => {
+  return axios({
+    url: '/setting/warehouse/device/edit',
+    method: 'post',
+    data: params
+  })
+}
+// 启用设备
 export const enabled = (params) => {
   return axios({
     url: '/setting/warehouse/device/enabled',

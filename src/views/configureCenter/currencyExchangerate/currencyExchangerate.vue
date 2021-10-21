@@ -30,7 +30,7 @@
         >
         <template slot-scope="scope">
           <el-button type="text" @click="changeDefault(scope.row.id)"> 设置默认</el-button>
-          <el-button type="text" @click="edit(scope.row.id)"> 修改</el-button>
+          <el-button type="text" @click="edit(scope.row)"> 修改</el-button>
         </template>
       </el-table-column>
       </commonTable>
@@ -41,7 +41,9 @@
       width="30%"
       :before-close="handleClose">
       币种名称：
-      <el-input v-model="currencyName"></el-input>
+      <el-input v-model="formData.name"></el-input>
+      汇率：
+      <el-input v-model="formData.exchangeRate" type="Number"></el-input>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addcurrency">确 定</el-button>
@@ -56,18 +58,14 @@ export default {
     return {
       dialogVisible: false,
       dialogTitile: '',
-      currencyName: '',
       editId: null,
-      activeName: '1', // 标签绑定
-      pageSize: 10,
-      currentPage: 1,
-      total: 50,
 
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
       columns: [
         { prop: 'name', label: '货币名称', align: 'center' },
+        { prop: 'exchange_rate', label: '汇率', align: 'center' },
         { prop: 'is_default', label: '是否默认', width: '795', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
@@ -76,6 +74,10 @@ export default {
         limit: 10,
         sizes: [1, 5, 10],
         total: 0
+      },
+      formData: {
+        name: null,
+        exchangeRate: null
       }
 
     }
@@ -102,14 +104,19 @@ export default {
       this.page.limit = val
       this.getData()
     },
-    edit (id) {
+    edit (row) {
       this.dialogVisible = true
       this.dialogTitile = '修改货币'
-      this.editId = id
+      this.editId = row.id
+      this.formData.name = row.name
+      this.formData.exchangeRate = row.exchange_rate
     },
     addcurrency () {
       if (this.dialogTitile === '新增货币') {
-        this.$api.setting.currency.add({ name: this.currencyName }).then((res) => {
+        this.$api.setting.currency.add({
+          name: this.formData.name,
+          exchangeRate: this.formData.exchangeRate
+        }).then((res) => {
           if (res.code === 0) {
             this.$message.success(res.msg)
             this.getData()
@@ -119,7 +126,11 @@ export default {
           }
         })
       } else if (this.dialogTitile === '修改货币') {
-        this.$api.setting.currency.edit({ name: this.currencyName, currencyId: this.editId }).then((res) => {
+        this.$api.setting.currency.edit({
+          currencyId: this.editId,
+          name: this.formData.name,
+          exchangeRate: this.formData.exchangeRate
+        }).then((res) => {
           if (res.code === 0) {
             this.$message.success(res.msg)
             this.getData()
@@ -131,7 +142,8 @@ export default {
       }
     },
     handleClose () {
-      this.currencyName = ''
+      this.formData.name = ''
+      this.formData.exchangeRate = ''
       this.editId = null
       this.dialogVisible = false
     },
