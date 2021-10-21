@@ -178,7 +178,16 @@ export default {
         this.page.total = res.data.total // 数据总量
       })
     },
-
+    // 改变页面大小处理
+    handleSizeChange (val) {
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
+    },
+    // 翻页处理
+    handleCurrentChange (val) {
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
+    },
     reset () {
       this.name = ''
       this.getData()

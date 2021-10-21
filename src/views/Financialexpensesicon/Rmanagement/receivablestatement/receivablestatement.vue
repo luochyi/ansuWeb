@@ -195,10 +195,10 @@ export default {
       columns: [
         { prop: 'bill_no', label: '应收账单号', width: '155', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
-        { prop: 'customer_code', label: '客户编号', width: '118', align: 'center' },
-        { prop: 'created_at', label: '账单日期', width: '82', align: 'center', formatter: this.formatter },
+        { prop: 'customer_code', label: '客户编号', width: '218', align: 'center' },
+        { prop: 'created_at', label: '账单日期', width: '282', align: 'center', formatter: this.formatter },
         { prop: 'wayill_count', label: '运单', width: '220', align: 'center', formatter: this.formatter },
-        { prop: 'amount', label: '结算金额', width: '126', align: 'center', formatter: this.formatter }
+        { prop: 'amount', label: '结算金额', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {

@@ -62,7 +62,7 @@ export default {
       }).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
-          this.$router.push({ name: 'driverManagement' }) // 添加成功后返回列表
+          this.$router.push({ name: 'receivingWarehouseManage' }) // 添加成功后返回列表
         } else {
           this.$message.error(res.msg) // 错误提示
         }
@@ -89,4 +89,5 @@ export default {
 .el-input__iconyellow{
     color:#FFBD32FF;
 }
+
 </style>

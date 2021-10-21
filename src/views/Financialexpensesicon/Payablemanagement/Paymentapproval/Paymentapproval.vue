@@ -100,12 +100,12 @@ export default {
     return {
       columns: [
         { prop: 'pay_no', label: '付款单号', width: '212', align: 'center' },
-        { prop: 'amount', label: '申请金额', width: '82', align: 'center' },
+        { prop: 'amount', label: '申请金额', width: '182', align: 'center' },
         { prop: 'agent_name', label: '代款代理', width: '255', align: 'center' },
-        { prop: 'agent_code', label: '代理编码', width: '142', align: 'center' },
-        { prop: 'audit_status', label: '审核状态', width: '95', align: 'center', formatter: this.formatter },
-        { prop: 'created_at', label: '账单生成日期', width: '129', align: 'center', formatter: this.formatter },
-        { prop: 'created_user_name', label: '对账确认人', width: '73', align: 'center' }
+        { prop: 'agent_code', label: '代理编码', width: '242', align: 'center' },
+        { prop: 'audit_status', label: '审核状态', width: '195', align: 'center', formatter: this.formatter },
+        { prop: 'created_at', label: '账单生成日期', width: '209', align: 'center', formatter: this.formatter },
+        { prop: 'created_user_name', label: '对账确认人', align: 'center' }
       ],
       tableData: [],
       page: {
