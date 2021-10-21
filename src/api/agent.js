@@ -186,3 +186,18 @@ export const channelServiceAdd = (params) => {
     data: params
   })
 }
+export const channelSelect = (params) => {
+  return axios({
+    url: '/setting/channel/select',
+    method: 'post',
+    data: params
+  })
+}
+// channelId 渠道服务筛选
+export const channelserviceSelect = (params) => {
+  return axios({
+    url: '/setting/channel/service/select',
+    method: 'post',
+    data: params
+  })
+}
