@@ -46,6 +46,14 @@ export const disabled = (warehouseIds) => {
     }
   })
 }
+// 仓库筛选
+export const select = () => {
+  return axios({
+    url: '/setting/warehouse/select',
+    method: 'post',
+    data: {}
+  })
+}
 
 export {
   device
