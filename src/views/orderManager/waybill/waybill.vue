@@ -87,7 +87,7 @@
             <span class="btnspan" @click="choseDevice">添加设备</span> </el-row>
           <el-divider></el-divider>
         <el-table :data="goodslist" border style="width: 100%"  :header-cell-style="{background: '#F5F5F6'}">
-          <el-table-column prop="cargoId" label="货件编号"></el-table-column>
+          <el-table-column prop="cargoNo" label="货件编号"></el-table-column>
           <el-table-column prop="length" label="长度"></el-table-column>
           <el-table-column prop="width" label="宽度"></el-table-column>
           <el-table-column prop="height" label="高度"></el-table-column>
@@ -128,10 +128,12 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
       socket: null,
+      header: this.$api.common.loginHeader(),
       activeName: '1',
       drawerVrisible: false,
       drawerTitle: '入仓',
@@ -263,7 +265,8 @@ export default {
           width: '200',
           align: 'center'
         }
-      ]
+      ],
+      waybillInfo: {}
     }
   },
   mounted () {
@@ -275,6 +278,22 @@ export default {
       this.$api.Ordermanagement.waybillLists({ page: this.page.pageNo, limit: this.page.limit, status: Number(this.activeName) }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
+      })
+    },
+    getInfo (waybillId) {
+      this.$api.Ordermanagement.waybillInfo(waybillId).then(res => {
+        this.goodslist = []
+        res.data.cargo_specs.forEach(item => {
+          this.goodslist.push({
+            cargoId: item.cargo_id,
+            cargoNo: item.cargo_no,
+            fbaNo: item.fba_no,
+            length: null,
+            width: null,
+            height: null,
+            weight: null
+          })
+        })
       })
     },
     choseDevice () {
@@ -294,12 +313,11 @@ export default {
       this.$api.setting.warehouse.device.select({ waybillId: row.id }).then(res => {
         this.deviceOption = res.data
       })
+      this.getInfo(row.id)
     },
     addClose () {
       this.drawerVrisible = false
-      if (this.socket && this.socket.onclose !== undefined) {
-        this.socket.onclose = this.close
-      }
+      this.close()
     },
     formatter (row, col) {
       switch (col.property) {
@@ -346,8 +364,12 @@ export default {
       if (typeof (WebSocket) === 'undefined') {
         alert('您的浏览器不支持socket')
       } else {
+        let wsUrl = this.$api.setting.warehouse.device.scanUrl + '?deviceId=' + id
+        for (let header in this.header) {
+          wsUrl = wsUrl + '&' + header + '=' + this.header[header]
+        }
         // 实例化socket
-        this.socket = new WebSocket(this.$api.setting.warehouse.device.scanUrl + '?deviceId=' + id)
+        this.socket = new WebSocket(wsUrl)
         // 监听socket连接
         this.socket.onopen = this.open
         // 监听socket错误信息
@@ -356,20 +378,32 @@ export default {
         this.socket.onmessage = this.getMessage
       }
     },
-    open: function () {
+    open () {
       console.log('socket连接成功')
     },
-    error: function () {
+    error () {
       console.log('连接错误')
     },
-    getMessage: function (msg) {
-      console.log(msg.data)
+    getMessage (msg) {
+      var data = JSON.parse(msg.data)
+      for (let index in this.goodslist) {
+        console.log(this.goodslist[index].cargoNo === data.orderNo, this.goodslist[index].cargoNo, data.data.orderNo, data)
+        if (this.goodslist[index].cargoNo === data.data.orderNo) {
+          this.goodslist[index].length = data.data.length
+          this.goodslist[index].width = data.data.width
+          this.goodslist[index].height = data.data.height
+          this.goodslist[index].weight = data.data.weight
+        }
+      }
+      console.log(this.goodslist)
     },
-    send: function () {
+    send () {
       // this.socket.send(params)
     },
-    close: function () {
-      console.log('socket已经关闭')
+    close () {
+      if (this.socket && this.socket.close !== undefined) {
+        this.socket.close()
+      }
     }
   }
 }

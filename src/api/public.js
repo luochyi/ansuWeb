@@ -7,6 +7,12 @@ const axios = GetAxios((config) => {
   location.href = '/'
 }, process.env.VUE_APP_URL)
 
+export const loginHeader = () => {
+  return {
+    'Ansuex-Manage-Token': sessionStorage.getItem('token')
+  }
+}
+
 // 公共接口
 // 登录 登出
 export const login = (data) => {
