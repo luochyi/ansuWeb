@@ -189,6 +189,9 @@ export default {
       this.kehuname = data.name
       this.dialogVisible = true
     },
+    handleClose () {
+      this.dialogVisible = false
+    },
     toG () {
       // let obj = {
       //   customerIds: this.Uid

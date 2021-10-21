@@ -511,8 +511,25 @@ export default {
         },
         {
           value: 1,
-          label: '大货进1小货进0.5 2=进1 3=不足1进1，超过1进0.1 4=进0.5 5=进0.05'
+          label: '大货进1小货进0.5'
+        },
+        {
+          value: 2,
+          label: '进1'
+        },
+        {
+          value: 3,
+          label: '不足1进1，超过1进0.1'
+        },
+        {
+          value: 4,
+          label: '进0.5'
+        },
+        {
+          value: 5,
+          label: '进0.05'
         }
+
       ],
       realWeightCubeOption: [
         {

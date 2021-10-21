@@ -134,14 +134,34 @@
     </div>
     </el-col>
     </el-row>
+    <el-dialog
+      title="添加服务"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      <span>代理服务</span>
+      <el-cascader
+        v-model="agentServiceId"
+        :options="agentServiceList"
+        @change="handleChange"
+        :props="{value: 'id', label: 'name'}"
+        ></el-cascader>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      dialogVisible: false,
       channelList: [],
       visible: false,
+      agentServiceId: null,
+      agentServiceList: [],
       red: null,
       channelId: null,
       chooseArr: [],
@@ -181,6 +201,22 @@ export default {
   },
   created () {
     this.getData()
+    this.$api.agent.agentServiceAll().then(res => {
+      res.data && res.data.forEach(ele => {
+        let obj = {
+          id: ele.id,
+          name: ele.name,
+          children: ele.children,
+          disabled: null
+        }
+        console.log(obj)
+        if (obj.children.length === 0) {
+          obj.disabled = true
+        }
+        this.agentServiceList.push(obj)
+      })
+      console.log(this.agentServiceList)
+    })
   },
   methods: {
     getData () {
@@ -238,6 +274,28 @@ export default {
         .catch(_ => {})
     },
     toAdd () {
+      if (this.channelId === null) {
+        this.$message.error('请选择渠道')
+      } else {
+        this.dialogVisible = true
+      }
+    },
+    addSubmit () {
+      this.$api.agent.channelServiceAdd({ channelId: this.channelId, agentServiceId: this.agentServiceId[1] }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+          this.handleClose()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    handleChange (val) {
+    },
+    handleClose () {
+      this.dialogVisible = false
+      this.agentServiceId = null
     }
   }
 }

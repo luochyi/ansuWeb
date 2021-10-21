@@ -95,7 +95,7 @@
         >
              <!-- slot -->
           <template v-slot:yewuyuan="slotData">
-            {{ slotData.data.ywy
+            {{ slotData.data.salesman_name
             }}&nbsp;<span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
@@ -103,7 +103,7 @@
             >
           </template>
           <template v-slot:piaoshu="slotData">
-            {{ slotData.data.num
+            {{ slotData.data.forecast_waybill_count
             }}&nbsp;<span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
@@ -111,7 +111,7 @@
             >
           </template>
           <template v-slot:diver="slotData">
-            {{ slotData.data.diver
+            {{ slotData.data.driver_name
             }}&nbsp;<span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
@@ -181,7 +181,8 @@ export default {
           prop: 'forecast_type',
           label: '预报类型',
           width: '100',
-          align: 'center'
+          align: 'center',
+          formatter: this.formatter
         },
         {
           prop: 'forecast_waybill_count',
@@ -204,27 +205,10 @@ export default {
           align: 'center'
 
         },
-        // 已处理才有
-        // {
-        //   prop: 'status',
-        //   label: '处理状态',
-        //   width: '200',
-        //   align: 'center',
-        //   type: 'slot',
-        //   slotName: 'status'
-        // },
-        // {
-        //   prop: 'spr',
-        //   label: '审批人',
-        //   width: '200',
-        //   align: 'center',
-        //   type: 'slot',
-        //   slotName: 'spr'
-        // },
         {
           prop: 'driver_name',
           label: '收货司机',
-          width: '100',
+          width: '200',
           align: 'center',
           type: 'slot',
           slotName: 'diver'
@@ -257,13 +241,15 @@ export default {
           prop: 'forecast_created_at',
           label: '预报时间',
           width: '200',
-          align: 'center'
+          align: 'center',
+          formatter: this.formatter
         },
         {
           prop: 'forecast_good_time',
           label: '货好时间',
-          width: '100',
-          align: 'center'
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
         },
         {
           prop: 'salesman_name',
@@ -295,27 +281,6 @@ export default {
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
       this.$api.Ordermanagement.forecastDirect({ limit: this.page.limit, page: this.page.pageNo, status: Number(this.activeName) }).then(res => {
         console.log(res.data) // res是接口返回的结果
-        // res.data.list && res.data.list.forEach(ele => {
-        //   let obj = {
-        //     // status: Number(this.activeName),
-        //     approver_name: ele.approver_name,
-        //     forecast_no: ele.forecast_no,
-        //     forecast_type: ele.forecast_type,
-        //     forecast_waybill_count: ele.forecast_waybill_count,
-        //     customer_name: ele.customer_name,
-        //     customer_code: ele.customer_code,
-        //     driver_name: ele.driver_name,
-        //     forecast_volume: ele.forecast_volume,
-        //     forecast_weight: ele.forecast_weight,
-        //     forecast_box_count: ele.forecast_box_count,
-        //     forecast_address: ele.forecast_address,
-        //     forecast_created_at: ele.forecast_created_at,
-        //     forecast_good_time: ele.forecast_good_time,
-        //     salesman_name: ele.salesman_name
-
-        //   }
-        //   this.tableData.push(obj)
-        // })
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
@@ -339,10 +304,16 @@ export default {
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'status':
+          return row.status === 1 ? '申请直接收获' : row.status === 2 ? '审核通过' : '审核驳回'
+        case 'forecast_type':
+          return row.forecast_type === 1 ? '计划下单' : '无计划下单'
+        case 'forecast_created_at':
+          return this.formatDate(row.forecast_created_at, 'yyyy-MM-dd hh:mm:ss')
+        case 'forecast_good_time':
+          return this.formatDate(row.forecast_good_time, 'yyyy-MM-dd hh:mm:ss')
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
@@ -381,10 +352,11 @@ export default {
             prop: 'status',
             label: '处理状态',
             width: '100',
-            align: 'center'
+            align: 'center',
+            formatter: this.formatter
           },
           {
-            prop: 'spr',
+            prop: 'approver_name',
             label: '审批人',
             width: '100',
             align: 'center'

@@ -88,3 +88,25 @@ export const customerSelect = () => {
     data: { }
   })
 }
+export const resetpsw = (params) => {
+  return axios({
+    url: '/customer/reset_pass',
+    method: 'post',
+    data: params
+  })
+}
+export const disabled = (params) => {
+  return axios({
+    url: '/customer/disabled',
+    method: 'post',
+    data: params
+  })
+}
+// customerIds enabled
+export const enabled = (params) => {
+  return axios({
+    url: '/customer/enabled',
+    method: 'post',
+    data: params
+  })
+}

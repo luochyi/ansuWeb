@@ -106,10 +106,10 @@ export default {
         { prop: 'PaymentNo', label: '付款单号', width: '212', align: 'center' },
         { prop: 'apply', label: '申请金额', width: '82', align: 'center' },
         { prop: 'agent', label: '代款代理', width: '255', align: 'center' },
-        { prop: 'code', label: '代理编码', width: '142', align: 'center' },
+        { prop: 'code', label: '代理编码', width: '300', align: 'center' },
         { prop: 'status', label: '审核状态', width: '95', align: 'center' },
-        { prop: 'date', label: '申请日期', width: '129', align: 'center' },
-        { prop: 'applicant', label: '申请人', width: '73', align: 'center' }
+        { prop: 'date', label: '申请日期', width: '229', align: 'center' },
+        { prop: 'applicant', label: '申请人', align: 'center' }
       ],
       tableData: [],
       page: {

@@ -42,12 +42,12 @@ export default {
       columns: [
         { prop: 'waybill_no', label: '安速单号', width: '176', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
-        { prop: 'customer_code', label: '客户编号', width: '80', align: 'center' },
+        { prop: 'customer_code', label: '客户编号', width: '180', align: 'center' },
         { prop: 'audit_status', label: '审核状态', width: '94', align: 'center', formatter: this.formatter },
         { prop: 'waybill_type', label: '运单类型', width: '106', align: 'center', formatter: this.formatter },
         { prop: 'cargoes_num', label: '货件数量', width: '106', align: 'center' },
-        { prop: 'remark', label: '备注', width: '106', align: 'center' },
-        { prop: 'interior_remark', label: '内部备注', width: '106', align: 'center' }
+        { prop: 'remark', label: '备注', align: 'center' },
+        { prop: 'interior_remark', label: '内部备注', align: 'center' }
       ],
       tableData: [],
       page: {

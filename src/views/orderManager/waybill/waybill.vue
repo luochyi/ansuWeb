@@ -75,16 +75,80 @@
         </div>
       </div>
     </div>
+    <commonDrawer :drawerVrisible="drawerVrisible" @handleClose='addClose' :drawerTitle="drawerTitle" @click="check(slotData)">
+      <div class="dra-content" style="textAlign:left;padding:10px">
+        <!-- 内容区域 -->
+        <el-row style="fontSize:20px;color:#FB4702">{{info.code}}</el-row>
+        <el-row style="fontSize:14px;fontWeight:500">客户名称：<span style="fontWeight:400">{{info.name}}</span></el-row>
+         <el-divider></el-divider>
+          <el-row style="fontSize:14px;">入仓设备：
+            <span v-if="deviceName">{{deviceName}}</span>
+            <span v-else>无</span>&nbsp;
+            <span class="btnspan" @click="choseDevice">添加设备</span> </el-row>
+          <el-divider></el-divider>
+        <el-table :data="goodslist" border style="width: 100%"  :header-cell-style="{background: '#F5F5F6'}">
+          <el-table-column prop="cargoNo" label="货件编号"></el-table-column>
+          <el-table-column prop="length" label="长度"></el-table-column>
+          <el-table-column prop="width" label="宽度"></el-table-column>
+          <el-table-column prop="height" label="高度"></el-table-column>
+          <el-table-column prop="weight" label="重量"></el-table-column>
+        </el-table>
+      </div>
+      <!-- 抽屉底部按钮 -->
+      <div slot="footer">
+        <button class="btn-orange" @click="submit()">
+          <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button>
+        <button class="btn-gray" @click="addClose">
+          <span>取消</span>
+        </button>
+      </div>
+    </commonDrawer>
+    <el-dialog
+      title="入仓设备"
+      :visible.sync="dialog"
+      width="20%"
+      :before-close="handleClose">
+      <span>请选择您的入仓设备</span>
+      <span>
+        <el-select v-model="deviceId" @change="changedevice">
+          <el-option v-for="item in deviceOption"
+            :key='item.id'
+            :label="item.name"
+            :value="item.id"
+            ></el-option>
+        </el-select>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialog = false">取 消</el-button>
+        <el-button type="primary" @click="deviceSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+
 export default {
   data () {
     return {
+      socket: null,
+      header: this.$api.common.loginHeader(),
       activeName: '1',
+      drawerVrisible: false,
+      drawerTitle: '入仓',
+      dialog: false,
+      waybillId: null, // 运单id
+      deviceId: null,
+      deviceName: '',
+      deviceOption: [],
       tableData: [],
+      goodslist: [],
       code: '',
+      info: {
+        name: '',
+        code: ''
+      },
       page: {
         pageNo: 1,
         limit: 10,
@@ -201,7 +265,8 @@ export default {
           width: '200',
           align: 'center'
         }
-      ]
+      ],
+      waybillInfo: {}
     }
   },
   mounted () {
@@ -215,13 +280,45 @@ export default {
         this.page.total = res.data.total
       })
     },
+    getInfo (waybillId) {
+      this.$api.Ordermanagement.waybillInfo(waybillId).then(res => {
+        this.goodslist = []
+        res.data.cargo_specs.forEach(item => {
+          this.goodslist.push({
+            cargoId: item.cargo_id,
+            cargoNo: item.cargo_no,
+            fbaNo: item.fba_no,
+            length: null,
+            width: null,
+            height: null,
+            weight: null
+          })
+        })
+      })
+    },
+    choseDevice () {
+      this.dialog = true
+    },
     detail (data) {},
     edit (data) {},
     handleClick () {
       this.getData()
     },
     // 入仓
-    irikura (row) {},
+    irikura (row) {
+      console.log(row)
+      this.drawerVrisible = true
+      this.info.name = row.customer_name
+      this.info.code = row.waybill_no
+      this.$api.setting.warehouse.device.select({ waybillId: row.id }).then(res => {
+        this.deviceOption = res.data
+      })
+      this.getInfo(row.id)
+    },
+    addClose () {
+      this.drawerVrisible = false
+      this.close()
+    },
     formatter (row, col) {
       switch (col.property) {
         case 'type':
@@ -246,7 +343,68 @@ export default {
       this.page.limit = val
       this.getData()
     },
-    handleSelectionChange (val) {}
+    deviceSubmit () {
+      this.$message.success('选择成功')
+      this.dialog = false
+      this.init(this.deviceId)
+    },
+    changedevice (val) {
+      let arr = this.deviceOption.filter(item => {
+        return item.id === val
+      })
+      console.log(arr)
+      this.deviceId = arr[0].id
+      this.deviceName = arr[0].name
+    },
+    handleClose () {
+      this.dialog = false
+    },
+    handleSelectionChange (val) {},
+    init: function (id) {
+      if (typeof (WebSocket) === 'undefined') {
+        alert('您的浏览器不支持socket')
+      } else {
+        let wsUrl = this.$api.setting.warehouse.device.scanUrl + '?deviceId=' + id
+        for (let header in this.header) {
+          wsUrl = wsUrl + '&' + header + '=' + this.header[header]
+        }
+        // 实例化socket
+        this.socket = new WebSocket(wsUrl)
+        // 监听socket连接
+        this.socket.onopen = this.open
+        // 监听socket错误信息
+        this.socket.onerror = this.error
+        // 监听socket消息
+        this.socket.onmessage = this.getMessage
+      }
+    },
+    open () {
+      console.log('socket连接成功')
+    },
+    error () {
+      console.log('连接错误')
+    },
+    getMessage (msg) {
+      var data = JSON.parse(msg.data)
+      for (let index in this.goodslist) {
+        console.log(this.goodslist[index].cargoNo === data.orderNo, this.goodslist[index].cargoNo, data.data.orderNo, data)
+        if (this.goodslist[index].cargoNo === data.data.orderNo) {
+          this.goodslist[index].length = data.data.length
+          this.goodslist[index].width = data.data.width
+          this.goodslist[index].height = data.data.height
+          this.goodslist[index].weight = data.data.weight
+        }
+      }
+      console.log(this.goodslist)
+    },
+    send () {
+      // this.socket.send(params)
+    },
+    close () {
+      if (this.socket && this.socket.close !== undefined) {
+        this.socket.close()
+      }
+    }
   }
 }
 </script>
@@ -267,5 +425,10 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+}
+.btnspan{
+  font-weight: 400;
+  color: #1890FF;
+  cursor: pointer;
 }
 </style>

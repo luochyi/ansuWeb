@@ -62,21 +62,21 @@
             width="238"
             :resizable="false"
           >
-            <template slot-scoped="scoped">
+            <template slot-scope="scope">
               <el-button type="text" @click="addAccount"> 编辑详情</el-button>
               <span style="color: #0084ff; margin: 0px 5px">|</span>
-              <el-button type="text" @click="password = true">
+              <el-button type="text" @click="resetP(scope.row)">
                 重置密码
               </el-button>
               <span style="color: #0084ff; margin: 0px 5px">|</span>
               <el-button
                 v-if="activeName === '1'"
                 type="text"
-                @click="stopAgentis = true"
+                @click="openDisable(scope.row)"
               >
                 停用账户
               </el-button>
-              <el-button v-else-if="activeName === '2'" type="text">
+              <el-button v-else-if="activeName === '2'" type="text" @click="openEnable(scope.row)">
                 启用账户
               </el-button>
             </template>
@@ -86,25 +86,25 @@
     </div>
     <!-- 重置密码 -->
     <el-dialog title="生成随机密码" :visible.sync="password" width="30%">
-      <div class="input"><br /><span>随机密码：LDKDLJ3432</span><br /></div>
+      <div class="input"><br /><span>随机密码：{{randomPSW}}</span><br /></div>
       <span slot="footer" class="password-footer">
-        <el-button type="primary" @click="password = false" class="orangeBtn"
+        <el-button type="primary" @click="copy" :data-clipboard-text="randomPSW" class="orangeBtn" id="copyBtn"
           >复制密码</el-button
         >
-        <el-button @click="password = false" class="wuBtn">取 消</el-button>
+        <el-button @click="password = false" class="wuBtn">关 闭</el-button>
       </span>
     </el-dialog>
     <!-- 停用账号 -->
-    <el-dialog title="停用账号" :visible.sync="stopAgentis" width="30%">
+    <el-dialog :title="diaTitle" :visible.sync="ableShow" width="30%">
       <div class="input">
         <br /><span
           ><i class="el-icon-circle-check"></i
-          >您是否确认停用客户“深圳沙马家具有限公司”的账号</span
+          >您是否确认{{diaTitle}}客户{{username}}的账号</span
         ><br />
       </div>
       <span slot="footer" class="stopAgent-footer">
-        <el-button @click="stopAgentis = false" class="wuBtn">取 消</el-button>
-        <el-button type="primary" @click="stopAgentis = false" class="orangeBtn"
+        <el-button @click="ableShow = false" class="wuBtn">取 消</el-button>
+        <el-button type="primary" @click="stopSubmit()" class="orangeBtn"
           >确 定</el-button
         >
       </span>
@@ -113,6 +113,7 @@
 </template>
 
 <script>
+import Clipboard from 'clipboard'
 export default {
   data () {
     return {
@@ -121,17 +122,16 @@ export default {
       input: '',
       code: '', // 客户编码
       customerCode: '',
-
+      username: '',
+      userId: null,
       // 分页
-
+      diaTitle: '',
       dialogVisible: false, // 对话框可见
-      stopAgentis: false, // 停用账号
+      ableShow: false, // 停用账号
       password: false, // 重置密码
       chooseAgent: {}, // 选择停用
       activeName: '1', // 标签绑定
-
-      agentName: '',
-      agentCode: '',
+      randomPSW: '',
       columns: [
         { prop: 'name', label: '客户名称', width: '289', align: 'center' },
         {
@@ -171,32 +171,10 @@ export default {
   mounted () {
     this.getData()
   },
+  beforeDestory () {
+    this.data.clipboard.destroy()
+  },
   methods: {
-    addAccount () {
-      this.$router.push({ name: 'addAccount' })
-    },
-    handleClick (val) {
-      console.log(val)
-      this.getData()
-    },
-    stopAgent (val) {
-      this.stopAgent = true
-      this.stopAgent = '停用代理'
-      this.chooseAgent = val
-      this.$router.push({
-        name: 'stopAgent',
-        params: {}
-      })
-    },
-    passwordis (val) {
-      this.passwordis = true
-      this.passwordis = '重置密码'
-      this.chooseAgent = val
-      this.$router.push({
-        name: 'passwordis',
-        params: {}
-      })
-    },
     getData () {
       let params = {
         status: Number(this.activeName),
@@ -206,6 +184,75 @@ export default {
       this.$api.customer.customerLists(params).then((res) => {
         this.tableData = res.data.list
         this.page.total = res.data.total
+      })
+    },
+    addAccount () {
+      this.$router.push({ name: 'addAccount' })
+    },
+    handleClick (val) {
+      console.log(val)
+      this.getData()
+    },
+    openDisable (data) {
+      this.userId = data.id
+      this.username = data.name
+      this.ableShow = true
+      this.diaTitle = '停用'
+    },
+    openEnable (data) {
+      this.userId = data.id
+      this.username = data.name
+      this.ableShow = true
+      this.diaTitle = '启用'
+    },
+    stopSubmit () {
+      let arr = []
+      arr.push(this.userId)
+      if (this.activeName === '1') {
+        this.$api.customer.disabled({ customerIds: arr }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.ableShow = false
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else {
+        this.$api.customer.enabled({ customerIds: arr }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.ableShow = false
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+    },
+    resetP (data) {
+      this.$api.customer.resetpsw({ customerId: data.id }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.password = true
+          this.randomPSW = res.data.password
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    copy () {
+      const clipboard = new Clipboard('#copyBtn')
+      clipboard.on('success', (e) => {
+        this.$message.success('复制成功！')
+        //  释放内存
+        clipboard.destroy()
+      })
+      clipboard.on('error', (e) => {
+        // 不支持复制
+        this.$message.error('复制失败！该浏览器不支持复制！')
+        // 释放内存
+        clipboard.destroy()
       })
     },
     handleSelectionChange (val) {
@@ -243,6 +290,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.long1{
+  width: 100px;
+}
 /deep/ .searchbox1 {
   .batch {
     height: 32px;
