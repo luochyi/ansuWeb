@@ -10,76 +10,15 @@
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>应收账单</span>
+              <span class='text'>应收账单号</span>
             </el-col>
             <el-col :span='13'>
               <el-input v-model='waybillNo' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>客户名称</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>客户编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>确认状态</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>所属公司</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='destination' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>业务员</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>确认员</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
-            <el-button class='wuBtn long1'>展开全部</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -90,8 +29,8 @@
             <el-button class='stopBtn' @click="confirmation=true">批量确认费用</el-button>
           </el-col>
           <el-col :span='10' class='right'>
-            <el-button class='whiteBtn '>查询条件设置</el-button>
-            <el-button class='whiteBtn '>列表显示设置</el-button>
+            <!-- <el-button class='whiteBtn '>查询条件设置</el-button>
+            <el-button class='whiteBtn '>列表显示设置</el-button> -->
           </el-col>
         </el-row>
         <br>

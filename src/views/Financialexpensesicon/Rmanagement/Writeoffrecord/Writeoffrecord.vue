@@ -3,7 +3,7 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>账单核销</span>
+        <span class='text'>账单核销记录</span>
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
@@ -13,10 +13,7 @@
               <span class='text'>核销单号</span>
             </el-col>
             <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-                </el-option>
-              </el-select>
+              <el-input></el-input>
             </el-col>
           </el-col>
 

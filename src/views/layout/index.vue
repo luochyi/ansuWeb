@@ -668,6 +668,18 @@ export default {
               parentId: '5'
             },
             {
+              name: 'Settlementperiod',
+              meta: {
+                title: '结算账期',
+                icon: 'Settlementperiod',
+                hidden: false
+              },
+              ID: 56,
+              menuId: '56',
+              path: 'Settlementperiod',
+              parentId: '5'
+            },
+            {
               name: 'receivingWarehouseManage',
               meta: {
                 title: '收货仓管理',

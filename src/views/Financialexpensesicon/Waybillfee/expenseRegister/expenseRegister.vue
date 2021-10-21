@@ -130,7 +130,7 @@ export default {
       total: 50, // 数据数量
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码
-
+      size: 'small',
       activeName: '1',
       waybillNo: '', // 运单号
       customerName: '', // 客户名称

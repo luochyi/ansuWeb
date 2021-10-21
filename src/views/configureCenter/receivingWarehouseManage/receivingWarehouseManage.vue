@@ -11,7 +11,7 @@
     <!-- 主要内容 -->
     <div class='content'>
       <!-- 搜索栏 -->
-     <div class='content'>
+     <div>
         <el-row class='searchbox1'>
           <el-col :span='8' class='colbox'>
             <el-col :span='7'>

@@ -13,7 +13,7 @@
               <span class='text'>客户名称</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
+              <el-input placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>

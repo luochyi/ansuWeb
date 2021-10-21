@@ -2,14 +2,16 @@
 <div id="boxx">
 <div id="box">
   <div class="add">
-    <span class='text'>客户名称</span>
-      <el-input v-model="name" placeholder="请输入客户名称"></el-input>
-      <span class='text'>客户联系人</span>
-      <el-input v-model="liaison" placeholder="请输入客户名称"></el-input>
-      <span class='text'>客户联系电话</span>
-      <span class='text'>客户联系电话</span>
-      <el-input v-model="phone" placeholder="请输入客户名称"></el-input>
        <el-descriptions class="margin-top" :column="1" direction="vertical">
+         <el-descriptions-item label="客户名称" :span="2">
+           <el-input v-model="name" placeholder="请输入客户名称"></el-input>
+         </el-descriptions-item>
+         <el-descriptions-item label="客户联系人" :span="2">
+           <el-input v-model="liaison" placeholder="请输入客户名称"></el-input>
+         </el-descriptions-item>
+         <el-descriptions-item label="客户联系电话" :span="2">
+           <el-input v-model="phone" placeholder="请输入客户名称"></el-input>
+         </el-descriptions-item>
         <el-descriptions-item label="客户地址" :span="2">
           <!-- 级联选择器 三级联动 -->
           <el-cascader
@@ -21,7 +23,6 @@
         </el-descriptions-item>
         <el-descriptions-item label="详细地址">
           <el-input
-            style="width: 517px"
             type="textarea"
             :rows="2"
             :column="8"
@@ -76,6 +77,9 @@ export default {
       console.log(val)
       console.log(this.provinceOptions) // 打印级联选择器的options
       this.countyId = val[2] // 区域id
+    },
+    Cancel () {
+      this.$router.go(-1)
     }
   },
   mounted () {
@@ -116,7 +120,8 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
+
 /* 写样式的地方，可以百度一下elementui怎么更改样式，要使用/deep/给组件改样式*/
 #boxx{
 width: 1440px;
@@ -132,11 +137,7 @@ margin: 53px 300px ;
 border: 1px solid #E8E8E8;
 }
 .text{
-width: 64px;
-height: 22px;
-font-size: 16px;
-color: rgba(0, 0, 0, 0.85);
-line-height: 22px;
+margin-top: 20px;
 }
 .add{
   width: 392px;

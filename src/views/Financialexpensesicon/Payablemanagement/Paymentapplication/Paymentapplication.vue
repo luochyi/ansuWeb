@@ -13,48 +13,10 @@
               <span class='text'>付款单号</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='PaymentNo' placeholder='请输入'></el-input>
+              <el-input placeholder='请输入'></el-input>
             </el-col>
           </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>付款金额</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='amount' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>代理编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='code' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>审核状态</span>
-            </el-col>
-            <el-col :span='13'>
-                <el-input v-model='status' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>申请状态</span>
-            </el-col>
-            <el-col :span='13'>
-           <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='17' class='right'>
+          <el-col :span='6' class='right'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
           </el-col>

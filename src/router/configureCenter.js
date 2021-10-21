@@ -152,6 +152,16 @@ export default [
     component: () => import('@/views/configureCenter/Customerlevel/Customerlevel.vue')
   },
   {
+    path: '/Settlementperiod',
+    name: 'Settlementperiod',
+    meta: {
+      title: '结算账期',
+      icon: 'Settlementperiod',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/Settlementperiod/Settlementperiod.vue')
+  },
+  {
     path: '/receivingWarehouseManage',
     name: 'receivingWarehouseManage',
     meta: {

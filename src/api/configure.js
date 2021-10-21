@@ -140,6 +140,38 @@ export const countryAdd = (params) => {
 // 司机列表
 // driver/lists
 
+// 结算账期列表
+export const periodLists = (params) => {
+  return axios({
+    url: '/setting/period/lists',
+    method: 'post',
+    data: params
+  })
+}
+// 添加结算账期
+export const periodAdd = (params) => {
+  return axios({
+    url: '/setting/period/add',
+    method: 'post',
+    data: params
+  })
+}
+// 删除结算账期
+export const periodDel = (params) => {
+  return axios({
+    url: '/setting/period/del',
+    method: 'post',
+    data: params
+  })
+}
+// 修改结算账期
+export const periodEdit = (params) => {
+  return axios({
+    url: '/setting/period/edit',
+    method: 'post',
+    data: params
+  })
+}
 export {
   car, // 车辆
   menu, // 菜单
