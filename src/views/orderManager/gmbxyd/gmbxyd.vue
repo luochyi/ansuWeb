@@ -4,8 +4,8 @@
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
       <span class='text' style="height:43px;lineHeight:43px">购买保险运单</span>
       <el-tabs v-model="activeName" type="card" @tab-click="getData">
-        <el-tab-pane label="不可投保" name="1"></el-tab-pane>
-        <el-tab-pane label="可投保" name="2"></el-tab-pane>
+        <el-tab-pane label="可投保" name="1"></el-tab-pane>
+        <el-tab-pane label="不可投保" name="2"></el-tab-pane>
         <el-tab-pane label="全部" name="0"></el-tab-pane>
       </el-tabs>
     </el-row>
