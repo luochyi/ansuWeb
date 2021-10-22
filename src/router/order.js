@@ -50,6 +50,17 @@ export default [
     },
     component: () => import('@/views/orderManager/waybill/waybill.vue')
   },
+  // waybillDetail
+  {
+    path: '/waybillDetail',
+    name: 'waybillDetail',
+    meta: {
+      title: '预报运单',
+      icon: 'waybillIcon',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/waybill/waybillDetail.vue')
+  },
   {
     path: '/management',
     name: 'management',

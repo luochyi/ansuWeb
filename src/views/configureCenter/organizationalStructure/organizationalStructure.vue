@@ -8,10 +8,8 @@
     <div class="content">
       <el-row>
         <el-col :span="6" style="marginRight: 10px">
-          <span class="sub_title">部门</span
-          ><el-button class="whiteBtn" size="mini" @click="department = true;digTitle='新增部门'"
-            >新增部门</el-button
-          >
+          <span class="sub_title">部门</span>
+          <el-button class="whiteBtn" size="mini" @click="department = true;digTitle='新增部门'" >新增部门</el-button>
           <el-tree
             :data="organizationList"
             accordion
@@ -25,27 +23,18 @@
                 <el-button type="text" size="mini" @click="() => change(data)">
                   修改名称
                 </el-button>
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="() => remove(node, data)"
-                  style="color: #ff0000"
-                >
-                  删除
-                </el-button>
               </span>
             </span>
           </el-tree>
         </el-col>
         <el-col :span="6" style="borderLeft: 1px solid #d8d8d8; height: 600px">
-          <span class="sub_title">角色</span
-          ><el-button class="whiteBtn" @click="toAdd = true" size="mini"
-            >新增角色</el-button
-          >
+          <span class="sub_title">角色</span>
+          <el-button class="whiteBtn" @click="showAddRole" size="mini">新增角色</el-button>
           <el-tree
             :data="roleList"
             accordion
             node-key="id"
+            :props="{label: 'name'}"
             :expand-on-click-node="false"
             @node-click="handleroleNodeClick"
           >
@@ -56,7 +45,7 @@
             >
               <span>{{ node.label }}</span>
               <span>
-                <el-button type="text" size="mini" @click="() => roleChange(data)">
+                <el-button type="text" size="mini" @click="roleChange(data)">
                   修改名称
                 </el-button>
                 <el-button
@@ -65,14 +54,6 @@
                   @click="showAuth(data)"
                 >
                   权限
-                </el-button>
-                <el-button
-                  type="text"
-                  size="mini"
-                  @click="() => remove(node, data)"
-                  style="color: #ff0000"
-                >
-                  删除
                 </el-button>
               </span>
             </span>
@@ -84,33 +65,39 @@
     <el-drawer title="我是标题" :visible.sync="drawer" :with-header="false">
       <div class="drawera">
         <el-row type="flex" justify="flex-start" class="title" align="middle">
-          <span class="text">角色权限</span>
+          <el-col :span="6" class="colbox">
+            <span class="text">角色权限</span>
+          </el-col>
+          <el-col :span="12" class="colbox">
+          </el-col>
+          <el-col :span="6" class="colbox">
+            <el-button @click="auth">确定</el-button>
+          </el-col>
         </el-row>
         <div class="drawer">
-          <br />
-          <el-row class="searchbox1">
-            <el-col :span="15" class="colbox">
-              <el-col :span="5">
-                <span class="text">权限配置</span>
-              </el-col>
-              <el-col :span="10">
-                <!-- <el-input v-model="name" placeholder="请选择"></el-input> -->
+          <el-tabs v-model="activeName" type="card">
+            <el-tab-pane label="管理端配置" name="first">
+              <div>
                 <el-checkbox v-model="formData.hasManage">web管理端</el-checkbox>
-                <div v-show="formData.hasManage">
-                  <el-tree ref="menuTree" :data="menus" node-key="id" :props="{label: 'name'}" show-checkbox></el-tree>
-                </div>
-                <el-checkbox v-model="formData.hasDriver">司机端</el-checkbox>
-                <div v-show="formData.hasDriver">
-                  <el-checkbox v-model="formData.driver.isManage">司机主管</el-checkbox>
-                </div>
-                <el-checkbox v-model="formData.hasWarehouse">仓库端</el-checkbox>
-                <el-checkbox v-model="formData.hasSales">业务员端</el-checkbox>
-              </el-col>
-            </el-col>
-            <el-col :span="1" class="colbox">
-              <el-button @click="auth">确定</el-button>
-            </el-col>
-          </el-row>
+              </div>
+              <div v-show="formData.hasManage">
+                <el-tree ref="menuTree" :data="menus" node-key="id" :props="{label: 'name'}" show-checkbox></el-tree>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="司机端" name="second">
+              <el-checkbox v-model="formData.hasDriver">司机端</el-checkbox>
+              <div v-show="formData.hasDriver">
+                <el-checkbox v-model="formData.driver.isManage">司机主管</el-checkbox>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="仓库端" name="third">
+              <el-checkbox v-model="formData.hasWarehouse">仓库端</el-checkbox>
+            </el-tab-pane>
+            <el-tab-pane label="业务员端" name="fourth">
+              <el-checkbox v-model="formData.hasSales">业务员端</el-checkbox>
+            </el-tab-pane>
+          </el-tabs>
+          <br />
         </div>
       </div>
     </el-drawer>
@@ -147,29 +134,29 @@
     <!-- 新增角色 -->
     <el-dialog :title="roleTitle" :visible.sync="toAdd" width="30%">
       <div class="input">
-        <span
-          >角色名称<el-input
-            v-model="roleName"
+        <span>角色名称
+          <el-input
+            v-model="formRole.name"
             style="width: 190px"
             placeholder="请输入角色名称"
-          ></el-input
-        ></span>
+          ></el-input>
+        </span>
         <br />
         <br />
-        <span
-          >上级角色<el-cascader
+        <span>上级角色
+          <el-cascader
             :key="isRoleShow"
-            :options="roleOptions"
-            v-model="roleParentId"
-            :props="{ checkStrictly: true }"
+            :options="roleList"
+            v-model="formRole.parentId"
+            :props="{ checkStrictly: true, expandTrigger: 'hover', value: 'id', label: 'name' }"
             @change="handleChange"
             clearable
-          ></el-cascader
-        ></span>
+          ></el-cascader>
+        </span>
       </div>
       <span slot="footer" class="toAdd-footer">
         <el-button @click="toAddClose" class="wuBtn">取 消</el-button>
-        <el-button type="primary" class="orangeBtn" @click="addRoleSubmit">确 定</el-button>
+        <el-button type="primary" class="orangeBtn" @click="roleSubmit">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -179,6 +166,7 @@
 export default {
   data () {
     return {
+      activeName: 'first',
       organizationName: null,
       parentId: [],
       digTitle: '',
@@ -189,6 +177,7 @@ export default {
       isResouceShow: 0,
       isRoleShow: 0,
       toAdd: false, // 新增角色
+      roleType: null,
       drawer: false,
       organizationList: [],
       organizationOptions: [],
@@ -213,7 +202,12 @@ export default {
         hasWarehouse: false,
         hasSales: false
       },
-      menus: []
+      menus: [],
+      formRole: {
+        roleId: null,
+        parentId: [],
+        name: null
+      }
     }
   },
   mounted () {
@@ -262,90 +256,13 @@ export default {
             console.log(this.organizationList)
           })
       })
-      this.$api.configure.departmentAll().then((res) => {
-        console.log(res)
-        res.data &&
-          res.data.forEach((element) => {
-            let obj = {
-              value: element.id,
-              label: element.name,
-              children: []
-            }
-            if (obj.value === element.id) {
-              element.children &&
-                element.children.forEach((item) => {
-                  let objs = {
-                    value: item.id,
-                    label: item.name
-                  }
-                  obj.children.push(objs)
-                })
-            }
-            this.organizationOptions.push(obj)
-            console.log(this.organizationOptions)
-          })
-      })
     },
     // 获取角色
     getRoleData () {
       this.roleList = [] // el-tree的数据
       this.roleOptions = [] // 级联选择器的选项数据
       this.$api.configure.positionAll().then((res) => {
-        console.log(res)
-        res.data &&
-          res.data.forEach((element) => {
-            let obj = {
-              value: element.id,
-              label: element.name,
-              children: []
-            }
-            if (obj.value === element.id) {
-              element.children &&
-                element.children.forEach((item) => {
-                  let objs = {
-                    value: item.id,
-                    label: item.name,
-                    children: []
-                  }
-                  obj.children.push(objs)
-                  if (objs.value === item.id) {
-                    item.children &&
-                      item.children.forEach((e) => {
-                        let objss = {
-                          value: e.id,
-                          label: e.name
-                        }
-                        objs.children.push(objss)
-                      })
-                  }
-                })
-            }
-            this.roleList.push(obj)
-            console.log(this.roleList)
-          })
-      })
-      this.$api.configure.positionAll().then((res) => {
-        console.log(res)
-        res.data &&
-          res.data.forEach((element) => {
-            let obj = {
-              value: element.id,
-              label: element.name,
-              children: []
-            }
-            if (obj.value === element.id) {
-              element.children &&
-                element.children.forEach((item) => {
-                  let objs = {
-                    value: item.id,
-                    label: item.name
-                  }
-                  obj.children.push(objs)
-                })
-            }
-            this.roleOptions.push(obj)
-            console.log(this.roleOptions)
-          })
+        this.roleList = res.data
       })
     },
     // 新增部门
@@ -420,35 +337,41 @@ export default {
       this.roleParentId = []
       this.roleName = null
     },
-    // 新增角色
-    addRoleSubmit () {
-      let pid
-      if (this.roleParentId.length === 0) {
-        pid = 0
+    roleSubmit () {
+      let parentId = 0
+      if (this.formRole.parentId) {
+        parentId = Number(this.formRole.parentId.slice(-1))
       }
-      if (this.roleParentId.length === 1) {
-        pid = this.roleParentId[0]
+      switch (this.roleType) {
+        case 1:
+          this.$api.configure.positionAdd({
+            name: this.formRole.name,
+            parentId: parentId
+          }).then((res) => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.toAddClose()
+              this.getRoleData()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+          return
+        case 2:
+          this.$api.configure.positionEdit({
+            positionId: this.formRole.roleId,
+            name: this.formRole.name,
+            parentId: parentId
+          }).then((res) => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getRoleData()
+              this.toAddClose()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
       }
-      if (this.roleParentId.length === 2) {
-        pid = this.roleParentId[1]
-      }
-      if (this.roleParentId.length === 3) {
-        pid = this.roleParentId[2]
-      }
-
-      let resData = {
-        name: this.roleName,
-        parentId: pid
-      }
-      this.$api.configure.positionAdd(resData).then((res) => {
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.toAddClose()
-          this.getRoleData()
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
     },
     // 修改部门名称
     change (data) {
@@ -500,7 +423,21 @@ export default {
       this.digTitle = '修改部门'
       this.organizationName = data.label
     },
+    showAddRole () {
+      this.formRole.name = null
+      this.formRole.roleId = null
+      this.formRole.parentId = []
+      this.roleTitle = '新增角色'
+      this.roleType = 1
+      this.toAdd = true
+    },
     roleChange (data) {
+      this.formRole.name = data.name
+      this.formRole.roleId = data.id
+      this.formRole.parentId = this.cascaderData(this.roleList, data.parent_id)
+      this.roleTitle = '编辑角色'
+      this.roleType = 2
+      this.toAdd = true
     },
     handleChange (val) {
       console.log(val)
@@ -521,8 +458,8 @@ export default {
       })
     },
     showAuth (data) {
-      this.formData.positionId = data.value
-      this.$api.company.position.getSuth(data.value).then(res => {
+      this.formData.positionId = data.id
+      this.$api.company.position.getSuth(data.id).then(res => {
         this.formData.hasManage = res.data.has_manage === 1
         this.formData.hasDriver = res.data.has_driver === 1
         this.formData.hasWarehouse = res.data.has_warehouse === 1
@@ -533,6 +470,21 @@ export default {
         })
       })
       this.drawer = true
+    },
+    cascaderData (val, id) {
+      for (let i in val) {
+        if (val[i].id === id) {
+          return [id]
+        }
+        if (val[i].children) {
+          let res = this.cascaderData(val[i].children, id)
+          if (res.length > 0) {
+            res.unshift(val[i].id)
+            return res
+          }
+        }
+      }
+      return []
     },
     auth () {
       this.$api.company.position.auth({
@@ -612,16 +564,5 @@ export default {
 }
 /deep/ .el-dialog {
   text-align: left;
-}
-.drawera {
-  width: 820px;
-  height: 1080px;
-  background-color: #f0f0f0;
-}
-.drawer {
-  width: 770px;
-  height: 868px;
-  background-color: rgb(255, 255, 255);
-  margin: 20px;
 }
 </style>

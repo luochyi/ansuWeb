@@ -82,6 +82,14 @@ export const irikuraLists = (params) => {
     data: params
   })
 }
+// order/waybill/irikura
+export const waybillIrikura = (params) => {
+  return axios({
+    url: '/order/waybill/irikura',
+    method: 'post',
+    data: params
+  })
+}
 // 出库列表
 export const Ejectlists = (params) => {
   return axios({

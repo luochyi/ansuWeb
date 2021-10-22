@@ -34,8 +34,8 @@
           align="middle"
         >
           <el-col :span="12" class="left">
-            <el-button class='stopBtn' v-if="activeName==='1'" @click="batchStop">批量停用</el-button>
-            <el-button class='stopBtn' v-else @click="batchStop">批量启用</el-button>
+            <el-button class='orangeBtn' v-if="activeName==='1'" @click="batchStop">批量停用</el-button>
+            <el-button class='orangeBtn' v-else @click="batchStop">批量启用</el-button>
           </el-col>
           <el-col :span="12" class="right">
             <el-button class="whiteBtn" @click="toAdd">新增代理服务</el-button>
@@ -464,7 +464,7 @@ export default {
       },
       tempData: {
         zone: { zoneIndex: -1, name: '', areas: [] },
-        weights: [{ weightIndex: -1, maxWeight: 0, priceType: null }],
+        weights: [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: null }],
         unitWeights: [],
         unitPrices: [],
         amountWeights: [],
