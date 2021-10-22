@@ -9,6 +9,7 @@ import * as company from './company'
 import * as customer from './customer'
 import * as Ordermanagement from './Ordermanagement'
 import * as finance from './finance'
+import * as order from './order'
 // 默认全部导出
 
 export default {
@@ -19,5 +20,6 @@ export default {
   company,
   customer,
   finance,
-  Ordermanagement
+  Ordermanagement,
+  order
 }
