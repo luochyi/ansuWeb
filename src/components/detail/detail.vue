@@ -12,7 +12,7 @@
         labelClassName='labelClass'
       >
         <span>{{ item.value }}</span>
-        <span v-if="item.type==='slot'"><el-button type="text" @click="check(item)">查看</el-button></span>
+        <span v-if="item.type==='button'"><el-button type="text" @click="check(item)">查看</el-button></span>
       </el-descriptions-item>
     </el-descriptions>
   </div>
