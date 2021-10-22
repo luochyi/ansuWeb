@@ -78,7 +78,16 @@
     <commonDrawer :drawerVrisible="drawerVrisible" :drawerTitle="drawerTitle" :drawerSize='drawerSize'>
       <div class="dra-content" style="textAlign:left;padding:10px">
         <!-- 内容区域 -->
-        <el-row style="fontSize:20px;color:#FB4702">{{info.code}}</el-row>
+        <div>
+          <el-row>
+            <el-col :span="18" style="fontSize:20px;color:#FB4702">
+              {{info.code}}
+            </el-col>
+            <el-col :span="4" style="fontSize:14px">
+              手动录单<el-switch v-model="manual"  active-color="#FB4702" inactive-color="#FB4702" @change="changes"></el-switch>
+            </el-col>
+          </el-row>
+        </div>
         <el-row style="fontSize:14px;fontWeight:500">客户名称：<span style="fontWeight:400">{{info.name}}</span></el-row>
          <el-divider></el-divider>
           <el-row style="fontSize:14px;">入仓设备：
@@ -86,13 +95,38 @@
             <span v-else>无</span>&nbsp;
             <span class="btnspan" @click="choseDevice">添加设备</span> </el-row>
           <el-divider></el-divider>
-        <el-table :data="goodslist" border style="width: 100%"  :header-cell-style="{background: '#F5F5F6'}">
+
+        <el-table :data="goodslist" border style="width: 100%"  :header-cell-style="{background: '#F5F5F6'}" v-show="manual">
+          <el-table-column prop="cargoNo" label="货件编号"></el-table-column>
+          <el-table-column prop="length" label="长度">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.length"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop="width" label="宽度">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.width"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop="height" label="高度">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.height"></el-input>
+            </template>
+          </el-table-column>
+          <el-table-column prop="weight" label="重量">
+            <template slot-scope="scope">
+              <el-input v-model="scope.row.weight"></el-input>
+            </template>
+          </el-table-column>
+        </el-table>
+        <el-table :data="goodslist" border style="width: 100%"  :header-cell-style="{background: '#F5F5F6'}" v-show="manual===false">
           <el-table-column prop="cargoNo" label="货件编号"></el-table-column>
           <el-table-column prop="length" label="长度"></el-table-column>
           <el-table-column prop="width" label="宽度"></el-table-column>
           <el-table-column prop="height" label="高度"></el-table-column>
           <el-table-column prop="weight" label="重量"></el-table-column>
         </el-table>
+
       </div>
       <!-- 抽屉底部按钮 -->
       <div slot="footer">
@@ -141,6 +175,7 @@ export default {
       timeoutnum: null, // 断开 重连倒计时
       header: this.$api.common.loginHeader(),
       //
+      manual: false,
       activeName: '1',
       drawerVrisible: false,
       drawerSize: '50%',
@@ -306,14 +341,32 @@ export default {
     choseDevice () {
       this.dialog = true
     },
-    detail (data) {},
+    detail (data) {
+      this.$router.push({ name: 'waybillDetail', params: { id: data.id } })
+    },
     edit (data) {},
+    submit () {
+      console.log(this.goodslist)
+      let params = {
+        waybillId: this.waybillId,
+        irikuraDataItems: this.goodslist
+      }
+      this.$api.Ordermanagement.waybillIrikura(params).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.addClose()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     handleClick () {
       this.getData()
     },
     // 入仓
     irikura (row) {
       console.log(row)
+      this.waybillId = row.id
       this.drawerVrisible = true
       this.info.name = row.customer_name
       this.info.code = row.waybill_no
@@ -371,6 +424,9 @@ export default {
     },
     handleClose () {
       this.dialog = false
+    },
+    changes (val) {
+      console.log(val)
     },
     handleSelectionChange (val) {},
     init: function (id) {

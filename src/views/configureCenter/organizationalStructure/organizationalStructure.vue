@@ -94,7 +94,6 @@
                 <span class="text">权限配置</span>
               </el-col>
               <el-col :span="10">
-                <!-- <el-input v-model="name" placeholder="请选择"></el-input> -->
                 <el-checkbox v-model="formData.hasManage">web管理端</el-checkbox>
                 <div v-show="formData.hasManage">
                   <el-tree ref="menuTree" :data="menus" node-key="id" :props="{label: 'name'}" show-checkbox></el-tree>
@@ -106,6 +105,7 @@
                 <el-checkbox v-model="formData.hasWarehouse">仓库端</el-checkbox>
                 <el-checkbox v-model="formData.hasSales">业务员端</el-checkbox>
               </el-col>
+
             </el-col>
             <el-col :span="1" class="colbox">
               <el-button @click="auth">确定</el-button>

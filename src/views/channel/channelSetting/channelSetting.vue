@@ -485,7 +485,7 @@ export default {
       },
       tempData: {
         zone: { zoneIndex: -1, name: '', areas: [] },
-        weights: [{ weightIndex: -1, maxWeight: 0, priceType: null }],
+        weights: [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: null }],
         unitWeights: [],
         unitPrices: [],
         amountWeights: [],
