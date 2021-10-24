@@ -59,7 +59,7 @@ export default [
       icon: 'waybillIcon',
       hidden: false
     },
-    component: () => import('@/views/orderManager/waybill/waybillDetail.vue')
+    component: () => import('@/views/orderManager/waybill/orderDetials.vue')
   },
   {
     path: '/management',
