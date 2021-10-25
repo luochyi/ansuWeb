@@ -137,8 +137,8 @@ margin: 20px;
   background-color: #f3f3f3;
 }
 #boxx{
-width: 1191px;
-height: 1050px;
+/* width: 1191px; */
+/* height: 1050px; */
 background: #FFFFFF;
 border-radius: 4px;
 border: 1px solid #E8E8E8;
