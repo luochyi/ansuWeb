@@ -170,16 +170,40 @@ export default {
               parentId: '1'
             },
             {
-              name: 'gmbxyd',
               meta: {
-                title: '购买保险运单',
-                icon: 'gmbxyd',
+                title: '保险',
+                icon: 'finance',
                 hidden: false
               },
               ID: 16,
-              menuId: '16',
-              path: 'gmbxyd',
-              parentId: '1'
+              menuId: '20',
+              parentId: '1',
+              children: [
+                {
+                  name: 'gmbxyd',
+                  meta: {
+                    title: '购买保险运单',
+                    icon: 'gmbxyd',
+                    hidden: false
+                  },
+                  ID: 1,
+                  menuId: '1',
+                  path: 'gmbxyd',
+                  parentId: '16'
+                },
+                {
+                  name: 'safeOrder',
+                  meta: {
+                    title: '保单管理',
+                    icon: 'safeOrder',
+                    hidden: false
+                  },
+                  ID: 2,
+                  menuId: '2',
+                  path: 'safeOrder',
+                  parentId: '16'
+                }
+              ]
             }, {
               name: 'ccd',
               meta: {
