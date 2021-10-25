@@ -9,7 +9,7 @@
     <div>
     <div class="top" >
          <el-row type='flex' justify='flex-start' class='titlea' align='middle'>
-      <span style=" margin:25px" class='text'>预报订单：{{data.forecast_no}}  预报类型：计划下单</span>
+      <span style=" margin:25px" class='text'>预报订单：{{data.forecast_no}}  预报类型：{{data.type === 1 ? '计划下单' : '未建计划下单'}}</span>
     </el-row>
          <el-descriptions title="客户信息">
          <el-descriptions-item label="客户名称">{{data.customer_name}}</el-descriptions-item>
@@ -17,12 +17,11 @@
          </el-descriptions>
     </div>
     <div class="en">
-          <el-descriptions title="业务员">
-         <el-descriptions-item label="所属业务员">{{data.salesman_name}}</el-descriptions-item>
-         <el-descriptions-item label="业务员手机">{{data.salesman_phone}}</el-descriptions-item>
-         <el-descriptions-item label="业务员职位">{{data.salesman_position_name}}</el-descriptions-item>
-         <el-descriptions-item label="上级领导">高飞</el-descriptions-item>
-         </el-descriptions>
+      <el-descriptions title="业务员">
+       <el-descriptions-item label="所属业务员">{{data.salesman_name}}</el-descriptions-item>
+       <el-descriptions-item label="业务员手机">{{data.salesman_phone}}</el-descriptions-item>
+       <el-descriptions-item label="业务员职位">{{data.salesman_position_name}}</el-descriptions-item>
+     </el-descriptions>
     </div>
         <div class="en">
           <el-descriptions title="收货信息">
@@ -33,8 +32,8 @@
     </div>
         <div class="en">
           <el-descriptions title="预报信息">
-         <el-descriptions-item label="下单时间">{{data.created_at}} </el-descriptions-item>
-         <el-descriptions-item label="货好时间">{{data.good_time}}</el-descriptions-item>
+         <el-descriptions-item label="下单时间">{{formatDate(data.created_at, 'yyyy-MM-dd hh:mm:ss')}} </el-descriptions-item>
+         <el-descriptions-item label="货好时间">{{formatDate(data.good_time, 'yyyy-MM-dd hh:mm:ss')}}</el-descriptions-item>
          <el-descriptions-item label="寄件方式">{{data.receive_type}}</el-descriptions-item>
          <el-descriptions-item label="预报件数">{{data.box_count}}</el-descriptions-item>
          <el-descriptions-item label="预报重量">{{data.weight}}</el-descriptions-item>
@@ -52,15 +51,15 @@
      <el-divider></el-divider>
         <div class="foot" >
             <el-row class="left">
-              <span class='title' >票数：2票 货件数量：100箱</span>
+              <span class='title' >票数：{{ data.waybills.length }}票 货件数量：{{ data.box_count }}箱</span>
             </el-row>
             <br>
-          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 80%" @handleSelectionChange="handleSelectionChange"
+          <el-table ref="multipleTable" :data="data.waybills" border  tooltip-effect="dark" style="width: 80%"
             :header-cell-style="{background: '#F5F5F6'}">
             <!-- 运单号 -->
-            <el-table-column  prop='WaybillNo'  label='运单号'  min-width='318'> </el-table-column>
+            <el-table-column  prop='waybill_no'  label='运单号'  min-width='318'> </el-table-column>
             <!-- 预报类型 -->
-            <el-table-column  prop='quantity'  label='发货数量'  min-width='318'></el-table-column>
+            <el-table-column  prop='cargoes_num'  label='发货数量'  min-width='318'></el-table-column>
              <el-table-column label='操作' fixed='right' min-width='120'>
               <template slot-scope="scope">
                  <el-button type="text" @click="Viewwaybill(scope.row.id)"> 查看运单</el-button>
