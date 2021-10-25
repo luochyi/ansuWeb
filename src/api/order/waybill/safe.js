@@ -17,3 +17,12 @@ export const change = (params) => {
     data: params
   })
 }
+
+// 保单列表
+export const order = (params) => {
+  return axios({
+    url: '/order/waybill/safe/order',
+    method: 'post',
+    data: params
+  })
+}
