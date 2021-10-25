@@ -4,8 +4,8 @@
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
       <span class='text' style="height:43px;lineHeight:43px">购买保险运单</span>
       <el-tabs v-model="activeName" type="card" @tab-click="getData">
-        <el-tab-pane label="不可投保" name="1"></el-tab-pane>
-        <el-tab-pane label="可投保" name="2"></el-tab-pane>
+        <el-tab-pane label="可投保" name="1"></el-tab-pane>
+        <el-tab-pane label="不可投保" name="2"></el-tab-pane>
         <el-tab-pane label="全部" name="0"></el-tab-pane>
       </el-tabs>
     </el-row>
@@ -31,14 +31,22 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <span @click="detail(scope.row)" class="blue">查看保单</span>
-              <span @click="detail(scope.row)" class="blue">&nbsp;|&nbsp;查看运单</span>
+              <span @click="change(scope.row)" class="blue" v-if="scope.row.safe_status === 2">修改货值</span>
             </template>
           </el-table-column>
         </commonTable>
       </div>
-
     </div>
+    <el-dialog
+        title="修改货值"
+        :visible.sync="dialog.change.visable"
+        width="30%">
+      <el-input-number v-model="formChange.safe_declared_value" :precision="2"></el-input-number>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialog.change.visable = false">取 消</el-button>
+        <el-button type="primary" @click="submitChange">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -46,6 +54,11 @@
 export default {
   data () {
     return {
+      dialog: {
+        change: {
+          visable: false
+        }
+      },
       columns: [
         { prop: 'safe_no', label: '保单号', width: '100', align: 'center' },
         { prop: 'waybill_no', label: '运单号', width: '100', align: 'center' },
@@ -72,7 +85,10 @@ export default {
         total: 0
       },
       waybillIds: [],
-      activeName: '1'
+      activeName: '1',
+      formChange: {
+        safe_declared_value: null
+      }
     }
   },
   created () {
@@ -118,9 +134,24 @@ export default {
       })
     },
     // 查看
-    detail (val) {
-      console.log(val.data)
-      this.$router.push('name:sjmssqDetail')
+    change (val) {
+      this.dialog.change.visable = true
+      this.formChange.waybillId = val.id
+      this.formChange.safe_declared_value = val.safe_declared_value
+    },
+    submitChange () {
+      this.$api.order.waybill.safe.change({
+        waybillId: this.formChange.waybillId,
+        safeAmount: this.formChange.safe_declared_value
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData()
+          this.dialog.change.visable = false
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
     }
   }
 }

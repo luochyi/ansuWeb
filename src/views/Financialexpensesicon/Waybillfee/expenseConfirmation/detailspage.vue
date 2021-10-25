@@ -237,6 +237,7 @@ export default {
       this.dialog.priceForm = {
         priceIndex: null,
         name: null,
+        type: 2,
         price: null,
         num: null,
         unit: null,
@@ -247,6 +248,7 @@ export default {
     add () {
       this.formData.surcharges.push({
         name: this.dialog.priceForm.name,
+        type: 2,
         price: this.dialog.priceForm.price,
         num: this.dialog.priceForm.num,
         unit: this.dialog.priceForm.unit,
@@ -258,6 +260,7 @@ export default {
     editSubmit () {
       this.formData.surcharges[this.dialog.priceForm.priceIndex] = {
         name: this.dialog.priceForm.name,
+        type: 2,
         price: this.dialog.priceForm.price,
         num: this.dialog.priceForm.num,
         unit: this.dialog.priceForm.unit,
