@@ -122,6 +122,16 @@ export default [
     component: () => import('@/views/orderManager/gmbxyd/gmbxyd.vue')
   },
   {
+    path: '/safeOrder',
+    name: 'safeOrder',
+    meta: {
+      title: '保单管理',
+      icon: 'safeOrder',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/gmbxyd/safeOrder.vue')
+  },
+  {
     path: '/ccd',
     name: 'ccd',
     meta: {
