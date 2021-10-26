@@ -97,8 +97,8 @@ export default {
       }).then(res => {
         console.log(res)
         this.data = res.data
-        this.data.good_time = this.formatDate(res.data.good_time, 'yyyy-MM-dd')
-        this.data.created_at = this.formatDate(res.data.created_at, 'yyyy-MM-dd')
+        // this.data.good_time = this.formatDate(res.data.good_time, 'yyyy-MM-dd')
+        // this.data.created_at = this.formatDate(res.data.created_at, 'yyyy-MM-dd')
         this.tableData = res.data.waybills
       })
     },

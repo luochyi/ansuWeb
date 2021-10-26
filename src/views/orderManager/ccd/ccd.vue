@@ -234,9 +234,9 @@ export default {
     this.$api.configure.warehouse.select().then(res => {
       this.warehouseOption = res.data
     })
-    this.$api.setting.warehouse.select().then(res => {
-      this.warehouseOption = res.data
-    })
+    // this.$api.setting.warehouse.select().then(res => {
+    //   this.warehouseOption = res.data
+    // })
   },
   methods: {
     getData () {
