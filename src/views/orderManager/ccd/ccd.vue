@@ -60,7 +60,7 @@
 
       <!-- 表格 -->
       <div>
-        <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
+        <el-row class='searchbox1' type='flex' justify='space-between' align='middle' v-if="false">
           <el-col :span='12' class="left" >
             <el-button class='stopBtn'>批量导出Excel</el-button>
           </el-col>
@@ -120,7 +120,7 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <span @click="detail(scope.row)" class="blue">下载Excel</span>
+              <span @click="download(scope.row)" class="blue" v-if="scope.row.has_assign_drivers === 2">下载Excel</span>
               <span @click="detail(scope.row)" class="blue">&nbsp;|&nbsp;运单明细</span>
                <span @click="detail(scope.row)" v-if="scope.row.has_assign_drivers===1" class="blue">&nbsp;|&nbsp;查看送货司机</span>
                 <span @click="setDriver(scope.row)" v-else class="blue">&nbsp;|&nbsp;配置司机</span>
@@ -207,66 +207,25 @@ export default {
         waybillIds: [] // 配置司机选择的运单id
       },
       msg: '',
-      ejectData: {}, // 出仓单信息
+      ejectData: {
+        eject_no: null,
+        eject_time: null,
+        channel_name: null,
+        agent_name: null,
+        waybill_count: null,
+        item_count: null
+      }, // 出仓单信息
       waybillsList: [], // 所有运单
       columns: [
-        {
-          prop: 'eject_no',
-          label: '出仓单号',
-          width: '200',
-          align: 'center'
-        },
-        {
-          prop: 'channel_name',
-          label: '渠道名称',
-          width: '250',
-          align: 'center'
-        },
-        {
-          prop: 'agent_name',
-          label: '代理名称',
-          width: '200',
-          align: 'center'
-
-        },
-        {
-          prop: 'eject_time',
-          label: '出仓时间',
-          width: '200',
-          align: 'center',
-          formatter: this.formatters
-        },
-        {
-          prop: 'waybill_count',
-          label: '运单数',
-          width: '200',
-          align: 'center'
-        },
-        {
-          prop: 'item_count',
-          label: '货件数',
-          width: '200',
-          align: 'center'
-        },
-        {
-          prop: 'volume',
-          label: '体积',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'bill_weight',
-          label: '结算重',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'has_assign_drivers',
-          label: '是否配置司机',
-          width: '100',
-          align: 'center',
-          formatter: this.formatter
-        }
+        { prop: 'eject_no', label: '出仓单号', width: '200', align: 'center' },
+        { prop: 'channel_name', label: '渠道名称', width: '250', align: 'center' },
+        { prop: 'agent_name', label: '代理名称', width: '200', align: 'center' },
+        { prop: 'eject_time', label: '出仓时间', width: '200', align: 'center', formatter: this.formatters },
+        { prop: 'waybill_count', label: '运单数', width: '200', align: 'center' },
+        { prop: 'item_count', label: '货件数', width: '200', align: 'center' },
+        { prop: 'volume', label: '体积', width: '100', align: 'center' },
+        { prop: 'bill_weight', label: '结算重', width: '100', align: 'center' },
+        { prop: 'has_assign_drivers', label: '是否配置司机', width: '100', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -297,9 +256,9 @@ export default {
     // 重新渲染name列
     formatter (row, column, cellValue) {
       if (row.has_assign_drivers === 1) {
-        return '是'
-      } else {
         return '否'
+      } else {
+        return '是'
       }
     },
     formatters (row, column, cellValue) {
@@ -312,14 +271,15 @@ export default {
         this.warehouseOption = res.data
       })
     },
-    setDriver (data) {
-      this.$api.Ordermanagement.ejectInfo({ ejectId: data.id }).then(res => {
-        console.log(res.data.waybills)
-        this.ejectData = res.data
-        this.waybillsList = res.data.waybills
-        this.drawerVrisible = true
-      })
-      // ejectDriver  ejectId drivers
+    setDriver (row) {
+      this.ejectData = row
+      this.drawerVrisible = true
+      // this.$api.Ordermanagement.ejectInfo({ ejectId: data.id }).then(res => {
+      //   console.log(res.data.waybills)
+      //   this.ejectData = res.data
+      //   this.waybillsList = res.data.waybills
+      //   this.drawerVrisible = true
+      // })
     },
     // 改变页面大小处理
     handleSizeChange (val) {
@@ -361,6 +321,13 @@ export default {
     // 关闭抽屉
     addClose () {
       this.drawerVrisible = false
+    },
+    download (row) {
+      this.$api.Ordermanagement.ejectExportDriver({
+        ejectId: row.id
+      }).then(res => {
+        this.downloadBlob(res, '出仓单.xlsx')
+      })
     }
   }
 }
