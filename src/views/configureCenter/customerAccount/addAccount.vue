@@ -113,6 +113,9 @@
             <el-table-column label="姓名" min-width="150" prop="name">
             </el-table-column>
             <el-table-column label="职位" min-width="150" prop="position">
+              <template slot-scope="scope">
+                <span>{{scope.row.position===1?'财务':scope.row.position===2?'业务':'发货'}}</span>
+              </template>
             </el-table-column>
             <el-table-column label="联系电话" min-width="150" prop="phone">
             </el-table-column>

@@ -154,3 +154,19 @@ export const shipmentSign = (params) => {
     data: params
   })
 }
+// /order/eject/info出仓单详情
+export const ejectInfo = (params) => {
+  return axios({
+    url: '/order/eject/info',
+    method: 'post',
+    data: params
+  })
+}
+// /order/eject/driver
+export const ejectDriver = (params) => {
+  return axios({
+    url: '/order/eject/driver',
+    method: 'post',
+    data: params
+  })
+}

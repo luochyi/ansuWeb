@@ -122,13 +122,29 @@
             <template slot-scope="scope">
               <span @click="detail(scope.row)" class="blue">下载Excel</span>
               <span @click="detail(scope.row)" class="blue">&nbsp;|&nbsp;运单明细</span>
-               <span @click="detail(scope.row)" class="blue">&nbsp;|&nbsp;查看送货司机</span>
+               <span @click="detail(scope.row)" v-if="scope.row.has_assign_drivers===1" class="blue">&nbsp;|&nbsp;查看送货司机</span>
+                <span @click="setDriver(scope.row)" v-else class="blue">&nbsp;|&nbsp;配置司机</span>
             </template>
           </el-table-column>
         </commonTable>
       </div>
-
     </div>
+    <commonDrawer :drawerVrisible="drawerVrisible"  @handleClose='addClose' :drawerTitle="drawerTitle" style="textAlign:left">
+          <div class="dra-content">
+            选择司机<el-select>
+              <el-option  v-for="item in warehouseOption" :key="item.id" :value="item.id" :label="item.name"></el-option>
+            </el-select>
+          </div>
+          <!-- 抽屉底部按钮 -->
+          <div slot="footer">
+            <button class="btn-orange" @click="ejectSubmit()">
+              <span> <i class="el-icon-circle-check"></i>提交</span>
+            </button>
+            <button class="btn-gray" @click="addClose">
+              <span>取消</span>
+            </button>
+          </div>
+        </commonDrawer>
   </div>
 </template>
 
@@ -136,6 +152,9 @@
 export default {
   data () {
     return {
+      drawerVrisible: false,
+      drawerTitle: '配置司机',
+      warehouseOption: [], // 仓库选择
       msg: '',
       activeName: '1', // 标签绑定
       serviceName: null,
@@ -209,48 +228,15 @@ export default {
       }
     }
   },
-  // created () {
-  //   this.tableData = [
-  //     {
-  //       code: 'YBSZ213232232',
-  //       type: '已建计划',
-  //       num: '2票',
-  //       name: 'sz沙马家具毛衣公司',
-  //       khbh: 'smjj',
-  //       status: '通过审批',
-  //       spr: '张三',
-  //       diver: '王师傅',
-  //       js: '2件',
-  //       address: '上海市普陀区金沙江路 1518 弄',
-  //       ybzl: '80公斤',
-  //       ybfs: '90立方',
-  //       time: '2020年12月9日',
-  //       hhsj: '14.50',
-  //       ywy: '张三'
-  //     },
-  //     {
-  //       code: 'YBSZ213232232',
-  //       type: '已建计划',
-  //       num: '2票',
-  //       name: 'sz沙马家具毛衣公司',
-  //       khbh: 'smjj',
-  //       status: '通过审批',
-  //       spr: '张三',
-  //       diver: '王师傅',
-  //       js: '2件',
-  //       address: '上海市普陀区金沙江路 1518 弄',
-  //       ybzl: '80公斤',
-  //       ybfs: '90立方',
-  //       time: '2020年12月9日',
-  //       hhsj: '14.50',
-  //       ywy: '张三'
-  //     }
-  //   ]
-  //   this.page.total = 2
-  // },
   mounted () {
     // 在页面加载前调用获取列表数据函数
     this.getData()
+    this.$api.configure.warehouse.select().then(res => {
+      this.warehouseOption = res.data
+    })
+    this.$api.setting.warehouse.select().then(res => {
+      this.warehouseOption = res.data
+    })
   },
   methods: {
     getData () {
@@ -269,6 +255,13 @@ export default {
     },
     formatters (row, column, cellValue) {
       return this.formatDate(row.eject_time, 'yyyy-MM-dd hh:mm:ss')
+    },
+    setDriver (data) {
+      this.$api.Ordermanagement.ejectInfo({ ejectId: data.id }).then(res => {
+        console.log(res.data.waybills)
+        this.drawerVrisible = true
+      })
+      // ejectDriver
     },
     // 改变页面大小处理
     handleSizeChange (val) {
@@ -291,8 +284,11 @@ export default {
     },
     handleClick (tab, event) { console.log(tab, event) },
     // 操作按钮列表
-    editTableData (row) {}
+    editTableData (row) {},
     // 关闭抽屉
+    addClose () {
+      this.drawerVrisible = false
+    }
   }
 }
 </script>
