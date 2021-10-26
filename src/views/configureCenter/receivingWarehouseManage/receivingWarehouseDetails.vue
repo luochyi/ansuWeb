@@ -10,8 +10,8 @@
         <div class="en">
           <el-descriptions title="仓库信息">
             <el-descriptions-item label="仓库名称">{{data.name}}</el-descriptions-item>
-            <el-descriptions-item label="代理编码">{{data.code}}</el-descriptions-item>
-            <el-descriptions-item label="公司地址">{{data.province_name}}{{data.city_name}}{{data.county_name}}</el-descriptions-item>
+<!--            <el-descriptions-item label="代理编码">{{data.code}}</el-descriptions-item>-->
+<!--            <el-descriptions-item label="公司地址">{{data.province_name}}{{data.city_name}}{{data.county_name}}</el-descriptions-item>-->
             <el-descriptions-item label="详细地址">{{data.address}}</el-descriptions-item>
           </el-descriptions>
         </div>
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import * as setting from "../../../api/setting";
+
 export default {
   data () {
     return {
@@ -42,7 +44,7 @@ export default {
     getdata () {
       console.log('111')
       console.log(this.id)
-      this.$api.agent.warehouseInfo({
+      this.$api.setting.warehouse.warehouseInfo({
         warehouseId: this.id
       }).then(res => {
         console.log(res)

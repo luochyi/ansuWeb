@@ -57,8 +57,8 @@
         :resizable="false"
         >
         <template slot-scope="scoped">
-<!--          <el-button type="text" @click="toDetail(scoped.row.id)"> 详情</el-button>-->
-<!--          <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+          <el-button type="text" @click="toDetail(scoped.row.id)"> 详情</el-button>
+          <span style="color: #0084FF; margin: 0px 5px">|</span>
           <el-button type="text" @click="dialogVisible=true"> 修改</el-button>
           <span style="color: #0084FF; margin: 0px 5px">|</span>
           <el-button type="text" @click="equipment(scoped.row)"> 仓库设备 </el-button>
