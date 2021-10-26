@@ -22,6 +22,13 @@ export const agentAdd = (params) => {
     data: params
   })
 }
+export const agentInfo = (params) => {
+  return axios({
+    url: '/setting/agent/info',
+    method: 'post',
+    data: params
+  })
+}
 // /setting/period/select
 export const periodSelect = (params) => {
   return axios({
@@ -197,6 +204,13 @@ export const channelSelect = (params) => {
 export const channelserviceSelect = (params) => {
   return axios({
     url: '/setting/channel/service/select',
+    method: 'post',
+    data: params
+  })
+}
+export const agentSelectAddress = (params) => {
+  return axios({
+    url: '/setting/agent/select/address',
     method: 'post',
     data: params
   })

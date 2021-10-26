@@ -51,7 +51,7 @@
      <el-divider></el-divider>
         <div class="foot" >
             <el-row class="left">
-              <span class='title' >票数：{{ data.waybills.length }}票 货件数量：{{ data.box_count }}箱</span>
+              <!-- <span class='title' >票数：2票 货件数量：100箱</span> -->
             </el-row>
             <br>
           <el-table ref="multipleTable" :data="data.waybills" border  tooltip-effect="dark" style="width: 80%"
@@ -59,12 +59,12 @@
             <!-- 运单号 -->
             <el-table-column  prop='waybill_no'  label='运单号'  min-width='318'> </el-table-column>
             <!-- 预报类型 -->
-            <el-table-column  prop='cargoes_num'  label='发货数量'  min-width='318'></el-table-column>
-             <el-table-column label='操作' fixed='right' min-width='120'>
+            <el-table-column  prop='cargoes_num'  label='货件数量'  min-width='318'></el-table-column>
+             <!-- <el-table-column label='操作' fixed='right' min-width='120'>
               <template slot-scope="scope">
                  <el-button type="text" @click="Viewwaybill(scope.row.id)"> 查看运单</el-button>
               </template>
-            </el-table-column>
+            </el-table-column> -->
             </el-table>
          </div>
     </div>
@@ -79,14 +79,6 @@ export default {
       quantity: '',
       msg: '',
       tableData: [
-        {
-          WaybillNo: 'AS202112120001',
-          quantity: '20箱'
-        },
-        {
-          WaybillNo: 'AS202112120002',
-          quantity: '40箱'
-        }
       ],
       data: ''
     }
@@ -105,6 +97,9 @@ export default {
       }).then(res => {
         console.log(res)
         this.data = res.data
+        // this.data.good_time = this.formatDate(res.data.good_time, 'yyyy-MM-dd')
+        // this.data.created_at = this.formatDate(res.data.created_at, 'yyyy-MM-dd')
+        this.tableData = res.data.waybills
       })
     },
     modify () {

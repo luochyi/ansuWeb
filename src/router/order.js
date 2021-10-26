@@ -111,6 +111,17 @@ export default [
     },
     component: () => import('@/views/orderManager/sjmssq/sjmssq.vue')
   },
+  // sjmssqDetail
+  {
+    path: '/sjmssqDetail',
+    name: 'sjmssqDetail',
+    meta: {
+      title: '收件免扫申请',
+      icon: 'sjmssq',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/sjmssq/sjmssqDetail.vue')
+  },
   {
     path: '/gmbxyd',
     name: 'gmbxyd',

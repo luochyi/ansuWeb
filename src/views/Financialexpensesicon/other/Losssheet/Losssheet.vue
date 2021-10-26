@@ -22,16 +22,6 @@
           </el-col>
         </el-row>
         <el-divider></el-divider>
-         <el-row class='tableBtn'>
-             <el-col :span='10' class="left">
-               <el-button class='stopBtn' @click="changes=true">批量扣毛利</el-button>
-          </el-col>
-            <el-col :span='10' class='right'>
-              <!-- <el-button class='whiteBtn '>操作日志</el-button>
-                 -->
-            </el-col>
-          </el-row>
-          <br>
           <!-- 组件 -->
     <commonTable
       :columns="columns"

@@ -57,14 +57,16 @@
         :resizable="false"
         >
         <template slot-scope="scoped">
+          <el-button type="text" @click="toDetail(scoped.row.id)"> 详情</el-button>
+          <span style="color: #0084FF; margin: 0px 5px">|</span>
           <el-button type="text" @click="dialogVisible=true"> 修改</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="equipment(scoped.row)"> 仓库设备 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="setDefault(scoped.row.id)" v-if="activeName === '1'" v-show="scoped.row.is_default === 0"> 默认仓库 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px" v-if="activeName === '1'" v-show="scoped.row.is_default === 0">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="disabled([scoped.row.id])">停用</el-button>
-                <el-button v-else-if="activeName === '2'" type="text" @click="enabled([scoped.row.id])" >启用</el-button>
+          <span style="color: #0084FF; margin: 0px 5px">|</span>
+          <el-button type="text" @click="equipment(scoped.row)"> 仓库设备 </el-button>
+          <span style="color: #0084FF; margin: 0px 5px">|</span>
+          <el-button type="text" @click="setDefault(scoped.row.id)" v-if="activeName === '1'" v-show="scoped.row.is_default === 0"> 默认仓库 </el-button>
+          <span style="color: #0084FF; margin: 0px 5px" v-if="activeName === '1'" v-show="scoped.row.is_default === 0">|</span>
+          <el-button v-if="activeName === '1'" type="text" @click="disabled([scoped.row.id])">停用</el-button>
+          <el-button v-else-if="activeName === '2'" type="text" @click="enabled([scoped.row.id])" >启用</el-button>
         </template>
       </el-table-column>
       </commonTable>
@@ -117,6 +119,10 @@ export default {
     },
     addWarehouse () {
       this.$router.push({ name: 'addWarehouse' })
+    },
+    toDetail (val) {
+      console.log(val)
+      this.$router.push({ name: 'receivingWarehouseDetails', params: { id: val } })
     },
     equipment (val) {
       this.$router.push({ name: 'equipment', params: val })

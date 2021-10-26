@@ -24,6 +24,14 @@ export const forecastInfo = (params) => {
     data: params
   })
 }
+// 收件免扫申请详情
+export const forecastDirectInfo = (params) => {
+  return axios({
+    url: '/order/forecast/direct/info',
+    method: 'post',
+    data: params
+  })
+}
 // 运单列表
 export const waybillLists = (params) => {
   return axios({
@@ -150,6 +158,46 @@ export const checkoutShipment = (params) => {
 export const shipmentSign = (params) => {
   return axios({
     url: '/order/waybill/shipment/sign',
+    method: 'post',
+    data: params
+  })
+}
+// /order/eject/info出仓单详情
+export const ejectInfo = (params) => {
+  return axios({
+    url: '/order/eject/info',
+    method: 'post',
+    data: params
+  })
+}
+// /order/eject/driver
+export const ejectDriver = (params) => {
+  return axios({
+    url: '/order/eject/driver',
+    method: 'post',
+    data: params
+  })
+}
+// 导出出仓单
+export const ejectExportDriver = (params) => {
+  return axios({
+    url: '/order/eject/export/driver',
+    method: 'post',
+    data: params,
+    responseType: 'blob'
+  })
+}
+// 添加运单轨迹
+export const milestoneAdd = (params) => {
+  return axios({
+    url: '/order/waybill/milestone/add',
+    method: 'post',
+    data: params
+  })
+}
+export const milestoneInfo = (params) => {
+  return axios({
+    url: '/order/waybill/milestone/info',
     method: 'post',
     data: params
   })

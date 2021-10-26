@@ -18,7 +18,7 @@
                 <el-row class="line"></el-row>
             <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
             <el-col :span='14' class="left">
-                <!-- <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button> -->
+                <el-button class='orangeBtn' @click="updateRoad" size="small">批量更新轨迹</el-button>
             </el-col>
             <el-col :span='10' class="right">
             </el-col>
@@ -30,6 +30,7 @@
                 :data="tableData"
                 :pager="page"
                 @handleSizeChange="handleSizeChange"
+                @handleSelectionChange='handleSelectionChange'
                 @handleCurrentChange="handleCurrentChange"
                 >
                 <el-table-column
@@ -41,12 +42,67 @@
                   :resizable="false"
                   >
                   <template slot-scope="scope">
+                    <el-button type="text" @click="check(scope.row)"> 查看轨迹</el-button>
                     <el-button type="text" @click="sign(scope.row)"> 签收</el-button>
                   </template>
                 </el-table-column>
               </commonTable>
             </div>
         </el-row>
+        <el-dialog
+          title="更新轨迹"
+          :visible.sync="dialogVisible"
+          width="30%"
+          :before-close="handleClose">
+          <div class="diabox">
+            <div>节点状态</div>
+            <el-select v-model="milestone.status">
+              <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"></el-option>
+            </el-select>
+            <div>
+              名称
+            <el-input v-model="milestone.name"></el-input>
+            </div>
+            <div>节点时间</div>
+            <el-date-picker
+              v-model="milestone.nodeTime"
+              type="datetime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              placeholder="选择日期时间">
+            </el-date-picker>
+          </div>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="dialogVisible = false">取 消</el-button>
+            <el-button type="primary" @click="updateRoadSubmit()">确 定</el-button>
+          </span>
+        </el-dialog>
+        <commonDrawer :drawerVrisible="drawerVrisible"  @handleClose='addClose' :drawerSize='drawerSize' :drawerTitle="drawerTitle" style="textAlign:left">
+          <div class="dra-content">
+            <el-table  :data="milestoneList">
+              <el-table-column prop="user_name" label="操作人姓名" width="120"></el-table-column>
+              <el-table-column prop="status" label="状态" width="120">
+                <template slot-scope="scope">
+                  {{scope.row.status===1?'港前':scope.row.status===2?'港后':'派件'}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="name" label="名称" width="200"></el-table-column>
+              <el-table-column prop="node_time" label="节点时间">
+                <template slot-scope="scope">
+                  {{formatDate(scope.row.node_time, 'yyyy-MM-dd hh:mm:ss')}}
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <!-- 抽屉底部按钮 -->
+          <div slot="footer">
+            <!-- <button class="btn-orange" @click="ejectSubmit()">
+              <span> <i class="el-icon-circle-check"></i>提交</span>
+            </button> -->
+            <button class="btn-gray" @click="addClose">
+              <span>关闭</span>
+            </button>
+          </div>
+        </commonDrawer>
     </div>
 </template>
 
@@ -55,9 +111,32 @@ export default {
   data () {
     return {
       code: '',
+      dialogVisible: false,
+      drawerSize: '40%',
+      drawerVrisible: false,
+      drawerTitle: '查看轨迹',
       req: {
         waybillIds: []
       },
+      milestoneList: [],
+      milestone: {
+        status: '',
+        name: '',
+        nodeTime: ''
+      },
+      options: [
+        {
+          label: '港前',
+          value: 1
+        }, {
+          label: '港后',
+          value: 2
+        }, {
+          label: '派件',
+          value: 3
+        }
+      ],
+      table_choose: [],
       columns: [
         { prop: 'type', label: '运单类型', align: 'center', formatter: this.formatter },
         { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
@@ -71,7 +150,9 @@ export default {
         { prop: 'remark', label: '客户备注', width: '200', align: 'center' },
         { prop: 'interior_remark', label: '内部备注', width: '200', align: 'center' }
       ],
-      tableData: [],
+      tableData: [
+
+      ],
       page: {
         limit: 10,
         total: 100,
@@ -112,6 +193,39 @@ export default {
         })
         .catch(_ => {})
     },
+    check (data) {
+      console.log(data.id)
+      this.drawerVrisible = true
+      this.$api.Ordermanagement.milestoneInfo({ waybillId: data.id }).then(res => { this.milestoneList = res.data })
+    },
+    handleSelectionChange (val) {
+      val && val.forEach(item => {
+        this.table_choose.push(item.id)
+      })
+    },
+    updateRoad () {
+      if (this.table_choose.length < 1) {
+        this.$message.error('请选择')
+        return
+      }
+      this.dialogVisible = true
+    },
+    updateRoadSubmit () {
+      let obj = {
+        waybillIds: this.table_choose,
+        status: this.milestone.status,
+        name: this.milestone.name,
+        nodeTime: this.milestone.nodeTime
+      }
+      this.$api.Ordermanagement.milestoneAdd(obj).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.handleClose()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     // 页码切换
     handleCurrentChange (val) {
       this.page.pageNo = val
@@ -135,7 +249,17 @@ export default {
           return this.formatDate(row.created_at, 'yyyy-MM-dd hh:mm:ss')
       }
     },
-    handleClose () {}
+    addClose () {
+      this.drawerVrisible = false
+    },
+    handleClose () {
+      this.milestone = {
+        status: '',
+        name: '',
+        nodeTime: ''
+      }
+      this.dialogVisible = false
+    }
   }
 }
 </script>
@@ -183,5 +307,11 @@ export default {
   color: #FE822F;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.diabox{
+  text-align: left;
+  /deep/.el-input__inner{
+    width: 200px;
+  }
 }
 </style>

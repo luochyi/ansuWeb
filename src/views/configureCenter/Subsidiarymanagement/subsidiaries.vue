@@ -79,9 +79,9 @@
               v-model="admin.confirmPassword"
               show-password
             ></el-input>
-            <el-button style="width: 165px; marginLeft: 20px" class="whiteBtn" @click="randomPsw()"
+            <!-- <el-button style="width: 165px; marginLeft: 20px" class="whiteBtn" @click="randomPsw()"
               >生成随机密码</el-button
-            >
+            > -->
           </el-descriptions-item>
         </el-descriptions>
         <el-form>
@@ -98,6 +98,7 @@
 </template>
 
 <script>
+import Clipboard from 'clipboard'
 export default {
   data () {
     return {
@@ -114,6 +115,9 @@ export default {
         confirmPassword: null
       }
     }
+  },
+  beforeDestory () {
+    this.data.clipboard.destroy()
   },
   methods: {
     submit () {
@@ -145,6 +149,20 @@ export default {
     randomPsw () {
       this.admin.password = Math.floor((Math.random() + Math.floor(Math.random() * 9 + 1)) * Math.pow(10, 9))
       this.admin.confirmPassword = this.admin.password
+    },
+    copy () {
+      const clipboard = new Clipboard('#copyBtn')
+      clipboard.on('success', (e) => {
+        this.$message.success('复制成功！')
+        //  释放内存
+        clipboard.destroy()
+      })
+      clipboard.on('error', (e) => {
+        // 不支持复制
+        this.$message.error('复制失败！该浏览器不支持复制！')
+        // 释放内存
+        clipboard.destroy()
+      })
     },
     // 级联选择器选择
     handleChange (val) {

@@ -16,3 +16,11 @@ export const region = (params) => {
     data: params
   })
 }
+// 配置区域
+export const select = (params) => {
+  return axios({
+    url: '/company/driver/select',
+    method: 'post',
+    data: params
+  })
+}

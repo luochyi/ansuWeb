@@ -43,7 +43,7 @@
    </el-descriptions-item>
    <el-descriptions-item label="确认密码">
        <el-input style="width: 200px" placeholder="请输入" v-model="formData.confirmPassword" show-password></el-input>
-       <el-button class="whiteBtn" @click=" password = true">生成随机密码</el-button>
+       <!-- <el-button class="whiteBtn" @click=" password = true">生成随机密码</el-button> -->
    </el-descriptions-item>
    </el-descriptions>
    <el-form >

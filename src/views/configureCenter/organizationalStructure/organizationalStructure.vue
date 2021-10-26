@@ -71,7 +71,7 @@
           <el-col :span="12" class="colbox">
           </el-col>
           <el-col :span="6" class="colbox">
-            <el-button @click="auth">确定</el-button>
+            <el-button class="orangeBtn" @click="auth">确定</el-button>
           </el-col>
         </el-row>
         <div class="drawer">
@@ -564,5 +564,9 @@ export default {
 }
 /deep/ .el-dialog {
   text-align: left;
+}
+.drawera{
+  text-align: left;
+  margin-left:10px ;
 }
 </style>

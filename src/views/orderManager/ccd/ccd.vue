@@ -60,7 +60,7 @@
 
       <!-- 表格 -->
       <div>
-        <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
+        <el-row class='searchbox1' type='flex' justify='space-between' align='middle' v-if="false">
           <el-col :span='12' class="left" >
             <el-button class='stopBtn'>批量导出Excel</el-button>
           </el-col>
@@ -120,15 +120,73 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <span @click="detail(scope.row)" class="blue">下载Excel</span>
+              <span @click="download(scope.row)" class="blue" v-if="scope.row.has_assign_drivers === 2">下载Excel</span>
               <span @click="detail(scope.row)" class="blue">&nbsp;|&nbsp;运单明细</span>
-               <span @click="detail(scope.row)" class="blue">&nbsp;|&nbsp;查看送货司机</span>
+               <span @click="detail(scope.row)" v-if="scope.row.has_assign_drivers===1" class="blue">&nbsp;|&nbsp;查看送货司机</span>
+                <span @click="setDriver(scope.row)" v-else class="blue">&nbsp;|&nbsp;配置司机</span>
             </template>
           </el-table-column>
         </commonTable>
       </div>
-
     </div>
+    <commonDrawer :drawerVrisible="drawerVrisible"  :drawerTitle="drawerTitle" :drawerSize='drawerSize' style="textAlign:left">
+          <div class="dra-content">
+            <el-descriptions  :column="2">
+              <el-descriptions-item label="出仓单号" contentClassName='titledes'>{{ejectData.eject_no}}</el-descriptions-item>
+              <el-descriptions-item label="出仓日期" contentClassName='titledes'>
+                  {{formatDate(ejectData.eject_time,'yyyy-MM-dd hh:mm:ss')}}
+              </el-descriptions-item>
+              <el-descriptions-item label="出仓渠道">{{ejectData.channel_name}}</el-descriptions-item>
+              <el-descriptions-item label="出仓代理">{{ejectData.agent_name}}</el-descriptions-item>
+              <el-descriptions-item label="合计票数">{{ejectData.waybill_count}}</el-descriptions-item>
+              <el-descriptions-item label="合计件数">{{ejectData.item_count}}</el-descriptions-item>
+          </el-descriptions>
+          <el-divider></el-divider>
+          <div v-if="!choosed">
+             <el-descriptions :title='"出仓单"+(index+1)' :column="3" v-for="item,index in drivers" :key='index'>
+               <template slot="extra">
+                <el-button type="text" size="small">删除</el-button>
+              </template>
+              <el-descriptions-item label="运输司机"></el-descriptions-item>
+              <el-descriptions-item label="送货票数">{{item.waybillIds.length}}</el-descriptions-item>
+              <el-descriptions-item label="送货数量"></el-descriptions-item>
+          </el-descriptions>
+            <el-button class="addbtn" size="mini" round @click="addDriver">添加出仓司机</el-button>
+          </div>
+          <div v-else>
+            <el-form label-width="120px">
+              <el-form-item label="选择司机">
+                <el-select v-model="form.driverId" size="mini">
+                  <el-option  v-for="item in driverOption" :key="item.id" :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="选择仓库地址">
+                <el-select v-model="form.agentAddressId" size="mini">
+                  <el-option  v-for="item in warehouseOption" :key="item.id" :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+            <el-table :data="waybillsList"  @selection-change="handleSelectionChange">
+              <el-table-column type="selection" width="55"></el-table-column>
+              <el-table-column prop="waybill_no" label="运单编号"></el-table-column>
+              <el-table-column prop="cargoes_num" label="货件数"></el-table-column>
+            </el-table>
+          </div>
+          </div>
+
+          <!-- 抽屉底部按钮 -->
+          <div slot="footer">
+            <button class="btn-orange" @click="chooseok()" v-if="choosed">
+              <span> <i class="el-icon-circle-check"></i>确定</span>
+            </button>
+            <button class="btn-orange" @click="submit()" v-else>
+              <span> <i class="el-icon-circle-check"></i>提交</span>
+            </button>
+            <button class="btn-gray" @click="addClose">
+              <span>取消</span>
+            </button>
+          </div>
+        </commonDrawer>
   </div>
 </template>
 
@@ -136,69 +194,38 @@
 export default {
   data () {
     return {
+      drawerVrisible: false,
+      drawerTitle: '配置司机',
+      drawerSize: '50%',
+      choosed: false, // 是否在选择司机
+      drivers: [],
+      warehouseOption: [], // 仓库选择
+      driverOption: [],
+      form: {
+        agentAddressId: null,
+        driverId: null, // 选择司机
+        waybillIds: [] // 配置司机选择的运单id
+      },
       msg: '',
-      activeName: '1', // 标签绑定
-      serviceName: null,
-      fenquzhongliang: true,
+      ejectData: {
+        eject_no: null,
+        eject_time: null,
+        channel_name: null,
+        agent_name: null,
+        waybill_count: null,
+        item_count: null
+      }, // 出仓单信息
+      waybillsList: [], // 所有运单
       columns: [
-        {
-          prop: 'eject_no',
-          label: '出仓单号',
-          width: '200',
-          align: 'center'
-        },
-        // 定义表格列的类型为slot，slot插槽名字为 slotbtn
-        {
-          prop: 'channel_name',
-          label: '渠道名称',
-          width: '250',
-          align: 'center'
-        },
-        {
-          prop: 'agent_name',
-          label: '代理名称',
-          width: '200',
-          align: 'center'
-
-        },
-        {
-          prop: 'eject_time',
-          label: '出仓时间',
-          width: '200',
-          align: 'center',
-          formatter: this.formatters
-        },
-        {
-          prop: 'waybill_count',
-          label: '运单数',
-          width: '200',
-          align: 'center'
-        },
-        {
-          prop: 'item_count',
-          label: '货件数',
-          width: '200',
-          align: 'center'
-        },
-        {
-          prop: 'volume',
-          label: '体积',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'bill_weight',
-          label: '结算重',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'has_assign_drivers',
-          label: '是否配置司机',
-          width: '100',
-          align: 'center',
-          formatter: this.formatter
-        }
+        { prop: 'eject_no', label: '出仓单号', width: '200', align: 'center' },
+        { prop: 'channel_name', label: '渠道名称', width: '250', align: 'center' },
+        { prop: 'agent_name', label: '代理名称', width: '200', align: 'center' },
+        { prop: 'eject_time', label: '出仓时间', width: '200', align: 'center', formatter: this.formatters },
+        { prop: 'waybill_count', label: '运单数', width: '200', align: 'center' },
+        { prop: 'item_count', label: '货件数', width: '200', align: 'center' },
+        { prop: 'volume', label: '体积', width: '100', align: 'center' },
+        { prop: 'bill_weight', label: '结算重', width: '100', align: 'center' },
+        { prop: 'has_assign_drivers', label: '是否配置司机', width: '100', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
@@ -209,48 +236,15 @@ export default {
       }
     }
   },
-  // created () {
-  //   this.tableData = [
-  //     {
-  //       code: 'YBSZ213232232',
-  //       type: '已建计划',
-  //       num: '2票',
-  //       name: 'sz沙马家具毛衣公司',
-  //       khbh: 'smjj',
-  //       status: '通过审批',
-  //       spr: '张三',
-  //       diver: '王师傅',
-  //       js: '2件',
-  //       address: '上海市普陀区金沙江路 1518 弄',
-  //       ybzl: '80公斤',
-  //       ybfs: '90立方',
-  //       time: '2020年12月9日',
-  //       hhsj: '14.50',
-  //       ywy: '张三'
-  //     },
-  //     {
-  //       code: 'YBSZ213232232',
-  //       type: '已建计划',
-  //       num: '2票',
-  //       name: 'sz沙马家具毛衣公司',
-  //       khbh: 'smjj',
-  //       status: '通过审批',
-  //       spr: '张三',
-  //       diver: '王师傅',
-  //       js: '2件',
-  //       address: '上海市普陀区金沙江路 1518 弄',
-  //       ybzl: '80公斤',
-  //       ybfs: '90立方',
-  //       time: '2020年12月9日',
-  //       hhsj: '14.50',
-  //       ywy: '张三'
-  //     }
-  //   ]
-  //   this.page.total = 2
-  // },
   mounted () {
     // 在页面加载前调用获取列表数据函数
     this.getData()
+    this.$api.configure.driver.select().then(res => {
+      this.driverOption = res.data
+    })
+    // this.$api.setting.warehouse.select().then(res => {
+    //   this.warehouseOption = res.data
+    // })
   },
   methods: {
     getData () {
@@ -262,13 +256,30 @@ export default {
     // 重新渲染name列
     formatter (row, column, cellValue) {
       if (row.has_assign_drivers === 1) {
-        return '是'
-      } else {
         return '否'
+      } else {
+        return '是'
       }
     },
     formatters (row, column, cellValue) {
       return this.formatDate(row.eject_time, 'yyyy-MM-dd hh:mm:ss')
+    },
+    addDriver () {
+      this.choosed = true
+      this.$api.agent.agentSelectAddress({ agentId: this.ejectData.agent_id }).then(res => {
+        console.log(res)
+        this.warehouseOption = res.data
+      })
+    },
+    setDriver (row) {
+      this.ejectData = row
+      this.drawerVrisible = true
+      // this.$api.Ordermanagement.ejectInfo({ ejectId: data.id }).then(res => {
+      //   console.log(res.data.waybills)
+      //   this.ejectData = res.data
+      //   this.waybillsList = res.data.waybills
+      //   this.drawerVrisible = true
+      // })
     },
     // 改变页面大小处理
     handleSizeChange (val) {
@@ -280,24 +291,54 @@ export default {
       this.page.pageNo = val
       this.getData()
     },
-    // checkbox选中获取数据
-    handleSelectionChange (val) {
-      console.log(val)
-    },
     // 查看
     detail (val) {
       console.log(val.data)
       this.$router.push('name:sjmssqDetail')
     },
+    handleSelectionChange (val) {
+      val && val.forEach(item => {
+        this.form.waybillIds.push(item.id)
+      })
+    },
+    // 选择司机确定
+    chooseok () {
+      this.choosed = false
+      this.drivers.push(this.form)
+      console.log(this.drivers)
+      // 对出仓单的运单数组操作 this.waybillsList
+      // 选择司机数据清空
+      this.form = {
+        agentAddressId: null,
+        driverId: null, // 选择司机
+        waybillIds: [] // 配置司机选择的运单id
+      }
+    },
+    submit () {},
     handleClick (tab, event) { console.log(tab, event) },
     // 操作按钮列表
-    editTableData (row) {}
+    editTableData (row) {},
     // 关闭抽屉
+    addClose () {
+      this.drawerVrisible = false
+    },
+    download (row) {
+      this.$api.Ordermanagement.ejectExportDriver({
+        ejectId: row.id
+      }).then(res => {
+        this.downloadBlob(res, '出仓单.xlsx')
+      })
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.dra-content{
+  padding-left: 10px;
+  padding-top:10px ;
+  font-size: 14px;
+}
 /deep/ .searchbox1{
   .stopBtn{
     height: 32px;
@@ -354,5 +395,13 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+}
+.titledes{
+  color:#FB4702;
+  font-size: 18px;
+}
+.addbtn{
+  color: #FB4702;
+  border-color: #FB4702;
 }
 </style>
