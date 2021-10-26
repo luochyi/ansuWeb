@@ -30,6 +30,16 @@ export default [
     },
     component: () => import('@/views/configureCenter/Subsidiarymanagement/subsidiaries.vue')
   },
+  {
+    path: '/Subsidiarymanagement/subsidiaryDetails',
+    name: 'subsidiaryDetails',
+    meta: {
+      title: '子公司详情',
+      icon: 'subsidiaryDetails',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/Subsidiarymanagement/subsidiaryDetails.vue')
+  },
   // 代理管理
   {
     path: '/organizationalStructure',
