@@ -35,6 +35,7 @@ export const GetAxios = (config, login, baseUrl) => {
         }
       } else {
         // 文件流
+        return response
       }
     }
     return response.data
