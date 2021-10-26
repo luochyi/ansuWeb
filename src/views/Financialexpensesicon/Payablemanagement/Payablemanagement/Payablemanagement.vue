@@ -132,12 +132,14 @@ export default {
         agentId: null,
         path: ''
       },
-      billAgentIds: []
+      billAgentIds: [],
+      templatePath: ''
     }
   },
   mounted () {
     this.getData()
     this.getAgent()
+    this.getTemplate()
   },
   methods: {
     getAgent () {
@@ -154,11 +156,19 @@ export default {
         this.page.total = res.data.total
       })
     },
+    getTemplate () {
+      this.$api.setting.template.lists(1).then(res => {
+        if (res.data && res.data.length > 0) {
+          this.templatePath = res.data[0].path
+        }
+      })
+    },
     detailspage () {
       this.$router.push({ name: 'detailspage' })
     },
     download () {
       // 下载模板
+      window.location.href = this.$api.file.cdnPath(this.templatePath)
     },
     handleAvatarSuccess (res, file) {
       this.formData.path = res.data.path // 上传成功的回调函数
