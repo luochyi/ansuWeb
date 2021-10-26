@@ -2,9 +2,7 @@
   <div>
     <div class="right">
       <div class="one" v-if="waybillAmount.fare.audit_status === 3">
-        <el-row type='flex' justify='flex-start' class='title' align='middle'>
-          <span>驳回原因：{{ waybillAmount.fare.fail_reason }}</span>
-        </el-row>
+        <div class="reason">驳回原因：{{ waybillAmount.fare.fail_reason }}</div>
       </div>
       <br>
       <div class="two">
@@ -24,7 +22,7 @@
             <el-col :span="10" class="flex align-center" v-if="waybillAmount.type === 1">
               <div class="name">单价调整：</div>
               <el-col :span="10">
-                <el-input placeholder="请输入" v-model="formData.adjustPrice" type="Number" style="width:195px">
+                <el-input placeholder="请输入" v-model="formData.adjustPrice" type="Number" style="width:195px" :disabled="!hasEdit">
                   <template slot="prepend">
                     <el-select v-model="formData.adjustType" style="width:80px">
                       <el-option v-for="item in options.adjustType" :key="item.value" :value="item.value"
@@ -37,13 +35,13 @@
             </el-col>
             <el-col :span="10" class="flex align-center">
               <el-col :span='6'>
-                <el-select v-model="formData.taxType" >
+                <el-select v-model="formData.taxType" :disabled="!hasEdit">
                   <el-option v-for="item in options.taxType" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
               </el-col>
               <el-col :span='6' v-show="formData.taxType === 1">
-                <el-select v-model="formData.taxRate">
+                <el-select v-model="formData.taxRate" :disabled="!hasEdit">
                   <el-option v-for="item in options.taxRate" :key="item.value" :label="item.label" :value="item.value">
                   </el-option>
                 </el-select>
@@ -71,7 +69,7 @@
                 width="152"
                 :resizable="false"
             >
-              <template slot-scope="scoped">
+              <template slot-scope="scoped" v-if="hasEdit">
                 <el-button type="text" @click="edit(scoped.$index, scoped.row)"> 修改</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="del(scoped.$index)"> 删除</el-button>
@@ -80,13 +78,13 @@
           </commonTable>
         </el-row>
         <el-row style="margin: 20px; float: left;">
-          <el-button class="orangeBtn" @click="dialogAddPrice">添加附加费</el-button>
+          <el-button class="orangeBtn" @click="dialogAddPrice" v-if="hasEdit">添加附加费</el-button>
         </el-row>
       </div>
       <br>
       <div class="six">
         <el-row style="margin: 20px; float: right;">
-          <el-button class="orangeBtn" icon="el-icon-circle-check" @click="offer">确认报价</el-button>
+          <el-button class="orangeBtn" icon="el-icon-circle-check" @click="formData.adjustPrice && formData.adjustPrice !== '0' ? showRemark() : offer()" v-if="hasEdit">确认报价</el-button>
           <el-button class="wthBtn">取消</el-button>
         </el-row>
       </div>
@@ -139,9 +137,25 @@
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
-        <el-button >取 消</el-button>
+        <el-button @click="dialog.price = false">取 消</el-button>
         <el-button type="primary" @click="add" v-if="dialog.priceForm.priceIndex === null">提 交</el-button>
         <el-button type="primary" @click="editSubmit" v-else>提交修改</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+        title="改价理由"
+        :visible.sync="dialog.remark"
+        width="30%">
+      <el-input
+          type="textarea"
+          :rows="4"
+          placeholder="请输入改价理由"
+          maxlength="255"
+          v-model="formData.customerRemark">
+      </el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialog.remark = false">取 消</el-button>
+        <el-button type="primary" @click="offer">提 交</el-button>
       </span>
     </el-dialog>
   </div>
@@ -154,6 +168,7 @@ export default {
   data () {
     return {
       waybillId: 0,
+      hasEdit: true,
       waybillAmount: {
         additionalWeight: null,
         additionalWeightPrice: null,
@@ -196,6 +211,7 @@ export default {
         billTarget: [{ value: 1, label: '客户' }, { value: 2, label: '代理' }]
       },
       dialog: {
+        remark: false,
         price: false,
         priceForm: {
           priceIndex: null,
@@ -238,6 +254,29 @@ export default {
           fare: {
             audit_status: res.data.fare.audit_status,
             fail_reason: res.data.fare.fail_reason
+          }
+        }
+        if (res.data.fare.audit_status > 0) {
+          if (res.data.fare.audit_status === 1 || res.data.fare.audit_status === 2) {
+            this.hasEdit = false
+          }
+          this.formData.taxRate = res.data.fare.tax_rate
+          this.formData.taxType = res.data.fare.tax_type
+          this.formData.adjustPrice = res.data.fare.adjust_price
+          this.formData.adjustType = res.data.fare.adjust_type
+          if (res.data.fare.surcharges) {
+            this.formData.surcharges = []
+            res.data.fare.surcharges.forEach(item => {
+              this.formData.surcharges.push({
+                name: item.name,
+                type: 2,
+                price: item.price,
+                num: item.unit_num,
+                unit: item.unit,
+                taxType: item.tax_type,
+                taxRate: item.tax_rate
+              })
+            })
           }
         }
       })
@@ -315,15 +354,33 @@ export default {
         taxRate: row.taxRate
       }
     },
+    showRemark () {
+      if (this.formData.adjustPrice && this.formData.adjustPrice !== '') {
+        this.dialog.remark = true
+      }
+    },
     offer () {
-      this.$api.finance.fare.confirm.offer(this.formData).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg) // 成功提示
-          this.getData()
-        } else {
-          this.$message.error(res.msg) // 错误提示
-        }
-      })
+      if (this.waybillAmount.fare.audit_status === 3) {
+        this.$api.finance.fare.confirm.reOffer(this.formData).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.getAmount()
+            this.dialog.remark = false
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
+      } else {
+        this.$api.finance.fare.confirm.offer(this.formData).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.getAmount()
+            this.dialog.remark = false
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
+      }
     }
   }
 }
@@ -463,5 +520,10 @@ margin: auto 20px;
 }
 .el-col-24{
   width: 130px;
+}
+.reason{
+  line-height: 63px;
+  text-align: left;
+  padding-left: 10px;
 }
 </style>

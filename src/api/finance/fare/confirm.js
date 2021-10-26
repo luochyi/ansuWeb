@@ -19,6 +19,15 @@ export const offer = (params) => {
   })
 }
 
+// 费用确认列表
+export const reOffer = (params) => {
+  return axios({
+    url: '/finance/fare/confirm/re_offer',
+    method: 'post',
+    data: params
+  })
+}
+
 export {
   customer
 }
