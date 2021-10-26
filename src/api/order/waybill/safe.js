@@ -8,3 +8,21 @@ export const lists = (params) => {
     data: params
   })
 }
+
+// 修改货值
+export const change = (params) => {
+  return axios({
+    url: '/order/waybill/safe/change',
+    method: 'post',
+    data: params
+  })
+}
+
+// 保单列表
+export const order = (params) => {
+  return axios({
+    url: '/order/waybill/safe/order',
+    method: 'post',
+    data: params
+  })
+}
