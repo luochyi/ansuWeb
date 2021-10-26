@@ -68,9 +68,9 @@
               :resizable="false"
           >
             <template slot-scope="scoped">
-              <el-button type="text" @click="detailspage(scoped.row)"> 查看详情</el-button>
+              <el-button type="text" @click="detailspage(scoped.row)"> {{ scoped.row.audit_status === 0 ? '报价' : scoped.row.audit_status === 1 ? '查看' : scoped.row.audit_status === 2 ? '查看' : '重新报价' }}</el-button>
               <span style="color: #0084FF; margin: 0px 5px">|</span>
-              <el-button type="text" @click="password= true"> 查看运单</el-button>
+              <el-button type="text" @click="waybillInfo(scoped.row)"> 查看运单</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -179,6 +179,9 @@ export default {
     handleCurrentChange (val) {
       this.page.pageNo = val // 设置当前页码为val
       this.getData() // 重新渲染表格
+    },
+    waybillInfo (row) {
+      this.$router.push({ name: 'waybillDetail', params: { waybillId: row.id } })
     }
   }
 }

@@ -26,12 +26,29 @@
             <template slot-scope="scoped">
               <el-button type="text" @click="adopt([scoped.row.id])" v-if="scoped.row.audit_status === 1"> 通过</el-button>
               <span style="color: #0084FF; margin: 0px 5px" v-if="scoped.row.audit_status === 1">|</span>
-              <el-button type="text" @click="reject= true" v-if="scoped.row.audit_status === 1"> 驳回</el-button>
+              <el-button type="text" @click="showFail([scoped.row.id])" v-if="scoped.row.audit_status === 1"> 驳回</el-button>
             </template>
           </el-table-column>
         </commonTable>
       </div>
     </div>
+    <el-dialog
+        title="驳回理由"
+        :visible.sync="dialog.fail.visable"
+        width="30%"
+        :before-close="handleClose">
+      <el-input
+          type="textarea"
+          :rows="4"
+          placeholder="请输入驳回理由"
+          maxlength="255"
+          v-model="formData.failReason">
+      </el-input>
+      <span slot="footer" class="dialog-footer">
+      <el-button @click="dialog.fail.visable = false">取 消</el-button>
+      <el-button type="primary" @click="fail">确 定</el-button>
+    </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -57,7 +74,13 @@ export default {
         total: 0
       },
       formData: {
+        auditIds: [],
         failReason: ''
+      },
+      dialog: {
+        fail: {
+          visable: false
+        }
       }
     }
   },
@@ -103,14 +126,20 @@ export default {
         }
       })
     },
-    fail (auditIds) {
+    showFail (auditIds) {
+      this.formData.auditIds = auditIds
+      this.formData.failReason = ''
+      this.dialog.fail.visable = true
+    },
+    fail () {
       this.$api.finance.fare.audit.fail({
-        auditIds: auditIds,
+        auditIds: this.formData.auditIds,
         failReason: this.formData.failReason
       }).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.getData()
+          this.dialog.fail.visable = false
         } else {
           this.$message.error(res.msg) // 错误提示
         }

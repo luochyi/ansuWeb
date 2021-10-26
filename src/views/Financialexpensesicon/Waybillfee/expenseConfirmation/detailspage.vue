@@ -1,8 +1,10 @@
 <template>
   <div>
     <div class="right">
-      <div class="one">
-        <el-button @click="Approvaldetails= true" class='whiteBtn' style="margin:15px; float: left; ">审批详情</el-button>
+      <div class="one" v-if="waybillAmount.fare.audit_status === 3">
+        <el-row type='flex' justify='flex-start' class='title' align='middle'>
+          <span>驳回原因：{{ waybillAmount.fare.fail_reason }}</span>
+        </el-row>
       </div>
       <br>
       <div class="two">
@@ -160,7 +162,11 @@ export default {
         firstWeight: null,
         firstWeightPrice: null,
         price: null,
-        type: null
+        type: null,
+        fare: {
+          audit_status: null,
+          fail_reason: null
+        }
       },
       columns: [
         { prop: 'name', label: '费用名称', width: '176', align: 'center' },
@@ -228,7 +234,11 @@ export default {
           firstWeight: res.data.first_weight,
           firstWeightPrice: res.data.first_weight_price,
           price: res.data.price,
-          type: res.data.type
+          type: res.data.type,
+          fare: {
+            audit_status: res.data.fare.audit_status,
+            fail_reason: res.data.fare.fail_reason
+          }
         }
       })
     },
@@ -354,7 +364,7 @@ margin: auto 20px;
     height:63px ;
 }
 .two{
-    height:367px ;
+    height: auto;
     background: #FFFFFF ;
     width: 988px;
 }
