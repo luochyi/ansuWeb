@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import * as setting from "../../../api/setting";
+// import * as setting from '../../../api/setting'
 
 export default {
   data () {

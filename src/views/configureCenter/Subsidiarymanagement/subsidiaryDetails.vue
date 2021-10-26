@@ -21,7 +21,6 @@
 </template>
 
 <script>
-import * as configure from "../../../api/configure";
 
 export default {
   data () {
