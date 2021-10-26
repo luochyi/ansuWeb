@@ -129,15 +129,57 @@
         </commonTable>
       </div>
     </div>
-    <commonDrawer :drawerVrisible="drawerVrisible"  @handleClose='addClose' :drawerTitle="drawerTitle" style="textAlign:left">
+    <commonDrawer :drawerVrisible="drawerVrisible"  :drawerTitle="drawerTitle" :drawerSize='drawerSize' style="textAlign:left">
           <div class="dra-content">
-            选择司机<el-select>
-              <el-option  v-for="item in warehouseOption" :key="item.id" :value="item.id" :label="item.name"></el-option>
-            </el-select>
+            <el-descriptions  :column="2">
+              <el-descriptions-item label="出仓单号" contentClassName='titledes'>{{ejectData.eject_no}}</el-descriptions-item>
+              <el-descriptions-item label="出仓日期" contentClassName='titledes'>
+                  {{formatDate(ejectData.eject_time,'yyyy-MM-dd hh:mm:ss')}}
+              </el-descriptions-item>
+              <el-descriptions-item label="出仓渠道">{{ejectData.channel_name}}</el-descriptions-item>
+              <el-descriptions-item label="出仓代理">{{ejectData.agent_name}}</el-descriptions-item>
+              <el-descriptions-item label="合计票数">{{ejectData.waybill_count}}</el-descriptions-item>
+              <el-descriptions-item label="合计件数">{{ejectData.item_count}}</el-descriptions-item>
+          </el-descriptions>
+          <el-divider></el-divider>
+          <div v-if="!choosed">
+             <el-descriptions :title='"出仓单"+(index+1)' :column="3" v-for="item,index in drivers" :key='index'>
+               <template slot="extra">
+                <el-button type="text" size="small">删除</el-button>
+              </template>
+              <el-descriptions-item label="运输司机"></el-descriptions-item>
+              <el-descriptions-item label="送货票数">{{item.waybillIds.length}}</el-descriptions-item>
+              <el-descriptions-item label="送货数量"></el-descriptions-item>
+          </el-descriptions>
+            <el-button class="addbtn" size="mini" round @click="addDriver">添加出仓司机</el-button>
           </div>
+          <div v-else>
+            <el-form label-width="120px">
+              <el-form-item label="选择司机">
+                <el-select v-model="form.driverId" size="mini">
+                  <el-option  v-for="item in driverOption" :key="item.id" :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="选择仓库地址">
+                <el-select v-model="form.agentAddressId" size="mini">
+                  <el-option  v-for="item in warehouseOption" :key="item.id" :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-form>
+            <el-table :data="waybillsList"  @selection-change="handleSelectionChange">
+              <el-table-column type="selection" width="55"></el-table-column>
+              <el-table-column prop="waybill_no" label="运单编号"></el-table-column>
+              <el-table-column prop="cargoes_num" label="货件数"></el-table-column>
+            </el-table>
+          </div>
+          </div>
+
           <!-- 抽屉底部按钮 -->
           <div slot="footer">
-            <button class="btn-orange" @click="ejectSubmit()">
+            <button class="btn-orange" @click="chooseok()" v-if="choosed">
+              <span> <i class="el-icon-circle-check"></i>确定</span>
+            </button>
+            <button class="btn-orange" @click="submit()" v-else>
               <span> <i class="el-icon-circle-check"></i>提交</span>
             </button>
             <button class="btn-gray" @click="addClose">
@@ -154,11 +196,19 @@ export default {
     return {
       drawerVrisible: false,
       drawerTitle: '配置司机',
+      drawerSize: '50%',
+      choosed: false, // 是否在选择司机
+      drivers: [],
       warehouseOption: [], // 仓库选择
+      driverOption: [],
+      form: {
+        agentAddressId: null,
+        driverId: null, // 选择司机
+        waybillIds: [] // 配置司机选择的运单id
+      },
       msg: '',
-      activeName: '1', // 标签绑定
-      serviceName: null,
-      fenquzhongliang: true,
+      ejectData: {}, // 出仓单信息
+      waybillsList: [], // 所有运单
       columns: [
         {
           prop: 'eject_no',
@@ -166,7 +216,6 @@ export default {
           width: '200',
           align: 'center'
         },
-        // 定义表格列的类型为slot，slot插槽名字为 slotbtn
         {
           prop: 'channel_name',
           label: '渠道名称',
@@ -231,8 +280,8 @@ export default {
   mounted () {
     // 在页面加载前调用获取列表数据函数
     this.getData()
-    this.$api.configure.warehouse.select().then(res => {
-      this.warehouseOption = res.data
+    this.$api.configure.driver.select().then(res => {
+      this.driverOption = res.data
     })
     // this.$api.setting.warehouse.select().then(res => {
     //   this.warehouseOption = res.data
@@ -256,12 +305,21 @@ export default {
     formatters (row, column, cellValue) {
       return this.formatDate(row.eject_time, 'yyyy-MM-dd hh:mm:ss')
     },
+    addDriver () {
+      this.choosed = true
+      this.$api.agent.agentSelectAddress({ agentId: this.ejectData.agent_id }).then(res => {
+        console.log(res)
+        this.warehouseOption = res.data
+      })
+    },
     setDriver (data) {
       this.$api.Ordermanagement.ejectInfo({ ejectId: data.id }).then(res => {
         console.log(res.data.waybills)
+        this.ejectData = res.data
+        this.waybillsList = res.data.waybills
         this.drawerVrisible = true
       })
-      // ejectDriver
+      // ejectDriver  ejectId drivers
     },
     // 改变页面大小处理
     handleSizeChange (val) {
@@ -273,15 +331,30 @@ export default {
       this.page.pageNo = val
       this.getData()
     },
-    // checkbox选中获取数据
-    handleSelectionChange (val) {
-      console.log(val)
-    },
     // 查看
     detail (val) {
       console.log(val.data)
       this.$router.push('name:sjmssqDetail')
     },
+    handleSelectionChange (val) {
+      val && val.forEach(item => {
+        this.form.waybillIds.push(item.id)
+      })
+    },
+    // 选择司机确定
+    chooseok () {
+      this.choosed = false
+      this.drivers.push(this.form)
+      console.log(this.drivers)
+      // 对出仓单的运单数组操作 this.waybillsList
+      // 选择司机数据清空
+      this.form = {
+        agentAddressId: null,
+        driverId: null, // 选择司机
+        waybillIds: [] // 配置司机选择的运单id
+      }
+    },
+    submit () {},
     handleClick (tab, event) { console.log(tab, event) },
     // 操作按钮列表
     editTableData (row) {},
@@ -294,6 +367,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.dra-content{
+  padding-left: 10px;
+  padding-top:10px ;
+  font-size: 14px;
+}
 /deep/ .searchbox1{
   .stopBtn{
     height: 32px;
@@ -350,5 +428,13 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+}
+.titledes{
+  color:#FB4702;
+  font-size: 18px;
+}
+.addbtn{
+  color: #FB4702;
+  border-color: #FB4702;
 }
 </style>

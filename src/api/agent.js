@@ -201,3 +201,10 @@ export const channelserviceSelect = (params) => {
     data: params
   })
 }
+export const agentSelectAddress = (params) => {
+  return axios({
+    url: '/setting/agent/select/address',
+    method: 'post',
+    data: params
+  })
+}

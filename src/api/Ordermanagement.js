@@ -170,3 +170,18 @@ export const ejectDriver = (params) => {
     data: params
   })
 }
+// 添加运单轨迹
+export const milestoneAdd = (params) => {
+  return axios({
+    url: '/order/waybill/milestone/add',
+    method: 'post',
+    data: params
+  })
+}
+export const milestoneInfo = (params) => {
+  return axios({
+    url: '/order/waybill/milestone/info',
+    method: 'post',
+    data: params
+  })
+}
