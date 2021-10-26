@@ -191,6 +191,16 @@ export default [
     },
     component: () => import('@/views/configureCenter/receivingWarehouseManage/addWarehouse.vue')
   },
+  {
+    path: '/receivingWarehouseManage/receivingWarehouseDetails',
+    name: 'receivingWarehouseDetails',
+    meta: {
+      title: '仓库详情',
+      icon: 'receivingWarehouseDetails',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/receivingWarehouseManage/receivingWarehouseDetails.vue')
+  },
   // 仓库操作
   {
     path: '/warehouseOperation',

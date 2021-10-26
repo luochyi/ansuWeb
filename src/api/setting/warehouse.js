@@ -16,6 +16,14 @@ export const add = (params) => {
     data: params
   })
 }
+// 仓库详情
+export const warehouseInfo = (params) => {
+  return axios({
+    url: '/setting/warehouse/info',
+    method: 'post',
+    data: params
+  })
+}
 // 启用仓库
 export const setDefault = (warehouseId) => {
   return axios({
