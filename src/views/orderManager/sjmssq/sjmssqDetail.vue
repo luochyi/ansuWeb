@@ -3,10 +3,10 @@
         <!-- 扣货详情 （v-if="" ）-->
         <div>
             <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:17px 6px;">
-                <span class='text' style="color:#FF0000">扣货件详情</span>
+                <span class='text' style="color:#FF0000">免扫详情</span>
             </el-row>
             <el-row class="titleReason">
-                <span>扣货原因：{{titleReason}}</span>
+                <span>扣货2211原因：{{titleReason}}</span>
             </el-row>
         </div>
         <!-- 不扣货详情 -->

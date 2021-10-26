@@ -96,27 +96,30 @@
              <!-- slot -->
           <template v-slot:yewuyuan="slotData">
             {{ slotData.data.salesman_name
-            }}&nbsp;<span
+            }}&nbsp;
+            <!-- <span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
               >查看</span
-            >
+            > -->
           </template>
           <template v-slot:piaoshu="slotData">
             {{ slotData.data.forecast_waybill_count
-            }}&nbsp;<span
+            }}&nbsp;
+            <!-- <span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
               >查看</span
-            >
+            > -->
           </template>
           <template v-slot:diver="slotData">
             {{ slotData.data.driver_name
-            }}&nbsp;<span
+            }}&nbsp;
+            <!-- <span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
               >查看</span
-            >
+            > -->
           </template>
           <!-- <template v-slot:status="slotData">
             {{ slotData.data.status
@@ -300,7 +303,14 @@ export default {
     // 拒绝
     refuse: function (event) {
       console.log(event)
-      this.$api.Ordermanagement.directReject({ directId: Number(event) }).then((res) => {})
+      this.$api.Ordermanagement.directReject({ directId: Number(event) }).then((res) => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
@@ -330,9 +340,8 @@ export default {
       console.log(val)
     },
     // 查看
-    detail (val) {
-      console.log(val.data)
-      this.$router.push('name:sjmssqDetail')
+    detail (data) {
+      this.$router.push({ name: 'sjmssqDetail', params: { id: data.id } })
     },
     handleClick (tab, event) {
       this.getData()
