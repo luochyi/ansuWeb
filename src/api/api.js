@@ -10,6 +10,7 @@ import * as customer from './customer'
 import * as Ordermanagement from './Ordermanagement'
 import * as finance from './finance'
 import * as order from './order'
+import * as file from './file'
 // 默认全部导出
 
 export default {
@@ -21,5 +22,6 @@ export default {
   customer,
   finance,
   Ordermanagement,
-  order
+  order,
+  file
 }
