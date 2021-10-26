@@ -296,59 +296,59 @@
                     </el-row>
                 </el-row>
         </el-row>
-        <el-drawer
-            :visible.sync="drawer"
-            size="50%">
-            <div slot="title" class="headTitle">页面显示设置</div>
-           <el-row class="" style="padding:26px;text-align:left;background:#fff;margin-top:26px">
-               <el-row style="display:flex;align-items:center">
-                   <el-col :span="11" style="display:flex;align-items:center">
-                        <span class="formTitle">字段集名称&nbsp;&nbsp;</span>
-                        <span>
-                            <el-input size="small" style="width:100%" v-model="fieldName" placeholder="请输入"></el-input>
-                        </span>
-                   </el-col>
-                   <el-col :span="8">
-                       <el-button size="small" class="orangeBtn">查 询</el-button>
-                   </el-col>
-               </el-row>
-               <!-- 抽屉表格 -->
-          <div class="table" style="margin-top:16px">
-          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"
-          :header-cell-style="{background: '#F5F5F6'}">
-          <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="name" label="字段集名称" min-width="130"></el-table-column>
-            <el-table-column prop="display" label="是否显示" min-width="100">
-                <template>
-                    <div style="display:flex;align-items:center">
-                        <div style="width: 8px;height: 8px;background: #32AF05;border-radius: 50%;margin-right:8px"></div>
-                        <span>显示</span>
-                    </div>
-                </template>
-            </el-table-column>
-            <el-table-column type="expand" label="默认展开/收缩" :width="120">
-                <template v-slot="scope">
-                    <el-table :data="scope.row.view_detail" :row-class-name="tableRowClassName" :header-cell-style="{ background: '#EDF6FF' }">
-                        <el-table-column prop="goods_name" label="开票商品名称" min-width="120">
-                        </el-table-column>
-                        <el-table-column prop="tax_name" label="税收分类">
-                        </el-table-column>
-                        <el-table-column prop="unit" label="单位">
-                        </el-table-column>
-                        <el-table-column prop="unit_price" label="单价">
-                        </el-table-column>
-                    </el-table>
-                </template>
-            </el-table-column>
-            <el-table-column label="顺序" min-width="150">
-                <template>
-                    <span>{{(num+1)}}</span>
-                </template>
-            </el-table-column>
-          </el-table>
-          </div>
-           </el-row>
-        </el-drawer>
+<!--        <el-drawer-->
+<!--            :visible.sync="drawer"-->
+<!--            size="50%">-->
+<!--            <div slot="title" class="headTitle">页面显示设置</div>-->
+<!--           <el-row class="" style="padding:26px;text-align:left;background:#fff;margin-top:26px">-->
+<!--               <el-row style="display:flex;align-items:center">-->
+<!--                   <el-col :span="11" style="display:flex;align-items:center">-->
+<!--                        <span class="formTitle">字段集名称&nbsp;&nbsp;</span>-->
+<!--                        <span>-->
+<!--                            <el-input size="small" style="width:100%" v-model="fieldName" placeholder="请输入"></el-input>-->
+<!--                        </span>-->
+<!--                   </el-col>-->
+<!--                   <el-col :span="8">-->
+<!--                       <el-button size="small" class="orangeBtn">查 询</el-button>-->
+<!--                   </el-col>-->
+<!--               </el-row>-->
+<!--               &lt;!&ndash; 抽屉表格 &ndash;&gt;-->
+<!--          <div class="table" style="margin-top:16px">-->
+<!--          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"-->
+<!--          :header-cell-style="{background: '#F5F5F6'}">-->
+<!--          <el-table-column type="selection" width="55"></el-table-column>-->
+<!--            <el-table-column prop="name" label="字段集名称" min-width="130"></el-table-column>-->
+<!--            <el-table-column prop="display" label="是否显示" min-width="100">-->
+<!--                <template>-->
+<!--                    <div style="display:flex;align-items:center">-->
+<!--                        <div style="width: 8px;height: 8px;background: #32AF05;border-radius: 50%;margin-right:8px"></div>-->
+<!--                        <span>显示</span>-->
+<!--                    </div>-->
+<!--                </template>-->
+<!--            </el-table-column>-->
+<!--            <el-table-column type="expand" label="默认展开/收缩" :width="120">-->
+<!--                <template v-slot="scope">-->
+<!--                    <el-table :data="scope.row.view_detail" :row-class-name="tableRowClassName" :header-cell-style="{ background: '#EDF6FF' }">-->
+<!--                        <el-table-column prop="goods_name" label="开票商品名称" min-width="120">-->
+<!--                        </el-table-column>-->
+<!--                        <el-table-column prop="tax_name" label="税收分类">-->
+<!--                        </el-table-column>-->
+<!--                        <el-table-column prop="unit" label="单位">-->
+<!--                        </el-table-column>-->
+<!--                        <el-table-column prop="unit_price" label="单价">-->
+<!--                        </el-table-column>-->
+<!--                    </el-table>-->
+<!--                </template>-->
+<!--            </el-table-column>-->
+<!--            <el-table-column label="顺序" min-width="150">-->
+<!--                <template>-->
+<!--                    <span>{{(num+1)}}</span>-->
+<!--                </template>-->
+<!--            </el-table-column>-->
+<!--          </el-table>-->
+<!--          </div>-->
+<!--           </el-row>-->
+<!--        </el-drawer>-->
         <el-drawer
             :visible.sync="drawer.visible"
             size="50%">
@@ -450,7 +450,7 @@ export default {
     }
   },
   mounted () {
-    this.waybillId = this.$route.params.waybillId
+    this.waybillId = this.$route.params.id
     this.getData()
   },
   methods: {

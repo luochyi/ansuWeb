@@ -251,6 +251,7 @@ export default {
     },
     toDetail (val) {
       console.log(val)
+      this.$router.push({ name: 'agentDetails', params: { id: val } })
     },
     handleClose () {
       this.dialogStop = false

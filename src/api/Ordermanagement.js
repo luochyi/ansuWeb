@@ -24,6 +24,14 @@ export const forecastInfo = (params) => {
     data: params
   })
 }
+// 收件免扫申请详情
+export const forecastDirectInfo = (params) => {
+  return axios({
+    url: '/order/forecast/direct/info',
+    method: 'post',
+    data: params
+  })
+}
 // 运单列表
 export const waybillLists = (params) => {
   return axios({

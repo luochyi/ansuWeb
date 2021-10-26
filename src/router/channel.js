@@ -22,6 +22,16 @@ export default [
     component: () => import('@/views/channel/agentManage/agentManage')
   },
   {
+    path: '/agentManage/agentDetails',
+    name: 'agentDetails',
+    meta: {
+      title: '代理详情',
+      icon: 'agentDetails',
+      hidden: false
+    },
+    component: () => import('@/views/channel/agentManage/agentDetails.vue')
+  },
+  {
     path: '/agentManage/addAgent',
     name: 'addAgent',
     meta: {

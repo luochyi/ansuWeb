@@ -4,39 +4,25 @@
     <div class="box">
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>订单详情</span>
+        <span class='text'>代理详情</span>
       </el-row>
       <div>
-        <div class="top" >
-          <el-row type='flex' justify='flex-start' class='titlea' align='middle'>
-            <span style=" margin:25px" class='text'>预报订单：{{data.forecast_no}}  预报类型：{{data.forecast_type === 1 ? '计划下单' : '未建计划下单'}}</span>
-          </el-row>
-          <el-descriptions title="客户信息">
-            <el-descriptions-item label="客户名称">{{data.customer_name}}</el-descriptions-item>
-            <el-descriptions-item class='number' label="客户编号">{{data.customer_code}}</el-descriptions-item>
+        <div class="en">
+          <el-descriptions title="客户资料">
+            <el-descriptions-item label="代理名称">{{data.name}}</el-descriptions-item>
+            <el-descriptions-item label="代理编码">{{data.code}}</el-descriptions-item>
+            <el-descriptions-item label="公司地址">{{data.province_name}}{{data.city_name}}{{data.county_name}}</el-descriptions-item>
+            <el-descriptions-item label="详细地址">{{data.address}}</el-descriptions-item>
           </el-descriptions>
         </div>
         <div class="en">
-          <el-descriptions title="业务员">
-            <el-descriptions-item label="所属业务员">{{data.salesman_name}}</el-descriptions-item>
-            <el-descriptions-item label="业务员手机">{{data.salesman_phone}}</el-descriptions-item>
-            <el-descriptions-item label="业务员职位">{{data.salesman_position_name}}</el-descriptions-item>
+          <el-descriptions title="代理账期">
+            <el-descriptions-item label="结算账期">{{data.period_name}}</el-descriptions-item>
           </el-descriptions>
         </div>
         <div class="en">
-          <el-descriptions title="收货信息">
-            <el-descriptions-item label="收货司机">{{data.driver_name}}</el-descriptions-item>
-            <el-descriptions-item label="司机职位">{{data.driver_position_name}}</el-descriptions-item>
-            <el-descriptions-item label="司机手机">{{data.driver_phone}}</el-descriptions-item>
-          </el-descriptions>
-        </div>
-        <div class="en">
-          <el-descriptions title="预报信息">
-            <el-descriptions-item label="预报时间">{{formatDate(data.forecast_created_at, 'yyyy-MM-dd hh:mm:ss')}} </el-descriptions-item>
-            <el-descriptions-item label="货好时间">{{formatDate(data.forecast_good_time, 'yyyy-MM-dd hh:mm:ss')}}</el-descriptions-item>
-            <el-descriptions-item label="预报件数">{{data.forecast_box_count}}</el-descriptions-item>
-            <el-descriptions-item label="预报重量">{{data.forecast_weight}}</el-descriptions-item>
-            <el-descriptions-item label="预报方数">{{data.forecast_volume}}</el-descriptions-item>
+          <el-descriptions title="代理账期">
+            <el-descriptions-item label="代理备注">{{data.remark}}</el-descriptions-item>
           </el-descriptions>
         </div>
       </div>
@@ -45,7 +31,7 @@
     <div class="button">
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>查看运单</span>
+        <span class='text'>联系人</span>
       </el-row>
       <el-divider></el-divider>
       <div class="foot" >
@@ -53,12 +39,45 @@
           <!-- <span class='title' >票数：2票 货件数量：100箱</span> -->
         </el-row>
         <br>
-        <el-table ref="multipleTable" :data="data.waybills" border  tooltip-effect="dark" style="width: 80%"
+        <el-table ref="multipleTable" :data="data.contacts" border  tooltip-effect="dark" style="width: 80%"
                   :header-cell-style="{background: '#F5F5F6'}">
-          <!-- 运单号 -->
-          <el-table-column  prop='waybill_no'  label='运单号'  min-width='318'> </el-table-column>
-          <!-- 预报类型 -->
-          <el-table-column  prop='cargoes_num'  label='货件数量'  min-width='318'></el-table-column>
+          <!-- 联系人姓名 -->
+          <el-table-column  prop='name'  label='联系人姓名'  min-width='318'> </el-table-column>
+          <!-- 类型 -->
+          <el-table-column  prop='type'  label='类型'  min-width='318'></el-table-column>
+          <!-- 手机号 -->
+          <el-table-column  prop='phone'  label='手机号'  min-width='318'></el-table-column>
+          <!-- 微信 -->
+          <el-table-column  prop='wechat'  label='微信'  min-width='318'></el-table-column>
+          <!-- qq -->
+          <el-table-column  prop='qq'  label='qq'  min-width='318'></el-table-column>
+          <!-- <el-table-column label='操作' fixed='right' min-width='120'>
+           <template slot-scope="scope">
+              <el-button type="text" @click="Viewwaybill(scope.row.id)"> 查看运单</el-button>
+           </template>
+         </el-table-column> -->
+        </el-table>
+      </div>
+      <!--  标签页 -->
+      <el-row type='flex' justify='flex-start' class='title' align='middle'>
+        <span class='text'>收货地址</span>
+      </el-row>
+      <el-divider></el-divider>
+      <div class="foot" >
+        <el-row class="left">
+          <!-- <span class='title' >票数：2票 货件数量：100箱</span> -->
+        </el-row>
+        <br>
+        <el-table ref="multipleTable" :data="data.addresses" border  tooltip-effect="dark" style="width: 80%"
+                  :header-cell-style="{background: '#F5F5F6'}">
+          <!-- 联系人姓名 -->
+          <el-table-column  prop='name'  label='负责人名称'  min-width='318'> </el-table-column>
+          <!-- 手机号 -->
+          <el-table-column  prop='phone'  label='负责人手机'  min-width='318'></el-table-column>
+          <!-- 微信 -->
+          <el-table-column  prop=''  label='公司地址'  min-width='318'>{{data.province_name}}{{data.city_name}}{{data.county_name}}</el-table-column>
+          <!-- qq -->
+          <el-table-column  prop='address'  label='详细地址'  min-width='318'></el-table-column>
           <!-- <el-table-column label='操作' fixed='right' min-width='120'>
            <template slot-scope="scope">
               <el-button type="text" @click="Viewwaybill(scope.row.id)"> 查看运单</el-button>
@@ -74,10 +93,9 @@
 export default {
   data () {
     return {
-      forecast_type: '',
       WaybillNo: '',
       quantity: '',
-      id: null,
+      id: '',
       tableData: [
       ],
       data: ''
@@ -92,14 +110,14 @@ export default {
     getdata () {
       console.log('111')
       console.log(this.id)
-      this.$api.Ordermanagement.forecastDirectInfo({
-        directId: this.id
+      this.$api.agent.agentInfo({
+        agentId: this.id
       }).then(res => {
         console.log(res)
         this.data = res.data
         // this.data.good_time = this.formatDate(res.data.good_time, 'yyyy-MM-dd')
         // this.data.created_at = this.formatDate(res.data.created_at, 'yyyy-MM-dd')
-        this.tableData = res.data.waybills
+        this.tableData = res.data.contacts
       })
     },
     modify () {
