@@ -22,6 +22,13 @@ export const agentAdd = (params) => {
     data: params
   })
 }
+export const agentInfo = (params) => {
+  return axios({
+    url: '/setting/agent/info',
+    method: 'post',
+    data: params
+  })
+}
 // /setting/period/select
 export const periodSelect = (params) => {
   return axios({
