@@ -178,6 +178,15 @@ export const ejectDriver = (params) => {
     data: params
   })
 }
+// 导出出仓单
+export const ejectExportDriver = (params) => {
+  return axios({
+    url: '/order/eject/export/driver',
+    method: 'post',
+    data: params,
+    responseType: 'blob'
+  })
+}
 // 添加运单轨迹
 export const milestoneAdd = (params) => {
   return axios({
