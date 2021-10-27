@@ -24,7 +24,7 @@ export const info = (menuId) => {
     data: { menuId: menuId }
   })
 }
-// 编辑菜单
+// 修改菜单
 export const edit = (params) => {
   return axios({
     url: '/setting/menu/edit',

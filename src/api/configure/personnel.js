@@ -26,7 +26,7 @@ export const info = (personnelId) => {
     }
   })
 }
-// 编辑员工
+// 修改员工
 export const edit = (params) => {
   return axios({
     url: '/company/personnel/edit',

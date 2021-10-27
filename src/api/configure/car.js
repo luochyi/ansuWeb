@@ -19,7 +19,7 @@ export const carAdd = (params) => {
   })
 }
 
-// 编辑车辆
+// 修改车辆
 export const carEdit = (params) => {
   return axios({
     url: '/company/car/edit',
@@ -28,7 +28,7 @@ export const carEdit = (params) => {
   })
 }
 
-// 编辑车辆
+// 修改车辆
 export const carEnabled = (carIds) => {
   return axios({
     url: '/company/car/enabled',
@@ -39,7 +39,7 @@ export const carEnabled = (carIds) => {
   })
 }
 
-// 编辑车辆
+// 修改车辆
 export const carDisabled = (carIds) => {
   return axios({
     url: '/company/car/disabled',

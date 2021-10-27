@@ -1,7 +1,8 @@
 <template>
   <div id="boxx">
     <el-row type="flex" justify="flex-start" class="title" align="middle">
-      <span class="text">新建子公司</span>
+      <span class="text" v-if="this.editId===undefined">新建子公司</span>
+      <span class="text" v-else>修改子公司</span>
     </el-row>
     <div class="box">
       <!--  标签页 -->
@@ -39,7 +40,7 @@
           ></el-input>
         </el-descriptions-item>
       </el-descriptions>
-      <div class="top">
+      <div class="top" v-show="this.editId===undefined">
         <el-descriptions class="margin-top" :column="2" direction="vertical">
           <el-descriptions-item label="管理员名称">
             <el-input
@@ -84,15 +85,15 @@
             > -->
           </el-descriptions-item>
         </el-descriptions>
-        <el-form>
+      </div>
+      <el-form>
           <el-form-item size="large">
             <el-button type="primary" @click="submit()" class="orangeBtn long2"
               >确定</el-button
             >
-            <el-button class="whiteBtn long2">取消</el-button>
+            <!-- <el-button class="whiteBtn long2">取消</el-button> -->
           </el-form-item>
         </el-form>
-      </div>
     </div>
   </div>
 </template>
@@ -102,6 +103,7 @@ import Clipboard from 'clipboard'
 export default {
   data () {
     return {
+      editId: null,
       provinceOptions: [],
       name: '',
       startNo: '',
@@ -119,59 +121,18 @@ export default {
   beforeDestory () {
     this.data.clipboard.destroy()
   },
-  methods: {
-    submit () {
-      // 给请求参数赋值
-      let resData = {
-        name: this.name,
-        startNo: this.startNo,
-        countyId: this.countyId,
-        address: this.address,
-        admin: {
-          name: this.admin.name,
-          phone: this.admin.phone,
-          username: this.admin.username,
-          password: this.admin.password,
-          confirmPassword: this.admin.confirmPassword
-        }
-      }
-      // 把请求参数传输至后端，并且获取接口返回的结果res
-      this.$api.configure.companyAdd(resData).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg) // 成功提示
-          this.$router.push({ name: 'Subsidiarymanagement' }) // 添加成功后返回子公司列表
-        } else {
-          this.$message.error(res.msg) // 错误提示
-        }
-      })
-    },
-    // 生成随机密码
-    randomPsw () {
-      this.admin.password = Math.floor((Math.random() + Math.floor(Math.random() * 9 + 1)) * Math.pow(10, 9))
-      this.admin.confirmPassword = this.admin.password
-    },
-    copy () {
-      const clipboard = new Clipboard('#copyBtn')
-      clipboard.on('success', (e) => {
-        this.$message.success('复制成功！')
-        //  释放内存
-        clipboard.destroy()
-      })
-      clipboard.on('error', (e) => {
-        // 不支持复制
-        this.$message.error('复制失败！该浏览器不支持复制！')
-        // 释放内存
-        clipboard.destroy()
-      })
-    },
-    // 级联选择器选择
-    handleChange (val) {
-      console.log(val)
-      console.log(this.provinceOptions) // 打印级联选择器的options
-      this.countyId = val[2] // 区域id
-    }
-  },
   mounted () {
+    this.editId = this.$route.params.id
+    this.$api.configure.companyInfo({
+      companyId: this.editId
+    }).then(res => {
+      console.log(res)
+      this.name = res.data.name
+      this.startNo = res.data.start_no
+      this.address = res.data.address
+      this.countyId = [res.data.province_id, res.data.city_id, res.data.county_id]
+      console.log(this.countyId)
+    })
     // 省市区三级联动
     this.$api.common.settingRegionAll().then(res => {
       console.log(res)
@@ -205,6 +166,77 @@ export default {
         this.provinceOptions.push(province)
       })
     })
+  },
+  methods: {
+    submit () {
+      if (this.editId === undefined) {
+        // 给请求参数赋值
+        let resData = {
+          name: this.name,
+          startNo: this.startNo,
+          countyId: this.countyId[2],
+          address: this.address,
+          admin: {
+            name: this.admin.name,
+            phone: this.admin.phone,
+            username: this.admin.username,
+            password: this.admin.password,
+            confirmPassword: this.admin.confirmPassword
+          }
+        }
+        // 把请求参数传输至后端，并且获取接口返回的结果res
+        this.$api.configure.companyAdd(resData).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.$router.push({ name: 'Subsidiarymanagement' }) // 添加成功后返回子公司列表
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
+      } else {
+        let resData = {
+          companyId: this.editId,
+          name: this.name,
+          startNo: this.startNo,
+          countyId: this.countyId[2],
+          address: this.address
+        }
+        // 把请求参数传输至后端，并且获取接口返回的结果res
+        this.$api.configure.companyEdit(resData).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.$router.push({ name: 'Subsidiarymanagement' }) // 添加成功后返回子公司列表
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
+      }
+    },
+    // 生成随机密码
+    randomPsw () {
+      this.admin.password = Math.floor((Math.random() + Math.floor(Math.random() * 9 + 1)) * Math.pow(10, 9))
+      this.admin.confirmPassword = this.admin.password
+    },
+    copy () {
+      const clipboard = new Clipboard('#copyBtn')
+      clipboard.on('success', (e) => {
+        this.$message.success('复制成功！')
+        //  释放内存
+        clipboard.destroy()
+      })
+      clipboard.on('error', (e) => {
+        // 不支持复制
+        this.$message.error('复制失败！该浏览器不支持复制！')
+        // 释放内存
+        clipboard.destroy()
+      })
+    },
+    // 级联选择器选择
+    handleChange (val) {
+      console.log(val)
+      console.log(this.provinceOptions) // 打印级联选择器的options
+      // this.countyId = val[2] // 区域id
+    }
   }
 }
 </script>
@@ -225,8 +257,6 @@ export default {
   background: #ffffff;
 }
 #boxx {
-  width: 1191px;
-  height: 914px;
   background: #ffffff;
   border-radius: 4px;
   border: 1px solid #e8e8e8;

@@ -43,7 +43,7 @@
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="editMenu(scope.row)">编辑</el-button>
+          @click="editMenu(scope.row)">修改</el-button>
         <!-- <el-button
           size="mini"
           type="danger"
@@ -186,7 +186,7 @@ export default {
     return {
       digTitle: '',
       diaShow: false,
-      diaType: 1, // 1=添加 2=编辑
+      diaType: 1, // 1=添加 2=修改
 
       typeOptions: [
         { value: 1, label: '目录' },
@@ -250,7 +250,7 @@ export default {
       this.$api.configure.menu.info(val.id).then(res => {
         if (res.code === 0) {
           this.diaShow = true
-          this.digTitle = '编辑菜单'
+          this.digTitle = '修改菜单'
           this.diaType = 2
 
           this.formData.menuId = val.id

@@ -30,7 +30,7 @@
         :resizable="false"
         >
         <template slot-scope="scope">
-          <el-button type="text" @click="toDetail(scope.row)"> 编辑</el-button>
+          <el-button type="text" @click="toDetail(scope.row)"> 修改</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="del(scope.row.id)"> 删除 </el-button>
         </template>

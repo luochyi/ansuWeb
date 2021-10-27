@@ -68,7 +68,7 @@
             <el-table-column label="QQ" prop="qq" min-width="150"></el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template slot-scope="scope">
-                <el-button type="text">编辑信息</el-button>
+                <el-button type="text">修改信息</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click.native.prevent="deleteRow(scope.$index, contactsData)">删除</el-button>
               </template>
@@ -126,7 +126,7 @@
             <el-table-column label="地址" prop="address" min-width="300"></el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template slot-scope="scope">
-                <el-button type="text">编辑信息</el-button>
+                <el-button type="text">修改信息</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click.native.prevent="deleteRowe(scope.$index, wareData)">删除</el-button>
               </template>

@@ -16,7 +16,7 @@ export const add = (params) => {
     data: params
   })
 }
-// 编辑接口
+// 修改接口
 export const edit = (params) => {
   return axios({
     url: '/setting/api/edit',

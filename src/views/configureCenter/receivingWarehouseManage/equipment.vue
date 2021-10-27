@@ -46,7 +46,7 @@
             :resizable="false"
         >
           <template slot-scope="scope">
-            <el-button type="text" @click="showEdit(scope.row)"> 编辑</el-button>
+            <el-button type="text" @click="showEdit(scope.row)"> 修改</el-button>
             <span style="color: #0084FF; margin: 0px 5px">|</span>
             <el-button v-if="activeName === '1'" type="text" @click="disabled([scope.row.id])"> 停用设备</el-button>
             <el-button v-if="activeName === '2'" type="text" @click="enabled([scope.row.id])"> 启用设备</el-button>
@@ -172,7 +172,7 @@ export default {
     showEdit (row) {
       this.formData.deviceId = row.id
       this.formData.name = row.name
-      this.dialog.titile = '编辑设备'
+      this.dialog.titile = '修改设备'
       this.dialog.visible = true
       this.dialog.type = 2
     },

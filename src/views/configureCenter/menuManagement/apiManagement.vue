@@ -32,7 +32,7 @@
             <template slot-scope="scope">
               <el-button
                   size="mini"
-                  @click="showEdit(scope.row)">编辑</el-button>
+                  @click="showEdit(scope.row)">修改</el-button>
               <el-popconfirm
                   title="确定删除这个接口吗？"
                   @confirm="del(scope.row.id)"
@@ -139,7 +139,7 @@ export default {
       this.formData.apiPath = ''
     },
     showEdit (val) {
-      this.digTitle = '编辑接口'
+      this.digTitle = '修改接口'
       this.diaShow = true
       this.diaType = 2
       this.formData.parentId = this.cascaderData(this.tableData, val.parent_id)
