@@ -187,6 +187,14 @@ export const ejectExportDriver = (params) => {
     responseType: 'blob'
   })
 }
+
+export const orderEjectDriver = (params) => {
+  return axios({
+    url: '/order/eject/driver',
+    method: 'post',
+    data: params
+  })
+}
 // 添加运单轨迹
 export const milestoneAdd = (params) => {
   return axios({

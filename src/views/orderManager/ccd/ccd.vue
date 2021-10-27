@@ -65,8 +65,7 @@
             <el-button class='stopBtn'>批量导出Excel</el-button>
           </el-col>
           <!-- <el-col :span='12' class="right">
-            <el-button class='whiteBtn' @click="toAdd">新增渠道</el-button>
-            <el-button class='whiteBtn'>列表显示设置</el-button>
+            <el-button class='whiteBtn' @click="toAdd">新增</el-button>
           </el-col> -->
         </el-row>
         <commonTable
@@ -120,9 +119,9 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <span @click="download(scope.row)" class="blue" v-if="scope.row.has_assign_drivers === 2">下载Excel</span>
-              <span @click="detail(scope.row)" class="blue">&nbsp;|&nbsp;运单明细</span>
-               <span @click="detail(scope.row)" v-if="scope.row.has_assign_drivers===1" class="blue">&nbsp;|&nbsp;查看送货司机</span>
+              <span @click="download(scope.row)" class="blue" v-if="scope.row.has_assign_drivers === 2">下载Excel&nbsp;|&nbsp;</span>
+              <span @click="detail(scope.row)" class="blue">运单明细</span>
+               <span @click="detail(scope.row)" v-if="scope.row.has_assign_drivers===2" class="blue">&nbsp;|&nbsp;查看送货司机</span>
                 <span @click="setDriver(scope.row)" v-else class="blue">&nbsp;|&nbsp;配置司机</span>
             </template>
           </el-table-column>
@@ -145,18 +144,18 @@
           <div v-if="!choosed">
              <el-descriptions :title='"出仓单"+(index+1)' :column="3" v-for="item,index in drivers" :key='index'>
                <template slot="extra">
-                <el-button type="text" size="small">删除</el-button>
+                <!-- <el-button type="text" size="small" @click="del(index)">删除</el-button> -->
               </template>
-              <el-descriptions-item label="运输司机"></el-descriptions-item>
+              <el-descriptions-item label="运输司机">{{item.driverName}}</el-descriptions-item>
               <el-descriptions-item label="送货票数">{{item.waybillIds.length}}</el-descriptions-item>
-              <el-descriptions-item label="送货数量"></el-descriptions-item>
+              <el-descriptions-item label="送货数量">{{item.cargoes_num}}</el-descriptions-item>
           </el-descriptions>
             <el-button class="addbtn" size="mini" round @click="addDriver">添加出仓司机</el-button>
           </div>
           <div v-else>
             <el-form label-width="120px">
               <el-form-item label="选择司机">
-                <el-select v-model="form.driverId" size="mini">
+                <el-select v-model="form.driverId" size="mini" @change="changedrive">
                   <el-option  v-for="item in driverOption" :key="item.id" :value="item.id" :label="item.name"></el-option>
                 </el-select>
               </el-form-item>
@@ -166,20 +165,21 @@
                 </el-select>
               </el-form-item>
             </el-form>
-            <el-table :data="waybillsList"  @selection-change="handleSelectionChange">
+            <el-table :data="waybillsList" empty-text='无可配置运单'  @selection-change="handleSelectionChange">
               <el-table-column type="selection" width="55"></el-table-column>
               <el-table-column prop="waybill_no" label="运单编号"></el-table-column>
               <el-table-column prop="cargoes_num" label="货件数"></el-table-column>
             </el-table>
+             <div style="marginTop:20px">
+               <el-button type="primary" size="mini" @click="chooseok()" v-show="this.waybillsList.length!=0">确定</el-button>
+               <el-button type="info" size="mini" @click="cancel">取消</el-button>
+             </div>
           </div>
           </div>
 
           <!-- 抽屉底部按钮 -->
           <div slot="footer">
-            <button class="btn-orange" @click="chooseok()" v-if="choosed">
-              <span> <i class="el-icon-circle-check"></i>确定</span>
-            </button>
-            <button class="btn-orange" @click="submit()" v-else>
+            <button class="btn-orange" @click="submit()">
               <span> <i class="el-icon-circle-check"></i>提交</span>
             </button>
             <button class="btn-gray" @click="addClose">
@@ -199,12 +199,15 @@ export default {
       drawerSize: '50%',
       choosed: false, // 是否在选择司机
       drivers: [],
+      ejectId: null,
       warehouseOption: [], // 仓库选择
       driverOption: [],
       form: {
         agentAddressId: null,
         driverId: null, // 选择司机
-        waybillIds: [] // 配置司机选择的运单id
+        waybillIds: [], // 配置司机选择的运单id
+        driverName: '',
+        cargoes_num: 0
       },
       msg: '',
       ejectData: {
@@ -221,8 +224,8 @@ export default {
         { prop: 'channel_name', label: '渠道名称', width: '250', align: 'center' },
         { prop: 'agent_name', label: '代理名称', width: '200', align: 'center' },
         { prop: 'eject_time', label: '出仓时间', width: '200', align: 'center', formatter: this.formatters },
-        { prop: 'waybill_count', label: '运单数', width: '200', align: 'center' },
-        { prop: 'item_count', label: '货件数', width: '200', align: 'center' },
+        { prop: 'waybill_count', label: '运单数', width: '100', align: 'center' },
+        { prop: 'item_count', label: '货件数', width: '100', align: 'center' },
         { prop: 'volume', label: '体积', width: '100', align: 'center' },
         { prop: 'bill_weight', label: '结算重', width: '100', align: 'center' },
         { prop: 'has_assign_drivers', label: '是否配置司机', width: '100', align: 'center', formatter: this.formatter }
@@ -242,9 +245,6 @@ export default {
     this.$api.configure.driver.select().then(res => {
       this.driverOption = res.data
     })
-    // this.$api.setting.warehouse.select().then(res => {
-    //   this.warehouseOption = res.data
-    // })
   },
   methods: {
     getData () {
@@ -252,17 +252,6 @@ export default {
         this.tableData = res.data.list
         this.page.total = res.data.total // 数据总量
       })
-    },
-    // 重新渲染name列
-    formatter (row, column, cellValue) {
-      if (row.has_assign_drivers === 1) {
-        return '否'
-      } else {
-        return '是'
-      }
-    },
-    formatters (row, column, cellValue) {
-      return this.formatDate(row.eject_time, 'yyyy-MM-dd hh:mm:ss')
     },
     addDriver () {
       this.choosed = true
@@ -272,14 +261,117 @@ export default {
       })
     },
     setDriver (row) {
-      this.ejectData = row
+      // this.ejectData = row
       this.drawerVrisible = true
-      // this.$api.Ordermanagement.ejectInfo({ ejectId: data.id }).then(res => {
-      //   console.log(res.data.waybills)
-      //   this.ejectData = res.data
-      //   this.waybillsList = res.data.waybills
-      //   this.drawerVrisible = true
-      // })
+      this.ejectId = row.id
+      this.$api.Ordermanagement.ejectInfo({ ejectId: row.id }).then(res => {
+        console.log(res.data.waybills)
+        this.ejectData = res.data
+        this.waybillsList = res.data.waybills
+        this.drawerVrisible = true
+      })
+    },
+    del (index) {
+      console.log(index)
+      this.drivers.splice(index, 1)
+    },
+    // 查看
+    detail (val) {
+      console.log(val.data)
+      this.$router.push('name:sjmssqDetail')
+    },
+    handleSelectionChange (val) {
+      console.log(val)
+      val && val.forEach(item => {
+        this.form.waybillIds.push(item.id)
+        this.form.cargoes_num += item.cargoes_num
+      })
+    },
+    changedrive (val) {
+      console.log(val)
+      let obj = this.driverOption.find(ele => {
+        return ele.id === val
+      })
+      this.form.driverName = obj.name
+    },
+    // 选择司机确定
+    chooseok () {
+      if (this.form.driverId === null) {
+        this.$message.error('请选择司机')
+        return
+      }
+      if (this.form.agentAddressId === null) {
+        this.$message.error('请选择仓库地址')
+        return
+      }
+      if (this.form.waybillIds.length === 0) {
+        this.$message.error('请选择一条运单')
+        return
+      }
+      this.choosed = false
+      this.drivers.push(this.form)
+      console.log(this.drivers)
+      console.log(this.waybillsList)
+      // 对出仓单的运单数组操作 this.waybillsList
+      for (let i = 0; i < this.form.waybillIds.length; i++) {
+        for (let j = 0; j < this.waybillsList.length; j++) {
+          if (this.form.waybillIds[i] === this.waybillsList[j].id) {
+            this.waybillsList.splice(j, 1)
+          }
+        }
+      }
+      // 选择司机数据清空
+      this.form = {
+        agentAddressId: null,
+        driverId: null, // 选择司机
+        waybillIds: [], // 配置司机选择的运单id
+        driverName: '',
+        cargoes_num: 0
+      }
+    },
+    cancel () {
+      this.choosed = false
+      // 对出仓单的运单数组操作 this.waybillsList
+      // 选择司机数据清空
+      this.form = {
+        agentAddressId: null,
+        driverName: '',
+        driverId: null, // 选择司机
+        waybillIds: [], // 配置司机选择的运单id
+        cargoes_num: 0
+      }
+    },
+    // 提交
+    submit () {
+      let obj = {
+        ejectId: this.ejectId,
+        drivers: this.drivers
+      }
+      this.$api.Ordermanagement.orderEjectDriver(obj).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.addClose()
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    handleClick (tab, event) { console.log(tab, event) },
+    // 操作按钮列表
+    editTableData (row) {},
+    // 关闭抽屉
+    addClose () {
+      this.drawerVrisible = false
+      this.drivers = []
+      this.cancel()
+    },
+    download (row) {
+      this.$api.Ordermanagement.ejectExportDriver({
+        ejectId: row.id
+      }).then(res => {
+        this.downloadBlob(res, '出仓单.xlsx')
+      })
     },
     // 改变页面大小处理
     handleSizeChange (val) {
@@ -291,43 +383,16 @@ export default {
       this.page.pageNo = val
       this.getData()
     },
-    // 查看
-    detail (val) {
-      console.log(val.data)
-      this.$router.push('name:sjmssqDetail')
-    },
-    handleSelectionChange (val) {
-      val && val.forEach(item => {
-        this.form.waybillIds.push(item.id)
-      })
-    },
-    // 选择司机确定
-    chooseok () {
-      this.choosed = false
-      this.drivers.push(this.form)
-      console.log(this.drivers)
-      // 对出仓单的运单数组操作 this.waybillsList
-      // 选择司机数据清空
-      this.form = {
-        agentAddressId: null,
-        driverId: null, // 选择司机
-        waybillIds: [] // 配置司机选择的运单id
+    // 重新渲染name列
+    formatter (row, column, cellValue) {
+      if (row.has_assign_drivers === 1) {
+        return '否'
+      } else {
+        return '是'
       }
     },
-    submit () {},
-    handleClick (tab, event) { console.log(tab, event) },
-    // 操作按钮列表
-    editTableData (row) {},
-    // 关闭抽屉
-    addClose () {
-      this.drawerVrisible = false
-    },
-    download (row) {
-      this.$api.Ordermanagement.ejectExportDriver({
-        ejectId: row.id
-      }).then(res => {
-        this.downloadBlob(res, '出仓单.xlsx')
-      })
+    formatters (row, column, cellValue) {
+      return this.formatDate(row.eject_time, 'yyyy-MM-dd hh:mm:ss')
     }
   }
 }
