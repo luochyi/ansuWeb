@@ -42,7 +42,7 @@
          <template slot-scope="scope">
            <el-button type="text" @click="toDetail(scope.row.id)"> 详情</el-button>
            <span style="color: #0084FF; margin: 0px 5px">|</span>
-           <el-button type="text" @click="toDetail2(scope.row.id)"> 修改公司信息</el-button>
+           <el-button type="text" @click="edit(scope.row.id)"> 修改公司信息</el-button>
         </template>
       </el-table-column>
     </commonTable>
@@ -121,6 +121,10 @@ export default {
     toDetail (val) {
       console.log(val)
       this.$router.push({ name: 'subsidiaryDetails', params: { id: val } })
+    },
+    edit (val) {
+      console.log(val)
+      this.$router.push({ name: 'subsidiaries', params: { id: val } })
     },
     reset () {
       this.name = ''

@@ -63,7 +63,7 @@
         :resizable="false"
         >
         <template slot-scope="scoped">
-                <el-button type="text" @click="edit"> 编辑</el-button>
+                <el-button type="text" @click="edit(scoped.row)"> 修改</el-button>
                  <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="disabled([scoped.row.id])">停用车辆</el-button>
                 <el-button v-else-if="activeName === '2'" type="text" @click="enabled([scoped.row.id])" >启用车辆</el-button>
@@ -203,7 +203,22 @@ export default {
         this.carIds.push(item.id)
       })
     },
-    edit  () {},
+    edit  (data) {
+      console.log(data)
+      this.$router.push({
+        name: 'addTruck',
+        params: {
+          high: data.high,
+          id: data.id,
+          load: data.load,
+          long: data.long,
+          name: data.name,
+          number: data.number,
+          status: data.status,
+          wide: data.wide
+        }
+      })
+    },
     enabled  (val) {
       api.configure.car.carEnabled(val).then(res => {
         if (res.code === 0) {

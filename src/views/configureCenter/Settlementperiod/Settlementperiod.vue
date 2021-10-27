@@ -180,7 +180,7 @@ export default {
     // 修改
     toDetail (data) {
       this.name = data.name
-      this.period_Day = data.period_Day
+      this.period_Day = data.period
       this.periodId = data.id
       this.diaShow = true
       this.digTitle = '修改账期'

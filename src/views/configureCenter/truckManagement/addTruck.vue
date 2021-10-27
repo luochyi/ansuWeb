@@ -2,7 +2,8 @@
   <div>
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span>新建货车</span>
+      <span v-if="this.editId===undefined">新建货车</span>
+      <span v-else>修改货车</span>
     </el-row>
     <!-- 内容 -->
     <div class="content">
@@ -43,7 +44,7 @@
       <!-- 其他 -->
       <div class="infoBox">
         <el-button class="orangeBtn" @click="add">确 认</el-button>
-        <el-button class="whiteBtn">取 消</el-button>
+        <!-- <el-button class="whiteBtn">取 消</el-button> -->
       </div>
     </div>
   </div>
@@ -54,6 +55,7 @@ import api from '@/api/api'
 export default {
   data () {
     return {
+      editId: null,
       formData: {
         name: '',
         licensePlate: '',
@@ -64,25 +66,51 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
+    this.formData.name = this.$route.params.name
+    this.formData.licensePlate = this.$route.params.number
+    this.formData.load = this.$route.params.load
+    this.formData.long = this.$route.params.long
+    this.formData.wide = this.$route.params.wide
+    this.formData.high = this.$route.params.high
+    this.editId = this.$route.params.id
   },
   methods: {
     add () {
-      api.configure.car.carAdd({
-        name: this.formData.name,
-        licensePlate: this.formData.licensePlate,
-        load: Number(this.formData.load),
-        long: Number(this.formData.long),
-        wide: Number(this.formData.wide),
-        high: Number(this.formData.high)
-      }).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg) // 成功提示
-          this.$router.push({ name: 'truckManagement' }) // 添加成功后返回子公司列表
-        } else {
-          this.$message.error(res.msg) // 错误提示
-        }
-      })
+      if (this.editId === undefined) {
+        api.configure.car.carAdd({
+          name: this.formData.name,
+          licensePlate: this.formData.licensePlate,
+          load: Number(this.formData.load),
+          long: Number(this.formData.long),
+          wide: Number(this.formData.wide),
+          high: Number(this.formData.high)
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.$router.push({ name: 'truckManagement' }) // 添加成功后返回子公司列表
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
+      } else {
+        api.configure.car.carEdit({
+          carId: this.editId,
+          name: this.formData.name,
+          licensePlate: this.formData.licensePlate,
+          load: Number(this.formData.load),
+          long: Number(this.formData.long),
+          wide: Number(this.formData.wide),
+          high: Number(this.formData.high)
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.$router.push({ name: 'truckManagement' }) // 添加成功后返回子公司列表
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
+      }
     }
   }
 }

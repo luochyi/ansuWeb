@@ -46,7 +46,7 @@
             :resizable="false"
         >
           <template slot-scope="scope">
-            <el-button type="text" @click="showEdit(scope.row)"> 编辑</el-button>
+            <el-button type="text" @click="showEdit(scope.row)"> 修改</el-button>
             <span style="color: #0084FF; margin: 0px 5px">|</span>
             <el-button v-if="activeName === '1'" type="text" @click="disabled([scope.row.id])"> 停用设备</el-button>
             <el-button v-if="activeName === '2'" type="text" @click="enabled([scope.row.id])"> 启用设备</el-button>
@@ -59,6 +59,7 @@
         :title="dialog.titile"
         :visible.sync="dialog.visible"
         width="30%"
+        style="textAlign:left"
         :before-close="dialogClose">
       设备名称：
       <el-input v-model="formData.name"></el-input>
@@ -86,8 +87,8 @@ export default {
         name: ''
       },
       columns: [
-        { prop: 'name', label: '设备名称', width: '200', align: 'center' },
-        { prop: 'link', label: '设备连接', width: '700', align: 'center' }
+        { prop: 'name', label: '设备名称', width: '300', align: 'center' },
+        { prop: 'link', label: '设备连接', align: 'center' }
       ],
       tableData: [],
       page: {
@@ -171,7 +172,7 @@ export default {
     showEdit (row) {
       this.formData.deviceId = row.id
       this.formData.name = row.name
-      this.dialog.titile = '编辑设备'
+      this.dialog.titile = '修改设备'
       this.dialog.visible = true
       this.dialog.type = 2
     },
@@ -206,8 +207,6 @@ export default {
     margin: 17px;
 }
 #boxx{
-width: 1191px;
-height: 854px;
 background: #FFFFFF;
 border-radius: 4px;
 border: 1px solid #E8E8E8;

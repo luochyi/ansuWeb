@@ -48,7 +48,7 @@
         :resizable="false"
       >
         <template slot-scope="scope">
-                <el-button type="text" @click="informationis = true"> 编辑</el-button>
+                <el-button type="text" @click="informationis = true"> 修改</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button v-if="activeName === '1'" type="text" @click="open(scope.row)">转回公海</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>

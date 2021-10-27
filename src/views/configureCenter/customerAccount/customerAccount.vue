@@ -63,7 +63,7 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <el-button type="text" @click="addAccount"> 编辑详情</el-button>
+              <el-button type="text" @click="addAccount(scope.row)"> 修改详情</el-button>
               <span style="color: #0084ff; margin: 0px 5px">|</span>
               <el-button type="text" @click="resetP(scope.row)">
                 重置密码

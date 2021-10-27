@@ -377,7 +377,7 @@ export default {
     change (data) {
       this.parentId = []
       console.log(data)
-      this.editId = data.value // 编辑ID
+      this.editId = data.value // 修改ID
       if (data.parent_id === 0) {
         this.parentId = [0]
       } else {
@@ -435,7 +435,7 @@ export default {
       this.formRole.name = data.name
       this.formRole.roleId = data.id
       this.formRole.parentId = this.cascaderData(this.roleList, data.parent_id)
-      this.roleTitle = '编辑角色'
+      this.roleTitle = '修改角色'
       this.roleType = 2
       this.toAdd = true
     },

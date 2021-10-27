@@ -125,7 +125,7 @@
             </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template slot-scope="scope">
-                <!-- <el-button type="text">编辑信息</el-button>
+                <!-- <el-button type="text">修改信息</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span> -->
                 <el-button type="text" @click="deleterow(scope.$index, contactsData)">删除</el-button>
               </template>

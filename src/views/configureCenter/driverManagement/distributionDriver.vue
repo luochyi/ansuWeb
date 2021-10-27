@@ -14,6 +14,8 @@
             <div>收货区域</div>
             <div v-for="(item, index) in formData" :key="index">
               <el-cascader
+                  size="mini"
+                  style="marginBottom:10px"
                   :options="options"
                   v-model="item.areaIds"
                   :show-all-levels="false"
@@ -26,7 +28,7 @@
        </div>
        <div style="textAlign:left;paddingTop:20px;">
            <el-button size="mini" class='orangeBtn submitbtn' @click="region">确认</el-button>
-           <el-button size="mini" class='whiteBtn submitbtn'>取消</el-button>
+           <!-- <el-button size="mini" class='whiteBtn submitbtn' @click="back">取消</el-button> -->
        </div>
     </div>
   </div>
@@ -85,6 +87,9 @@ export default {
           this.$message.error(res.msg) // 错误提示
         }
       })
+    },
+    back () {
+      this.$router.go(-1)
     }
   }
 }

@@ -18,7 +18,7 @@ export const add = (params) => {
   })
 }
 
-// 编辑费用
+// 修改费用
 export const edit = (params) => {
   return axios({
     url: '/finance/fare/enrolment/edit',

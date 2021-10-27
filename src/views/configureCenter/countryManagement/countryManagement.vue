@@ -36,7 +36,7 @@
         :resizable="false"
         >
         <template slot-scope="scope">
-          <el-button type="text" @click="toDetail(scope.row.id)"> 编辑</el-button>
+          <el-button type="text" @click="edit(scope.row.id)">修改</el-button>
         </template>
       </el-table-column>
       </commonTable>
@@ -107,7 +107,8 @@ export default {
       this.getData()
     },
     // 操作按钮列表
-    editTableData (row) {}
+    editTableData (row) {},
+    edit (data) {}
   }
 }
 </script>

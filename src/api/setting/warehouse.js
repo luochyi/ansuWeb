@@ -16,6 +16,13 @@ export const add = (params) => {
     data: params
   })
 }
+export const edit = (params) => {
+  return axios({
+    url: '/setting/warehouse/edit',
+    method: 'post',
+    data: params
+  })
+}
 // 仓库详情
 export const warehouseInfo = (params) => {
   return axios({

@@ -33,6 +33,13 @@ export const companyAdd = (params) => {
     data: params
   })
 }
+export const companyEdit = (params) => {
+  return axios({
+    url: '/company/edit',
+    method: 'post',
+    data: params
+  })
+}
 // 子公司详情
 export const companyInfo = (params) => {
   return axios({

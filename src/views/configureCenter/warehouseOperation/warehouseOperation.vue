@@ -86,12 +86,12 @@ export default {
       agentCode: '',
       agentAccount: '',
       columns: [
-        { prop: 'name', label: '仓库操作员', width: '110', align: 'center' },
-        { prop: 'position_name', label: '职位', width: '91', align: 'center' },
-        { prop: 'responsible', label: '负责仓库', width: '122', align: 'center', formatter: this.formatter },
+        { prop: 'name', label: '仓库操作员', width: '210', align: 'center' },
+        { prop: 'position_name', label: '职位', width: '191', align: 'center' },
+        { prop: 'responsible', label: '负责仓库', width: '222', align: 'center', formatter: this.formatter },
         { prop: 'warehouse', label: '所属仓库', width: '457', align: 'center', formatter: this.formatter },
         { prop: 'person', label: '仓库负责人', width: '101', align: 'center', formatter: this.formatter },
-        { prop: 'status', label: '账号状态', width: '82', align: 'center', formatter: this.formatter }
+        { prop: 'status', label: '账号状态', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {

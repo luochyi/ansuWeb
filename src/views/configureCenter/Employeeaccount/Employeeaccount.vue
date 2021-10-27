@@ -47,33 +47,33 @@
           <el-button @click="employeeaccounta" class='orangeBtn long2' icon="el-icon-circle-plus-outline">新建账号</el-button>
         </el-col>
         </el-row>
-     <!-- 组件 -->
-     <commonTable
-      :columns="columns"
-      :data="tableData"
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-      @handleSelectionChange="handleSelectionChange"
-      >
-      <el-table-column
-        slot="table_oper"
-        align="center"
-        fixed="right"
-        label="操作"
-        width="238"
-        :resizable="false"
-        >
-        <template slot-scope="scope">
-          <el-button type="text" @click="toDetail(scope.row.id)"> 编辑</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="resetPassword(scope.row)"> 重置密码 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if ="activeName === '1'" type="text" @click="disabled([scope.row.id])"> 停用账号 </el-button>
-                <el-button v-else-if ="activeName === '2'" type="text" @click="enabled([scope.row.id])"> 启用账号 </el-button>
-        </template>
-      </el-table-column>
-      </commonTable>
+        <!-- 组件 -->
+        <commonTable
+          :columns="columns"
+          :data="tableData"
+          :pager="page"
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
+          @handleSelectionChange="handleSelectionChange"
+          >
+          <el-table-column
+            slot="table_oper"
+            align="center"
+            fixed="right"
+            label="操作"
+            width="238"
+            :resizable="false"
+            >
+            <template slot-scope="scope">
+              <el-button type="text" @click="edit(scope.row)"> 修改</el-button>
+                    <span style="color: #0084FF; margin: 0px 5px">|</span>
+                    <el-button type="text" @click="resetPassword(scope.row)"> 重置密码 </el-button>
+                    <span style="color: #0084FF; margin: 0px 5px">|</span>
+                    <el-button v-if ="activeName === '1'" type="text" @click="disabled([scope.row.id])"> 停用账号 </el-button>
+                    <el-button v-else-if ="activeName === '2'" type="text" @click="enabled([scope.row.id])"> 启用账号 </el-button>
+            </template>
+          </el-table-column>
+          </commonTable>
     </div>
    <!-- 批量停用 -->
    <el-dialog title="批量停用员工账号" :visible.sync="deactivation" width="30%">
@@ -139,7 +139,6 @@ export default {
         password: '',
         comPassword: ''
       },
-
       columns: [
         { prop: 'name', label: '姓名', width: '243', align: 'center' },
         { prop: 'department', label: '部门', width: '157', align: 'center', formatter: this.formatter },
@@ -163,6 +162,9 @@ export default {
   methods: {
     employeeaccounta () {
       this.$router.push({ name: 'employeeaccounta' })
+    },
+    edit (data) {
+      console.log(data)
     },
     handleClick (val) {
       console.log(val)
