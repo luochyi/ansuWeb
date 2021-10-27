@@ -13,7 +13,7 @@
         <div class="item">
             <div style="margin:20px 0 10px 0">负责仓库</div>
             <div>
-              <el-select v-model="formData.warehouseId" filterable placeholder="请选择">
+              <el-select v-model="formData.warehouseId" size="mini" filterable placeholder="请选择" style="marginBottom:10px">
                 <el-option
                     v-for="item in warehouses"
                     :key="item.id"
@@ -23,7 +23,7 @@
               </el-select>
             </div>
             <el-button class="orangeBtn" @click="set">确 认</el-button>
-            <el-button class="whiteBtn">取 消</el-button>
+            <!-- <el-button class="whiteBtn">取 消</el-button> -->
         </div>
     </div>
   </div>

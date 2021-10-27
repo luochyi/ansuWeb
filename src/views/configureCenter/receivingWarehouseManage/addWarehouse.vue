@@ -1,6 +1,7 @@
 <template>
   <div class="content">
-    <div class="adtitile">新建仓库地址</div>
+    <div class="adtitile" v-if="this.editId===undefined">新建仓库地址</div>
+    <div class="adtitile" v-else>修改仓库地址</div>
     <div>
         <!-- el-icon-search -->
       <div><el-input class="elipt" size="mini" placeholder="仓库名称" v-model="formData.name"></el-input></div>
@@ -20,7 +21,8 @@
       ></el-cascader></div>
       <div><el-input style="width:287px;marginBottom:10px" type="textarea" size="mini" v-model="formData.address" placeholder="详细地址"></el-input></div>
       <div><el-button class="orangeBtn" @click="add">保 存</el-button>
-        <el-button class="whiteBtn">取 消</el-button></div>
+        <!-- <el-button class="whiteBtn">取 消</el-button> -->
+        </div>
     </div>
   </div>
 </template>
@@ -30,6 +32,7 @@ export default {
   data () {
     return {
       regions: [],
+      editId: null,
       principalData: [],
       formData: {
         name: '',
@@ -42,6 +45,19 @@ export default {
   mounted () {
     this.regions = this.$store.state.common.regiondata
     this.principalSelect()
+    this.editId = this.$route.params.id
+    console.log(this.editId)
+    if (this.editId !== null) {
+      this.$api.setting.warehouse.warehouseInfo({
+        warehouseId: this.editId
+      }).then(res => {
+        console.log(res)
+        this.formData.name = res.data.name
+        this.formData.principalId = res.data.principal_id
+        this.formData.address = res.data.address
+        this.formData.area = [res.data.province_id, res.data.city_id, res.data.county_id]
+      })
+    }
   },
   methods: {
     principalSelect () {
@@ -50,23 +66,44 @@ export default {
       })
     },
     add () {
-      if (!this.formData.area || this.formData.area.length === 0) {
-        this.$message.error('请选择负责人') // 错误提示
-        return
-      }
-      this.$api.setting.warehouse.add({
-        name: this.formData.name,
-        principalId: Number(this.formData.principalId),
-        address: this.formData.address,
-        countyId: Number(this.formData.area.slice(-1))
-      }).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg) // 成功提示
-          this.$router.push({ name: 'receivingWarehouseManage' }) // 添加成功后返回列表
-        } else {
-          this.$message.error(res.msg) // 错误提示
+      if (this.editId === undefined) {
+        if (!this.formData.area || this.formData.area.length === 0) {
+          this.$message.error('请选择负责人') // 错误提示
+          return
         }
-      })
+        this.$api.setting.warehouse.add({
+          name: this.formData.name,
+          principalId: Number(this.formData.principalId),
+          address: this.formData.address,
+          countyId: Number(this.formData.area.slice(-1))
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.$router.push({ name: 'receivingWarehouseManage' }) // 添加成功后返回列表
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
+      } else {
+        if (!this.formData.area || this.formData.area.length === 0) {
+          this.$message.error('请选择负责人') // 错误提示
+          return
+        }
+        this.$api.setting.warehouse.edit({
+          warehouseId: this.editId,
+          name: this.formData.name,
+          principalId: Number(this.formData.principalId),
+          address: this.formData.address,
+          countyId: Number(this.formData.area.slice(-1))
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.$router.push({ name: 'receivingWarehouseManage' }) // 添加成功后返回列表
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
+      }
     }
   }
 }

@@ -21,14 +21,6 @@
               <el-input v-model='search.name' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
-<!--          <el-col :span='6' class='colbox'>-->
-<!--            <el-col :span='8'>-->
-<!--              <span class='text'>所属公司</span>-->
-<!--            </el-col>-->
-<!--            <el-col :span='14'>-->
-<!--              <el-input v-model='customerCode' placeholder='请输入'></el-input>-->
-<!--            </el-col>-->
-<!--          </el-col>-->
           <el-col :span='8' class='colbox'>
             <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
@@ -59,7 +51,7 @@
         <template slot-scope="scoped">
           <el-button type="text" @click="toDetail(scoped.row.id)"> 详情</el-button>
           <span style="color: #0084FF; margin: 0px 5px">|</span>
-          <el-button type="text" @click="dialogVisible=true"> 修改</el-button>
+          <el-button type="text" @click="edit(scoped.row.id)"> 修改</el-button>
           <span style="color: #0084FF; margin: 0px 5px">|</span>
           <el-button type="text" @click="equipment(scoped.row)"> 仓库设备 </el-button>
           <span style="color: #0084FF; margin: 0px 5px">|</span>
@@ -88,10 +80,10 @@ export default {
       },
       columns: [
         { prop: 'name', label: '仓库名称', width: '124', align: 'center' },
-        { prop: 'principal_name', label: '仓库负责人', width: '94', align: 'center' },
+        { prop: 'principal_name', label: '仓库负责人', width: '134', align: 'center' },
         { prop: 'default', label: '默认仓库', width: '122', align: 'center', formatter: this.formatter },
-        { prop: 'device', label: '仓库设备配置', width: '122', align: 'center', formatter: this.formatter },
-        { prop: 'address', label: '仓库地址', width: '536', align: 'center' }
+        { prop: 'device', label: '仓库设备配置', width: '172', align: 'center', formatter: this.formatter },
+        { prop: 'address', label: '仓库地址', align: 'center' }
       ],
       tableData: [],
       page: {
@@ -123,6 +115,10 @@ export default {
     toDetail (val) {
       console.log(val)
       this.$router.push({ name: 'receivingWarehouseDetails', params: { id: val } })
+    },
+    edit (val) {
+      console.log(val)
+      this.$router.push({ name: 'addWarehouse', params: { id: val } })
     },
     equipment (val) {
       this.$router.push({ name: 'equipment', params: val })

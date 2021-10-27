@@ -59,6 +59,7 @@
         :title="dialog.titile"
         :visible.sync="dialog.visible"
         width="30%"
+        style="textAlign:left"
         :before-close="dialogClose">
       设备名称：
       <el-input v-model="formData.name"></el-input>
@@ -86,8 +87,8 @@ export default {
         name: ''
       },
       columns: [
-        { prop: 'name', label: '设备名称', width: '200', align: 'center' },
-        { prop: 'link', label: '设备连接', width: '700', align: 'center' }
+        { prop: 'name', label: '设备名称', width: '300', align: 'center' },
+        { prop: 'link', label: '设备连接', align: 'center' }
       ],
       tableData: [],
       page: {
@@ -206,8 +207,6 @@ export default {
     margin: 17px;
 }
 #boxx{
-width: 1191px;
-height: 854px;
 background: #FFFFFF;
 border-radius: 4px;
 border: 1px solid #E8E8E8;

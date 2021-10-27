@@ -51,10 +51,12 @@
       >
       <!-- slot -->
       <template v-slot:city='slotData'>
-         {{format(slotData.data, 'city')}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看更多</span>
+         {{format(slotData.data, 'city')}}
+         <!-- <span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看更多</span> -->
       </template>
       <template v-slot:area='slotData'>
-         {{format(slotData.data, 'area')}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看更多</span>
+         {{format(slotData.data, 'area')}}
+         <!-- <span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看更多</span> -->
       </template>
             <!-- 操作 -->
       <el-table-column
