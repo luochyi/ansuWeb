@@ -28,7 +28,7 @@
       </div>
     </div>
     <div class="wu"></div>
-    <div class="button">
+    <div>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
         <span class='text'>联系人</span>
@@ -173,7 +173,6 @@ export default {
 }
 .foot{
   width: 100%;
-  height: 350px;
   margin: 20px;
 }
 .titlea{
