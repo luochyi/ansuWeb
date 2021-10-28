@@ -42,6 +42,7 @@
                   :resizable="false"
                   >
                   <template slot-scope="scope">
+                    <span @click="detail(scope.row)" class="blue">详情</span>
                     <el-button type="text" @click="check(scope.row)"> 查看轨迹</el-button>
                     <el-button type="text" @click="sign(scope.row)"> 签收</el-button>
                   </template>
@@ -192,6 +193,9 @@ export default {
           })
         })
         .catch(_ => {})
+    },
+    detail (data) {
+      this.$router.push({ name: 'waybillDetail', params: { id: data.id } })
     },
     check (data) {
       console.log(data.id)

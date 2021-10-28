@@ -122,7 +122,7 @@
                 </el-row>
                 <el-row class="line" v-if="false"></el-row>
                 <!-- 重量尺寸 -->
-                <el-row>
+                <el-row v-if="waybillInfo.status > 1">
                     <el-row>
                         <span class="headerTitle">重量尺寸</span>
                         <span class="item-info"></span>
@@ -170,7 +170,7 @@
                         </el-row>
                     </el-row>
                 </el-row>
-                <el-row class="line"></el-row>
+                <el-row class="line" v-if="waybillInfo.status > 1"></el-row>
                 <!-- 物流 -->
                 <el-row v-if="waybillInfo.fba_address.country_name !== ''">
                     <el-row>
@@ -305,7 +305,7 @@
                     <span class="item1">客户名称：</span>
                     <span class="item2">{{waybillInfo.customer_name}}</span>
                 </el-row>
-                <el-row><el-button @click="edit()" class="orangeBtn">批量修改</el-button></el-row>
+                <el-row><el-button @click="edit()" class="orangeBtn" :disabled="formData.cargoes.ids.length === 0" v-if="waybillInfo.status < 5">批量修改</el-button></el-row>
                 <el-row class="line"></el-row>
                 <!-- <el-row style="margin-top:16px">
                     <span class="item1">预报渠道：</span>
@@ -317,8 +317,8 @@
                 </el-row> -->
                 <div class="table" style="margin-top:16px">
                     <el-table ref="multipleTable" :data="weightList" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"
-                    :header-cell-style="{background: '#F5F5F6'}">
-                        <el-table-column type="selection"></el-table-column>
+                    :header-cell-style="{background: '#F5F5F6'}" @row-dblclick="showCargoEdit">
+                        <el-table-column type="selection" v-if="waybillInfo.status < 5"></el-table-column>
                         <el-table-column prop="cargo_no" label="货件编号" min-width="180"></el-table-column>
                         <el-table-column prop="length" label="长（cm）"></el-table-column>
                         <el-table-column prop="width" label="宽（cm）"></el-table-column>
@@ -329,7 +329,7 @@
             </div>
             <!-- 抽屉底部按钮 -->
             <div slot="footer">
-                <button class="btn-orange" @click="submit()">
+                <button class="btn-orange" @click="submit()"   v-if="waybillInfo.status < 5">
                 <span> <i class="el-icon-circle-check"></i>提交</span>
                 </button>
                 <button class="btn-gray" @click="addClose">
@@ -337,20 +337,34 @@
                 </button>
             </div>
         </commonDrawer>
-            <el-dialog
+        <el-dialog
             title="批量改货"
-            :visible.sync="dialogVisible"
-            width="26%"
-            :before-close="handleClose">
+            :visible.sync="dialog.visable.cargoes"
+            width="26%">
+          <span style="textAlign:left;marginLeft:20px">
+              <el-row><el-checkbox v-model="formData.cargoes.lengthSwitch">长</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.length" :disabled="!formData.cargoes.lengthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.widthSwitch">宽</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.width" :disabled="!formData.cargoes.widthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.heightSwitch">高</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.height" :disabled="!formData.cargoes.heightSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.weightSwitch">重</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.weight" :disabled="!formData.cargoes.weightSwitch" class="ipt"><template slot="append">kg</template></el-input></el-row>
+          </span>
+          <span slot="footer" class="dialog-footer">
+              <el-button @click="dialog.visable.cargoes = false">取 消</el-button>
+              <el-button class="orangeBtn" type="primary" @click="batchChange">确 定</el-button>
+          </span>
+        </el-dialog>
+        <el-dialog
+        title="改货重"
+        :visible.sync="dialog.visable.cargo"
+        width="26%">
             <span style="textAlign:left;marginLeft:20px">
-                <el-row><el-checkbox>长</el-checkbox><el-input size="mini" v-model="changeWeight.length" class="ipt"><template slot="append">cm</template></el-input></el-row>
-                <el-row><el-checkbox>宽</el-checkbox><el-input size="mini" v-model="changeWeight.width" class="ipt"><template slot="append">cm</template></el-input></el-row>
-                <el-row><el-checkbox>高</el-checkbox><el-input size="mini" v-model="changeWeight.height" class="ipt"><template slot="append">cm</template></el-input></el-row>
-                <el-row><el-checkbox>重</el-checkbox><el-input size="mini" v-model="changeWeight.weight" class="ipt"><template slot="append">kg</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.length" class="ipt"><template slot="prepend">长</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.width" class="ipt"><template slot="prepend">宽</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.height" class="ipt"><template slot="prepend">高</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.weight" class="ipt"><template slot="prepend">重</template><template slot="append">kg</template></el-input></el-row>
             </span>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="dialogVisible = false">取 消</el-button>
-                <el-button class="orangeBtn" type="primary" @click="batchChange">确 定</el-button>
+                <el-button @click="dialog.visable.cargo = false">取 消</el-button>
+                <el-button class="orangeBtn" type="primary" @click="cargoEdit">确 定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -375,6 +389,7 @@ export default {
         is_lock: 0,
         lock_reason: '0',
         type: 1,
+        status: 0,
         waybill_no: '',
         customer_name: '',
         customer_code: '',
@@ -418,8 +433,33 @@ export default {
           phone: '',
           zip_code: ''
         }
+      },
+      dialog: {
+        visable: {
+          cargo: false,
+          cargoes: false
+        }
+      },
+      formData: {
+        cargoes: {
+          ids: [],
+          length: null,
+          width: null,
+          height: null,
+          weight: null,
+          lengthSwitch: false,
+          widthSwitch: false,
+          heightSwitch: false,
+          weightSwitch: false
+        },
+        cargo: {
+          id: null,
+          length: null,
+          width: null,
+          height: null,
+          weight: null
+        }
       }
-
     }
   },
   mounted () {
@@ -436,31 +476,98 @@ export default {
     addClose () {
       this.drawer = false
     },
-    batchChange () {},
+    batchChange () {
+      this.weightList.forEach((item, key) => {
+        this.formData.cargoes.ids.forEach(id => {
+          if (item.id === id) {
+            if (this.formData.cargoes.lengthSwitch && this.formData.cargoes.length) {
+              this.weightList[key].length = this.formData.cargoes.length
+            }
+            if (this.formData.cargoes.widthSwitch && this.formData.cargoes.width) {
+              this.weightList[key].width = this.formData.cargoes.width
+            }
+            if (this.formData.cargoes.heightSwitch && this.formData.cargoes.height) {
+              this.weightList[key].height = this.formData.cargoes.height
+            }
+            if (this.formData.cargoes.weightSwitch && this.formData.cargoes.weight) {
+              this.weightList[key].weight = this.formData.cargoes.weight
+            }
+          }
+        })
+      })
+      this.dialog.visable.cargoes = false
+    },
     tableChange (val) {
+      this.formData.cargoes.ids = []
+      val && val.forEach((item) => {
+        this.formData.cargoes.ids.push(item.id)
+      })
     },
     setWeight () {
       this.drawer = true
-      this.$api.Ordermanagement.customerWeight({ waybillId: this.waybillId }).then(res => {
-        console.log(res.data)
+      this.$api.Ordermanagement.agentWeight({ waybillId: this.waybillId }).then(res => {
         this.weightList = res.data.cargoes
       })
     },
     edit () {
-      this.dialogVisible = true
+      this.formData.cargoes.length = null
+      this.formData.cargoes.width = null
+      this.formData.cargoes.height = null
+      this.formData.cargoes.weight = null
+      this.formData.cargoes.lengthSwitch = false
+      this.formData.cargoes.widthSwitch = false
+      this.formData.cargoes.heightSwitch = false
+      this.formData.cargoes.weightSwitch = false
+      this.dialog.visable.cargoes = true
     },
     submit () {
-      this.$api.Ordermanagement.customerWeightEdit({
+      let cargoSpecs = []
+      this.weightList.forEach(item => {
+        cargoSpecs.push({
+          cargoId: item.id,
+          length: item.length,
+          width: item.width,
+          height: item.height,
+          weight: item.weight
+        })
+      })
+      this.$api.Ordermanagement.agentWeightEdit({
         waybillId: this.waybillId,
-        cargoSpecs: this.weightList
+        cargoSpecs: cargoSpecs
       }).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg)
+          this.getData()
           this.addClose()
         } else {
           this.$message.error(res.msg)
         }
       })
+    },
+    showCargoEdit (row, column) {
+      if (this.waybillInfo.status >= 5) {
+        return
+      }
+      if (!column.property) {
+        return
+      }
+      this.formData.cargo.id = row.id
+      this.formData.cargo.length = row.length
+      this.formData.cargo.width = row.width
+      this.formData.cargo.height = row.height
+      this.formData.cargo.weight = row.weight
+      this.dialog.visable.cargo = true
+    },
+    cargoEdit () {
+      this.weightList.forEach((item, key) => {
+        if (item.id === this.formData.cargo.id) {
+          this.weightList[key].length = this.formData.cargo.length
+          this.weightList[key].width = this.formData.cargo.width
+          this.weightList[key].height = this.formData.cargo.height
+          this.weightList[key].weight = this.formData.cargo.weight
+        }
+      })
+      this.dialog.visable.cargo = false
     }
   }
 }

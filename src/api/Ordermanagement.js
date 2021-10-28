@@ -211,17 +211,17 @@ export const milestoneInfo = (params) => {
   })
 }
 // 查看货重 客户
-export const customerWeight = (params) => {
+export const agentWeight = (params) => {
   return axios({
-    url: '/order/waybill/cargo_spec/customer/get',
+    url: '/order/waybill/cargo_spec/agent/get',
     method: 'post',
     data: params
   })
 }
 // 客户改重
-export const customerWeightEdit = (params) => {
+export const agentWeightEdit = (params) => {
   return axios({
-    url: '/order/waybill/cargo_spec/customer/edit',
+    url: '/order/waybill/cargo_spec/agent/edit',
     method: 'post',
     data: params
   })
