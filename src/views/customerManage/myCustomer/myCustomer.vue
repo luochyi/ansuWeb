@@ -77,7 +77,7 @@ export default {
 
       pageSize: 10,
       currentPage: 1,
-      total: 50,
+      total: 0,
 
       agentName: '', // 代理名称
       agentCode: '', // 代理编码

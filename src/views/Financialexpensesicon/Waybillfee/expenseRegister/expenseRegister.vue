@@ -199,7 +199,7 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
+      total: 0, // 数据数量
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码
       size: 'small',
@@ -298,7 +298,7 @@ export default {
         this.page.total = res.data.total
       })
     },
-    searchReset ()  {
+    searchReset () {
       this.search.customerName = null
     },
     registration (row) {

@@ -146,7 +146,7 @@ export default {
         outletChannel: '', // 出仓渠道
         outletTime: '' // 出仓时间
       },
-      total: 50, // 表格数据总条数
+      total: 0, // 表格数据总条数
       currentPage: 1,
       pageSize: 10,
       // 表格数据

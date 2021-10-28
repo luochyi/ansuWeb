@@ -1079,7 +1079,7 @@ export default {
         warehousingChannel: '' // 入仓渠道
       },
 
-      total: 50, // 表格数据总条数
+      total: 0, // 表格数据总条数
       orderId: 'ASSZ202112120001',
       currentPage: 1,
       pageSize: 10,

@@ -165,7 +165,7 @@ export default {
       red: null,
       channelId: null,
       chooseArr: [],
-      total: null, // 数据总条数
+      total: 0, // 数据总条数
       currentPage: 1,
       pageSize: 15,
       agentCode: '',

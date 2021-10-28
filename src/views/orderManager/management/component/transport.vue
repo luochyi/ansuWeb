@@ -156,7 +156,7 @@ export default {
       ],
       page: {
         limit: 10,
-        total: 100,
+        total: 0,
         sizes: [1, 5, 10],
         pageNo: 1
       }
