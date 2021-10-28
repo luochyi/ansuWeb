@@ -10,3 +10,12 @@ export const agentGet = waybillId => {
     }
   })
 }
+
+// 代理改重
+export const agentEdit = params => {
+  return axios({
+    url: '/order/waybill/cargo_spec/agent/edit',
+    method: 'post',
+    data: params
+  })
+}

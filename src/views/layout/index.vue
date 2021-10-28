@@ -377,31 +377,31 @@ export default {
                   menuId: '221',
                   path: 'Payablemanagement',
                   parentId: '22'
-                },
-                {
-                  name: 'Paymentapplication',
-                  meta: {
-                    title: '付款申请',
-                    icon: 'Paymentapplication',
-                    hidden: false
-                  },
-                  ID: 222,
-                  menuId: '222',
-                  path: 'Paymentapplication',
-                  parentId: '22'
-                },
-                {
-                  name: 'Paymentapproval',
-                  meta: {
-                    title: '付款审核',
-                    icon: 'Paymentapproval',
-                    hidden: false
-                  },
-                  ID: 223,
-                  menuId: '223',
-                  path: 'Paymentapproval',
-                  parentId: '22'
                 }
+                // {
+                //   name: 'Paymentapplication',
+                //   meta: {
+                //     title: '付款申请',
+                //     icon: 'Paymentapplication',
+                //     hidden: false
+                //   },
+                //   ID: 222,
+                //   menuId: '222',
+                //   path: 'Paymentapplication',
+                //   parentId: '22'
+                // },
+                // {
+                //   name: 'Paymentapproval',
+                //   meta: {
+                //     title: '付款审核',
+                //     icon: 'Paymentapproval',
+                //     hidden: false
+                //   },
+                //   ID: 223,
+                //   menuId: '223',
+                //   path: 'Paymentapproval',
+                //   parentId: '22'
+                // }
               ]
             },
             {
