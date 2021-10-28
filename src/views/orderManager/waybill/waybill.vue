@@ -384,7 +384,7 @@ export default {
     formatter (row, col) {
       switch (col.property) {
         case 'type':
-          return row.type === 1 ? 'FBA运单' : row.type === 2 ? 'FBA运单' : '无'
+          return row.type === 1 ? 'FBA运单' : row.type === 2 ? '非FBA运单' : '无'
         case 'receipt_type':
           return row.receipt_type === 1 ? '扫码收货' : row.receipt_type === 2 ? '直接收货' : row.receipt_type === 3 ? '客户直送' : row.receipt_type === 4 ? '货拉拉' : '无'
         case 'has_invoice':

@@ -22,68 +22,6 @@
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>预报类型</span>
-            </el-col>
-            <el-col :span='13'>
-             <el-select v-model="type" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>客户名称</span>
-            </el-col>
-            <el-col :span='11'>
-              <el-input v-model='customer_name' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>客户编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='customer_code' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-        </el-row>
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>业务员</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model='salesman_name' placeholder="请输入">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>寄件方式</span>
-            </el-col>
-            <el-col :span='13'>
-                         <el-select v-model="valueb" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>收货司机</span>
-            </el-col>
-            <el-col :span='13'>
-                       <el-select v-model="driver_name" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
           </el-col>
@@ -92,7 +30,7 @@
         <div class='table'>
           <el-row class='tableBtn'>
             <el-col :span='12' class='left'>
-              <el-button class='batch'>批量导出Excel</el-button>
+              <!-- <el-button class='batch'>批量导出Excel</el-button> -->
               <!-- <el-button class='batch'>协调订单</el-button> -->
             </el-col>
             <el-col :span='20' class='right'>
@@ -135,21 +73,9 @@
             <el-table-column prop='weight' label='预报重量' min-width='80'>  </el-table-column>
             <!-- 预报方数 -->
              <el-table-column prop='volume' label='预报方数' min-width='80'>  </el-table-column>
-             <!-- 收货件数 -->
-            <!-- <el-table-column label='收货件数' min-width='107' prop='box_count' v-if="activeName !== '1'">
-              <template slot-scope='scope' >
-                <span style='margin-right: 5px'>
-                  {{ scope.row.goodsreceived }}
-                </span>
-                <el-button type='text'>查看</el-button>
-              </template>
-            </el-table-column>
-             <el-table-column prop='warehousedpieces' label='入库件数' min-width='182' v-else-if="activeName === '3'">
-            </el-table-column> -->
-            <!-- 货好时间 -->
             <el-table-column label='货好时间' min-width='157' prop='good_time'>
               <template slot-scope='scope'>
-                {{getDate(scope.row.good_time)}}
+                {{formatDate(scope.row.good_time,'yyyy-MM-dd hh:mm:ss')}}
               </template>
             </el-table-column>
             <!-- 寄件方式 -->
@@ -160,19 +86,19 @@
             </el-table-column>
             <!-- 预报时间 -->
              <el-table-column prop='created_at' label='预报时间' min-width='182'>
-               <template slot-scope="scope">{{getDate(scope.row.created_at)}}</template>
+               <template slot-scope="scope">{{formatDate(scope.row.created_at,'yyyy-MM-dd hh:mm:ss')}}</template>
             </el-table-column>
               <!-- 收货时间 -->
              <el-table-column prop='received_at' label='收货时间' min-width='182' v-if="activeName === '2'">
-               <template slot-scope="scope">{{getDate(scope.row.received_at)}}</template>
+               <template slot-scope="scope">{{formatDate(scope.row.received_at,'yyyy-MM-dd hh:mm:ss')}}</template>
             </el-table-column>
               <!-- 收货时间 -->
              <el-table-column prop='received_at' label='收货时间' min-width='182' v-if="activeName === '3'">
-               <template slot-scope="scope">{{getDate(scope.row.received_at)}}</template>
+               <template slot-scope="scope">{{formatDate(scope.row.received_at,'yyyy-MM-dd hh:mm:ss')}}</template>
             </el-table-column>
               <!-- 入库时间 -->
              <el-table-column prop='already_at' label='入库时间' min-width='182' v-if="activeName === '3'">
-               <template slot-scope="scope">{{getDate(scope.row.already_at)}}</template>
+               <template slot-scope="scope">{{formatDate(scope.row.already_at,'yyyy-MM-dd hh:mm:ss')}}</template>
             </el-table-column>
             <!-- 业务员 -->
             <el-table-column label='业务员' min-width='110'  prop='salesman_name'>
@@ -190,8 +116,7 @@
             <el-table-column label='操作' fixed='right' min-width='199'>
               <template slot-scope="scope">
                  <el-button type="text" @click="Orderdetails(scope.row.id)"> 查看详情</el-button>
-                 <span v-if="scope.row.Forecasttype == '未建计划'" style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="scope.row.Forecasttype == '未建计划'" type="text" @click="drawer= true" style="margin-left: 16px;"> 发货 </el-button>
+                <el-button v-if="scope.row.type ===2" type="text" @click="delivery(scope.row)">|&nbsp;&nbsp;发货 </el-button>
                  <!-- <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="Coordinated"> 协同运单 </el-button> -->
               </template>
@@ -211,22 +136,59 @@
               </el-pagination>
           </div>
         </div>
-        <el-drawer
-  title="我是外面的 Drawer"
-  :visible.sync="drawer"
-  size="50%">
-  <div>
-   <el-button @click="innerDrawer = true">打开里面的!</el-button>
-   <el-drawer
-     title="我是里面的"
-     :append-to-body="true"
-     :before-close="handleClose"
-     :visible.sync="innerDrawer">
-     <p>_(:зゝ∠)_</p>
-   </el-drawer>
-  </div>
-</el-drawer>
       </div>
+      <commonDrawer :drawerVrisible="drawer" :drawerSize="drawerSize" :drawerTitle="drawerTitle">
+        <div class="dra-content">
+          <el-row class="label">
+            <span>目的仓</span>
+          </el-row>
+          <el-row class="label">
+            <span>渠道</span>
+          </el-row>
+          <el-divider></el-divider>
+          <div v-for="item,index in tickets" :key="index" style="marginTop:30px">
+            <el-row class="label">
+              <span>货件编号</span><el-input size="mini" v-model="item.code" @blur="changeList(index)"></el-input>
+              <el-button type="danger" size="mini" @click="delPlan(index)" v-if="index!==0" style="marginLeft:10px">删除计划</el-button>
+            </el-row>
+            <el-row class="label"><span>货件数量</span><el-input size="mini" type="number" v-model="item.num" @blur="changeList(index)"></el-input></el-row>
+            <el-table :data="item.checklists" :key="timeStamp" border :header-cell-style="{ background: '#F5F5F6', color: '#999999FF',fontSize:'14px' }" tooltip-effect="light">
+              <el-table-column label="货件编号" prop="code" class="column" >
+                <template slot-scope="scope">
+                  {{scope.row.code}} <el-button type="text" @click="editCode(scope,index)">修改尾号</el-button>
+                </template>
+              </el-table-column>
+              <el-table-column label="装箱清单">
+                <template slot-scope="scope">
+                  {{scope.row.isHaveList===1?'有装箱清单':'无装修清单'}}
+                  <el-button type="text" v-if="scope.row.isHaveList===1">编辑</el-button>
+                  <el-button type="text" v-else-if="scope.row.isHaveList===0">填写</el-button>
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <el-button class="orangeBtn" @click="addPlan" size="mini">新增计划</el-button>
+        </div>
+        <div slot="footer">
+        <button class="btn-orange" @click="submit()" >
+          <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button>
+        <button class="btn-gray" @click="drawerClose" >
+          <span>取消</span>
+        </button>
+      </div>
+      </commonDrawer>
+      <el-dialog
+        title="修改尾号"
+        :visible.sync="dialogVisible"
+        width="30%"
+        >
+        <span><el-input v-model="msg"></el-input></span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="editOK">确 定</el-button>
+        </span>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -237,13 +199,29 @@ export default {
     return {
       // 抽屉
       drawer: false,
-      innerDrawer: false,
+      timeStamp: null,
+      drawerTitle: '未建FBA计划——发货',
+      codeindex: null,
+      scopeindex: null,
+      drawerSize: '40%',
+      dialogVisible: false,
+      forecastId: null, // 预报单id
+      warehouseOption: [], // 仓库筛选
+      addressId: null, // 仓库id
+      channelOption: [], // 渠道筛选
+      channelId: null, // 渠道id
+      tickets: [
+        {
+          num: null,
+          code: '',
+          checklists: []
+        }
+      ], // 票数据
+      msg: '',
       // 分页
       pageSize: 5, // 默认当前条数
       currentPage: 1, // 当前页码
-      total: 50, // 数据数量
-
-      valueb: '',
+      total: 0, // 数据数量
 
       activeName: '1', // 默认第一项‘已下单’
 
@@ -269,17 +247,6 @@ export default {
       salesman_id: '', // 销售id
       coordination: '', // 协同
 
-      options: [{
-        label: ''
-      }, {
-        value: '选项2',
-        label: '已建计划'
-      }, {
-        value: '选项3',
-        label: '未建计划'
-      }
-      ],
-      value: '',
       tableData: [
 
       ]
@@ -290,7 +257,6 @@ export default {
     this.getData()
   },
   methods: {
-    // 获取列表数据
     getData () {
       // 初始的表格数据清空
       this.tableData = []
@@ -299,27 +265,59 @@ export default {
         page: this.currentPage,
         limit: this.pageSize
       }
-      console.log('getget')
-      // limit: this.page.limit, page: this.page.pageNo 页码和页容量
       this.$api.Ordermanagement.forecastLists(params).then(res => {
         console.log(res.data) // res是接口返回的结果
-        // res.data.list && res.data.list.forEach(ele => {
-        // let obj = {
-        //   status: Number(this.activeName),
-        //   name: ele.name,
-        //   contact: ele.liaison,
-        //   number: ele.phone,
-        //   address: ele.address
-        // }
-        // this.tableData.push(obj)
         this.tableData = res.data.list
         this.total = res.data.total
-        // })
-        // this.page.total = res.data.total // 数据总量
       })
     },
-    getDate (val) {
-      return this.formatDate(val, 'yyyy-MM-dd hh:mm:ss')
+    addPlan () {
+      this.tickets.push(
+        {
+          num: null,
+          code: '',
+          checklists: []
+        }
+      )
+    },
+    delPlan (index) {
+      this.tickets.splice(index, 1)
+    },
+    // 修改尾号
+    editCode (scope, index) {
+      // console.log(scope)
+      this.msg = scope.row.code
+      this.dialogVisible = true
+      this.scopeindex = scope.$index
+      this.codeindex = index
+    },
+    editOK () {
+      this.timeStamp = String(new Date())
+      this.dialogVisible = false
+      this.tickets[this.codeindex].checklists[this.scopeindex].code = this.msg
+    },
+    // 输入数量、编号后调用
+    changeList (index) {
+      console.log(index)
+      console.log(this.tickets[index].num)
+      this.tickets[index].checklists = []
+      for (let j = 0; j < this.tickets[index].num; j++) {
+        this.timeStamp = String(new Date())
+        this.tickets[index].checklists[j] = {
+          code: this.tickets[index].code + '000' + (j + 1),
+          isHaveList: 0
+        }
+      }
+      console.log(this.tickets)
+    },
+    // 发货
+    delivery (data) {
+      this.drawer = true
+      console.log(data)
+      // this.forecastId = data.id
+    },
+    drawerClose () {
+      this.drawer = false
     },
     // 改变页面大小处理
     handleSizeChange (val) {
@@ -340,21 +338,6 @@ export default {
         return '无计划下单'
       }
     },
-    // formatters (row, column, cellValue) {
-    //   return this.tableData(row.created_at, 'yyyy-MM-dd hh:mm:ss')
-    // },
-    // formatter (row, column) {
-    //   // console.log(row)
-    //   if (row.status === 1) {
-    //     return '待收货'
-    //   } else if (row.status === 2) {
-    //     return '以收货'
-    //   } else if (row.status === 3) {
-    //     return '以收货'
-    //   }
-    // },
-    // 操作按钮列表
-    editTableData (row) {},
     search () {
       this.getData()
     },
@@ -372,13 +355,6 @@ export default {
       this.activeName = tab.name
       this.getData()
     },
-    handleClose (done) {
-      this.$confirm('还有未保存的工作哦确定关闭吗？')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
     handleSelectionChange () {
 
     }
@@ -387,9 +363,14 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-// .main {
-//   margin: 20px 0px;
-// }
+.dra-content{
+  text-align: left;
+  /deep/.cell{
+  display: flex;
+  justify-content:space-between;
+  line-height: 40px;
+}
+}
 /deep/ .tableBtn{
   .batch{
     height: 32px;
@@ -403,4 +384,20 @@ export default {
     color: rgba(0, 0, 0, 0.65);
   }
 }
+.label{
+  font-size: 14px;
+  padding: 5px;
+  span{
+    width: 100px;
+  }
+  /deep/.el-input__inner{
+    width: 200px;
+    display: inline;
+  }
+   .el-input{
+    display: inline;
+    margin-left: 10px;
+  }
+}
+
 </style>

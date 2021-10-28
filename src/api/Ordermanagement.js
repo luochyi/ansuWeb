@@ -170,6 +170,14 @@ export const ejectInfo = (params) => {
     data: params
   })
 }
+// /order/eject/waybill
+export const ejectWaybill = (params) => {
+  return axios({
+    url: '/order/eject/waybill',
+    method: 'post',
+    data: params
+  })
+}
 // /order/eject/driver
 export const ejectDriver = (params) => {
   return axios({

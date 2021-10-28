@@ -120,7 +120,7 @@
           >
             <template slot-scope="scope">
               <span @click="download(scope.row)" class="blue" v-if="scope.row.has_assign_drivers === 2">下载Excel&nbsp;|&nbsp;</span>
-              <span @click="detail(scope.row)" class="blue">运单明细</span>
+              <span @click="checkWaybill(scope.row)" class="blue">运单明细</span>
                <span @click="detail(scope.row)" v-if="scope.row.has_assign_drivers===2" class="blue">&nbsp;|&nbsp;查看送货司机</span>
                 <span @click="setDriver(scope.row)" v-else class="blue">&nbsp;|&nbsp;配置司机</span>
             </template>
@@ -137,8 +137,8 @@
               </el-descriptions-item>
               <el-descriptions-item label="出仓渠道">{{ejectData.channel_name}}</el-descriptions-item>
               <el-descriptions-item label="出仓代理">{{ejectData.agent_name}}</el-descriptions-item>
-              <el-descriptions-item label="合计票数">{{ejectData.waybill_count}}</el-descriptions-item>
-              <el-descriptions-item label="合计件数">{{ejectData.item_count}}</el-descriptions-item>
+              <el-descriptions-item label="总计运单数">{{ejectData.waybill_count}}</el-descriptions-item>
+              <el-descriptions-item label="总计货件数">{{ejectData.item_count}}</el-descriptions-item>
           </el-descriptions>
           <el-divider></el-divider>
           <div v-if="!choosed">
@@ -150,8 +150,21 @@
               <el-descriptions-item label="送货票数">{{item.waybillIds.length}}</el-descriptions-item>
               <el-descriptions-item label="送货数量">{{item.cargoes_num}}</el-descriptions-item>
           </el-descriptions>
-            <el-button class="addbtn" size="mini" round @click="addDriver">添加出仓司机</el-button>
+            <el-button v-if="add" class="addbtn" size="mini" round @click="addDriver">添加出仓司机</el-button>
+            <div v-else style="color:#979797;marginTop:50px">
+              司机信息
+              <el-collapse v-model="activeNames" @change="handleChange">
+                <el-collapse-item :title="'司机：'+item.driver_name" v-for="item,index in drivearr" :key="index" :name="index+1">
+                  <el-row>
+                    <el-col>仓库地址：{{item.agent_address}}</el-col>
+                    <el-col>运单数：{{item.waybill_count}}</el-col>
+                    <el-col>货件数：{{item.item_count}}</el-col>
+                  </el-row>
+                </el-collapse-item>
+              </el-collapse>
           </div>
+          </div>
+
           <div v-else>
             <el-form label-width="120px">
               <el-form-item label="选择司机">
@@ -179,11 +192,14 @@
 
           <!-- 抽屉底部按钮 -->
           <div slot="footer">
-            <button class="btn-orange" @click="submit()">
+            <button class="btn-orange" @click="submit()"  v-if="add">
               <span> <i class="el-icon-circle-check"></i>提交</span>
             </button>
-            <button class="btn-gray" @click="addClose">
+            <button class="btn-gray" @click="addClose"  v-if="add">
               <span>取消</span>
+            </button>
+            <button class="btn-gray" @click="addClose"  v-else>
+              <span>关闭</span>
             </button>
           </div>
         </commonDrawer>
@@ -194,6 +210,9 @@
 export default {
   data () {
     return {
+      activeNames: ['1'],
+      drivearr: [],
+      add: false,
       drawerVrisible: false,
       drawerTitle: '配置司机',
       drawerSize: '50%',
@@ -262,6 +281,7 @@ export default {
     },
     setDriver (row) {
       // this.ejectData = row
+      this.add = true
       this.drawerVrisible = true
       this.ejectId = row.id
       this.$api.Ordermanagement.ejectInfo({ ejectId: row.id }).then(res => {
@@ -276,9 +296,27 @@ export default {
       this.drivers.splice(index, 1)
     },
     // 查看
+    checkWaybill (val) {
+      console.log(val)
+      this.$router.push({
+        name: 'ejectWaybill',
+        params: {
+          id: val.id,
+          eject_time: val.eject_time,
+          eject_no: val.eject_no,
+          channel_name: val.channel_name,
+          agent_name: val.agent_name
+        }
+      })
+    },
     detail (val) {
-      console.log(val.data)
-      this.$router.push('name:sjmssqDetail')
+      this.drawerVrisible = true
+      this.add = false
+      this.$api.Ordermanagement.ejectInfo({ ejectId: val.id }).then(res => {
+        console.log(res.data.drivers)
+        this.ejectData = res.data
+        this.drivearr = res.data.drivers
+      })
     },
     handleSelectionChange (val) {
       console.log(val)
@@ -287,6 +325,7 @@ export default {
         this.form.cargoes_num += item.cargoes_num
       })
     },
+    handleChange () {},
     changedrive (val) {
       console.log(val)
       let obj = this.driverOption.find(ele => {
