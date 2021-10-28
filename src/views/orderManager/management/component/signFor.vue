@@ -40,9 +40,9 @@
                   width="126"
                   :resizable="false"
                   >
-                  <!-- <template slot-scope="scope">
-                    <el-button type="text" @click="eject(scope.row)"> 出库</el-button>
-                  </template> -->
+                  <template slot-scope="scope">
+                    <span @click="detail(scope.row)" class="blue">详情</span>
+                  </template>
                 </el-table-column>
               </commonTable>
             </div>
@@ -97,21 +97,8 @@ export default {
         this.tableData = res.data.list
       })
     },
-    // 出库
-    eject (data) {
-      this.req.channelServiceId = data.channel_id
-      this.req.waybillIds.push(data.id)
-      this.$confirm('确认出库')
-        .then(_ => {
-          this.$api.Ordermanagement.irikuraEject(this.req).then(res => {
-            if (res.code === 0) {
-              this.$message.success(res.msg)
-            } else {
-              this.$message.error(res.msg)
-            }
-          })
-        })
-        .catch(_ => {})
+    detail (data) {
+      this.$router.push({ name: 'waybillDetail', params: { id: data.id } })
     },
     // 页码切换
     handleCurrentChange (val) {

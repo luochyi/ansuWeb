@@ -21,18 +21,18 @@
             <el-button class='wuBtn long1'>重 置</el-button>
           </el-col>
         </el-row>
-        <el-divider></el-divider>
-        <el-row class='tableBtn'>
-          <el-col :span='10' class="left">
-            <el-button class='stopBtn' @click="Batchexport=true">批量导出Excle</el-button>
-            <el-button class='stopBtn' @click="Bulksendmail=true">批量发送邮件</el-button>
-            <el-button class='stopBtn' @click="confirmation=true">批量确认费用</el-button>
-          </el-col>
-          <el-col :span='10' class='right'>
+<!--        <el-divider></el-divider>-->
+<!--        <el-row class='tableBtn'>-->
+<!--          <el-col :span='10' class="left">-->
+<!--            <el-button class='stopBtn' @click="Batchexport=true">批量导出Excle</el-button>-->
+<!--            <el-button class='stopBtn' @click="Bulksendmail=true">批量发送邮件</el-button>-->
+<!--            <el-button class='stopBtn' @click="confirmation=true">批量确认费用</el-button>-->
+<!--          </el-col>-->
+<!--          <el-col :span='10' class='right'>-->
             <!-- <el-button class='whiteBtn '>查询条件设置</el-button>
             <el-button class='whiteBtn '>列表显示设置</el-button> -->
-          </el-col>
-        </el-row>
+<!--          </el-col>-->
+<!--        </el-row>-->
         <br>
         <!-- 组件 -->
         <commonTable
@@ -67,10 +67,10 @@
           >
             <template slot-scoped="scoped">
               <el-button type="text" @click="detailspage"> 查看详情</el-button>
-              <span style="color: #0084FF; margin: 0px 5px">|</span>
-              <el-button type="text" @click="password= true"> 发送账单</el-button>
-              <span style="color: #0084FF; margin: 0px 5px">|</span>
-              <el-button type="text" @click="password= true"> 导出Excle</el-button>
+<!--              <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+<!--              <el-button type="text" @click="password= true"> 发送账单</el-button>-->
+<!--              <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+<!--              <el-button type="text" @click="password= true"> 导出Excle</el-button>-->
             </template>
           </el-table-column>
         </commonTable>

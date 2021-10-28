@@ -13,12 +13,12 @@
               <span class='text'>客户名称</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
+              <el-input v-model='search.customerName' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
             <!-- <el-button class='wuBtn long1'>展开全部</el-button> -->
           </el-col>
         </el-row>
@@ -51,10 +51,10 @@
       >
          <template slot-scope="scoped">
           <el-button type="text" @click="registration(scoped.row)"> 费运登记</el-button>
+                <span style="color: #0084FF; margin: 0px 5px" v-if="scoped.row.status > 1">|</span>
+                <el-button type="text" @click="showDrawerCargoes(scoped.row)" v-if="scoped.row.status > 1"> 修改尺寸 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="adopt= true" > 修改尺寸 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="reject= true"> 查看详情 </el-button>
+                <el-button type="text" @click="waybillInfo(scoped.row)"> 查看详情 </el-button>
         </template>
       </el-table-column>
     </commonTable>
@@ -120,6 +120,78 @@
         </button>
       </div>
     </commonDrawer>
+
+    <commonDrawer
+        :drawerVrisible="drawer.visabled.cargoes" drawerTitle="客户改重" :drawerSize='drawer.size.cargoes'
+        size="50%">
+      <div class="dra-content" style="textAlign:left;padding:10px">
+        <el-row class="orderId">{{drawer.data.cargoes.waybill_no}}</el-row>
+        <el-row style="margin-top:16px">
+          <span class="item1">客户名称：</span>
+          <span class="item2">{{drawer.data.cargoes.customer_name}}</span>
+        </el-row>
+        <el-row><el-button @click="edit()" class="orangeBtn" :disabled="drawer.formData.cargoes.ids.length === 0">批量修改</el-button></el-row>
+        <el-row class="line"></el-row>
+        <!-- <el-row style="margin-top:16px">
+            <span class="item1">预报渠道：</span>
+            <span class="item2">{{forecastChannel}}</span>
+        </el-row>
+        <el-row style="margin-top:16px">
+            <span class="item1">件数：</span>
+            <span class="item2">{{number}}</span>
+        </el-row> -->
+        <div class="table" style="margin-top:16px">
+          <el-table ref="multipleTable" :data="drawer.data.cargoes.tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="selectionChange"
+                    :header-cell-style="{background: '#F5F5F6'}" @row-dblclick="showCargoEdit">
+            <el-table-column type="selection"></el-table-column>
+            <el-table-column prop="cargo_no" label="货件编号" min-width="180"></el-table-column>
+            <el-table-column prop="length" label="长（cm）"></el-table-column>
+            <el-table-column prop="width" label="宽（cm）"></el-table-column>
+            <el-table-column prop="height" label="高（cm）"></el-table-column>
+            <el-table-column prop="weight" label="重（kg）"></el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <!-- 抽屉底部按钮 -->
+      <div slot="footer">
+        <button class="btn-orange" @click="submit()">
+          <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button>
+        <button class="btn-gray" @click="drawer.visabled.cargoes = false">
+          <span>取消</span>
+        </button>
+      </div>
+    </commonDrawer>
+    <el-dialog
+        title="改货重"
+        :visible.sync="dialog.visable.cargo"
+        width="26%">
+            <span style="textAlign:left;marginLeft:20px">
+                <el-row><el-input size="mini" type="Number" v-model="drawer.formData.cargo.length" class="ipt"><template slot="prepend">长</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="drawer.formData.cargo.width" class="ipt"><template slot="prepend">宽</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="drawer.formData.cargo.height" class="ipt"><template slot="prepend">高</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="drawer.formData.cargo.weight" class="ipt"><template slot="prepend">重</template><template slot="append">kg</template></el-input></el-row>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialog.visable.cargo = false">取 消</el-button>
+                <el-button class="orangeBtn" type="primary" @click="cargoEdit">确 定</el-button>
+            </span>
+    </el-dialog>
+    <el-dialog
+        title="批量改货"
+        :visible.sync="dialog.visable.cargoes"
+        width="26%">
+          <span style="textAlign:left;marginLeft:20px">
+              <el-row><el-checkbox v-model="drawer.formData.cargoes.lengthSwitch">长</el-checkbox><el-input size="mini" type="Number" v-model="drawer.formData.cargoes.length" :disabled="!drawer.formData.cargoes.lengthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="drawer.formData.cargoes.widthSwitch">宽</el-checkbox><el-input size="mini" type="Number" v-model="drawer.formData.cargoes.width" :disabled="!drawer.formData.cargoes.widthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="drawer.formData.cargoes.heightSwitch">高</el-checkbox><el-input size="mini" type="Number" v-model="drawer.formData.cargoes.height" :disabled="!drawer.formData.cargoes.heightSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="drawer.formData.cargoes.weightSwitch">重</el-checkbox><el-input size="mini" type="Number" v-model="drawer.formData.cargoes.weight" :disabled="!drawer.formData.cargoes.weightSwitch" class="ipt"><template slot="append">kg</template></el-input></el-row>
+          </span>
+      <span slot="footer" class="dialog-footer">
+              <el-button @click="dialog.visable.cargoes = false">取 消</el-button>
+              <el-button class="orangeBtn" type="primary" @click="batchChange">确 定</el-button>
+          </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -164,6 +236,51 @@ export default {
         limit: 10,
         sizes: [15, 50, 100],
         total: 0
+      },
+      drawer: {
+        visabled: {
+          cargoes: false
+        },
+        size: {
+          cargoes: '50%'
+        },
+        data: {
+          cargoes: {
+            waybillId: 0,
+            customer_name: null,
+            waybill_no: null,
+            tableData: []
+          }
+        },
+        formData: {
+          cargoes: {
+            ids: [],
+            length: null,
+            width: null,
+            height: null,
+            weight: null,
+            lengthSwitch: false,
+            widthSwitch: false,
+            heightSwitch: false,
+            weightSwitch: false
+          },
+          cargo: {
+            id: null,
+            length: null,
+            width: null,
+            height: null,
+            weight: null
+          }
+        }
+      },
+      dialog: {
+        visable: {
+          cargo: false,
+          cargoes: false
+        }
+      },
+      search: {
+        customerName: null
       }
     }
   },
@@ -173,12 +290,16 @@ export default {
   methods: {
     getData () {
       this.$api.finance.fare.waybill.lists({
+        customerName: this.search.customerName,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    searchReset ()  {
+      this.search.customerName = null
     },
     registration (row) {
       this.$router.push({ name: 'registration', params: row })
@@ -257,6 +378,102 @@ export default {
     details (val) {
       console.log(val.data)
       this.drawerVrisiblb = true
+    },
+    waybillInfo (row) {
+      this.$router.push({ name: 'waybillDetail', params: { id: row.id } })
+    },
+    showDrawerCargoes (row) {
+      this.drawer.data.cargoes.waybillId = row.id
+      this.drawer.data.cargoes.customer_name = row.customer_name
+      this.drawer.data.cargoes.waybill_no = row.waybill_no
+      this.$api.order.waybill.cargoSpec.agentGet(row.id).then(res => {
+        this.drawer.data.cargoes.tableData = res.data.cargoes
+      })
+      this.drawer.visabled.cargoes = true
+    },
+    selectionChange (val) {
+      this.drawer.formData.cargoes.ids = []
+      val && val.forEach((item) => {
+        this.drawer.formData.cargoes.ids.push(item.id)
+      })
+    },
+    showCargoEdit (row, column) {
+      if (!column.property) {
+        return
+      }
+      this.drawer.formData.cargo.id = row.id
+      this.drawer.formData.cargo.length = row.length
+      this.drawer.formData.cargo.width = row.width
+      this.drawer.formData.cargo.height = row.height
+      this.drawer.formData.cargo.weight = row.weight
+      this.dialog.visable.cargo = true
+    },
+    cargoEdit () {
+      this.drawer.data.cargoes.tableData.forEach((item, key) => {
+        if (item.id === this.drawer.formData.cargo.id) {
+          this.drawer.data.cargoes.tableData[key].length = this.drawer.formData.cargo.length
+          this.drawer.data.cargoes.tableData[key].width = this.drawer.formData.cargo.width
+          this.drawer.data.cargoes.tableData[key].height = this.drawer.formData.cargo.height
+          this.drawer.data.cargoes.tableData[key].weight = this.drawer.formData.cargo.weight
+        }
+      })
+      this.dialog.visable.cargo = false
+    },
+    batchChange () {
+      this.drawer.data.cargoes.tableData.forEach((item, key) => {
+        this.drawer.formData.cargoes.ids.forEach(id => {
+          if (item.id === id) {
+            if (this.drawer.formData.cargoes.lengthSwitch && this.drawer.formData.cargoes.length) {
+              this.drawer.data.cargoes.tableData[key].length = this.drawer.formData.cargoes.length
+            }
+            if (this.drawer.formData.cargoes.widthSwitch && this.drawer.formData.cargoes.width) {
+              this.drawer.data.cargoes.tableData[key].width = this.drawer.formData.cargoes.width
+            }
+            if (this.drawer.formData.cargoes.heightSwitch && this.drawer.formData.cargoes.height) {
+              this.drawer.data.cargoes.tableData[key].height = this.drawer.formData.cargoes.height
+            }
+            if (this.drawer.formData.cargoes.weightSwitch && this.drawer.formData.cargoes.weight) {
+              this.drawer.data.cargoes.tableData[key].weight = this.drawer.formData.cargoes.weight
+            }
+          }
+        })
+      })
+      this.dialog.visable.cargoes = false
+    },
+    edit () {
+      this.drawer.formData.cargoes.length = null
+      this.drawer.formData.cargoes.width = null
+      this.drawer.formData.cargoes.height = null
+      this.drawer.formData.cargoes.weight = null
+      this.drawer.formData.cargoes.lengthSwitch = false
+      this.drawer.formData.cargoes.widthSwitch = false
+      this.drawer.formData.cargoes.heightSwitch = false
+      this.drawer.formData.cargoes.weightSwitch = false
+      this.dialog.visable.cargoes = true
+    },
+    submit () {
+      let cargoSpecs = []
+      this.drawer.data.cargoes.tableData.forEach(item => {
+        cargoSpecs.push({
+          cargoId: item.id,
+          length: item.length,
+          width: item.width,
+          height: item.height,
+          weight: item.weight
+        })
+      })
+      this.$api.order.waybill.cargoSpec.agentEdit({
+        waybillId: this.drawer.data.cargoes.waybillId,
+        cargoSpecs: cargoSpecs
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+          this.drawer.visabled.cargoes = false
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   }
 }

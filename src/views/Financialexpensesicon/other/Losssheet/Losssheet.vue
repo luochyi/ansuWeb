@@ -10,15 +10,31 @@
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>客户名称</span>
+              <span class='text'>运单号</span>
             </el-col>
             <el-col :span='13'>
-              <el-input placeholder='请输入'></el-input>
+              <el-input placeholder='请输入' v-model="search.waybillNo"></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-col :span='6'>
+              <span class='text'>客户名称</span>
+            </el-col>
+            <el-col :span='13'>
+              <el-input placeholder='请输入' v-model="search.customerName"></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>客户编码</span>
+            </el-col>
+            <el-col :span='13'>
+              <el-input placeholder='请输入' v-model="search.customerCode"></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -38,8 +54,8 @@
         width="200"
         :resizable="false"
       >
-         <template slot-scoped="scoped">
-            <el-button type="text" @click="password= true"> 查看详情 </el-button>
+         <template slot-scope="scoped">
+            <el-button type="text" @click="waybillInfo(scoped.row)"> 查看详情 </el-button>
         </template>
       </el-table-column>
     </commonTable>
@@ -68,6 +84,11 @@ export default {
         limit: 10,
         sizes: [10, 50, 100],
         total: 0
+      },
+      search: {
+        waybillNo: null,
+        customerName: null,
+        customerCode: null
       }
     }
   },
@@ -77,12 +98,22 @@ export default {
   methods: {
     getData () {
       this.$api.finance.other.profit.lists({
+        waybillNo: this.search.waybillNo,
+        customerName: this.search.customerName,
+        customerCode: this.search.customerCode,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    searchReset () {
+      this.search = {
+        waybillNo: null,
+        customerName: null,
+        customerCode: null
+      }
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
@@ -100,6 +131,9 @@ export default {
     handleCurrentChange (val) {
       this.page.pageNo = val // 设置当前页码为val
       this.getData() // 重新渲染表格
+    },
+    waybillInfo (row) {
+      this.$router.push({ name: 'waybillDetail', params: { id: row.id } })
     }
   }
 }

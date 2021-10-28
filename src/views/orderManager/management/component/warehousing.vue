@@ -41,6 +41,7 @@
                   :resizable="false"
                   >
                   <template slot-scope="scope">
+                    <span @click="detail(scope.row)" class="blue">详情</span>
                     <el-button type="text" @click="eject(scope.row)"> 出库</el-button>
                   </template>
                 </el-table-column>
@@ -151,6 +152,9 @@ export default {
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
+    },
+    detail (data) {
+      this.$router.push({ name: 'waybillDetail', params: { id: data.id } })
     },
     // 出库
     eject (data) {
