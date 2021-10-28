@@ -65,9 +65,9 @@
             >
               <template slot-scope="scope">
                 <span @click="detail(scope.row)" class="blue"
-                  >查看详情<span style="margin: 0px 5px 0px">|</span></span
+                  >查看详情</span
                 >
-                <span @click="edit(scope.row)" class="blue">修改</span>
+                <!-- <span @click="edit(scope.row)" class="blue">修改</span> -->
                 <span @click="irikura(scope.row)" v-show="activeName==='2'" class="blue">&nbsp;|&nbsp;入仓</span>
               </template>
             </el-table-column>

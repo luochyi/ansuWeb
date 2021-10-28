@@ -1,14 +1,14 @@
 <template>
     <div>
         <!-- 扣货详情 （v-if="" ）-->
-        <div v-if="waybillInfo.is_lock === 1">
+        <!-- <div v-if="waybillInfo.is_lock === 1">
             <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:17px 6px;">
                 <span class='text' style="color:#FF0000">扣货件详情</span>
             </el-row>
             <el-row class="titleReason">
                 <span>扣货原因：{{waybillInfo.lock_reason}}</span>
             </el-row>
-        </div>
+        </div> -->
         <!-- 不扣货详情 -->
         <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:17px 0">
             <span class='text'>订单详情</span>
@@ -122,7 +122,7 @@
                 </el-row>
                 <el-row class="line" v-if="false"></el-row>
                 <!-- 重量尺寸 -->
-                <el-row>
+                <el-row v-if="waybillInfo.status > 1">
                     <el-row>
                         <span class="headerTitle">重量尺寸</span>
                         <span class="item-info"></span>
@@ -146,7 +146,7 @@
                             <el-col :span="8">
                                 <span class="item1">结算重：</span>
                                 <span class="item2">{{ waybillInfo.bill_weight }}</span>
-                                <el-button type="text" style="padding:0" @click="changeAsettlement = true">查看</el-button>
+                                <!-- <el-button type="text" style="padding:0" @click="changeAsettlement = true">查看</el-button> -->
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">改货重量：</span>
@@ -165,12 +165,12 @@
                             <el-col :span="8">
                                 <span class="item1">改货结算重：</span>
                                 <span class="item2">{{ waybillInfo.agent_bill_weight }}</span>
-                                <el-button type="text" style="padding:0" @click="changeAsettlement = true">查看</el-button>
+                                <el-button type="text" style="padding:0" @click="setWeight">查看</el-button>
                             </el-col>
                         </el-row>
                     </el-row>
                 </el-row>
-                <el-row class="line"></el-row>
+                <el-row class="line" v-if="waybillInfo.status > 1"></el-row>
                 <!-- 物流 -->
                 <el-row v-if="waybillInfo.fba_address.country_name !== ''">
                     <el-row>
@@ -296,110 +296,100 @@
                     </el-row>
                 </el-row>
         </el-row>
-<!--        <el-drawer-->
-<!--            :visible.sync="drawer"-->
-<!--            size="50%">-->
-<!--            <div slot="title" class="headTitle">页面显示设置</div>-->
-<!--           <el-row class="" style="padding:26px;text-align:left;background:#fff;margin-top:26px">-->
-<!--               <el-row style="display:flex;align-items:center">-->
-<!--                   <el-col :span="11" style="display:flex;align-items:center">-->
-<!--                        <span class="formTitle">字段集名称&nbsp;&nbsp;</span>-->
-<!--                        <span>-->
-<!--                            <el-input size="small" style="width:100%" v-model="fieldName" placeholder="请输入"></el-input>-->
-<!--                        </span>-->
-<!--                   </el-col>-->
-<!--                   <el-col :span="8">-->
-<!--                       <el-button size="small" class="orangeBtn">查 询</el-button>-->
-<!--                   </el-col>-->
-<!--               </el-row>-->
-<!--               &lt;!&ndash; 抽屉表格 &ndash;&gt;-->
-<!--          <div class="table" style="margin-top:16px">-->
-<!--          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"-->
-<!--          :header-cell-style="{background: '#F5F5F6'}">-->
-<!--          <el-table-column type="selection" width="55"></el-table-column>-->
-<!--            <el-table-column prop="name" label="字段集名称" min-width="130"></el-table-column>-->
-<!--            <el-table-column prop="display" label="是否显示" min-width="100">-->
-<!--                <template>-->
-<!--                    <div style="display:flex;align-items:center">-->
-<!--                        <div style="width: 8px;height: 8px;background: #32AF05;border-radius: 50%;margin-right:8px"></div>-->
-<!--                        <span>显示</span>-->
-<!--                    </div>-->
-<!--                </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column type="expand" label="默认展开/收缩" :width="120">-->
-<!--                <template v-slot="scope">-->
-<!--                    <el-table :data="scope.row.view_detail" :row-class-name="tableRowClassName" :header-cell-style="{ background: '#EDF6FF' }">-->
-<!--                        <el-table-column prop="goods_name" label="开票商品名称" min-width="120">-->
-<!--                        </el-table-column>-->
-<!--                        <el-table-column prop="tax_name" label="税收分类">-->
-<!--                        </el-table-column>-->
-<!--                        <el-table-column prop="unit" label="单位">-->
-<!--                        </el-table-column>-->
-<!--                        <el-table-column prop="unit_price" label="单价">-->
-<!--                        </el-table-column>-->
-<!--                    </el-table>-->
-<!--                </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column label="顺序" min-width="150">-->
-<!--                <template>-->
-<!--                    <span>{{(num+1)}}</span>-->
-<!--                </template>-->
-<!--            </el-table-column>-->
-<!--          </el-table>-->
-<!--          </div>-->
-<!--           </el-row>-->
-<!--        </el-drawer>-->
-        <el-drawer
-            :visible.sync="drawer.visible"
+        <commonDrawer
+             :drawerVrisible="drawer" :drawerTitle="drawerTitle" :drawerSize='drawerSize'
             size="50%">
-            <div slot="title" class="headTitle">改货结算重</div>
-            <div class="body">
-                <el-row class="orderId">{{orderId}}</el-row>
+            <div class="dra-content" style="textAlign:left;padding:10px">
+                <el-row class="orderId">{{waybillInfo.waybill_no}}</el-row>
                 <el-row style="margin-top:16px">
                     <span class="item1">客户名称：</span>
-                    <span class="item2">{{name}}</span>
+                    <span class="item2">{{waybillInfo.customer_name}}</span>
                 </el-row>
+                <el-row><el-button @click="edit()" class="orangeBtn" :disabled="formData.cargoes.ids.length === 0" v-if="waybillInfo.status < 5">批量修改</el-button></el-row>
                 <el-row class="line"></el-row>
-                <el-row style="margin-top:16px">
+                <!-- <el-row style="margin-top:16px">
                     <span class="item1">预报渠道：</span>
                     <span class="item2">{{forecastChannel}}</span>
                 </el-row>
                 <el-row style="margin-top:16px">
                     <span class="item1">件数：</span>
                     <span class="item2">{{number}}</span>
-                </el-row>
-                <el-row style="margin-top:16px">
-                    <span class="item1">备注：</span>
-                    <span class="item2">{{note}}</span>
-                </el-row>
+                </el-row> -->
                 <div class="table" style="margin-top:16px">
-                    <el-table ref="multipleTable" :data="changeSettlementTable" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"
-                    :header-cell-style="{background: '#F5F5F6'}">
-                    <el-table-column prop="orderNum" label="货件编号" min-width="180" key="1"></el-table-column>
-                    <el-table-column prop="long" label="长（cm）" key="2"></el-table-column>
-                    <el-table-column prop="width" label="宽（cm）" key="3"></el-table-column>
-                    <el-table-column prop="high" label="高（cm）" key="4"></el-table-column>
-                    <el-table-column prop="squareNumber" label="方数（m³）" key="5"></el-table-column>
-                    <el-table-column prop="realWeight" label="实重（kg）" key="6"></el-table-column>
-                    <el-table-column prop="volumeWeight" label="材积重（kg）" min-width="120" key="7"></el-table-column>
+                    <el-table ref="multipleTable" :data="weightList" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"
+                    :header-cell-style="{background: '#F5F5F6'}" @row-dblclick="showCargoEdit">
+                        <el-table-column type="selection" v-if="waybillInfo.status < 5"></el-table-column>
+                        <el-table-column prop="cargo_no" label="货件编号" min-width="180"></el-table-column>
+                        <el-table-column prop="length" label="长（cm）"></el-table-column>
+                        <el-table-column prop="width" label="宽（cm）"></el-table-column>
+                        <el-table-column prop="height" label="高（cm）"></el-table-column>
+                        <el-table-column prop="weight" label="重（kg）"></el-table-column>
                     </el-table>
                 </div>
-                <el-row style="font-size: 14px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: #333333;margin-top:16px">
-                    <span>合计结算重：<span>{{total}}</span>公斤</span>
-                </el-row>
             </div>
-        </el-drawer>
+            <!-- 抽屉底部按钮 -->
+            <div slot="footer">
+                <button class="btn-orange" @click="submit()"   v-if="waybillInfo.status < 5">
+                <span> <i class="el-icon-circle-check"></i>提交</span>
+                </button>
+                <button class="btn-gray" @click="addClose">
+                <span>取消</span>
+                </button>
+            </div>
+        </commonDrawer>
+        <el-dialog
+            title="批量改货"
+            :visible.sync="dialog.visable.cargoes"
+            width="26%">
+          <span style="textAlign:left;marginLeft:20px">
+              <el-row><el-checkbox v-model="formData.cargoes.lengthSwitch">长</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.length" :disabled="!formData.cargoes.lengthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.widthSwitch">宽</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.width" :disabled="!formData.cargoes.widthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.heightSwitch">高</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.height" :disabled="!formData.cargoes.heightSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.weightSwitch">重</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.weight" :disabled="!formData.cargoes.weightSwitch" class="ipt"><template slot="append">kg</template></el-input></el-row>
+          </span>
+          <span slot="footer" class="dialog-footer">
+              <el-button @click="dialog.visable.cargoes = false">取 消</el-button>
+              <el-button class="orangeBtn" type="primary" @click="batchChange">确 定</el-button>
+          </span>
+        </el-dialog>
+        <el-dialog
+        title="改货重"
+        :visible.sync="dialog.visable.cargo"
+        width="26%">
+            <span style="textAlign:left;marginLeft:20px">
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.length" class="ipt"><template slot="prepend">长</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.width" class="ipt"><template slot="prepend">宽</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.height" class="ipt"><template slot="prepend">高</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.weight" class="ipt"><template slot="prepend">重</template><template slot="append">kg</template></el-input></el-row>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialog.visable.cargo = false">取 消</el-button>
+                <el-button class="orangeBtn" type="primary" @click="cargoEdit">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      weightList: [],
       waybillId: null,
+      dialogVisible: false,
+      changeWeight: {
+        length: '',
+        width: '',
+        height: '',
+        weight: ''
+      },
+      drawer: false,
+      drawerTitle: '改重',
+      drawerSize: '50%',
       waybillInfo: {
         is_lock: 0,
         lock_reason: '0',
         type: 1,
+        status: 0,
         waybill_no: '',
         customer_name: '',
         customer_code: '',
@@ -444,8 +434,31 @@ export default {
           zip_code: ''
         }
       },
-      drawer: {
-        visible: false
+      dialog: {
+        visable: {
+          cargo: false,
+          cargoes: false
+        }
+      },
+      formData: {
+        cargoes: {
+          ids: [],
+          length: null,
+          width: null,
+          height: null,
+          weight: null,
+          lengthSwitch: false,
+          widthSwitch: false,
+          heightSwitch: false,
+          weightSwitch: false
+        },
+        cargo: {
+          id: null,
+          length: null,
+          width: null,
+          height: null,
+          weight: null
+        }
       }
     }
   },
@@ -460,9 +473,102 @@ export default {
       })
     },
     // 关闭抽屉
-    handleClose () {},
-    // 抽屉表格
-    tableChange () {}
+    addClose () {
+      this.drawer = false
+    },
+    batchChange () {
+      this.weightList.forEach((item, key) => {
+        this.formData.cargoes.ids.forEach(id => {
+          if (item.id === id) {
+            if (this.formData.cargoes.lengthSwitch && this.formData.cargoes.length) {
+              this.weightList[key].length = this.formData.cargoes.length
+            }
+            if (this.formData.cargoes.widthSwitch && this.formData.cargoes.width) {
+              this.weightList[key].width = this.formData.cargoes.width
+            }
+            if (this.formData.cargoes.heightSwitch && this.formData.cargoes.height) {
+              this.weightList[key].height = this.formData.cargoes.height
+            }
+            if (this.formData.cargoes.weightSwitch && this.formData.cargoes.weight) {
+              this.weightList[key].weight = this.formData.cargoes.weight
+            }
+          }
+        })
+      })
+      this.dialog.visable.cargoes = false
+    },
+    tableChange (val) {
+      this.formData.cargoes.ids = []
+      val && val.forEach((item) => {
+        this.formData.cargoes.ids.push(item.id)
+      })
+    },
+    setWeight () {
+      this.drawer = true
+      this.$api.Ordermanagement.agentWeight({ waybillId: this.waybillId }).then(res => {
+        this.weightList = res.data.cargoes
+      })
+    },
+    edit () {
+      this.formData.cargoes.length = null
+      this.formData.cargoes.width = null
+      this.formData.cargoes.height = null
+      this.formData.cargoes.weight = null
+      this.formData.cargoes.lengthSwitch = false
+      this.formData.cargoes.widthSwitch = false
+      this.formData.cargoes.heightSwitch = false
+      this.formData.cargoes.weightSwitch = false
+      this.dialog.visable.cargoes = true
+    },
+    submit () {
+      let cargoSpecs = []
+      this.weightList.forEach(item => {
+        cargoSpecs.push({
+          cargoId: item.id,
+          length: item.length,
+          width: item.width,
+          height: item.height,
+          weight: item.weight
+        })
+      })
+      this.$api.Ordermanagement.agentWeightEdit({
+        waybillId: this.waybillId,
+        cargoSpecs: cargoSpecs
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+          this.addClose()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    showCargoEdit (row, column) {
+      if (this.waybillInfo.status >= 5) {
+        return
+      }
+      if (!column.property) {
+        return
+      }
+      this.formData.cargo.id = row.id
+      this.formData.cargo.length = row.length
+      this.formData.cargo.width = row.width
+      this.formData.cargo.height = row.height
+      this.formData.cargo.weight = row.weight
+      this.dialog.visable.cargo = true
+    },
+    cargoEdit () {
+      this.weightList.forEach((item, key) => {
+        if (item.id === this.formData.cargo.id) {
+          this.weightList[key].length = this.formData.cargo.length
+          this.weightList[key].width = this.formData.cargo.width
+          this.weightList[key].height = this.formData.cargo.height
+          this.weightList[key].weight = this.formData.cargo.weight
+        }
+      })
+      this.dialog.visable.cargo = false
+    }
   }
 }
 </script>
@@ -512,7 +618,6 @@ export default {
   padding-top: 0px;
   background: #E8EBF2;
     .el-drawer__header{
-      padding: 30px 26px;
       text-align: left;
       background: #FFFFFF;
       font-size: 16px;
@@ -568,5 +673,10 @@ export default {
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: 500;
     color: #FB4E0C;
+}
+.ipt{
+    width: 200px;
+    margin-left: 10px;
+    margin-top: 5px;
 }
 </style>

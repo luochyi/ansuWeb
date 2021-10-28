@@ -13,7 +13,7 @@
               <span class='text'>运单号</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='waybillNo' placeholder='请输入'></el-input>
+              <el-input v-model='search.waybillNo' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -21,7 +21,7 @@
               <span class='text'>客户名称</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
+              <el-input v-model='search.customerName' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -29,7 +29,7 @@
               <span class='text'>客户编码</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
+              <el-input v-model='search.customerCode' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -37,7 +37,7 @@
               <span class='text'>预报渠道</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='predictionChannel' placeholder='请输入'></el-input>
+              <el-input v-model='search.channelName' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
         </el-row>
@@ -46,8 +46,8 @@
           <el-col :span='18' class='colbox'>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
           </el-col>
         </el-row>
         <br>
@@ -118,6 +118,12 @@ export default {
         limit: 10,
         sizes: [15, 50, 100],
         total: 0
+      },
+      search: {
+        waybillNo: null,
+        customerName: null,
+        customerCode: null,
+        channelName: null
       }
     }
   },
@@ -127,12 +133,24 @@ export default {
   methods: {
     getData () {
       this.$api.finance.fare.confirm.lists({
+        waybillNo: this.search.waybillNo,
+        customerName: this.search.customerName,
+        customerCode: this.search.customerCode,
+        channelName: this.search.channelName,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    searchReset () {
+      this.search = {
+        waybillNo: null,
+        customerName: null,
+        customerCode: null,
+        channelName: null
+      }
     },
     detailspage (row) {
       this.$router.push({ name: 'detailspage', params: { waybillId: row.id } })
@@ -181,7 +199,7 @@ export default {
       this.getData() // 重新渲染表格
     },
     waybillInfo (row) {
-      this.$router.push({ name: 'waybillDetail', params: { waybillId: row.id } })
+      this.$router.push({ name: 'waybillDetail', params: { id: row.id } })
     }
   }
 }

@@ -210,3 +210,19 @@ export const milestoneInfo = (params) => {
     data: params
   })
 }
+// 查看货重 客户
+export const agentWeight = (params) => {
+  return axios({
+    url: '/order/waybill/cargo_spec/agent/get',
+    method: 'post',
+    data: params
+  })
+}
+// 客户改重
+export const agentWeightEdit = (params) => {
+  return axios({
+    url: '/order/waybill/cargo_spec/agent/edit',
+    method: 'post',
+    data: params
+  })
+}

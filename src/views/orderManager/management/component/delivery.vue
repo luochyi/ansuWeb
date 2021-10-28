@@ -1,53 +1,54 @@
 <template>
-    <div>
-        <el-row class="box">
-              <!-- 出库 -->
-                <el-row>
-                    <el-col :span="6" class="item">
-                        <span class="item-box">运单号&nbsp;&nbsp;</span>
-                        <el-input placeholder="请输入" class="input" v-model="code" size="small">
-                            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
-                            <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i>
-                        </el-input>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button size="small" class="orangeBtn" style="margin-right:10px">查 询</el-button>
-                        <el-button size="small" class="wuBtn" style="margin-right:10px">重 置</el-button>
-                    </el-col>
-                </el-row>
-                <el-row class="line"></el-row>
-            <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
-            <el-col :span='14' class="left">
-                <!-- <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button> -->
-            </el-col>
-            <el-col :span='10' class="right">
-            </el-col>
-            </el-row>
-            <!-- 表格 -->
-            <div class="table">
-              <commonTable
-                :columns="columns"
-                :data="tableData"
-                :pager="page"
-                @handleSizeChange="handleSizeChange"
-                @handleCurrentChange="handleCurrentChange"
-                >
-                <el-table-column
-                  slot="table_oper"
-                  align="center"
-                  fixed="right"
-                  label="操作"
-                  width="126"
-                  :resizable="false"
-                  >
-                  <template slot-scope="scope">
-                    <el-button type="text" @click="checkout(scope.row)"> 出仓</el-button>
-                  </template>
-                </el-table-column>
-              </commonTable>
-            </div>
-        </el-row>
-    </div>
+  <div>
+    <el-row class="box">
+      <!-- 出库 -->
+      <el-row>
+        <el-col :span="6" class="item">
+          <span class="item-box">运单号&nbsp;&nbsp;</span>
+          <el-input placeholder="请输入" class="input" v-model="code" size="small">
+            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
+            <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i>
+          </el-input>
+        </el-col>
+        <el-col :span="6">
+          <el-button size="small" class="orangeBtn" style="margin-right:10px">查 询</el-button>
+          <el-button size="small" class="wuBtn" style="margin-right:10px">重 置</el-button>
+        </el-col>
+      </el-row>
+      <el-row class="line"></el-row>
+      <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
+        <el-col :span='14' class="left">
+          <!-- <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button> -->
+        </el-col>
+        <el-col :span='10' class="right">
+        </el-col>
+      </el-row>
+      <!-- 表格 -->
+      <div class="table">
+        <commonTable
+            :columns="columns"
+            :data="tableData"
+            :pager="page"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+        >
+          <el-table-column
+              slot="table_oper"
+              align="center"
+              fixed="right"
+              label="操作"
+              width="126"
+              :resizable="false"
+          >
+            <template slot-scope="scope">
+              <span @click="detail(scope.row)" class="blue">详情</span>
+              <el-button type="text" @click="checkout(scope.row)">&nbsp; 出仓</el-button>
+            </template>
+          </el-table-column>
+        </commonTable>
+      </div>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -95,6 +96,9 @@ export default {
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
+    },
+    detail (data) {
+      this.$router.push({ name: 'waybillDetail', params: { id: data.id } })
     },
     // 出仓
     checkout (data) {

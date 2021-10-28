@@ -13,21 +13,21 @@
               <span class='text'>客户名称</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
+              <el-input v-model='search.customerName' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
            <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
         <el-row class='searchbox1'>
           <el-col :span='10' class="left">
-            <el-button class='stopBtn' @click="mulGen(confirmIds)">生成账单</el-button>
-            <el-button class='stopBtn' @click="Batchexport=true">批量导出Excle</el-button>
-            <el-button class='stopBtn' @click="Bulksendmail=true">批量发送邮件</el-button>
-            <el-button class='stopBtn' @click="confirmation=true">批量确认费用</el-button>
+            <el-button class='stopBtn' @click="mulGen(confirmIds)" :disabled="confirmIds.length === 0">生成账单</el-button>
+<!--            <el-button class='stopBtn' @click="Batchexport=true">批量导出Excle</el-button>-->
+<!--            <el-button class='stopBtn' @click="Bulksendmail=true">批量发送邮件</el-button>-->
+            <el-button class='stopBtn' @click="confirmation=true" :disabled="confirmIds.length === 0">批量确认费用</el-button>
           </el-col>
           <el-col :span='12' class='right'>
             <!-- <el-button class='whiteBtn '>查询条件设置</el-button>
@@ -53,11 +53,11 @@
               :resizable="false"
           >
             <template slot-scope="scoped">
-              <el-button type="text" @click="Viewquote"> 查看运单</el-button>
-              <span style="color: #0084FF; margin: 0px 5px">|</span>
-              <el-button type="text" @click="adopt= true"> 发送费运单</el-button>
-              <span style="color: #0084FF; margin: 0px 5px">|</span>
-              <el-button type="text" @click="reject= true"> 导出excle</el-button>
+              <el-button type="text" @click="Viewquote(scoped.row)"> 查看运单</el-button>
+<!--              <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+<!--              <el-button type="text" @click="adopt= true"> 发送费运单</el-button>-->
+<!--              <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+<!--              <el-button type="text" @click="reject= true"> 导出excle</el-button>-->
               <span style="color: #0084FF; margin: 0px 5px" v-if="scoped.row.is_confirm === 0">|</span>
               <el-button type="text" @click="confirm([scoped.row.id])" v-if="scoped.row.is_confirm === 0"> 确认费用
               </el-button>
@@ -149,7 +149,10 @@ export default {
         total: 0
       },
       confirmIds: [],
-      customerIds: []
+      customerIds: [],
+      search: {
+        customerName: null
+      }
     }
   },
   mounted () {
@@ -158,12 +161,16 @@ export default {
   methods: {
     getData () {
       this.$api.finance.fare.confirm.customer.lists({
+        customerName: this.search.customerName,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    searchReset () {
+      this.search.customerName = null
     },
     confirm (confirmIds) { // 确认费用单
       this.$api.finance.fare.confirm.customer.confirm({
@@ -172,6 +179,7 @@ export default {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.getData()
+          this.confirmation = false
         } else {
           this.$message.error(res.msg) // 错误提示
         }
@@ -199,7 +207,9 @@ export default {
     Expenseconfirmation () {
       this.$router.push({ name: 'Expenseconfirmation' })
     },
-    Viewquote () {},
+    Viewquote (data) {
+      this.$router.push({ name: 'waybillDetail', params: { id: data.waybill_id } })
+    },
     // 重新渲染name列
     formatter (row, column, cellValue) {
       switch (column.property) {
