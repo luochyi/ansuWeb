@@ -146,8 +146,11 @@
             <span>渠道</span>
           </el-row>
           <el-divider></el-divider>
-          <div v-for="item,index in tickets" :key="index">
-            <el-row class="label"><span>货件编号</span><el-input size="mini" v-model="item.code" @blur="changeList(index)"></el-input></el-row>
+          <div v-for="item,index in tickets" :key="index" style="marginTop:30px">
+            <el-row class="label">
+              <span>货件编号</span><el-input size="mini" v-model="item.code" @blur="changeList(index)"></el-input>
+              <el-button type="danger" size="mini" @click="delPlan(index)" v-if="index!==0" style="marginLeft:10px">删除计划</el-button>
+            </el-row>
             <el-row class="label"><span>货件数量</span><el-input size="mini" type="number" v-model="item.num" @blur="changeList(index)"></el-input></el-row>
             <el-table :data="item.checklists" :key="timeStamp" border :header-cell-style="{ background: '#F5F5F6', color: '#999999FF',fontSize:'14px' }" tooltip-effect="light">
               <el-table-column label="货件编号" prop="code" class="column" >
@@ -164,6 +167,7 @@
               </el-table-column>
             </el-table>
           </div>
+          <el-button class="orangeBtn" @click="addPlan" size="mini">新增计划</el-button>
         </div>
         <div slot="footer">
         <button class="btn-orange" @click="submit()" >
@@ -266,6 +270,18 @@ export default {
         this.tableData = res.data.list
         this.total = res.data.total
       })
+    },
+    addPlan () {
+      this.tickets.push(
+        {
+          num: null,
+          code: '',
+          checklists: []
+        }
+      )
+    },
+    delPlan (index) {
+      this.tickets.splice(index, 1)
     },
     // 修改尾号
     editCode (scope, index) {
