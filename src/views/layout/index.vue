@@ -205,15 +205,15 @@ export default {
                 }
               ]
             }, {
-              name: 'ccd',
+              name: 'eject',
               meta: {
                 title: '出仓单',
-                icon: 'ccd',
+                icon: 'eject',
                 hidden: false
               },
               ID: 17,
               menuId: '17',
-              path: 'ccd',
+              path: 'eject',
               parentId: '1'
             }
           ]

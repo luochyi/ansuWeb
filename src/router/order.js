@@ -143,14 +143,24 @@ export default [
     component: () => import('@/views/orderManager/gmbxyd/safeOrder.vue')
   },
   {
-    path: '/ccd',
-    name: 'ccd',
+    path: '/eject',
+    name: 'eject',
     meta: {
       title: '出仓单',
-      icon: 'ccd',
+      icon: 'eject',
       hidden: false
     },
-    component: () => import('@/views/orderManager/ccd/ccd.vue')
+    component: () => import('@/views/orderManager/eject/eject.vue')
+  },
+  {
+    path: '/ejectWaybill',
+    name: 'ejectWaybill',
+    meta: {
+      title: '出仓单',
+      icon: 'eject',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/eject/ejectWaybill.vue')
   }
 
 ]
