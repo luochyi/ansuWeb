@@ -10,15 +10,15 @@
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>客户名称</span>
+              <span class='text'>代理名称</span>
             </el-col>
             <el-col :span='13'>
-              <el-input placeholder='请输入'></el-input>
+              <el-input placeholder='请输入' v-model="search.agentName"></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -26,7 +26,7 @@
              <el-col :span='10' class="left">
                <el-button class='stopBtn' @click="importBill">导入对账单</el-button>
             <!-- <el-button class='stopBtn' @click="changes=true">批量导出Excle</el-button> -->
-            <el-button class='stopBtn' @click="changes=true">批量申请付款</el-button>
+<!--            <el-button class='stopBtn' @click="changes=true">批量申请付款</el-button>-->
           </el-col>
           </el-row>
           <br />
@@ -133,7 +133,10 @@ export default {
         path: ''
       },
       billAgentIds: [],
-      templatePath: ''
+      templatePath: '',
+      search: {
+        agentName: null
+      }
     }
   },
   mounted () {
@@ -147,8 +150,12 @@ export default {
         this.agents = res.data
       })
     },
+    searchReset () {
+      this.search.agentName = null
+    },
     getData () {
       this.$api.finance.payabble.agent.lists({
+        agentName: this.search.agentName,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {

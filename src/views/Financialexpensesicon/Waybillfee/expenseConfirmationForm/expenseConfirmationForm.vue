@@ -10,10 +10,26 @@
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
+              <span class='text'>账单号</span>
+            </el-col>
+            <el-col :span='13'>
+              <el-input v-model='search.billNo' placeholder='请输入'></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
               <span class='text'>客户名称</span>
             </el-col>
             <el-col :span='13'>
               <el-input v-model='search.customerName' placeholder='请输入'></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
+              <span class='text'>客户编码</span>
+            </el-col>
+            <el-col :span='13'>
+              <el-input v-model='search.customerCode' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
            <el-col :span='6' class='colbox'>
@@ -151,17 +167,22 @@ export default {
       confirmIds: [],
       customerIds: [],
       search: {
-        customerName: null
+        billNo: null,
+        customerName: null,
+        customerCode: null
       }
     }
   },
   mounted () {
+    this.search.billNo = this.$route.params.billNo
     this.getData()
   },
   methods: {
     getData () {
       this.$api.finance.fare.confirm.customer.lists({
+        billNo: this.search.billNo,
         customerName: this.search.customerName,
+        customerCode: this.search.customerCode,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
@@ -170,7 +191,9 @@ export default {
       })
     },
     searchReset () {
+      this.search.billNo = null
       this.search.customerName = null
+      this.search.customerCode = null
     },
     confirm (confirmIds) { // 确认费用单
       this.$api.finance.fare.confirm.customer.confirm({

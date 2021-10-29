@@ -13,12 +13,12 @@
               <span class='text'>客户名称</span>
             </el-col>
             <el-col :span='13'>
-              <el-input></el-input>
+              <el-input v-model="search.customerName"></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
           </el-col>
         </el-row>
         <!-- 组件 -->
@@ -63,6 +63,9 @@ export default {
         limit: 10,
         sizes: [15, 50, 100],
         total: 0
+      },
+      search: {
+        customerName: null
       }
     }
   },
@@ -72,12 +75,16 @@ export default {
   methods: {
     getData () {
       this.$api.finance.fare.writeOff.customer.lists({
+        customerName: this.search.customerName,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    searchReset () {
+      this.search.customerName = null
     },
     bill (customerId) {
       this.$router.push({ name: 'bill', params: { customerId: customerId } })
