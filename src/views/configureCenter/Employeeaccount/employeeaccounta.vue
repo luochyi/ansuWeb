@@ -145,7 +145,6 @@ export default {
 background: #FFFFFF;
 }
 #boxx{
-width: 1191px;
 height: 914px;
 background: #FFFFFF;
 border-radius: 4px;

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="right">
+    <div class="content">
       <div class="one" v-if="waybillAmount.fare.audit_status === 3">
         <div class="reason">驳回原因：{{ waybillAmount.fare.fail_reason }}</div>
       </div>
@@ -17,7 +17,7 @@
         <div class="infoBox">
           <el-row class="info">
             <el-col>
-              <div class="name">运费模式：{{ waybillAmount.type === 1 ? '单价' : waybillAmount.type === 2 ? '金额' : '首续重' }}</div>
+              <div class="name" style="marginTop:5px">运费模式：{{ waybillAmount.type === 1 ? '单价' : waybillAmount.type === 2 ? '金额' : '首续重' }}</div>
             </el-col>
             <el-col :span="10" class="flex align-center" v-if="waybillAmount.type === 1">
               <div class="name">单价调整：</div>
@@ -77,13 +77,13 @@
             </el-table-column>
           </commonTable>
         </el-row>
-        <el-row style="margin: 20px; float: left;">
-          <el-button class="orangeBtn" @click="dialogAddPrice" v-if="hasEdit">添加附加费</el-button>
-        </el-row>
       </div>
       <br>
       <div class="six">
-        <el-row style="margin: 20px; float: right;">
+        <el-row style="float: left;">
+          <el-button class="orangeBtn" @click="dialogAddPrice" v-if="hasEdit">添加附加费</el-button>
+        </el-row>
+        <el-row style="float: right;">
           <el-button class="orangeBtn" icon="el-icon-circle-check" @click="formData.adjustPrice && formData.adjustPrice !== '0' ? showRemark() : offer()" v-if="hasEdit">确认报价</el-button>
           <el-button class="wthBtn">取消</el-button>
         </el-row>
@@ -120,7 +120,7 @@
               </el-select>
             </el-col>
           </el-row>
-          <el-row class="elrow">
+          <el-row class="elrow" style="marginTop:10px">
             <el-col :span='4'>
               <el-select v-model="dialog.priceForm.taxType" >
                 <el-option v-for="item in options.taxType" :key="item.value" :label="item.label" :value="item.value">
@@ -391,15 +391,6 @@ export default {
  height: 56px;
  font-size: 16px;
 }
-.left{
-  float: left;
-  width: 212px;
-  height: 1337px;
-  background: #FFFFFF;
-border-radius: 4px;
-border: 1px solid #E8E8E8;
-text-align:left;
-}
 .first{
   width: 159px;
   height: 67px;
@@ -408,7 +399,6 @@ text-align:left;
 }
 .right{
 float: left;
-width: 1028px;
 height: 1337px;
 background: #E8EBF2;
 border-radius: 4px;
@@ -417,13 +407,11 @@ margin: auto 20px;
 }
 .one{
     background: #FFFFFF ;
-    width: 988px;
     height:63px ;
 }
 .two{
     height: auto;
     background: #FFFFFF ;
-    width: 988px;
 }
 .el-descriptions{
     margin: auto  30px;
@@ -434,7 +422,6 @@ margin: auto 20px;
 .three{
     height:520px ;
     background: #FFFFFF ;
-    width: 988px;
 }
 .infoBox{
   margin-bottom: 20px;
@@ -474,19 +461,16 @@ margin: auto 20px;
     margin: 14px 0;
 }
 .four{
-    height:144px ;
     background: #FFFFFF ;
-    width: 988px;
 }
 .five{
     height:136px ;
     background: #FFFFFF ;
-    width: 988px;
 }
 .six{
     height:63px ;
     background: #FFFFFF ;
-    width: 1028px;
+    margin-top: 20px;
 }
 /deep/ .el-dialog{
   position: absolute;

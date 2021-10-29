@@ -1,5 +1,5 @@
 <template>
-  <div class='main'>
+  <div class='content'>
     <Info :data="waybillData"></Info>
     <div class="four">
       <el-row type='flex' justify='flex-start' class='title' align='middle'>

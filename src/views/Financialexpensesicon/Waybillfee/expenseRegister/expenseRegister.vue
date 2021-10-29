@@ -223,7 +223,7 @@ export default {
         { prop: 'cargoes_num', label: '件数', width: '90', align: 'center' },
         { prop: 'channel_name', label: '渠道名称', width: '84', align: 'center' },
         { prop: 'channel_code', label: '渠道编码', width: '109', align: 'center' },
-        { prop: 'created_at', label: '下单时间', width: '89', align: 'center', formatter: this.formatter },
+        { prop: 'created_at', label: '下单时间', width: '189', align: 'center', formatter: this.formatter },
         { prop: 'trade_type', label: '贸易类型', width: '84', align: 'center', formatter: this.formatter },
         { prop: 'is_separate_customs_clearance', label: '单独清关', width: '109', align: 'center', formatter: this.formatter },
         { prop: 'bill_weight', label: '客户结算重', width: '107', align: 'center' },
@@ -512,5 +512,9 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
   }
+}
+.ipt{
+  width: 200px;
+  margin:8px
 }
 </style>

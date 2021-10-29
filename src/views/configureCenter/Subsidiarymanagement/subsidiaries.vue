@@ -1,5 +1,5 @@
 <template>
-  <div id="boxx">
+  <div class="content">
     <el-row type="flex" justify="flex-start" class="title" align="middle">
       <span class="text" v-if="this.editId===undefined">新建子公司</span>
       <span class="text" v-else>修改子公司</span>
