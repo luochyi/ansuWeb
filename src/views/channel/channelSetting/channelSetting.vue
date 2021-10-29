@@ -159,7 +159,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-button @click="zoneAdd()" style="marginTop:10px" class="orangeBtn">新建分区</el-button>
+          <el-button @click="zoneAdd()" style="marginTop:10px;float:left" class="orangeBtn">新建分区</el-button>
         </div>
         <div v-else-if="!inhere">
         <el-row style="marginTop:10px;textAlign:left;" >国家/分区名称：<el-input size="mini" style="width:200px" v-model="tempData.zone.name"></el-input></el-row>
@@ -226,6 +226,17 @@
                 </el-select>
               </template>
             </el-table-column>
+            <el-table-column label="fba仓库" min-width="200" v-else>
+               <template slot-scope="scope">
+                  <el-select
+                  disabled
+                  v-model="scope.row.fbaIds"
+                  multiple
+                  placeholder="按国家">
+                  <el-option v-for="item in FbaOptions" :key='item.id' :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template v-slot="scope">
                 <el-button @click="addZoneSubmit(scope.row)" type="text">确认</el-button>
@@ -234,7 +245,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-button @click="addTable=true" style="marginTop:10px" class="orangeBtn">新建分区</el-button>
+          <el-button @click="addTable=true" style="marginTop:10px;" class="orangeBtn">新建分区</el-button>
         </el-row>
         </div>
   <!-- 设置重量区间 -->

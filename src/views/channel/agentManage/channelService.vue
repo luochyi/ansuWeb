@@ -68,7 +68,7 @@
           >
             <template slot-scope="scope">
               <!-- <span @click="editZone(scope.row)" class="blue" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span> -->
-              <span @click="fqjg(scope.row)" class="blue">查看分区价格<span style="margin:0px 5px 0px">|</span></span>
+              <span @click="price(scope.row)" class="blue">查看分区价格<span style="margin:0px 5px 0px">|</span></span>
               <span @click="fqjg(scope.row)" class="blue">分区价格<span style="margin:0px 5px 0px">|</span></span>
               <!-- <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span> -->
               <span  v-if="activeName === '1'" @click="stopAgent(scope.row)" class="blue">停用<span style="margin:0px 5px 0px">|</span></span>
@@ -110,7 +110,7 @@
         <el-button class="orangeBtn" @click="stopOK">确 定</el-button>
       </span>
     </el-dialog>
-    <commonDrawer :drawerVrisible="drawerVrisible" :drawerSize="drawerSize" @handleClose='addClose' :drawerTitle="drawerTitle" @click="check(slotData)">
+    <commonDrawer :drawerVrisible="drawerVrisible" :drawerSize="drawerSize" :drawerTitle="drawerTitle" @click="check(slotData)">
       <div class="dra-content">
         <!-- 内容区域 -->
         <div class="circleBox">
@@ -160,7 +160,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-button @click="zoneAdd()" style="marginTop:10px" class="orangeBtn">新建分区</el-button>
+          <el-button @click="zoneAdd()" style="marginTop:10px;float:left" class="orangeBtn">新建分区</el-button>
         </div>
         <div v-else-if="!inhere">
         <el-row style="marginTop:10px;textAlign:left;" >国家/分区名称：<el-input size="mini" style="width:200px" v-model="tempData.zone.name"></el-input></el-row>
@@ -227,6 +227,17 @@
                 </el-select>
               </template>
             </el-table-column>
+            <el-table-column label="fba仓库" min-width="200" v-else>
+               <template slot-scope="scope">
+                  <el-select
+                  disabled
+                  v-model="scope.row.fbaIds"
+                  multiple
+                  placeholder="按国家">
+                  <el-option v-for="item in FbaOptions" :key='item.id' :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
             <el-table-column label="操作" width="150" fixed="right">
               <template v-slot="scope">
                 <el-button @click="addZoneSubmit(scope.row)" type="text">确认</el-button>
@@ -235,7 +246,7 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-button @click="addTable=true" style="marginTop:10px" class="orangeBtn">新建分区</el-button>
+          <el-button @click="addTable=true" style="marginTop:10px" class="orangeBtn">新建分区信息</el-button>
         </el-row>
         </div>
   <!-- 设置重量区间 -->
@@ -362,6 +373,22 @@
         </button>
       </div>
     </commonDrawer>
+    <!-- 查看分区价格 -->
+    <commonDrawer :drawerVrisible="drawer" :drawerSize="drawerSize" @handleClose='priceClose' drawerTitle="查看分区价格">
+      <div class="dra-content">
+        <el-table :data="priceList" border :header-cell-style="{background: '#F5F5F6'}">
+          <el-table-column></el-table-column>
+        </el-table>
+      </div>
+      <div slot="footer">
+        <button class="btn-orange" @click="submit()">
+          <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button>
+        <button class="btn-gray" @click="priceClose">
+          <span>关闭</span>
+        </button>
+      </div>
+    </commonDrawer>
   </div>
 </template>
 
@@ -369,6 +396,9 @@
 export default {
   data () {
     return {
+      drawer: false,
+      priceList: [],
+
       zoneType: null, // 派件类型 1快递 2卡派
       saveData: [],
       control: 1,
@@ -516,6 +546,13 @@ export default {
           this.tableData.push(obj)
         })
       })
+    },
+    price (data) {
+      console.log(data)
+      this.drawer = true
+      this.priceList = [{
+
+      }]
     },
     // 分区价格
     fqjg (data) {
@@ -828,6 +865,9 @@ export default {
     },
     // 操作按钮列表
     editTableData (row) {},
+    priceClose () {
+      this.drawer = false
+    },
     // 关闭抽屉
     addClose () {
       this.drawerVrisible = false

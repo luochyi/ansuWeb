@@ -30,6 +30,7 @@
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
+      :selection='selection'
     >
       <el-table-column
         slot="table_oper"
@@ -55,6 +56,7 @@
 export default {
   data () {
     return {
+      selection: false,
       name: '',
       columns: [
         { prop: 'name', label: '公司名称', width: '215', align: 'center' },
@@ -138,9 +140,6 @@ export default {
 /deep/ .title {
   height: 56px;
   font-size: 16px;
-}
-.content {
-  height: 600px;
 }
 .elipt {
   width: 287px;

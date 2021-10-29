@@ -72,7 +72,7 @@
             </el-select>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row style="margin:20px">
           <el-upload
           class="upload-demo"
           :headers="uploadhead"
@@ -86,7 +86,7 @@
           :limit="1"
           :on-exceed="handleExceed"
           :file-list="fileList">
-          <span>选择Excel</span>
+          <el-button size="mini"  type="primary">上传Excel</el-button>
         </el-upload>
         </el-row>
         <el-row class="diabox2">
