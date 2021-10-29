@@ -68,6 +68,7 @@
           >
             <template slot-scope="scope">
               <!-- <span @click="editZone(scope.row)" class="blue" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span> -->
+              <span @click="fqjg(scope.row)" class="blue">查看分区价格<span style="margin:0px 5px 0px">|</span></span>
               <span @click="fqjg(scope.row)" class="blue">分区价格<span style="margin:0px 5px 0px">|</span></span>
               <!-- <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span> -->
               <span  v-if="activeName === '1'" @click="stopAgent(scope.row)" class="blue">停用<span style="margin:0px 5px 0px">|</span></span>
