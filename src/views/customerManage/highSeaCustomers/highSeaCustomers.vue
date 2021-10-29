@@ -21,14 +21,14 @@
           <el-button @click="reset()" class='wuBtn long1'>重 置</el-button>
         </el-col>
         <el-col :span='12' >
-          <el-button @click="add" class='orangeBtn long2'>⊕ 添加客户</el-button>
+          <el-button @click="add" class='orangeBtn long2'>添加客户</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button class='batch' @click=" intois =true">批量转入私海</el-button>
+            <!-- <el-button class='batch' @click=" intois =true">批量转入私海</el-button> -->
             <el-button class='batch' @click="batchStopis = true">批量指派客户</el-button>
           </el-col>
         </el-row>
@@ -49,16 +49,16 @@
         :resizable="false"
       >
          <template slot-scope="scope">
-                <el-button type="text" @click="dialogVisible =true"> 转入私海
+                <!-- <el-button type="text" @click="dialogVisible =true"> 转入私海
                 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button  type="text" @click="stopAgentis = true">
+                <span style="color: #0084FF; margin: 0px 5px">|</span> -->
+                <el-button  type="text" @click="assign(scope.row)">
                   指派业务
                 </el-button>
-                 <span style="color: #0084FF; margin: 0px 5px">|</span>
+                 <!-- <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button  type="text"   @click.native.prevent="deleteRow(scope.$index, tableData)">
                   删除客户
-                </el-button>
+                </el-button> -->
               </template>
       </el-table-column>
     </commonTable>
@@ -80,7 +80,10 @@
                <div class="input">
                <br><span>是否将客户“深圳市沙马家居有限公司”指派给业务员</span><br>
                <br>
-               <span>业务员&nbsp;    <el-select v-model="agentName" size="small" placeholder="请选择业务员"></el-select></span>
+               <span>业务员&nbsp;
+                  <el-select v-model="salesId" size="small" placeholder="请选择业务员">
+                   <el-option v-for="item in salesOption" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                  </el-select></span>
                </div>
                <span slot="footer" class="stopAgent-footer">
                  <el-button @click="stopAgentis = false" class='wuBtn'>取 消</el-button>
@@ -101,7 +104,7 @@
    <!-- 批量转入私海 -->
      <el-dialog title="转入私海" :visible.sync="intois" width="30%">
                <div class="input">
-               <span>是否批量将这34个客户转入私海客户</span>
+               <span>是否批量将这{{}}个客户转入私海客户</span>
                </div>
                <span slot="footer" class="into-footer">
                  <el-button @click="intois = false" class='wuBtn'>取 消</el-button>
@@ -111,7 +114,7 @@
             <!-- 批量指派业务 -->
             <el-dialog title="指派业务" :visible.sync="batchStopis" width="30%">
                <div class="input">
-               <br><span>是否批量将这34个客户指派给业务员</span><br>
+               <br><span>是否批量将这{{}}个客户指派给业务员</span><br>
                <br>
                <span>业务员&nbsp;&nbsp;<el-select v-model="agentName" size="small" placeholder="请选择业务员"></el-select></span>
                </div>
@@ -128,6 +131,8 @@ export default {
   data () {
     return {
       dialogVisible: false, // 对话框可见
+      salesId: null,
+      salesOption: [],
       intois: false,
       stopAgentis: false,
       batchStopis: false,
@@ -156,6 +161,9 @@ export default {
   mounted () {
     // 在页面加载前调用获取列表数据函数
     this.getData()
+    this.$api.company.position.salesSelect().then(res => {
+      this.salesOption = res.data
+    })
   },
   methods: {
     // 获取列表数据
@@ -192,6 +200,8 @@ export default {
       this.name = ''
       this.getData()
     },
+    // 指派
+    assign (data) {},
     deleteRow (index, rows) {
       rows.splice(index, 1)
     },

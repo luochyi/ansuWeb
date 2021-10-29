@@ -21,7 +21,7 @@
           <el-button @click="reset()" class='wuBtn long1'>重 置</el-button>
         </el-col>
         <el-col :span='12' >
-          <el-button @click="addcustomerp" class='orangeBtn long2'>⊕ 添加客户</el-button>
+          <el-button @click="addcustomerp" class='orangeBtn long2'>添加客户</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -53,8 +53,8 @@
                 <el-button v-if="activeName === '1'" type="text" @click="open(scope.row)">转回公海</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" class="visi" @click="recordLists"> 拜访记录</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">开户</el-button>
+                <!-- <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">开户</el-button> -->
               </template>
       </el-table-column>
     </commonTable>
