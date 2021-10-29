@@ -16,7 +16,7 @@
       <!--  标签页 -->
       <div class="right">
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span style="marginLeft:40px">里程碑配置</span>
+      <span style="marginLeft:20px;marginRight:10px">里程碑配置</span>
        <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
         <el-tab-pane label='港前状态' name='1'></el-tab-pane>
         <el-tab-pane label='港后状态' name='2'></el-tab-pane>
@@ -48,6 +48,7 @@
       :columns="columns"
       :data="tableData"
       :pager="page"
+      :selection='selection'
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
       >
@@ -115,6 +116,7 @@
 export default {
   data () {
     return {
+      selection: false,
       input: '',
       isRed: 0,
       dialogVisible: false, // 对话框可见

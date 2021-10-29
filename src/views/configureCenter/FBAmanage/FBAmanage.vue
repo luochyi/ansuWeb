@@ -9,8 +9,8 @@
       </el-tabs> -->
     </el-row>
     <el-row class="box-block flex">
-      <el-col :span="6" style="border: 1px solid #D9D9D9;box-shadow: 8px 0px 0px -5px rgba(0, 0, 0, 0.9);border-top:none">
-        <div style="height:100%;background:#fff">
+      <el-col :span="6" style="border: 1px solid #D9D9D9;border-top:none;height:750px;overflow:scroll">
+        <div style="background:#fff">
           <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
             <el-col :span="3" style="margin-top:-2px">
             <span style="font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;font-weight: 500;color: #000000;">国家</span>

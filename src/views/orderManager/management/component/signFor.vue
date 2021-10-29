@@ -27,6 +27,7 @@
             <div class="table">
               <commonTable
                 :columns="columns"
+                :selection="selection"
                 :data="tableData"
                 :pager="page"
                 @handleSizeChange="handleSizeChange"
@@ -54,6 +55,7 @@
 export default {
   data () {
     return {
+      selection: false,
       code: '',
       req: {
         waybillIds: [],

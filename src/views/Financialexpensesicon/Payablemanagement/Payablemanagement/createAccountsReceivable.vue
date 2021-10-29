@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="content">
     <el-row type="flex" justify="flex-start" class="title" align="middle">
       <span class="text">生成应收账单</span>
     </el-row>
@@ -34,7 +34,7 @@
           </el-table-column>
         </el-table-column>
       </el-table>
-      <el-button @click="confirm">确认账单</el-button>
+      <el-button @click="confirm" class="orangeBtn subbtn">确认账单</el-button>
     </div>
     <el-dialog
         title="费用明细"
@@ -205,5 +205,8 @@ export default {
 /deep/ .title {
   height: 56px;
   font-size: 16px;
+}
+.subbtn{
+  margin-top: 20px;
 }
 </style>

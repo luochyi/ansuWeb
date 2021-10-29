@@ -39,3 +39,11 @@ export const deleted = incomingId => {
     }
   })
 }
+// 来款导入
+export const paymentimport = (params) => {
+  return axios({
+    url: '/finance/charge/payment/import',
+    method: 'post',
+    data: params
+  })
+}

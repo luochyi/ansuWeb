@@ -39,6 +39,7 @@
             :columns="columns"
             :data="tableData"
             :pager="page"
+            :selection='selection'
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
         >
@@ -114,6 +115,7 @@
 export default {
   data () {
     return {
+      selection: false,
       total: 0, // 数据数量
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码

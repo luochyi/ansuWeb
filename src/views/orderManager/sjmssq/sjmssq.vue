@@ -86,6 +86,7 @@
           </el-col> -->
         </el-row>
         <commonTable
+          :selection="selection"
           :columns="columns"
           :data="tableData"
           :pager="page"
@@ -155,6 +156,7 @@
 export default {
   data () {
     return {
+      selection: false,
       forecast_no: '', // 预报单号
       type: '', // 预报类型
       forecast_waybill_count: '', // 运单数量

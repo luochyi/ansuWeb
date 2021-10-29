@@ -16,6 +16,7 @@
 <commonTable
       :columns="columns"
       :data="tableData"
+      :selection='selection'
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
@@ -71,6 +72,7 @@
 export default {
   data () {
     return {
+      selection: false,
       dialogVisible: false,
       diaShow: false,
       digTitle: '',

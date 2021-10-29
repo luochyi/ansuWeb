@@ -26,6 +26,7 @@
             <!-- 表格 -->
             <div class="table">
               <commonTable
+              :selection="selection"
                 :columns="columns"
                 :data="tableData"
                 :pager="page"
@@ -100,6 +101,7 @@
 export default {
   data () {
     return {
+      selection: false,
       drawerVrisible: false,
       drawerTitle: '出库',
       code: '',

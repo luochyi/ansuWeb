@@ -17,6 +17,7 @@
       :columns="columns"
       :data="tableData"
       :pager="page"
+      :selection='selection'
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
       >
@@ -54,6 +55,7 @@
 export default {
   data () {
     return {
+      selection: false,
       dialogVisible: false,
       dialogTitile: '',
       currencyName: '',

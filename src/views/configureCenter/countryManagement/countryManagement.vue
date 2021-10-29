@@ -23,11 +23,12 @@
     <commonTable
       :columns="columns"
       :data="tableData"
+      :selection='selection'
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
       >
-      <el-table-column
+      <!-- <el-table-column
         slot="table_oper"
         align="left"
         fixed="right"
@@ -38,7 +39,7 @@
         <template slot-scope="scope">
           <el-button type="text" @click="edit(scope.row.id)">修改</el-button>
         </template>
-      </el-table-column>
+      </el-table-column> -->
       </commonTable>
     </div>
   </div>
@@ -48,6 +49,7 @@
 export default {
   data () {
     return {
+      selection: false,
       name: '',
       activeName: '1', // 标签绑定
       columns: [

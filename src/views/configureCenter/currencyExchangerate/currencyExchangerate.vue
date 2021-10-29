@@ -17,6 +17,7 @@
       :columns="columns"
       :data="tableData"
       :pager="page"
+      :selection='selection'
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
       >
@@ -56,6 +57,7 @@
 export default {
   data () {
     return {
+      selection: false,
       dialogVisible: false,
       dialogTitile: '',
       editId: null,
@@ -64,9 +66,9 @@ export default {
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
       columns: [
-        { prop: 'name', label: '货币名称', align: 'center' },
-        { prop: 'exchange_rate', label: '汇率', align: 'center' },
-        { prop: 'is_default', label: '是否默认', width: '795', align: 'center', formatter: this.formatter }
+        { prop: 'name', label: '货币名称', width: '500', align: 'center' },
+        { prop: 'exchange_rate', label: '汇率', width: '500', align: 'center' },
+        { prop: 'is_default', label: '是否默认', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {

@@ -50,6 +50,7 @@
         <commonTable
           :columns="columns"
           :data="tableData"
+          :selection='selection'
           :pager="page"
           @handleSizeChange="handleSizeChange"
           @handleCurrentChange="handleCurrentChange"
@@ -120,6 +121,7 @@ export default {
       // 输入框
       name: '', // 客户名称
       input: '',
+      selection: false,
       code: '', // 客户编码
       customerCode: '',
       username: '',

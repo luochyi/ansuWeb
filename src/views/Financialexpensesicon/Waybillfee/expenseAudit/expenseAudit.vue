@@ -10,6 +10,7 @@
         <!-- 组件 -->
         <commonTable
             :columns="columns"
+             :selection='selection'
             :data="tableData"
             :pager="page"
             @handleSizeChange="handleSizeChange"
@@ -56,6 +57,7 @@
 export default {
   data () {
     return {
+      selection: false,
       columns: [
         { prop: 'waybill_no', label: '安速单号', width: '176', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
