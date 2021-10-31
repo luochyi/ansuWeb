@@ -28,7 +28,7 @@
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button class='stopBtn' @click="changes=true">批量转回公海</el-button>
+            <el-button class='stopBtn' @click="changes=true" :disabled='table_row.length===0'>批量转回公海</el-button>
           </el-col>
         </el-row>
   <!-- 组件 -->
@@ -38,6 +38,7 @@
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
+      @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column
         slot="table_oper"
@@ -48,13 +49,11 @@
         :resizable="false"
       >
         <template slot-scope="scope">
-                <el-button type="text" @click="informationis = true"> 修改</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <!-- <el-button type="text" @click="informationis = true"> 修改</el-button> -->
+                <!-- <span style="color: #0084FF; margin: 0px 5px">|</span> -->
                 <el-button v-if="activeName === '1'" type="text" @click="open(scope.row)">转回公海</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" class="visi" @click="recordLists"> 拜访记录</el-button>
-                <!-- <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">开户</el-button> -->
+                <el-button type="text" class="visi" @click="recordLists(scope.row)"> 拜访记录</el-button>
               </template>
       </el-table-column>
     </commonTable>
@@ -79,11 +78,11 @@
   <el-dialog title="转回公海" :visible.sync="changes" width="30%" >
   <div class="input">
     <br>
-  <span>是否批量将这34个客户转入公海客户</span>
+  <span>是否批量将这{{table_row.length}}个客户转入公海客户</span>
   </div>
   <span slot="footer" class="change-footer">
     <el-button @click="changes = false" class='wuBtn'>取 消</el-button>
-    <el-button type="primary" @click="changes = false" class='orangeBtn'>确 定</el-button>
+    <el-button type="primary" @click="allchange" class='orangeBtn'>确 定</el-button>
   </span>
 </el-dialog>
 <!-- 完善信息 -->
@@ -104,6 +103,7 @@
 export default {
   data () {
     return {
+      table_row: [],
       changes: false,
       dialogVisible: false,
       informationis: false,
@@ -139,8 +139,8 @@ export default {
     addcustomerp () {
       this.$router.push({ name: 'addcustomerp' })
     },
-    recordLists () {
-      this.$router.push({ name: 'recordLists' })
+    recordLists (data) {
+      this.$router.push({ name: 'recordLists', params: { id: data.id, name: data.name } })
     },
     // 获取列表数据
     getData () {
@@ -160,6 +160,11 @@ export default {
           this.tableData.push(obj)
         })
         this.page.total = res.data.total // 数据总量
+      })
+    },
+    handleSelectionChange (val) {
+      val && val.forEach(item => {
+        this.table_row.push(item.id)
       })
     },
     // 改变页面大小处理
@@ -191,6 +196,18 @@ export default {
     },
     handleClose () {
       this.dialogVisible = false
+    },
+    allchange () {
+      this.$api.customer.privatePublic({ customerIds: this.table_row }).then(res => {
+        console.log(res)
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.changes = false
+          this.getData()
+        } else {
+          this.$message.success(res.msg)
+        }
+      })
     },
     toG () {
       // let obj = {
