@@ -9,6 +9,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column
+      v-if="selection===true"
       type="selection"
       width="50">
     </el-table-column>
@@ -71,6 +72,10 @@ export default {
     maxHeight: {
       type: Number,
       default: 2000
+    },
+    selection: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {

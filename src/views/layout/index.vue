@@ -40,7 +40,7 @@
       <el-aside class='aside main-left' width='200px'>
         <el-scrollbar style='height: calc(100vh - 60px)'>
           <!-- 导航栏 -->
-          <asides :num='Number(activeIndex)'></asides>
+          <asides :num='Number(activeIndex-1)'></asides>
         </el-scrollbar>
       </el-aside>
 
@@ -72,19 +72,19 @@ export default {
   data () {
     return {
       menu: [
-        {
-          name: 'summary',
-          meta: {
-            title: '概述',
-            icon: 'gaishuIcon',
-            hidden: false
-          },
-          ID: 0,
-          menuId: '0',
-          path: 'summary',
-          parentId: '0',
-          children: []
-        },
+        // {
+        //   name: 'summary',
+        //   meta: {
+        //     title: '概述',
+        //     icon: 'gaishuIcon',
+        //     hidden: false
+        //   },
+        //   ID: 0,
+        //   menuId: '0',
+        //   path: 'summary',
+        //   parentId: '0',
+        //   children: []
+        // },
         {
           name: 'orderManager',
           meta: {
@@ -813,12 +813,12 @@ export default {
       item.children.forEach(items => {
         console.log(items.name)
         if (items.name === arr) {
-          this.activeIndex = String(index)
+          this.activeIndex = String(index + 1)
         }
         if (items.children) {
           items.children.forEach(itms => {
             if (itms.name === this.$route.name || itms.name === arr) {
-              this.activeIndex = String(index)
+              this.activeIndex = String(index + 1)
             }
           })
         }
@@ -834,7 +834,7 @@ export default {
       this.menu.forEach((item, index) => {
         item.children.forEach(items => {
           if (items.name === arr) {
-            this.activeIndex = String(index)
+            this.activeIndex = String(index + 1)
           }
         })
       })

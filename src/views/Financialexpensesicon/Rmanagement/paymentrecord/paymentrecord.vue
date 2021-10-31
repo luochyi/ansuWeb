@@ -13,12 +13,12 @@
               <span class='text'>来款客户</span>
             </el-col>
             <el-col :span='12'>
-              <el-input></el-input>
+              <el-input v-model="search.customerName"></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
             <!-- <el-button class='wuBtn long1'>展 开</el-button> -->
           </el-col>
         </el-row>
@@ -132,7 +132,10 @@ export default {
         sizes: [15, 50, 100],
         total: 0
       },
-      customers: []
+      customers: [],
+      search: {
+        customerName: null
+      }
     }
   },
   mounted () {
@@ -175,10 +178,17 @@ export default {
     },
     // editSubmit () {},
     getData () {
-      this.$api.finance.charge.payment.lists({}).then(res => {
+      this.$api.finance.charge.payment.lists({
+        customerName: this.search.customerName,
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    searchReset () {
+      this.search.customerName = null
     },
     confirm (incomingIds) {
       this.$api.finance.charge.payment.confirm(incomingIds).then(res => {

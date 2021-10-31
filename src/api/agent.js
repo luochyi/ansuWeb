@@ -106,6 +106,14 @@ export const selectFba = (params) => {
     data: params
   })
 }
+// /setting/storehouse/fba/select
+export const fbaSelect = () => {
+  return axios({
+    url: '/setting/storehouse/fba/select',
+    method: 'post',
+    data: {}
+  })
+}
 // /setting/country/select
 export const selectCountry = (params) => {
   return axios({
@@ -162,6 +170,22 @@ export const channelServiceLists = (params) => {
     data: params
   })
 }
+export const channelPrice = channelId => {
+  return axios({
+    url: '/setting/channel/price',
+    method: 'post',
+    data: {
+      channelId: channelId
+    }
+  })
+}
+export const channelPlanLists = params => {
+  return axios({
+    url: '/setting/channel/plan/lists',
+    method: 'post',
+    data: params
+  })
+}
 // /setting/channel/service/del
 export const channelServiceDel = (params) => {
   return axios({
@@ -193,6 +217,23 @@ export const channelServiceAdd = (params) => {
     data: params
   })
 }
+// /setting/channel/service/add
+export const channelprice = (params) => {
+  return axios({
+    url: '/setting/channel/price',
+    method: 'post',
+    data: params
+  })
+}
+export const channelPlanPrice = planId => {
+  return axios({
+    url: '/setting/channel/plan/price',
+    method: 'post',
+    data: {
+      planId: planId
+    }
+  })
+}
 export const channelSelect = (params) => {
   return axios({
     url: '/setting/channel/select',
@@ -206,6 +247,31 @@ export const channelserviceSelect = (params) => {
     url: '/setting/channel/service/select',
     method: 'post',
     data: params
+  })
+}
+export const agentServicePrice = agentServiceId => {
+  return axios({
+    url: '/setting/agent/service/price',
+    method: 'post',
+    data: {
+      agentServiceId: agentServiceId
+    }
+  })
+}
+export const agentServicePlanLists = params => {
+  return axios({
+    url: '/setting/agent/service/plan/lists',
+    method: 'post',
+    data: params
+  })
+}
+export const agentServicePlanPrice = planId => {
+  return axios({
+    url: '/setting/agent/service/plan/price',
+    method: 'post',
+    data: {
+      planId: planId
+    }
   })
 }
 export const agentSelectAddress = (params) => {

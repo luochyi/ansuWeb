@@ -13,12 +13,12 @@
               <span class='text'>应收账单号</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='waybillNo' placeholder='请输入'></el-input>
+              <el-input v-model='search.billNo' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
           </el-col>
         </el-row>
 <!--        <el-divider></el-divider>-->
@@ -65,8 +65,8 @@
               width="242"
               :resizable="false"
           >
-            <template slot-scoped="scoped">
-              <el-button type="text" @click="detailspage"> 查看详情</el-button>
+            <template slot-scope="scoped">
+              <el-button type="text" @click="detailspage(scoped.row)"> 查看详情</el-button>
 <!--              <span style="color: #0084FF; margin: 0px 5px">|</span>-->
 <!--              <el-button type="text" @click="password= true"> 发送账单</el-button>-->
 <!--              <span style="color: #0084FF; margin: 0px 5px">|</span>-->
@@ -145,6 +145,9 @@ export default {
         limit: 10,
         sizes: [1, 5, 10],
         total: 0
+      },
+      search: {
+        billNo: null
       }
     }
   },
@@ -154,6 +157,7 @@ export default {
   methods: {
     getData () {
       this.$api.finance.fare.bill.customer.lists({
+        billNo: this.search.billNo,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
@@ -161,8 +165,11 @@ export default {
         this.page.total = res.data.total
       })
     },
-    detailspage () {
-      this.$router.push({ name: 'detailspage' })
+    searchReset () {
+      this.search.billNo = null
+    },
+    detailspage (row) {
+      this.$router.push({ name: 'expenseConfirmationForm', params: { billNo: row.bill_no } })
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
