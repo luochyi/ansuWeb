@@ -68,8 +68,10 @@
           >
             <template slot-scope="scope">
               <!-- <span @click="editZone(scope.row)" class="blue" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span> -->
-              <span @click="price(scope.row)" class="blue">查看分区价格<span style="margin:0px 5px 0px">|</span></span>
-              <span @click="fqjg(scope.row)" class="blue">分区价格<span style="margin:0px 5px 0px">|</span></span>
+              <span @click="price(scope.row)" class="blue" v-if="scope.row.has_price > 0">查看价格<span style="margin:0px 5px 0px">|</span></span>
+              <span @click="plan(scope.row)" class="blue" v-if="scope.row.has_price > 0">价格记录<span style="margin:0px 5px 0px">|</span></span>
+              <span @click="fqjg(scope.row)" class="blue" v-if="scope.row.has_price === 0">分区价格<span style="margin:0px 5px 0px">|</span></span>
+              <span @click="priceEdit(scope.row)" class="blue" v-if="scope.row.has_price === 1">价格修改<span style="margin:0px 5px 0px">|</span></span>
               <!-- <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span> -->
               <span  v-if="activeName === '1'" @click="stopAgent(scope.row)" class="blue">停用<span style="margin:0px 5px 0px">|</span></span>
               <span v-else-if="activeName === '2'" @click="stopAgent(scope.row)" class="blue">
@@ -193,7 +195,7 @@
           <el-table :data="addZone" v-if="addTable" border style="width: 100%"  :show-header="false">
             <el-table-column label="国家" min-width="80">
               <template slot-scope="scope">
-                <el-select v-model="scope.row.countryId" @change='countrychange'>
+                <el-select v-model="scope.row.countryId">
                   <el-option v-for="item in countryOptions" :key="item.value" :value="item.id" :label="item.name"></el-option>
                 </el-select>
               </template>
@@ -223,7 +225,7 @@
                   v-model="scope.row.fbaIds"
                   multiple
                   placeholder="请选择fba仓">
-                  <el-option v-for="item in FbaOptions" :key='item.id' :value="item.id" :label="item.name"></el-option>
+                  <el-option v-for="item in FbaOptions[scope.row.countryId]" :key='item.id' :value="item.id" :label="item.name"></el-option>
                 </el-select>
               </template>
             </el-table-column>
@@ -234,7 +236,7 @@
                   v-model="scope.row.fbaIds"
                   multiple
                   placeholder="按国家">
-                  <el-option v-for="item in FbaOptions" :key='item.id' :value="item.id" :label="item.name"></el-option>
+                  <el-option v-for="item in FbaOptions[scope.row.countryId]" :key='item.id' :value="item.id" :label="item.name"></el-option>
                 </el-select>
               </template>
             </el-table-column>
@@ -273,12 +275,12 @@
             <el-table-column label="区间" min-width="80">新区间</el-table-column>
             <el-table-column label="最低重量" min-width="90">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.minWeight"></el-input>
+                <el-input v-model="scope.row.minWeight" type="Number" min="0" max="99999999"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="最高重量" min-width="90">
               <template slot-scope="scope">
-                 <el-input v-model="scope.row.maxWeight"></el-input>
+                 <el-input v-model="scope.row.maxWeight" type="Number" min="0" max="99999999"></el-input>
               </template>
             </el-table-column>
             <el-table-column label="计价方式" min-width="200">
@@ -346,6 +348,13 @@
               </template>
             </el-table-column>
           </el-table>
+          <span class="tips" v-if="!formData.isFirst">生效时间</span>
+          <el-date-picker v-if="!formData.isFirst"
+              v-model="formData.planTime"
+              type="datetime"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              placeholder="选择日期时间">
+          </el-date-picker>
         </el-row>
       </div>
       <!-- 抽屉底部按钮 -->
@@ -375,16 +384,115 @@
     </commonDrawer>
     <!-- 查看分区价格 -->
     <commonDrawer :drawerVrisible="drawer" :drawerSize="drawerSize" @handleClose='priceClose' drawerTitle="查看分区价格">
-      <div class="dra-content">
-        <el-table :data="priceList" border :header-cell-style="{background: '#F5F5F6'}">
-          <el-table-column></el-table-column>
+      <div class="dra-content" v-if="drawerData.price.wightCol.unitWeights.length > 0">
+        <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
+          <el-table-column>
+            <template slot-scope="scope">
+              <el-popover
+                  placement="top-start"
+                  trigger="hover">
+                <el-table :data="scope.row.areas">
+                  <el-table-column property="country_name" label="国家"></el-table-column>
+                  <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
+                  <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
+                  <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
+                </el-table>
+                <div slot="reference">{{ scope.row.name }}</div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column v-for="(item,index) in drawerData.price.wightCol.unitWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
+            <template slot-scope="scope">
+              {{ getDrawerPriceData(drawerData.price.unit_prices, scope.row.id, item.id, 'price') }}
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="dra-content" v-if="drawerData.price.wightCol.amountWeights.length > 0">
+        <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
+          <el-table-column prop="name">
+            <template slot-scope="scope">
+              <el-popover
+                  placement="top-start"
+                  trigger="hover">
+                <el-table :data="scope.row.areas">
+                  <el-table-column property="country_name" label="国家"></el-table-column>
+                  <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
+                  <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
+                  <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
+                </el-table>
+                <div slot="reference">{{ scope.row.name }}</div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column v-for="(item,index) in drawerData.price.wightCol.amountWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
+            <template slot-scope="scope">
+              {{ getDrawerPriceData(drawerData.price.amounts, scope.row.id, item.id, 'price') }}
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="dra-content" v-if="drawerData.price.wightCol.firstWeights.length > 0">
+        <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
+          <el-table-column prop="name">
+            <template slot-scope="scope">
+              <el-popover
+                  placement="top-start"
+                  trigger="hover">
+                <el-table :data="scope.row.areas">
+                  <el-table-column property="country_name" label="国家"></el-table-column>
+                  <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
+                  <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
+                  <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
+                </el-table>
+                <div slot="reference">{{ scope.row.name }}</div>
+              </el-popover>
+            </template>
+          </el-table-column>
+          <el-table-column v-for="(item,index) in drawerData.price.wightCol.firstWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
+            <el-table-column label="首重重量">
+              <template slot-scope="scope">
+                {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'first_weight') }}
+              </template>
+            </el-table-column>
+            <el-table-column label="首重价格">
+              <template slot-scope="scope">
+                {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'first_weight_price') }}
+              </template>
+            </el-table-column>
+            <el-table-column label="续重重量">
+              <template slot-scope="scope">
+                {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'additional_weight') }}
+              </template>
+            </el-table-column>
+            <el-table-column label="续重价格">
+              <template slot-scope="scope">
+                {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'additional_weight_price') }}
+              </template>
+            </el-table-column>
+          </el-table-column>
         </el-table>
       </div>
       <div slot="footer">
-        <button class="btn-orange" @click="submit()">
-          <span> <i class="el-icon-circle-check"></i>提交</span>
-        </button>
         <button class="btn-gray" @click="priceClose">
+          <span>关闭</span>
+        </button>
+      </div>
+    </commonDrawer>
+    <commonDrawer :drawerVrisible="drawerData.plan.visabled" :drawerSize="drawerData.plan.size" @handleClose='drawerData.plan.visabled = false' drawerTitle="历史价格">
+      <div class="dra-content">
+        <el-table :data="drawerData.plan.data" >
+          <el-table-column prop="time" :formatter="formatterPlan" label="时间"></el-table-column>
+          <el-table-column prop="user_name" label="录价人" width="100"></el-table-column>
+          <el-table-column label="操作" width="100">
+            <template slot-scope="scope">
+               <span @click="showPrice(scope.row)" class="blue">查看</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div slot="footer">
+        <button class="btn-gray" @click="drawerData.plan.visabled=false">
           <span>关闭</span>
         </button>
       </div>
@@ -393,6 +501,7 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
@@ -494,8 +603,9 @@ export default {
         total: 0
       },
       tempData: {
+        changePrice: false,
         zone: { zoneIndex: -1, name: '', areas: [] },
-        weights: [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: null }],
+        weights: [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: 1 }],
         unitWeights: [],
         unitPrices: [],
         amountWeights: [],
@@ -504,6 +614,7 @@ export default {
         firstPrices: []
       },
       formData: {
+        isFirst: true,
         agentServiceId: 1,
         zones: [],
         weights: [],
@@ -511,6 +622,32 @@ export default {
         amounts: [],
         firstPrices: [],
         planTime: ''
+      },
+      drawerData: {
+        price: {
+          type: null,
+          wightCol: {
+            unitWeights: [],
+            amountWeights: [],
+            firstWeights: []
+          },
+          zones: [],
+          unit_prices: [],
+          amounts: [],
+          first_prices: []
+        },
+        data: {},
+        plan: {
+          visabled: false,
+          size: '50%',
+          data: [],
+          page: {
+            pageNo: 1,
+            limit: 10,
+            sizes: [10, 50, 100],
+            total: 0
+          }
+        }
       }
     }
   },
@@ -519,9 +656,7 @@ export default {
     this.id = Number(sessionStorage.getItem('agentId'))
     this.getData()
     // 国家
-    this.$api.agent.selectCountry().then(res => {
-      this.countryOptions = res.data
-    })
+    this.selectFba()
   },
   methods: {
     getData () {
@@ -548,15 +683,77 @@ export default {
       })
     },
     price (data) {
-      console.log(data)
+      this.$api.agent.agentServicePrice(data.id).then(res => {
+        this.priceDetail(res)
+      })
+    },
+    getDrawerPriceData (data, zoneId, weightId, type) {
+      for (let i in data) {
+        if (data[i].zone_id === zoneId && data[i].weight_id === weightId) {
+          return data[i][type]
+        }
+      }
+    },
+    priceDetail (res) {
+      this.drawerData.price.unit_prices = res.data.unit_prices
+      this.drawerData.price.amounts = res.data.amounts
+      this.drawerData.price.first_prices = res.data.first_prices
+      this.drawerData.price.zones = res.data.zones
+      this.drawerData.price.type = res.data.type
+      this.drawerData.price.wightCol.unitWeights = []
+      this.drawerData.price.wightCol.amountWeights = []
+      this.drawerData.price.wightCol.firstWeights = []
+      res.data.weights.forEach(item => {
+        switch (item.type) {
+          case 1:// 单价
+            this.drawerData.price.wightCol.unitWeights.push(item)
+            break
+          case 2:// 金额
+            this.drawerData.price.wightCol.amountWeights.push(item)
+            break
+          case 3:// 首续重
+            this.drawerData.price.wightCol.firstWeights.push(item)
+            break
+        }
+      })
+      this.priceList = res.data
       this.drawer = true
-      this.priceList = [{
-
-      }]
+    },
+    plan (row) {
+      this.$api.agent.agentServicePlanLists({
+        agentServiceId: row.id,
+        page: this.drawerData.plan.page.pageNo,
+        limit: this.drawerData.plan.page.limit
+      }).then(res => {
+        this.drawerData.plan.data = res.data.list
+        this.drawerData.plan.page.total = res.data.total
+      })
+      this.drawerData.plan.visabled = true
     },
     // 分区价格
     fqjg (data) {
       console.log(data)
+      this.tempData = {
+        changePrice: false,
+        zone: { zoneIndex: -1, name: '', areas: [] },
+        weights: [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: 1 }],
+        unitWeights: [],
+        unitPrices: [],
+        amountWeights: [],
+        amountPrices: [],
+        firstWeights: [],
+        firstPrices: []
+      }
+      this.formData = {
+        isFirst: true,
+        agentServiceId: 1,
+        zones: [],
+        weights: [],
+        unitPrices: [],
+        amounts: [],
+        firstPrices: [],
+        planTime: ''
+      }
       this.formData.agentServiceId = data.id
       this.drawerVrisible = true
       if (data.type === 1) {
@@ -564,6 +761,112 @@ export default {
       } else if (data.type === 2) {
         this.zoneType = 2
       }
+    },
+    priceEdit (data) {
+      this.$api.agent.agentServicePrice(data.id).then(res => {
+        this.formData.zones = []
+        res.data.zones.forEach(zone => {
+          let zoneItem = {
+            id: zone.id,
+            name: zone.name,
+            areas: []
+          }
+          zone.areas.forEach(area => {
+            let areaItem = {
+              countryId: area.country_id,
+              countryName: area.country_name,
+              scopeType: area.scope_type,
+              fbaIds: [],
+              prefixes: area.prefixes
+            }
+            area.fbas.forEach(fba => {
+              areaItem.fbaIds.push(fba.fba_id)
+            })
+            zoneItem.areas.push(areaItem)
+          })
+          this.formData.zones.push(zoneItem)
+        })
+        this.formData.weights = []
+        res.data.weights.forEach(weight => {
+          this.formData.weights.push({ id: weight.id, minWeight: weight.min_weight, maxWeight: weight.max_weight, priceType: weight.type })
+        })
+        this.tempData.unitWeights = []
+        this.tempData.amountWeights = []
+        this.tempData.firstWeights = []
+        this.formData.weights.forEach((weight, weightIndex) => {
+          switch (weight.priceType) {
+            case 1: // 单价
+              this.tempData.unitWeights.push({ weightIndex: weightIndex, weight: weight })
+              break
+            case 2: // 金额
+              this.tempData.amountWeights.push({ weightIndex: weightIndex, weight: weight })
+              break
+            case 3: // 首续重
+              this.tempData.firstWeights.push({ weightIndex: weightIndex, weight: weight })
+              break
+          }
+        })
+
+        this.tempData.unitPrices = []
+        this.tempData.amountPrices = []
+        this.tempData.firstPrices = []
+        this.formData.zones.forEach((zone, zoneIndex) => {
+          if (this.tempData.unitWeights.length > 0) {
+            let cols = {}
+            this.tempData.unitWeights.forEach(item => {
+              let col = { price: null }
+              for (let key in res.data.unit_prices) {
+                let priceItem = res.data.unit_prices[key]
+                if (zone.id === priceItem.zone_id && item.weight.id === priceItem.weight_id) {
+                  col.price = priceItem.price
+                }
+              }
+              cols[item.weightIndex] = col
+            })
+            this.tempData.unitPrices.push({ zoneIndex: zoneIndex, cols: cols })
+          }
+          if (this.tempData.amountWeights.length > 0) {
+            let cols = {}
+            this.tempData.amountWeights.forEach(item => {
+              let col = { price: null }
+              for (let key in res.data.amounts) {
+                let priceItem = res.data.amounts[key]
+                if (zone.id === priceItem.zone_id && item.weight.id === priceItem.weight_id) {
+                  col.price = priceItem.price
+                }
+              }
+              cols[item.weightIndex] = col
+            })
+            this.tempData.amountPrices.push({ zoneIndex: zoneIndex, cols: cols })
+          }
+          if (this.tempData.firstWeights.length > 0) {
+            let cols = {}
+            this.tempData.firstWeights.forEach(item => {
+              let col = { firstWeight: null, firstWeightPrice: null, additionalWeight: null, additionalWeightPrice: null }
+              for (let key in res.data.first_prices) {
+                let priceItem = res.data.first_prices[key]
+                if (zone.id === priceItem.zone_id && item.weight.id === priceItem.weight_id) {
+                  col.firstWeight = priceItem.first_weight
+                  col.firstWeightPrice = priceItem.first_weight_price
+                  col.additionalWeight = priceItem.additional_weight
+                  col.additionalWeightPrice = priceItem.additional_weight_price
+                }
+              }
+              cols[item.weightIndex] = col
+            })
+            this.tempData.firstPrices.push({ zoneIndex: zoneIndex, cols: cols })
+          }
+        })
+        this.tempData.changePrice = false
+        this.formData.isFirst = false
+      })
+      this.formData.agentServiceId = data.id
+      if (data.type === 1) {
+        this.zoneType = 1
+      } else if (data.type === 2) {
+        this.zoneType = 2
+      }
+      this.drawerVrisible = true
     },
     // 停用
     batchStop () {
@@ -610,7 +913,14 @@ export default {
     },
     // 添加分区
     submitfenqu () {
-      this.inhere = true
+      if (this.tempData.zone.name === '') {
+        this.$message.error('分区名称不能为空') // 错误提示
+        return
+      }
+      if (this.tempData.zone.areas.length === 0) {
+        this.$message.error('分区信息不能为空') // 错误提示
+        return
+      }
       this.fenquData.push({ fenqu: this.zonename })
       this.addZone = [
         {
@@ -630,13 +940,14 @@ export default {
         this.saveData.push(obj)
         this.zoneData = []
         this.zonename = ''
-        console.log(this.saveData)
       })
       if (this.tempData.zone.zoneIndex !== -1) {
         this.formData.zones[this.tempData.zone.zoneIndex] = this.tempData.zone
       } else {
+        this.tempData.changePrice = true
         this.formData.zones.push(this.tempData.zone)
       }
+      this.inhere = true
     },
     // 停用启用
     stopOK () {
@@ -673,71 +984,84 @@ export default {
     // 下一步
     nextPrev (data) {
       this.control += data
+      if (this.control === 2) {
+        if (this.formData.zones.length === 0) {
+          this.$message.error('分区不能为空')
+          this.control -= data
+          return
+        }
+        if (this.formData.weights.length === 0) {
+          this.formData.weights.push({ minWeight: 0, maxWeight: 99999999, priceType: 1 })
+        }
+      }
       if (this.control === 3) {
-        this.amounts = []
-        this.firstPrices = []
-        this.unitPrices = []
-        for (let i = 0; i < this.weights.length; i++) {
-          this.fenquData.forEach(ele => {
-            let obj = {
-              fenqu: ele.fenqu,
-              price: '',
-              minWeight: ele.minWeight,
-              maxWeight: ele.maxWeight
+        if (this.tempData.changePrice) {
+          this.tempData.changePrice = false
+          this.amounts = []
+          this.firstPrices = []
+          this.unitPrices = []
+          for (let i = 0; i < this.weights.length; i++) {
+            this.fenquData.forEach(ele => {
+              let obj = {
+                fenqu: ele.fenqu,
+                price: '',
+                minWeight: ele.minWeight,
+                maxWeight: ele.maxWeight
+              }
+              if (this.weights[i].priceType === 1) {
+                this.unitPrices.push(obj)
+              } else if (this.weights[i].priceType === 2) {
+                this.amounts.push(obj)
+              } else if (this.weights[i].priceType === 3) {
+                this.firstPrices.push(obj)
+              }
+            })
+          }
+
+          this.tempData.unitWeights = []
+          this.tempData.amountWeights = []
+          this.tempData.firstWeights = []
+          this.formData.weights.forEach((weight, weightIndex) => {
+            switch (weight.priceType) {
+              case 1: // 单价
+                this.tempData.unitWeights.push({ weightIndex: weightIndex, weight: weight })
+                break
+              case 2: // 金额
+                this.tempData.amountWeights.push({ weightIndex: weightIndex, weight: weight })
+                break
+              case 3: // 首续重
+                this.tempData.firstWeights.push({ weightIndex: weightIndex, weight: weight })
+                break
             }
-            if (this.weights[i].priceType === 1) {
-              this.unitPrices.push(obj)
-            } else if (this.weights[i].priceType === 2) {
-              this.amounts.push(obj)
-            } else if (this.weights[i].priceType === 3) {
-              this.firstPrices.push(obj)
+          })
+
+          this.tempData.unitPrices = []
+          this.tempData.amountPrices = []
+          this.tempData.firstPrices = []
+          this.formData.zones.forEach((zone, zoneIndex) => {
+            if (this.tempData.unitWeights.length > 0) {
+              let cols = {}
+              this.tempData.unitWeights.forEach(item => {
+                cols[item.weightIndex] = { price: null }
+              })
+              this.tempData.unitPrices.push({ zoneIndex: zoneIndex, cols: cols })
+            }
+            if (this.tempData.amountWeights.length > 0) {
+              let cols = {}
+              this.tempData.amountWeights.forEach(item => {
+                cols[item.weightIndex] = { price: null }
+              })
+              this.tempData.amountPrices.push({ zoneIndex: zoneIndex, cols: cols })
+            }
+            if (this.tempData.firstWeights.length > 0) {
+              let cols = {}
+              this.tempData.firstWeights.forEach(item => {
+                cols[item.weightIndex] = { firstWeight: null, firstWeightPrice: null, additionalWeight: null, additionalWeightPrice: null }
+              })
+              this.tempData.firstPrices.push({ zoneIndex: zoneIndex, cols: cols })
             }
           })
         }
-
-        this.tempData.unitWeights = []
-        this.tempData.amountWeights = []
-        this.tempData.firstWeights = []
-        this.formData.weights.forEach((weight, weightIndex) => {
-          switch (weight.priceType) {
-            case 1: // 单价
-              this.tempData.unitWeights.push({ weightIndex: weightIndex, weight: weight })
-              break
-            case 2: // 金额
-              this.tempData.amountWeights.push({ weightIndex: weightIndex, weight: weight })
-              break
-            case 3: // 首续重
-              this.tempData.firstWeights.push({ weightIndex: weightIndex, weight: weight })
-              break
-          }
-        })
-
-        this.tempData.unitPrices = []
-        this.tempData.amountPrices = []
-        this.tempData.firstPrices = []
-        this.formData.zones.forEach((zone, zoneIndex) => {
-          if (this.tempData.unitWeights.length > 0) {
-            let cols = {}
-            this.tempData.unitWeights.forEach(item => {
-              cols[item.weightIndex] = { price: null }
-            })
-            this.tempData.unitPrices.push({ zoneIndex: zoneIndex, cols: cols })
-          }
-          if (this.tempData.amountWeights.length > 0) {
-            let cols = {}
-            this.tempData.amountWeights.forEach(item => {
-              cols[item.weightIndex] = { price: null }
-            })
-            this.tempData.amountPrices.push({ zoneIndex: zoneIndex, cols: cols })
-          }
-          if (this.tempData.firstWeights.length > 0) {
-            let cols = {}
-            this.tempData.firstWeights.forEach(item => {
-              cols[item.weightIndex] = { firstWeight: null, firstWeightPrice: null, additionalWeight: null, additionalWeightPrice: null }
-            })
-            this.tempData.firstPrices.push({ zoneIndex: zoneIndex, cols: cols })
-          }
-        })
       }
     },
     toAdd () {
@@ -745,7 +1069,24 @@ export default {
     },
     // 国家id类型 只传国家和区域类型
     addZoneSubmit (data) {
-      console.log(data)
+      if (data.countryId === '') {
+        this.$message.error('国家不能为空') // 错误提示
+        return
+      }
+      if (data.scopeType === null) {
+        this.$message.error('请选择区域类型') // 错误提示
+        return
+      }
+      if (Number(data.scopeType) === 2) {
+        if (this.zoneType === 1 && data.prefixes.length === 0) {
+          this.$message.error('请填写邮编前缀') // 错误提示
+          return
+        }
+        if (this.zoneType === 2 && data.fbaIds.length === 0) {
+          this.$message.error('请选择FBA仓库') // 错误提示
+          return
+        }
+      }
       let obj = {
         countryId: data.countryId,
         scopeType: data.scopeType,
@@ -808,6 +1149,30 @@ export default {
           break
       }
     },
+    // 重新渲染name列
+    formatterPlan (row, column, cellValue) {
+      switch (column.property) {
+        case 'time':
+          return this.formatDate(row.start_time, 'yyyy年MM月dd日 hh:mm') + ' —— ' + this.formatDate(row.end_time, 'yyyy年MM月dd日 hh:mm')
+        case 'scope_type':
+          return row.scope_type === 1 ? '按国家' : '区域'
+        case 'areaOther':
+          if (row.fba_only === 1) {
+            let fbaName = []
+            row.fbas.forEach(item => {
+              fbaName.push(item.fba_name)
+            })
+            return fbaName.join(',')
+          } else {
+            return row.prefixes.join(',')
+          }
+      }
+    },
+    showPrice (row) {
+      this.$api.agent.agentServicePlanPrice(row.id).then(res => {
+        this.priceDetail(res)
+      })
+    },
     reset () {
       this.serviceName = ''
       this.getData()
@@ -822,10 +1187,22 @@ export default {
           break
       }
     },
-    countrychange (data) {
-      console.log(data)
-      this.$api.agent.selectFba({ countryId: data }).then(res => {
-        this.FbaOptions = res.data
+    selectFba () {
+      this.$api.agent.fbaSelect().then(res => {
+        this.countryOptions = []
+        res.data.forEach(item => {
+          this.FbaOptions[item.id] = []
+          item.fbas.forEach(fba => {
+            this.FbaOptions[item.id].push({
+              id: fba.id,
+              name: fba.name
+            })
+          })
+          this.countryOptions.push({
+            id: item.id,
+            name: item.name
+          })
+        })
       })
     },
     // 改变页面大小处理
@@ -892,9 +1269,9 @@ export default {
       console.log(row.fbaIds)
       let arr = []
       row.fbaIds.forEach(element => {
-        for (let i = 0; i < this.FbaOptions.length; i++) {
-          if (this.FbaOptions[i].id === element) {
-            arr.push(this.FbaOptions[i].name)
+        for (let i = 0; i < this.FbaOptions[row.countryId].length; i++) {
+          if (this.FbaOptions[row.countryId][i].id === element) {
+            arr.push(this.FbaOptions[row.countryId][i].name)
           }
         }
       })
@@ -915,6 +1292,7 @@ export default {
       this.tempData.zone = { zoneIndex: -1, name: '', areas: [] }
     },
     zoneDel (index) {
+      this.tempData.changePrice = true
       this.formData.zones.splice(index, 1)
     },
     zoneEdit (index) {
@@ -926,21 +1304,96 @@ export default {
       this.tempData.zone.areas.splice(index, 1)
     },
     weightDel (index) {
+      if (this.formData.weights.length === 1) {
+        this.$message.error('价格不能为空')
+        return
+      }
       this.formData.weights.splice(index, 1)
+      if (index === 0) {
+        this.formData.weights[0].minWeight = 0
+      } else if (index === this.formData.weights.length) {
+        this.formData.weights[index - 1].maxWeight = 99999999
+      } else {
+        this.formData.weights[index].minWeight = this.formData.weights[index - 1].maxWeight
+      }
+      this.tempData.changePrice = true
     },
     weightAdd () {
       this.addweightsTable = true
       this.tempData.weight = [{ weightIndex: -1, maxWeight: 0, priceType: null }]
     },
     weightSubmit (index) {
-      this.addweightsTable = false
       let weight = this.tempData.weights[index]
-      if (weight.weightIndex !== -1) {
-        this.formData.weights[weight.weightIndex] = weight
-      } else {
-        this.formData.weights.push(weight)
+      if (weight.minWeight === '' || weight.maxWeight === '') {
+        this.$message.error('重量不能为空')
+        return
       }
-      this.tempData.weights = [{ weightIndex: -1, maxWeight: 0, priceType: null }]
+      weight.minWeight = Number(weight.minWeight)
+      weight.maxWeight = Number(weight.maxWeight)
+      if (weight.maxWeight <= weight.minWeight) {
+        this.$message.error('最小重量必须小于最大重量')
+        return
+      }
+      if (weight.minWeight < 0) {
+        this.$message.error('重量不能小于0')
+        return
+      }
+      if (weight.maxWeight > 99999999) {
+        this.$message.error('超出最大重量')
+        return
+      }
+      for (let weightsKey in this.formData.weights) {
+        let item = this.formData.weights[weightsKey]
+        if (weight.minWeight >= item.minWeight && weight.minWeight < item.maxWeight) {
+          if (weight.minWeight > item.minWeight) {
+            this.formData.weights.splice(weightsKey, 0, {
+              minWeight: item.minWeight,
+              maxWeight: weight.minWeight,
+              priceType: item.priceType
+            })
+            item.minWeight = weight.minWeight
+            weightsKey++
+          }
+          if (weight.minWeight === item.minWeight) {
+            if (weight.maxWeight < item.maxWeight) {
+              item.minWeight = weight.maxWeight
+              this.formData.weights.splice(weightsKey, 0, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+            } else if (weight.maxWeight === item.maxWeight) {
+              this.formData.weights.splice(weightsKey, 1, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+            } else {
+              let delCount = 0
+              for (let i = weightsKey; i < this.formData.weights.length; i++) {
+                if (weight.maxWeight > this.formData.weights[i].maxWeight) {
+                  delCount++
+                } else if (weight.maxWeight === this.formData.weights[i].maxWeight) {
+                  delCount++
+                  break
+                } else {
+                  this.formData.weights[i].minWeight = weight.maxWeight
+                  break
+                }
+              }
+              this.formData.weights.splice(weightsKey, delCount, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+            }
+          }
+          break
+        }
+      }
+      this.addweightsTable = false
+      this.tempData.changePrice = true
+      this.tempData.weights = [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: 1 }]
     },
     submit () {
       this.formData.unitPrices = []
@@ -971,6 +1424,7 @@ export default {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.drawerVrisible = false
+          this.getData()
         } else {
           this.$message.error(res.msg) // 错误提示
         }
