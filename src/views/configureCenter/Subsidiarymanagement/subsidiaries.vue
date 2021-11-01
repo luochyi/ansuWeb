@@ -7,17 +7,17 @@
     <div class="box">
       <!--  标签页 -->
       <el-descriptions class="margin-top" :column="2" direction="vertical">
-        <el-descriptions-item label="公司名称">
-          <el-input
-            style="width: 265px"
-            v-model="name"
-            placeholder="请输入"
-          ></el-input>
-        </el-descriptions-item>
         <el-descriptions-item label="运单起始号码">
           <el-input
             style="width: 265px"
             v-model="startNo"
+            placeholder="请输入"
+          ></el-input>
+        </el-descriptions-item>
+        <el-descriptions-item label="公司名称">
+          <el-input
+            style="width: 265px"
+            v-model="name"
             placeholder="请输入"
           ></el-input>
         </el-descriptions-item>
@@ -73,17 +73,14 @@
               show-password
             ></el-input>
           </el-descriptions-item>
-          <el-descriptions-item label="确认密码">
+          <!-- <el-descriptions-item label="确认密码">
             <el-input
               style="width: 265px"
               placeholder=""
               v-model="admin.confirmPassword"
               show-password
             ></el-input>
-            <!-- <el-button style="width: 165px; marginLeft: 20px" class="whiteBtn" @click="randomPsw()"
-              >生成随机密码</el-button
-            > -->
-          </el-descriptions-item>
+          </el-descriptions-item> -->
         </el-descriptions>
       </div>
       <el-form>

@@ -13,16 +13,16 @@
         </el-row>
         <!--  -->
         <el-row class="info">
-          <el-col :span="6" class="flex align-center">
-            <div class="name">客户名称</div>
-            <el-col :span="16">
-              <el-input v-model="form.name" placeholder="请输入" ></el-input>
-            </el-col>
-          </el-col>
           <el-col :span="6" class="flex  align-center">
             <div class="name">客户编码</div>
             <el-col :span="16">
               <el-input v-model="form.code" placeholder="请输入" ></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span="6" class="flex align-center">
+            <div class="name">客户名称</div>
+            <el-col :span="16">
+              <el-input v-model="form.name" placeholder="请输入" ></el-input>
             </el-col>
           </el-col>
           <el-col :span="6" class="flex align-center">
@@ -52,12 +52,12 @@
               <el-input v-model="form.password" placeholder="请输入" ></el-input>
             </el-col>
           </el-col>
-           <el-col :span="6" class="flex  align-center">
+           <!-- <el-col :span="6" class="flex  align-center">
             <div class="name">确认密码</div>
             <el-col :span="16">
               <el-input v-model="form.confirmPassword" placeholder="请输入" ></el-input>
             </el-col>
-          </el-col>
+          </el-col> -->
         </el-row>
         <el-row class="info">
           <el-col :span="6" class="flex align-center">
@@ -276,9 +276,9 @@ export default {
         levelId: null,
         periodId: null,
         bigGoodsType: null,
-        bigGoodsAmount: '',
+        bigGoodsAmount: 0,
         smallGoodsType: null,
-        smallGoodsAmount: '',
+        smallGoodsAmount: 0,
         contacts: [
           {
             name: '',

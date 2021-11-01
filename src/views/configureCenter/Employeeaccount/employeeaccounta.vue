@@ -41,15 +41,14 @@
    <el-descriptions-item label="登陆密码">
        <el-input style="width: 200px" placeholder="请输入" v-model="formData.password" show-password></el-input>
    </el-descriptions-item>
-   <el-descriptions-item label="确认密码">
+   <!-- <el-descriptions-item label="确认密码">
        <el-input style="width: 200px" placeholder="请输入" v-model="formData.confirmPassword" show-password></el-input>
-       <!-- <el-button class="whiteBtn" @click=" password = true">生成随机密码</el-button> -->
-   </el-descriptions-item>
+   </el-descriptions-item> -->
    </el-descriptions>
    <el-form >
     <el-form-item size="large">
     <el-button type="primary" @click="add" class="orangeBtn long2">确定</el-button>
-    <el-button class='whiteBtn long2' @click="back" style="color:rgba(251, 71, 2, 1)">取消</el-button>
+    <!-- <el-button class='whiteBtn long2' @click="back" style="color:rgba(251, 71, 2, 1)">取消</el-button> -->
     </el-form-item>
    </el-form>
   </div>

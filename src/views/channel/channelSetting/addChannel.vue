@@ -15,13 +15,13 @@
                 渠道信息
             </el-row>
             <el-row style="margin-top:16px">
+              <el-col :span="8" style="display:flex;align-items:center">
+                    <span class="item">渠道编号&nbsp;</span>
+                    <span><el-input style="width:108%" v-model="form.code" size="small" placeholder="请输入"></el-input></span>
+                </el-col>
                 <el-col :span="8" style="display:flex;align-items:center">
                     <span class="item">渠道名称&nbsp;</span>
                     <span><el-input style="width:108%" v-model="form.name" size="small" placeholder="请输入"></el-input></span>
-                </el-col>
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">渠道编号&nbsp;</span>
-                    <span><el-input style="width:108%" v-model="form.code" size="small" placeholder="请输入"></el-input></span>
                 </el-col>
                 <el-col :span="8" style="display:flex;align-items:center">
                     <span class="item">渠道英文&nbsp;</span><span>
@@ -232,7 +232,7 @@
             </el-row>
             <el-row style="">
                 <el-col :span="10">
-               <el-input type="textarea" v-model="form.describes[0].content" rows="5"></el-input>
+               <el-input type="textarea" v-model="text" rows="5"></el-input>
                 </el-col>
             </el-row>
             <!--  -->
@@ -253,7 +253,7 @@
             </el-row>
             <el-row style="">
                 <el-col :span="10">
-                   <el-input type="textarea" v-show="careful===1" v-model="form.describes[1].content" rows="5"></el-input>
+                   <el-input type="textarea" v-if="careful===1" v-model="carefulText" rows="5"></el-input>
                 </el-col>
             </el-row>
             <!--  -->
@@ -274,7 +274,7 @@
             </el-row>
             <el-row style="">
                 <el-col :span="10">
-                   <el-input type="textarea" v-show="Require===1"  v-model="form.describes[2].content" rows="5"></el-input>
+                   <el-input type="textarea" v-show="Require===1"  v-model="RequireText" rows="5"></el-input>
                 </el-col>
             </el-row>
             <!--  -->
@@ -295,7 +295,7 @@
             </el-row>
             <el-row style="">
                 <el-col :span="10">
-                   <el-input type="textarea" v-show="tip===1" v-model="form.describes[3].content" rows="5"></el-input>
+                   <el-input type="textarea" v-show="tip===1" v-model="tiptext" rows="5"></el-input>
                 </el-col>
             </el-row>
             <el-row class="line"></el-row>
@@ -339,12 +339,14 @@ export default {
     return {
       otherChannel: '', // 参考其他渠道输入框
       dialogChannel: false, // 选择其他渠道弹窗
-      tip: 1, // 是否有温馨提示
+      tip: 2, // 是否有温馨提示
       RequireText: '', // 有无特殊要求
-      Require: 1, // 特殊要求
+      Require: 2, // 特殊要求
       carefulText: '', // 注意事项
+      text: '',
+      tiptext: '',
       sendRule: '', // 寄送规则
-      careful: 1, // 注意事项
+      careful: 2, // 注意事项
       shortest: '', // 最短时间
       Longest: '', // 最长时间
       time: '', // 派送时间
@@ -387,19 +389,20 @@ export default {
           {
             type: 1,
             content: ''
-          },
-          {
-            type: 2,
-            content: ''
-          },
-          {
-            type: 3,
-            content: ''
-          },
-          {
-            type: 4,
-            content: ''
-          }
+          }, {}, {}, {}
+          // 简介类型 1=寄送规则 2=注意事项 3=特殊要求 4=温馨提示
+          // {
+          //   type: 2,
+          //   content: ''
+          // },
+          // {
+          //   type: 3,
+          //   content: ''
+          // },
+          // {
+          //   type: 4,
+          //   content: ''
+          // }
         ],
         materialCates: []
       },
@@ -552,6 +555,16 @@ export default {
       this.$router.go(-1)
     },
     addSumbit () {
+      let obj = [{ type: 1, content: this.text }]
+      if (this.careful === 1) {
+        obj[1] = [{ type: 2, content: this.carefulText }]
+      }
+      if (this.Require === 1) {
+        obj[2] = [{ type: 3, content: this.RequireText }]
+      }
+      if (this.tip === 1) {
+        obj[3] = [{ type: 4, content: this.tiptext }]
+      }
       this.$api.agent.channelAdd(
         {
           name: this.form.name,
@@ -576,8 +589,8 @@ export default {
             carryRule: this.form.weightRule.carryRule,
             realWeightCube: this.form.weightRule.realWeightCube
           },
-          describes: this.form.describes,
-          materialCates: this.form.materialCates
+          materialCates: this.form.materialCates,
+          describes: obj
         }
       ).then(res => {
         if (res.code === 0) {
@@ -596,6 +609,44 @@ export default {
     this.$api.setting.currency.select().then(res => {
       this.currencyOption = res.data
     })
+  },
+  watch: {
+    careful: {
+      handler (val) {
+        if (val === 1) {
+          this.form.describes[1] = {
+            type: 2,
+            content: ''
+          }
+        } else if (val === 2) {
+          this.form.describes[1] = {}
+        }
+      }
+    },
+    Require: {
+      handler (val) {
+        if (val === 1) {
+          this.form.describes[2] = {
+            type: 3,
+            content: ''
+          }
+        } else if (val === 2) {
+          this.form.describes[2] = {}
+        }
+      }
+    },
+    tip: {
+      handler (val) {
+        if (val === 1) {
+          this.form.describes[3] = {
+            type: 4,
+            content: ''
+          }
+        } else if (val === 2) {
+          this.form.describes[3] = {}
+        }
+      }
+    }
   }
 }
 </script>
