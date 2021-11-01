@@ -22,6 +22,15 @@ export const add = (params) => {
     data: params
   })
 }
+export const Import = path => {
+  return axios({
+    url: '/setting/storehouse/fba/import',
+    method: 'post',
+    data: {
+      path: path
+    }
+  })
+}
 export const del = (params) => {
   return axios({
     url: '/setting/storehouse/fba/del',
