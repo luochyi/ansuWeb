@@ -45,6 +45,7 @@
           :columns="columns"
           :data="tableData"
           :pager="page"
+          :selection='selection'
           @handleSizeChange="handleSizeChange"
           @handleCurrentChange="handleCurrentChange"
           @handleSelectionChange="handleSelectionChange"
@@ -505,6 +506,7 @@
 export default {
   data () {
     return {
+      selection: false,
       zoneType: null, // 派件类型 1快递 2卡派
       saveData: [],
       control: 1,

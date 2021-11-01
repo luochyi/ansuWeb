@@ -54,7 +54,7 @@
         <!-- 组件 -->
         <commonTable
             :columns="columns"
-            :data="tableData"
+            :data="tableData" :selection='selection'
             :pager="page"
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
@@ -83,6 +83,7 @@
 export default {
   data () {
     return {
+      selection: false,
       waybillNo: '', // 运单号
       customerName: '', // 客户名称
       customerCode: '', // 客户编号

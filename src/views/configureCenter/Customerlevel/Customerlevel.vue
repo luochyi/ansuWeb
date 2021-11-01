@@ -16,6 +16,7 @@
    <commonTable
       :columns="columns"
       :data="tableData"
+      :selection='selection'
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
@@ -71,13 +72,14 @@
 export default {
   data () {
     return {
+      selection: false,
       diaShow: false,
       digTitle: '',
       name: '',
       warn_day: null,
       customerLevelId: null,
       columns: [
-        { prop: 'name', label: '客户名称', width: '400', align: 'center' },
+        { prop: 'name', label: '客户名称', width: '600', align: 'center' },
         { prop: 'warn_day', label: '提醒天数', align: 'center', formatter: this.formatter }
       ],
       tableData: [],

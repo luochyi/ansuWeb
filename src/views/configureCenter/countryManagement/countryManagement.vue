@@ -23,6 +23,7 @@
     <commonTable
       :columns="columns"
       :data="tableData"
+      :selection='selection'
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
@@ -36,7 +37,7 @@
         :resizable="false"
         >
         <template slot-scope="scope">
-          <el-button type="text" @click="edit(scope.row.id)">修改</el-button>
+          <el-button type="text" @click="edit(scope.row)">修改</el-button>
         </template>
       </el-table-column>
       </commonTable>
@@ -48,6 +49,7 @@
 export default {
   data () {
     return {
+      selection: false,
       name: '',
       activeName: '1', // 标签绑定
       columns: [
@@ -108,7 +110,17 @@ export default {
     },
     // 操作按钮列表
     editTableData (row) {},
-    edit (data) {}
+    edit (data) {
+      this.$router.push({
+        name: 'addCountry',
+        params: {
+          id: data.id,
+          name: data.name,
+          icon: data.icon,
+          area_code: data.area_code
+        }
+      })
+    }
   }
 }
 </script>

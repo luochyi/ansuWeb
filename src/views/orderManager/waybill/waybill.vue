@@ -29,7 +29,7 @@
         <div class="table">
           <el-row class="tableBtn">
             <el-col :span="12" class="left">
-              <el-button class="batch">批量导出Excel</el-button>
+              <!-- <el-button class="batch">批量导出Excel</el-button> -->
               <!-- <el-button class='batch'>协调订单</el-button> -->
             </el-col>
             <el-col :span="20" class="right">
@@ -40,6 +40,7 @@
           <commonTable
             :columns="columns"
             :data="tableData"
+            :selection='selection'
             :pager="page"
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
@@ -166,6 +167,7 @@
 export default {
   data () {
     return {
+      selection: false,
       // websocket
       socket: null,
       lockReconnect: false, // 是否真正建立连接

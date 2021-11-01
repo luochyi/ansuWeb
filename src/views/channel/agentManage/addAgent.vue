@@ -13,16 +13,16 @@
         </el-row>
         <!--  -->
         <el-row class="info">
-          <el-col :span="6" class="flex align-center">
-            <div class="name">代理名称</div>
-            <el-col :span="16">
-              <el-input v-model="agentName" placeholder="请输入" ></el-input>
-            </el-col>
-          </el-col>
           <el-col :span="6" class="flex  align-center">
             <div class="name">代理编码</div>
             <el-col :span="16">
               <el-input v-model="agentCode" placeholder="请输入" ></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span="6" class="flex align-center">
+            <div class="name">代理名称</div>
+            <el-col :span="16">
+              <el-input v-model="agentName" placeholder="请输入" ></el-input>
             </el-col>
           </el-col>
         </el-row>

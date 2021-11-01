@@ -9,6 +9,7 @@
       <!-- 表格 -->
       <div>
         <commonTable
+        :selection="selection"
           :columns="columns"
           :data="tableData"
           :pager="page"
@@ -26,6 +27,7 @@
 export default {
   data () {
     return {
+      selection: false,
       columns: [
         { prop: 'safe_no', label: '保单号', width: '100', align: 'center' },
         { prop: 'waybill_no', label: '运单号', width: '100', align: 'center' },

@@ -25,7 +25,8 @@
         <el-divider></el-divider>
          <el-row class='searchbox1'>
           <el-col :span='10' class="left">
-            <el-button class='stopBtn' @click="Batchregistration">批量登记费用</el-button></el-col>
+            <!-- <el-button class='stopBtn' @click="Batchregistration">批量登记费用</el-button> -->
+            </el-col>
             <el-col :span='12' class='right'>
                 <!-- <el-button class='whiteBtn '>查询条件设置</el-button>
               <el-button class='whiteBtn '>列表显示设置</el-button> -->
@@ -35,6 +36,7 @@
           <!-- 组件 -->
     <commonTable
       :columns="columns"
+      :selection='selection'
       :data="tableData"
       :pager="page"
       @handleSizeChange="handleSizeChange"
@@ -199,6 +201,7 @@
 export default {
   data () {
     return {
+      selection: false,
       total: 0, // 数据数量
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码
@@ -215,7 +218,7 @@ export default {
       drawerTitle: '装箱清单', // 抽屉标题
 
       columns: [
-        { prop: 'waybill_no', label: '运单号', width: '140', align: 'center' },
+        { prop: 'waybill_no', label: '运单号', width: '150', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
         { prop: 'customer_code', label: '客户编号', width: '118', align: 'center' },
         { prop: 'type', label: '订单类型', width: '90', align: 'center', formatter: this.formatter },

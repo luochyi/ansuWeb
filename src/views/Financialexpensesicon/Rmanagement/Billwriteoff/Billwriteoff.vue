@@ -25,6 +25,7 @@
         <commonTable
             :columns="columns"
             :data="tableData"
+            :selection='selection'
             :pager="page"
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
@@ -51,6 +52,7 @@
 export default {
   data () {
     return {
+      selection: false,
       columns: [
         { prop: 'name', label: '客户名称', align: 'center' },
         { prop: 'code', label: '客户编码', align: 'center' },

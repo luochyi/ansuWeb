@@ -33,6 +33,7 @@
           <!-- 组件 -->
     <commonTable
       :columns="columns"
+      :selection='selection'
       :data="tableData"
       :pager="page"
       @handleSizeChange="handleSizeChange"
@@ -107,6 +108,7 @@
 export default {
   data () {
     return {
+      selection: false,
       uploadhead: {
         'Ansuex-Manage-Token': sessionStorage.getItem('token')
       },

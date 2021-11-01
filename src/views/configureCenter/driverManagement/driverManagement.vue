@@ -44,6 +44,7 @@
       <div>
        <commonTable
       :columns="columns"
+      :selection='selection'
       :data="tableData"
       :pager="page"
       @handleSizeChange="handleSizeChange"
@@ -82,6 +83,7 @@
 export default {
   data () {
     return {
+      selection: false,
       dialogVisible: false, // 对话框可见
       stopAgentis: false,
       activeName: '1', // 标签绑定

@@ -43,6 +43,7 @@
       :columns="columns"
       :data="tableData"
       :pager="page"
+      :selection="selection"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
@@ -67,10 +68,11 @@
 export default {
   data () {
     return {
+      selection: false,
       columns: [
         { prop: 'waybill_no', label: '运单号', width: '212', align: 'center' },
-        { prop: 'customer_name', label: '客户名称', width: '82', align: 'center' },
-        { prop: 'customer_code', label: '客户编码', width: '255', align: 'center' },
+        { prop: 'customer_name', label: '客户名称', width: '182', align: 'center' },
+        { prop: 'customer_code', label: '客户编码', width: '135', align: 'center' },
         { prop: 'channel_name', label: '渠道', width: '142', align: 'center' },
         { prop: 'cargoes_num', label: '件数', width: '95', align: 'center' },
         { prop: 'customer_bill_weight', label: '客户结算重', width: '129', align: 'center' },

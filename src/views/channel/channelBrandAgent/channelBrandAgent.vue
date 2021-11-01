@@ -85,7 +85,6 @@
         <div class="table">
           <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
             :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type="selection" width="50" key="1"></el-table-column>
             <el-table-column prop="agent_name" label="代理名称" min-width="150" key="2"></el-table-column>
             <el-table-column prop="agent_status" label="代理状态" min-width="100" key="3">
               <template slot-scope="scope">

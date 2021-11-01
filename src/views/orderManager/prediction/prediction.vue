@@ -41,7 +41,7 @@
           <!-- 表格 -->
           <el-table ref="multipleTable" :data="tableData"  border  tooltip-effect="dark" style="width: 100%" @handleSelectionChange="handleSelectionChange"
             :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type='selection' min-width='50'> </el-table-column>
+            <!-- <el-table-column type='selection' min-width='50'> </el-table-column> -->
             <!-- 预报单号 -->
             <el-table-column  prop='forecast_no'  label='预报单号'  min-width='153'> </el-table-column>
             <!-- 预报类型 -->
@@ -116,7 +116,7 @@
             <el-table-column label='操作' fixed='right' min-width='199'>
               <template slot-scope="scope">
                  <el-button type="text" @click="Orderdetails(scope.row.id)"> 查看详情</el-button>
-                <el-button v-if="scope.row.type ===2" type="text" @click="delivery(scope.row)">|&nbsp;&nbsp;发货 </el-button>
+                <!-- <el-button v-if="scope.row.type ===2" type="text" @click="delivery(scope.row)">|&nbsp;&nbsp;发货 </el-button> -->
                  <!-- <span style="color: #0084FF; margin: 0px 5px">|</span>
                 <el-button type="text" @click="Coordinated"> 协同运单 </el-button> -->
               </template>

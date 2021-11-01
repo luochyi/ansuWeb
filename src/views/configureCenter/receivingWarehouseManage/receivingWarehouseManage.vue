@@ -36,6 +36,7 @@
 <commonTable
       :columns="columns"
       :data="tableData"
+      :selection='selection'
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
@@ -72,6 +73,7 @@ import api from '../../../api/api'
 export default {
   data () {
     return {
+      selection: false,
       dialogVisible: false, // 对话框可见
       stopAgentis: false,
       activeName: '1', // 标签绑定

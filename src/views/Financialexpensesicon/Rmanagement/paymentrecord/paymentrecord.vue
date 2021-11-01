@@ -25,7 +25,7 @@
         <el-divider></el-divider>
         <el-row class='tableBtn'>
           <el-col :span='10' class="left">
-            <el-button class='stopBtn' @click="changes=true">批量导入来款</el-button>
+            <el-button class='stopBtn' @click="dialogShow=true">批量导入来款</el-button>
           </el-col>
           <el-col :span='10' class='right'>
             <el-button class='whiteBtn' @click="showAdd">新增来款登记</el-button>
@@ -38,6 +38,7 @@
         <commonTable
             :columns="columns"
             :data="tableData"
+            :selection="selection"
             :pager="page"
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
@@ -100,6 +101,40 @@
         <!-- <el-button type="primary" @click="editSubmit" v-else>提交修改</el-button> -->
       </span>
     </el-dialog>
+    <!-- 导入 -->
+    <el-dialog
+    style="textAlign:left "
+      title="导入来款记录"
+      :visible.sync="dialogShow"
+      width="30%"
+      :before-close="excelClose">
+      <div >
+        <el-row style="margin:20px">
+          <el-upload
+          class="upload-demo"
+          :headers="uploadhead"
+          :action="`${$baseUrl}/file/upload/file`"
+          :on-preview="handlePreview"
+          :on-remove="handleRemove"
+          :before-remove="beforeRemove"
+          :on-success="handleAvatarSuccess"
+          name="file"
+          multiple
+          :limit="1"
+          :on-exceed="handleExceed"
+          :file-list="fileList">
+          <el-button size="mini"  type="primary">上传Excel</el-button>
+        </el-upload>
+        </el-row>
+        <el-row class="diabox2">
+          <span @click="download">下载Excel模板</span>
+        </el-row>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogShow = false">取 消</el-button>
+        <el-button type="primary" @click="importOk">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -107,7 +142,15 @@
 export default {
   data () {
     return {
+      selection: false,
+      uploadhead: {
+        'Ansuex-Manage-Token': sessionStorage.getItem('token')
+      },
+      path: '',
+      fileList: [],
+      templatePath: '',
       dialogVisible: false,
+      dialogShow: false,
       id: null,
       form: {
         amount: null,
@@ -141,8 +184,38 @@ export default {
   mounted () {
     this.getData()
     this.customerSelect()
+    this.getTemplate()
   },
   methods: {
+    getTemplate () {
+      this.$api.setting.template.lists(2).then(res => {
+        if (res.data && res.data.length > 0) {
+          this.templatePath = res.data[0].path
+        }
+      })
+    },
+    download () {
+      // 下载模板
+      window.location.href = this.$api.file.cdnPath(this.templatePath)
+    },
+    handleRemove (file, fileList) {
+      console.log(file, fileList)
+    },
+    handlePreview (file) {
+      console.log(file)
+    },
+    handleExceed (files, fileList) {
+      this.$message.warning(`当前限制选择 3 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`)
+    },
+    beforeRemove (file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    handleAvatarSuccess (res, file) {
+      this.path = res.data.path // 上传成功的回调函数
+    },
+    excelClose () {
+      this.dialogShow = false
+    },
     handleClose () {
       this.dialogVisible = false
       this.form = {
@@ -176,7 +249,20 @@ export default {
         }
       })
     },
-    // editSubmit () {},
+    // 导入提交
+    importOk () {
+      // /finance/charge/payment/import
+      this.$api.finance.charge.payment.paymentimport({ path: this.path }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.dialogShow = false
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+      this.getData()
+    },
     getData () {
       this.$api.finance.charge.payment.lists({
         customerName: this.search.customerName,
@@ -272,6 +358,17 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
+  }
+}
+.diabox2{
+border-top:1px solid #E8EBF2;
+padding-top: 20px;
+  span{
+    color: #0091FF;
+    cursor: pointer;
+  }
+  div{
+    color:#FF4D4F;
   }
 }
 </style>

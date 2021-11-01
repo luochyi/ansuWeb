@@ -14,6 +14,7 @@
       <!-- 表格 -->
       <div>
         <commonTable
+          :selection="selection"
           :columns="columns"
           :data="tableData"
           :pager="page"
@@ -53,6 +54,7 @@
 export default {
   data () {
     return {
+      selection: false,
       dialog: {
         change: {
           visable: false
