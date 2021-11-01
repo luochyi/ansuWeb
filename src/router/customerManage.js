@@ -1,7 +1,7 @@
 // 客户管理
 export default [
   {
-    path: '/customerManage',
+    path: '/',
     name: 'customerManage',
     meta: {
       title: '客户管理',

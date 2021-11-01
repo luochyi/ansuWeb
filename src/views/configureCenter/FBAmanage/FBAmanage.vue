@@ -58,6 +58,7 @@
             <!-- <el-button class='stopBtn' @click="batchDel">批量删除</el-button> -->
           </el-col>
           <el-col :span='12' class="right">
+            <el-button class='whiteBtn' @click="showUpload">导入FBA仓</el-button>
             <el-button class='whiteBtn' @click="dialogVisible = true;diatitle='新增FBA仓'">添加FBA仓</el-button>
           </el-col>
         </el-row>
@@ -113,13 +114,56 @@
           <el-button type="primary" @click="addSubmit">确 定</el-button>
         </span>
       </el-dialog>
+
+    <el-dialog
+        title="导入FBA仓库"
+        :visible.sync="dialog.upload.visible"
+        width="30%"
+        @before-close="dialog.upload.visible = false">
+      <div>
+        <el-row>
+          <el-upload
+              class="upload-demo"
+              :headers="uploadhead"
+              :action="`${$baseUrl}/file/upload/file`"
+              :before-remove="beforeRemove"
+              :on-success="handleAvatarSuccess"
+              name="file"
+              :limit="1"
+              :file-list="fileList">
+            <el-button size="mini"  type="primary">上传Excel</el-button>
+          </el-upload>
+        </el-row>
+        <el-row class="diabox2">
+          <span @click="download">下载导入FBA仓库Excel</span>
+          <div>请下载导入FBA仓库专用Excel</div>
+          <div>如用其他Excel会发生对账数据错误</div>
+        </el-row>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialog.upload.visible = false">取 消</el-button>
+        <el-button type="primary" @click="submit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 <script>
 export default {
   data () {
     return {
+      uploadhead: {
+        'Ansuex-Manage-Token': sessionStorage.getItem('token')
+      },
+      fileList: [],
       diatitle: '',
+      dialog: {
+        upload: {
+          visible: false,
+          formData: {
+            path: null
+          }
+        }
+      },
       dialogVisible: false,
       countryList: [],
       form: {
@@ -144,6 +188,7 @@ export default {
   },
   mounted () {
     this.getData()
+    this.getTemplate()
   },
   methods: {
     getData () {
@@ -173,6 +218,23 @@ export default {
     reset () {
       this.keyword = ''
       this.getData()
+    },
+    beforeRemove (file, fileList) {
+      return this.$confirm(`确定移除 ${file.name}？`)
+    },
+    handleAvatarSuccess (res, file) {
+      this.dialog.upload.formData.path = res.data.path // 上传成功的回调函数
+    },
+    getTemplate () {
+      this.$api.setting.template.lists(3).then(res => {
+        if (res.data && res.data.length > 0) {
+          this.templatePath = res.data[0].path
+        }
+      })
+    },
+    download () {
+      // 下载模板
+      window.location.href = this.$api.file.cdnPath(this.templatePath)
     },
     del (id) {
       this.$confirm('确认删除')
@@ -241,6 +303,22 @@ export default {
         address: ''
       }
       this.dialogVisible = false
+    },
+    showUpload () {
+      this.dialog.upload.formData.path = null
+      this.fileList = []
+      this.dialog.upload.visible = true
+    },
+    submit () {
+      this.$api.configure.FBA.Import(this.dialog.upload.formData.path).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData()
+          this.dialog.upload.visible = false
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
     }
   }
 }
@@ -248,6 +326,17 @@ export default {
 <style lang="scss" scoped>
 .active{
   border:3px solid #FB4702
+}
+.diabox2{
+  border-top:1px solid #E8EBF2;
+  padding-top: 20px;
+  span{
+    color: #0091FF;
+    cursor: pointer;
+  }
+  div{
+    color:#FF4D4F;
+  }
 }
 .search-font{
   width: 60px;
