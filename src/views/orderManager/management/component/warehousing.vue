@@ -18,7 +18,7 @@
                 <el-row class="line"></el-row>
             <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
             <el-col :span='14' class="left">
-                <!-- <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button> -->
+                <el-button class='orangeBtn' @click="lotEject" :disabled='this.table_row.length===0' size="small">批量出库</el-button>
             </el-col>
             <el-col :span='10' class="right">
             </el-col>
@@ -26,12 +26,12 @@
             <!-- 表格 -->
             <div class="table">
               <commonTable
-              :selection="selection"
                 :columns="columns"
                 :data="tableData"
                 :pager="page"
                 @handleSizeChange="handleSizeChange"
                 @handleCurrentChange="handleCurrentChange"
+                @handleSelectionChange="handleSelectionChange"
                 >
                 <el-table-column
                   slot="table_oper"
@@ -53,10 +53,11 @@
           <div class="dra-content">
             <!-- 内容区域 -->
             <el-row>
-              <span style="fontSize:20px;color:#FB4702">{{orderCode}}</span>
+              <span style="fontSize:20px;color:#FB4702" v-show="req.waybillIds.length===1">{{orderCode}}</span>
             </el-row>
             <el-row>
-              <span style="fontSize:14px">客户名称：{{userName}}</span>
+              <span style="fontSize:14px" v-if="req.waybillIds.length===1">客户名称：{{userName}}</span>
+              <span style="fontSize:14px" v-else>批量出库运单数：{{req.waybillIds.length}}</span>
             </el-row>
             <el-divider></el-divider>
             <el-form  label-width="80px">
@@ -101,8 +102,8 @@
 export default {
   data () {
     return {
-      selection: false,
       drawerVrisible: false,
+      table_row: [],
       drawerTitle: '出库',
       code: '',
       userName: '',
@@ -139,6 +140,7 @@ export default {
   mounted () {
     // 在页面加载前调用获取列表数据函数
     this.getData()
+    // this.tableData = [{ type: 1, id: 1, waybill_no: '212d12d2d2' }, { type: 2, id: 2, waybill_no: '12d1d12' }]
     this.$api.agent.channelSelect().then(res => {
       this.channelOption = res.data
     })
@@ -180,6 +182,18 @@ export default {
         })
         .catch(_ => {})
     },
+    handleSelectionChange (val) {
+      console.log(val)
+      this.table_row = []
+      val && val.forEach(item => {
+        this.table_row.push(item.id)
+      })
+      console.log(this.table_row)
+    },
+    lotEject () {
+      this.req.waybillIds = this.table_row
+      this.drawerVrisible = true
+    },
     changeChannel (val) {
       let channelid = val
       this.$api.agent.channelserviceSelect({ channelId: channelid }).then(res => {
@@ -209,11 +223,13 @@ export default {
           return this.formatDate(row.created_at, 'yyyy-MM-dd hh:mm:ss')
       }
     },
-    handleClose () {},
     addClose () {
       this.drawerVrisible = false
       this.channelId = null
-      this.req.channelServiceId = null
+      this.req = {
+        waybillIds: [],
+        channelServiceId: null
+      }
     }
   }
 }
