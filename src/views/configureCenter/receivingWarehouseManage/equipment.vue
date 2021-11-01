@@ -1,5 +1,5 @@
 <template>
-  <div id='boxx'>
+  <div>
     <div class="box">
       <!--  top -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>

@@ -557,13 +557,13 @@ export default {
     addSumbit () {
       let obj = [{ type: 1, content: this.text }]
       if (this.careful === 1) {
-        obj[1] = [{ type: 2, content: this.carefulText }]
+        obj[1] = { type: 2, content: this.carefulText }
       }
       if (this.Require === 1) {
-        obj[2] = [{ type: 3, content: this.RequireText }]
+        obj[2] = { type: 3, content: this.RequireText }
       }
       if (this.tip === 1) {
-        obj[3] = [{ type: 4, content: this.tiptext }]
+        obj[3] = { type: 4, content: this.tiptext }
       }
       this.$api.agent.channelAdd(
         {

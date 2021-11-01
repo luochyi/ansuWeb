@@ -2,7 +2,8 @@
   <div>
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span>新增目的国</span>
+      <span v-if="editId===undefined">新增目的国</span>
+      <span v-else>修改目的国</span>
     </el-row>
     <!-- 内容 -->
     <div class="content">
@@ -26,7 +27,7 @@
                 <div style="fontSize:14px;color:#000000A6;marginTop:10px">上传国家图标</div>
                 <div  style="fontSize:12px;color:#00000073;marginBottom:10px">图片像素为114*76px</div>
             <el-button @click="addSubmit" class="orangeBtn">确 认</el-button>
-            <el-button class="whiteBtn" @click="back()">取 消</el-button>
+            <!-- <el-button class="whiteBtn" @click="back()">取 消</el-button> -->
         </div>
     </div>
   </div>
@@ -35,6 +36,7 @@
 export default {
   data () {
     return {
+      editId: null,
       uploadhead: {
         'Ansuex-Manage-Token': sessionStorage.getItem('token')
       },
@@ -42,6 +44,13 @@ export default {
       areaCode: null,
       icon: null
     }
+  },
+  mounted () {
+    this.editId = this.$route.params.id
+    this.name = this.$route.params.name
+    this.icon = this.$route.params.icon
+    this.areaCode = this.$route.params.area_code
+    // countryId
   },
   methods: {
     handleAvatarSuccess (res, file) {
@@ -62,20 +71,38 @@ export default {
     },
     // 提交新增
     addSubmit () {
-      let params = {
-        name: this.name,
-        areaCode: Number(this.areaCode),
-        icon: this.icon
-      }
-      this.$api.configure.countryAdd(params).then(res => {
-        console.log(res)
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.$router.push('name:countryManagement')
-        } else {
-          this.$message.error(res.msg)
+      if (this.editId === undefined) {
+        let params = {
+          name: this.name,
+          areaCode: Number(this.areaCode),
+          icon: this.icon
         }
-      })
+        this.$api.configure.countryAdd(params).then(res => {
+          console.log(res)
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.$router.push({ name: 'countryManagement' })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else {
+        let params = {
+          countryId: this.editId,
+          name: this.name,
+          areaCode: Number(this.areaCode),
+          icon: this.icon
+        }
+        this.$api.configure.countryEdit(params).then(res => {
+          console.log(res)
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.$router.push({ name: 'countryManagement' })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
     },
     back () {
       this.$router.push('name:countryManagement')

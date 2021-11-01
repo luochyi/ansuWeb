@@ -144,6 +144,13 @@ export const countryAdd = (params) => {
     data: params
   })
 }
+export const countryEdit = (params) => {
+  return axios({
+    url: '/setting/country/edit',
+    method: 'post',
+    data: params
+  })
+}
 // 司机列表
 // driver/lists
 

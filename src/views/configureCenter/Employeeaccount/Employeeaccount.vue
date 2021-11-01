@@ -40,8 +40,8 @@
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button v-if ="activeName === '1'" class='batch' @click="disabled(personnelIds)">批量停用</el-button>
-            <el-button v-if ="activeName === '2'" class='batch' @click="enabled(personnelIds)">批量启用</el-button>
+            <el-button v-if ="activeName === '1'" class='batch' @click="disabled(personnelIds)" :disabled='personnelIds.length===0'>批量停用</el-button>
+            <el-button v-if ="activeName === '2'" class='batch' @click="enabled(personnelIds)" :disabled='personnelIds.length===0'>批量启用</el-button>
         </el-col>
         <el-col :span='12' class="right">
           <el-button @click="employeeaccounta" class='orangeBtn long2' icon="el-icon-circle-plus-outline">新建账号</el-button>
@@ -108,6 +108,27 @@
                  <el-button type="primary" @click="rePass" class='orangeBtn'>确 定</el-button>
                </span>
             </el-dialog>
+            <!-- 编辑员工 -->
+            <el-dialog
+              title="修改员工"
+              :visible.sync="editShow"
+              width="30%"
+              :before-close="editClose">
+              <div>
+                <el-form ref="form" :model="form" label-width="80px">
+                  <el-form-item label="姓名">
+                    <el-input v-model="form.name"></el-input>
+                  </el-form-item>
+                  <el-form-item label="手机号">
+                    <el-input v-model="form.phone"></el-input>
+                  </el-form-item>
+                </el-form>
+              </div>
+              <span slot="footer" class="dialog-footer">
+                <el-button @click="editShow = false">取 消</el-button>
+                <el-button type="primary" @click="editSubmit">确 定</el-button>
+              </span>
+            </el-dialog>
   </div>
   </div>
 </template>
@@ -120,10 +141,16 @@ export default {
     return {
       // 输入框
       search: {
+        personnelId: null,
         name: '', // 姓名
         phone: '' // 员工手机
       },
       // 弹框
+      editShow: false,
+      form: {
+        name: '',
+        phone: ''
+      },
       deactivation: false, // 批量停用弹框
       stopAgentis: false, // 停用账号
       password: false, // 重置密码
@@ -165,6 +192,25 @@ export default {
     },
     edit (data) {
       console.log(data)
+      this.form.personnelId = data.id
+      this.form.name = data.name
+      this.form.phone = data.phone
+      this.editShow = true
+    },
+    editSubmit () {
+      this.$api.configure.personnel.edit(this.form).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.editClose()
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    editClose () {
+      this.editShow = false
+      this.form.personnelId = null
     },
     handleClick (val) {
       console.log(val)
