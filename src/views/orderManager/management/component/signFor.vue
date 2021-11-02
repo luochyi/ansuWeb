@@ -142,7 +142,7 @@ export default {
 }
 .box{
     background: #fff;
-    padding: 14px 32px;
+    padding-top: 14px;
     text-align: left;
 }
 .item{

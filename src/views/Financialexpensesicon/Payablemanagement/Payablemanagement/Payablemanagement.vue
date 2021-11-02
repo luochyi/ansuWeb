@@ -115,10 +115,10 @@ export default {
       fileList: [],
       dialogVisible: false,
       columns: [
-        { prop: 'pay_no', label: '应收账单号', width: '155', align: 'center' },
+        { prop: 'pay_no', label: '应收账单号', width: '180', align: 'center' },
         { prop: 'agent_name', label: '代理名称', width: '193', align: 'center' },
-        { prop: 'agent_code', label: '代理编号', width: '118', align: 'center' },
-        { prop: 'created_at', label: '账单生成时间', align: 'center', formatter: this.formatter },
+        { prop: 'agent_code', label: '代理编号', width: '200', align: 'center' },
+        { prop: 'created_at', label: '账单生成时间', width: '200', align: 'center', formatter: this.formatter },
         { prop: 'created_user_name', label: '对账确认人', width: '171', align: 'center' },
         { prop: 'audit_status', label: '审核状态', width: '171', align: 'center', formatter: this.formatter }
       ],

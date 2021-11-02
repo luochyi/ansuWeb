@@ -76,7 +76,7 @@ export default {
         { prop: 'channel_name', label: '渠道', width: '142', align: 'center' },
         { prop: 'cargoes_num', label: '件数', width: '95', align: 'center' },
         { prop: 'customer_bill_weight', label: '客户结算重', width: '129', align: 'center' },
-        { prop: 'agent_bill_weight', label: '代理结算重', width: '73', align: 'center' },
+        { prop: 'agent_bill_weight', label: '代理结算重', width: '200', align: 'center' },
         { prop: 'salesman_name', label: '业务员', width: '120', align: 'center' },
         { prop: 'created_at', label: '下单日', width: '255', align: 'center', formatter: this.formatter }
       ],

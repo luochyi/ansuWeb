@@ -85,7 +85,7 @@
               {{info.code}}
             </el-col>
             <el-col :span="4" style="fontSize:14px">
-              手动录单<el-switch v-model="manual"  active-color="#FB4702" inactive-color="#FB4702" @change="changes"></el-switch>
+              手动录单<el-switch v-model="manual"  active-color="#13ce66" inactive-color="#ff4949" @change="changes" style="marginLeft:20px"></el-switch>
             </el-col>
           </el-row>
         </div>
@@ -212,7 +212,7 @@ export default {
         {
           prop: 'customer_name',
           label: '客户名称',
-          width: '100',
+          width: '300',
           align: 'center'
         },
         {
@@ -249,7 +249,7 @@ export default {
         {
           prop: 'has_invoice',
           label: '是否制作发票',
-          width: '100',
+          width: '130',
           align: 'center',
           formatter: this.formatter
         },
@@ -294,7 +294,7 @@ export default {
         {
           prop: 'have_safe',
           label: '是否购买保险',
-          width: '100',
+          width: '200',
           align: 'center',
           formatter: this.formatter
         },

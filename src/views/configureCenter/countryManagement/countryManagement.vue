@@ -53,7 +53,7 @@ export default {
       name: '',
       activeName: '1', // 标签绑定
       columns: [
-        { prop: 'name', label: '目的国', align: 'center' },
+        { prop: 'name', label: '目的国', width: '100', align: 'center' },
         { prop: 'area_code', label: '国家区号', align: 'center', formatter: this.formatter },
         { prop: 'storehouse_count', label: '仓库数量', align: 'center', formatter: this.formatter }
       ],
@@ -75,17 +75,18 @@ export default {
       this.tableData = []
       this.$api.configure.countryLists({ page: this.page.pageNo, limit: this.page.limit }).then(res => {
         console.log(res)
-        res.data.list && res.data.list.forEach(ele => {
-          let obj = {
-            id: ele.id,
-            name: ele.name,
-            icon: ele.icon,
-            area_code: ele.area_code,
-            storehouse_count: ele.storehouse_count
-          }
-          this.tableData.push(obj)
-          this.page.total = res.data.total
-        })
+        this.tableData = res.data.list
+        // res.data.list && res.data.list.forEach(ele => {
+        //   let obj = {
+        //     id: ele.id,
+        //     name: ele.name,
+        //     icon: ele.icon,
+        //     area_code: ele.area_code,
+        //     storehouse_count: ele.storehouse_count
+        //   }
+        //   this.tableData.push(obj)
+        this.page.total = res.data.total
+        // })
       })
     },
     addCountry () {

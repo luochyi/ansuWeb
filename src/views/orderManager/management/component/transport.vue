@@ -28,7 +28,6 @@
             <!-- 表格 -->
             <div class="table">
               <commonTable
-                :selection="selection"
                 :columns="columns"
                 :data="tableData"
                 :pager="page"
@@ -148,7 +147,6 @@
 export default {
   data () {
     return {
-      selection: false,
       code: '',
       dialogVisible: false,
       drawerSize: '40%',
@@ -447,7 +445,7 @@ export default {
 }
 .box{
     background: #fff;
-    padding: 14px 32px;
+    padding-top: 14px;
     text-align: left;
 }
 .item{

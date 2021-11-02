@@ -12,7 +12,7 @@
       <el-col :span="6" style="border: 1px solid #D9D9D9;border-top:none;height:750px;overflow:scroll">
         <div style="background:#fff">
           <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
-            <el-col :span="3" style="margin-top:-2px">
+            <el-col :span="5" style="margin-top:-2px">
             <span style="font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;font-weight: 500;color: #000000;">国家</span>
             </el-col>
             <el-col :span="14" type="flex">
@@ -69,7 +69,7 @@
             <el-table-column prop="name" label="仓库名"></el-table-column>
             <el-table-column prop="zip_code" label="邮编"></el-table-column>
             <el-table-column prop="address" label="地址"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="300">
+            <el-table-column fixed="right" label="操作" width="100">
               <template slot-scope="scope">
                 <el-button type="text" @click="edit(scope.row)">
                   修改
@@ -87,8 +87,10 @@
               :current-page.sync='currentPage'
               :pager-count='9'
               :page-size='pageSize'
-              :page-sizes='[10, 20, 50, 100]'
+              :page-sizes='[5, 10, 15, 50]'
               layout='total, prev, pager, next, sizes, jumper'
+              @size-change='handleSizeChange'
+              @current-change='currentPageChange'
               :total='total'
             ></el-pagination>
           </div>
@@ -179,7 +181,7 @@ export default {
       chooseArr: [],
       total: null, // 数据总条数
       currentPage: 1,
-      pageSize: 15,
+      pageSize: 5,
       agentCode: '',
       agentName: '',
       tableData: [], // 表格数据
@@ -209,6 +211,15 @@ export default {
     changecountry (id, index) {
       this.red = index
       this.countryId = id
+      this.currentPage = 1
+      this.getData()
+    },
+    handleSizeChange (val) {
+      this.pageSize = val
+      this.getData()
+    },
+    currentPageChange (val) {
+      this.currentPage = val
       this.getData()
     },
     handleSelectionChange (arr) {},

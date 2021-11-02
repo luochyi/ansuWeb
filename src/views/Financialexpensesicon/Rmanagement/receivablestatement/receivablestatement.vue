@@ -9,7 +9,7 @@
       <div class='content'>
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
+            <el-col :span='7'>
               <span class='text'>应收账单号</span>
             </el-col>
             <el-col :span='13'>
