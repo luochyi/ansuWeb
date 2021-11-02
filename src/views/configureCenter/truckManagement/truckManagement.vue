@@ -117,11 +117,11 @@ export default {
       agentName: '',
       agentCode: '',
       columns: [
-        { prop: 'name', label: '车辆名称', width: '373', align: 'center' },
+        { prop: 'name', label: '车辆名称', width: '223', align: 'center' },
         { prop: 'number', label: '车牌号', width: '102', align: 'center' },
         { prop: 'status', label: '账号状态', width: '122', align: 'center', formatter: this.formatter },
         { prop: 'load', label: '车载数量', width: '154', align: 'center', formatter: this.formatter },
-        { prop: 'Carsize', label: '车厢大小（米）', align: 'center', formatter: this.formatter }
+        { prop: 'Carsize', label: '车厢大小（米）', align: 'center', width: '204', formatter: this.formatter }
       ],
       tableData: [],
       page: {

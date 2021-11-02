@@ -45,12 +45,12 @@ export default {
     return {
       selection: false,
       columns: [
-        { prop: 'write_off_no', label: '核销单号', width: '165', align: 'center' },
+        { prop: 'write_off_no', label: '核销单号', width: '200', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
-        { prop: 'customer_code', label: '客户编号', width: '187', align: 'center' },
+        { prop: 'customer_code', label: '客户编号', width: '200', align: 'center' },
         { prop: 'cost_count', label: '核销费用', width: '165', align: 'center', formatter: this.formatter },
         { prop: 'amount', label: '核销金额', width: '189', align: 'center', formatter: this.formatter },
-        { prop: 'created_at', label: '核销日期', align: 'center', formatter: this.formatter }
+        { prop: 'created_at', label: '核销日期', align: 'center', width: '200', formatter: this.formatter }
       ],
       tableData: [],
       page: {

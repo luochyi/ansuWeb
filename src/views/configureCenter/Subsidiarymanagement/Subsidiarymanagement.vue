@@ -61,7 +61,7 @@ export default {
       columns: [
         { prop: 'name', label: '公司名称', width: '215', align: 'center' },
         { prop: 'startNo', label: '运单起始号码', width: '151', align: 'center' },
-        { prop: 'address', label: '公司地址', align: 'center' }
+        { prop: 'address', label: '公司地址', width: '100', align: 'center' }
       ],
       tableData: [],
       page: {

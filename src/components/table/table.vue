@@ -20,7 +20,7 @@
           :prop="item.prop"
           :label="item.label"
           :align="item.align ? item.align : 'center'"
-          :width="item.width"
+          :min-width="item.width"
           :formatter="item.formatter ? item.formatter : formatterValue">
               <template slot-scope="scope">
                   <slot :name="item.slotName"
@@ -33,7 +33,7 @@
           :prop="item.prop"
           :label="item.label"
           :align="item.align ? item.align : 'center'"
-          :width="item.width"
+          :min-width="item.width"
           :formatter="item.formatter ? item.formatter : formatterValue"
         >
         </el-table-column>

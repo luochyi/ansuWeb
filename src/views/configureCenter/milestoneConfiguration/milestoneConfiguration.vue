@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row>
-      <el-col :span="2">
+      <el-col :xs="4" :sm="4" :md="4" :lg="2" :xl="2">
         <div class="left">
           <div class="lefta">
             <el-row type="flex" justify="flex-start" align="middle"></el-row>
@@ -18,7 +18,7 @@
           </div>
         </div>
       </el-col>
-      <el-col :span="22">
+      <el-col :xs="20" :sm="20" :md="20" :lg="22" :xl="22">
         <!--  标签页 -->
         <div class="right">
           <el-row type="flex" justify="flex-start" class="title" align="middle">
@@ -225,7 +225,7 @@ export default {
       ],
       predictionNo: '',
       columns: [
-        { prop: 'name', label: '名称', width: '427', align: 'center' },
+        { prop: 'name', label: '名称', width: '327', align: 'center' },
         {
           prop: 'status',
           label: '状态',
@@ -425,20 +425,20 @@ export default {
   font-size: 16px;
 }
 .right {
-  float: left;
+  // float: left;
   width: 100%;
   background: #ffffff;
   border-radius: 4px;
   border: 1px solid #e8e8e8;
-  margin: auto 20px;
+  // margin: auto 20px;
 }
 .top {
   margin: 10px auto;
 }
 .left {
   // float: left;
-  width: 124px;
-  height: 616px;
+  min-width: 124px;
+  height: 700px;
   background: #ffffff;
   border-radius: 4px;
   border: 1px solid #e8e8e8;
