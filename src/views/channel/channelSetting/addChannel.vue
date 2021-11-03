@@ -240,7 +240,7 @@
              color: rgba(0, 0, 0, 0.65);margin-top:20px">
                 注意事项
             </el-row>
-            <el-row style="margin-top: 16px;">
+            <el-row style="marginTop:16px">
                 <el-col :span="3" class="yes">是否有注意事项</el-col>
                 <el-col :span="14">
                     <template>
@@ -252,13 +252,18 @@
                 </el-col>
             </el-row>
             <el-row style="">
-                <el-col :span="10">
-                   <el-input type="textarea" v-if="careful===1" v-model="carefulText" rows="5"></el-input>
+                <el-col>
+                   <!-- <el-input type="textarea" v-if="careful===1" v-model="carefulText" rows="5"></el-input> -->
+                    <quill-editor class="appwrapper"
+                      v-model="carefulText"
+                      v-if="careful===1"
+                      @change="onEditorChange($event)">
+                    </quill-editor>
                 </el-col>
             </el-row>
             <!--  -->
             <el-row style="font-size: 16px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;
-             color: rgba(0, 0, 0, 0.65);margin-top:20px">
+             color: rgba(0, 0, 0, 0.65);marginTop:20px">
                 特殊要求
             </el-row>
             <el-row style="margin-top: 16px;">
@@ -273,8 +278,13 @@
                 </el-col>
             </el-row>
             <el-row style="">
-                <el-col :span="10">
-                   <el-input type="textarea" v-show="Require===1"  v-model="RequireText" rows="5"></el-input>
+                <el-col>
+                   <!-- <el-input type="textarea" v-show="Require===1"  v-model="RequireText" rows="5"></el-input> -->
+                   <quill-editor class="appwrapper"
+                      v-model="RequireText"
+                      v-if="Require===1"
+                      @change="onEditorChange($event)">
+                    </quill-editor>
                 </el-col>
             </el-row>
             <!--  -->
@@ -294,8 +304,13 @@
                 </el-col>
             </el-row>
             <el-row style="">
-                <el-col :span="10">
-                   <el-input type="textarea" v-show="tip===1" v-model="tiptext" rows="5"></el-input>
+                <el-col>
+                   <!-- <el-input type="textarea" v-show="tip===1" v-model="tiptext" rows="5"></el-input> -->
+                   <quill-editor class="appwrapper"
+                      v-model="tiptext"
+                      v-if="tip===1"
+                      @change="onEditorChange($event)">
+                    </quill-editor>
                 </el-col>
             </el-row>
             <el-row class="line"></el-row>
@@ -600,6 +615,10 @@ export default {
           this.$message.error(res.msg)
         }
       })
+    },
+    onEditorChange ({ quill, html, text }) {
+      console.log('editor change!', quill, html, text)
+      this.content = html
     }
   },
   mounted () {
@@ -677,5 +696,9 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
+}
+.appwrapper{
+  height: 200px;
+  margin-bottom: 50px;
 }
 </style>

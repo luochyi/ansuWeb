@@ -26,7 +26,7 @@ export default [
     meta: {
       title: '订单详情',
       icon: 'OrderdetailsIcon',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/orderManager/prediction/Orderdetails.vue')
   },
