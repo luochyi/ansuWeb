@@ -49,7 +49,7 @@ export default {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .drawers_box {
     position: relative;
     .el-drawer__header {

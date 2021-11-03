@@ -26,7 +26,7 @@ export default [
     meta: {
       title: '订单详情',
       icon: 'OrderdetailsIcon',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/orderManager/prediction/Orderdetails.vue')
   },
@@ -57,7 +57,7 @@ export default [
     meta: {
       title: '预报运单',
       icon: 'waybillIcon',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/orderManager/waybill/orderDetials.vue')
   },
@@ -158,7 +158,7 @@ export default [
     meta: {
       title: '出仓单',
       icon: 'eject',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/orderManager/eject/ejectWaybill.vue')
   }

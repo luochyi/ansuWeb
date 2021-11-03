@@ -11,6 +11,7 @@
         <el-col :span='4' >出仓日期：{{baseInfo.eject_time}}</el-col>
         <el-col :span='4' >渠道：{{baseInfo.channel_name}}</el-col>
         <el-col :span='4' >代理：{{baseInfo.agent_name}}</el-col>
+        <el-col :span='4' ><el-button size="small" class="orangeBtn" @click="back">返回</el-button></el-col>
       </el-row>
       <el-divider></el-divider>
       <!-- 搜索栏 -->
@@ -136,6 +137,9 @@ export default {
     }
   },
   mounted () {
+    if (this.$route.params.id === undefined) {
+      this.$router.go(-1)
+    }
     let params = this.$route.params
     this.baseInfo.eject_time = params.eject_time
     this.baseInfo.eject_no = params.eject_no
@@ -175,7 +179,8 @@ export default {
           return this.formatDate(row.created_at, 'yyyy-MM-dd hh:mm:ss')
       }
     },
-    handleSelectionChange (val) {}
+    handleSelectionChange (val) {},
+    back () { this.$router.go(-1) }
   }
 }
 </script>

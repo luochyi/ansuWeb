@@ -107,7 +107,7 @@ export default {
         { prop: 'is_separate_customs_clearance', label: '单独清关', width: '115', formatter: this.formatter },
         { prop: 'bill_weight', label: '结算重', width: '111', align: 'center' },
         { prop: 'weight', label: '实重', width: '120', align: 'center' },
-        { prop: 'volume', label: '方数', width: '120', align: 'center' },
+        { prop: 'volume', label: '方数', width: '120', align: 'center', formatter: this.formatter },
         { prop: 'volume_weight', label: '材积重', width: '120', align: 'center' },
         { prop: 'remark', label: '客户备注', width: '200', align: 'center' },
         { prop: 'interior_remark', label: '内部备注', width: '200', align: 'center' },
@@ -187,6 +187,8 @@ export default {
           return row.is_separate_customs_clearance === 1 ? '单独清关' : '非单独清关'
         case 'have_safe':
           return row.have_safe === 1 ? '购买保险' : '不购买保险'
+        case 'volume':
+          return (row.volume / 1000000).toFixed(2) + 'm³'
       }
     },
     // 改变页面大小处理

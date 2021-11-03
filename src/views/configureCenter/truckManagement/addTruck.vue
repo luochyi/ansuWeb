@@ -44,7 +44,7 @@
       <!-- 其他 -->
       <div class="infoBox">
         <el-button class="orangeBtn" @click="add">确 认</el-button>
-        <!-- <el-button class="whiteBtn">取 消</el-button> -->
+        <el-button class="whiteBtn" @click="back">取 消</el-button>
       </div>
     </div>
   </div>
@@ -111,6 +111,9 @@ export default {
           }
         })
       }
+    },
+    back () {
+      this.$router.go(-1)
     }
   }
 }

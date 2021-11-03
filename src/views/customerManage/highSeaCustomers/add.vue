@@ -15,6 +15,7 @@
         <el-descriptions-item label="客户地址" :span="2">
           <!-- 级联选择器 三级联动 -->
           <el-cascader
+          filterable
            :span="12"
           v-model="countyId"
           :options="provinceOptions"
@@ -121,7 +122,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 /* 写样式的地方，可以百度一下elementui怎么更改样式，要使用/deep/给组件改样式*/
 #boxx{
 width: 1440px;

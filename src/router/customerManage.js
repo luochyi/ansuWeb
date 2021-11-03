@@ -46,7 +46,7 @@ export default [
     meta: {
       title: '添加客户',
       icon: 'add',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/customerManage/highSeaCustomers/add.vue')
   },
@@ -56,7 +56,7 @@ export default [
     meta: {
       title: '添加客户',
       icon: 'addcustomerp',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/customerManage/addcustomerp.vue')
   },

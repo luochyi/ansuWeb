@@ -247,7 +247,7 @@ export default {
         { prop: 'eject_time', label: '出仓时间', width: '200', align: 'center', formatter: this.formatters },
         { prop: 'waybill_count', label: '运单数', width: '100', align: 'center' },
         { prop: 'item_count', label: '货件数', width: '100', align: 'center' },
-        { prop: 'volume', label: '体积', width: '100', align: 'center' },
+        { prop: 'volume', label: '方数', width: '100', align: 'center', formatter: this.formatters },
         { prop: 'bill_weight', label: '结算重', width: '100', align: 'center' },
         { prop: 'has_assign_drivers', label: '是否配置司机', width: '100', align: 'center', formatter: this.formatter }
       ],
@@ -433,7 +433,12 @@ export default {
       }
     },
     formatters (row, column, cellValue) {
-      return this.formatDate(row.eject_time, 'yyyy-MM-dd hh:mm:ss')
+      switch (column.property) {
+        case 'eject_time':
+          return this.formatDate(row.eject_time, 'yyyy-MM-dd hh:mm:ss')
+        case 'volume':
+          return (row.volume / 1000000).toFixed(2) + 'm³'
+      }
     }
   }
 }

@@ -145,6 +145,10 @@ export default {
       sessionStorage.setItem('historys', JSON.stringify(this.historys))
     },
     setTab (route) {
+      console.log(route)
+      if (route.meta.hidden === true) {
+        return
+      }
       if (!this.historys.some(item => item.name === route.name)) {
         const obj = {}
         obj.name = route.name

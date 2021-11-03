@@ -26,6 +26,7 @@
         <el-descriptions-item label="公司地址" :span="2">
           <!-- 级联选择器 三级联动 -->
           <el-cascader
+          filterable
           v-model="countyId"
           :options="provinceOptions"
           @change="handleChange"></el-cascader>
@@ -88,7 +89,7 @@
             <el-button type="primary" @click="submit()" class="orangeBtn long2"
               >确定</el-button
             >
-            <!-- <el-button class="whiteBtn long2">取消</el-button> -->
+            <el-button class="whiteBtn long2" @click="back">取消</el-button>
           </el-form-item>
         </el-form>
     </div>
@@ -233,12 +234,15 @@ export default {
       console.log(val)
       console.log(this.provinceOptions) // 打印级联选择器的options
       // this.countyId = val[2] // 区域id
+    },
+    back () {
+      this.$router.go(-1)
     }
   }
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .margin-top{
   margin-top: 10px;
 }

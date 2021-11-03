@@ -4,12 +4,13 @@
   <div class="box">
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span class='text'>订单详情</span>
+      <el-col><span class='text'>订单详情</span></el-col>
     </el-row>
     <div>
     <div class="top" >
          <el-row type='flex' justify='flex-start' class='titlea' align='middle'>
       <span style=" margin:25px" class='text'>预报订单：{{data.forecast_no}}  预报类型：{{data.type === 1 ? '计划下单' : '未建计划下单'}}</span>
+      <el-button class="orangeBtn" size="mini" @click="back">返回</el-button>
     </el-row>
          <el-descriptions title="客户信息">
          <el-descriptions-item label="客户名称">{{data.customer_name}}</el-descriptions-item>
@@ -37,18 +38,16 @@
          <el-descriptions-item label="寄件方式">{{data.receive_type}}</el-descriptions-item>
          <el-descriptions-item label="预报件数">{{data.box_count}}</el-descriptions-item>
          <el-descriptions-item label="预报重量">{{data.weight}}</el-descriptions-item>
-         <el-descriptions-item label="预报方数">{{data.volume}}</el-descriptions-item>
+         <el-descriptions-item label="预报方数">{{(data.volume/1000000).toFixed(2)+'m³'}}</el-descriptions-item>
          </el-descriptions>
     </div>
    </div>
   </div>
-  <div class="wu"></div>
   <div class="button">
      <!--  标签页 -->
      <el-row type='flex' justify='flex-start' class='title' align='middle'>
       <span class='text'>查看运单</span>
      </el-row>
-     <el-divider></el-divider>
         <div class="foot" >
             <el-row class="left">
               <!-- <span class='title' >票数：2票 货件数量：100箱</span> -->
@@ -84,6 +83,9 @@ export default {
     }
   },
   mounted () {
+    if (this.$route.params.mes === undefined) {
+      this.$router.go(-1)
+    }
     this.msg = this.$route.params.mes
     this.getdata()
   },
@@ -105,6 +107,7 @@ export default {
     modify () {
       this.$router.push({ name: 'modify' })
     },
+    back () { this.$router.go(-1) },
     handleSelectionChange () {
 
     }
@@ -112,7 +115,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .el-dialog{
   text-align: left;
 }
@@ -155,7 +158,6 @@ border: 1px solid #E8E8E8;
 }
 .foot{
   width: 100%;
-  height: 350px;
   margin: 20px;
 }
 .titlea{

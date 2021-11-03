@@ -14,14 +14,14 @@
         </el-option>
       </el-select></div>
       <div><el-cascader
+          filterable
           :options="regions" class="elipt" size="mini" placeholder="仓库地址"
           v-model="formData.area"
           :props="{ expandTrigger: 'hover' }"
-          filterable
       ></el-cascader></div>
       <div><el-input style="width:287px;marginBottom:10px" type="textarea" size="mini" v-model="formData.address" placeholder="详细地址"></el-input></div>
       <div><el-button class="orangeBtn" @click="add">保 存</el-button>
-        <!-- <el-button class="whiteBtn">取 消</el-button> -->
+        <el-button class="whiteBtn" @click="back">取 消</el-button>
         </div>
     </div>
   </div>
@@ -104,6 +104,9 @@ export default {
           }
         })
       }
+    },
+    back () {
+      this.$router.go(-1)
     }
   }
 }

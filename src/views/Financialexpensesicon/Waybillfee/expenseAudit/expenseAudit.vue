@@ -25,6 +25,8 @@
               :resizable="false"
           >
             <template slot-scope="scoped">
+              <el-button type="text" @click="detail(scoped.row.id)"> 查看运单</el-button>
+              <span style="color: #0084FF; margin: 0px 5px">|</span>
               <el-button type="text" @click="adopt([scoped.row.id])" v-if="scoped.row.audit_status === 1"> 通过</el-button>
               <span style="color: #0084FF; margin: 0px 5px" v-if="scoped.row.audit_status === 1">|</span>
               <el-button type="text" @click="showFail([scoped.row.id])" v-if="scoped.row.audit_status === 1"> 驳回</el-button>
@@ -98,6 +100,9 @@ export default {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    detail (id) {
+      this.$router.push({ name: 'waybillDetail', params: { id: id } })
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
