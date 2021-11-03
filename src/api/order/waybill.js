@@ -6,7 +6,7 @@ export const transship = params => {
   return axios({
     url: '/order/waybill/transship',
     method: 'post',
-    data: {}
+    data: params
   })
 }
 // 设置提单信息
@@ -14,7 +14,7 @@ export const extract = params => {
   return axios({
     url: '/order/waybill/extract',
     method: 'post',
-    data: {}
+    data: params
   })
 }
 export {

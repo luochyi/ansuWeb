@@ -1,6 +1,9 @@
 <template>
   <div class="waybillInfo">
     <el-descriptions class="margin-top" title="运单信息" :column="3">
+      <template slot="extra">
+      <el-button class="orangeBtn" size="small" @click="back">返回</el-button>
+      </template>
       <el-descriptions-item label="客户名称">{{ info.customer_name }}</el-descriptions-item>
       <el-descriptions-item label="运单编号">{{ info.waybill_no }}</el-descriptions-item>
       <el-descriptions-item label="业务员">{{ info.salesman_name }}</el-descriptions-item>
@@ -109,6 +112,9 @@ export default {
       this.$api.Ordermanagement.waybillInfo(this.waybillId).then(res => {
         this.info = res.data
       })
+    },
+    back () {
+      this.$router.go(-1)
     }
   },
   watch: {

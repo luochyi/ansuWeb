@@ -37,7 +37,7 @@ export default [
     meta: {
       title: '录入报价',
       icon: 'detailspage',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/Financialexpensesicon/Waybillfee/expenseConfirmation/detailspage.vue')
   },
@@ -107,7 +107,7 @@ export default [
     meta: {
       title: '费用登记单',
       icon: 'registration',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/Financialexpensesicon/Waybillfee/expenseRegister/registration.vue')
   },

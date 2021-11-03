@@ -40,15 +40,15 @@
                   align="center"
                   fixed="right"
                   label="操作"
-                  width="126"
+                  width="400"
                   :resizable="false"
                   >
                   <template slot-scope="scope">
-                    <span @click="detail(scope.row)" class="blue">详情</span>
+                    <el-button type="text" @click="detail(scope.row)">详情</el-button>
                     <el-button type="text" @click="check(scope.row)"> 查看轨迹</el-button>
                     <el-button type="text" @click="sign(scope.row)"> 签收</el-button>
-                    <el-button type="text" @click="showTransship(scope.row)" v-if="scope.row.channel_type === 1">&nbsp; 设置转单号</el-button>
-                    <el-button type="text" @click="showExtract(scope.row)" v-if="scope.row.channel_type === 1">&nbsp; 设置提单号</el-button>
+                    <el-button type="text" @click="showTransship(scope.row)">&nbsp; 设置转单号</el-button>
+                    <el-button type="text" @click="showExtract(scope.row)">&nbsp; 设置提单号</el-button>
                   </template>
                 </el-table-column>
               </commonTable>
@@ -175,7 +175,7 @@ export default {
       ],
       table_choose: [],
       columns: [
-        { prop: 'type', label: '运单类型', align: 'center', formatter: this.formatter },
+        { prop: 'type', label: '运单类型', align: 'center', width: '200', formatter: this.formatter },
         { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
         { prop: 'customer_code', label: '客户编码', width: '200', align: 'center' },
         { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
@@ -225,6 +225,7 @@ export default {
   mounted () {
     // 在页面加载前调用获取列表数据函数
     this.getData()
+    this.getTransships()
   },
   methods: {
     // 获取列表数据
@@ -353,22 +354,7 @@ export default {
         this.$message.error('请选择运单')
         return
       }
-      let waybill = []
-      waybillIds.forEach(waybillId => {
-        for (let tableDataKey in this.tableData) {
-          if (this.tableData[tableDataKey].id === waybillId) {
-            if (this.tableData[tableDataKey].channel_type === 1) {
-              waybill.push(waybillId)
-            }
-            break
-          }
-        }
-      })
-      if (waybill.length === 0) {
-        this.$message.error('未选择快递运单')
-        return
-      }
-      this.dialog.transship.formData.waybillIds = waybill
+      this.dialog.transship.formData.waybillIds = waybillIds
       this.dialog.transship.formData.transshipId = null
       this.dialog.transship.formData.transshipNo = null
       this.dialog.transship.visable = true
@@ -378,22 +364,7 @@ export default {
         this.$message.error('请选择运单')
         return
       }
-      let waybill = []
-      waybillIds.forEach(waybillId => {
-        for (let tableDataKey in this.tableData) {
-          if (this.tableData[tableDataKey].id === waybillId) {
-            if (this.tableData[tableDataKey].channel_type === 1) {
-              waybill.push(waybillId)
-            }
-            break
-          }
-        }
-      })
-      if (waybill.length === 0) {
-        this.$message.error('未选择快递运单')
-        return
-      }
-      this.dialog.extract.formData.waybillIds = waybill
+      this.dialog.extract.formData.waybillIds = waybillIds
       this.dialog.extract.formData.extractNo = null
       this.dialog.extract.visable = true
     },

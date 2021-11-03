@@ -116,7 +116,7 @@ export default {
         channelServiceId: null
       },
       columns: [
-        { prop: 'type', label: '运单类型', align: 'center', formatter: this.formatter },
+        { prop: 'type', label: '运单类型', align: 'center', width: '200', formatter: this.formatter },
         { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
         { prop: 'customer_code', label: '客户编码', width: '200', align: 'center' },
         { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },

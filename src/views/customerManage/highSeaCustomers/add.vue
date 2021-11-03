@@ -130,7 +130,7 @@ height: 1080px;
 background: rgb(241, 241, 241);
 }
 #box{
-width: 640px;
+width: 740px;
 height: 845px;
 background: #FFFFFF;
 border-radius: 10px 11px 10px 10px;

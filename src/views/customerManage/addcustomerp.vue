@@ -17,13 +17,13 @@
           <el-cascader
            :span="12"
           v-model="countyId"
-          filterable
           :options="provinceOptions"
           placeholder="客户地址"
           @change="handleChange"></el-cascader>
         </el-descriptions-item>
         <el-descriptions-item label="详细地址">
           <el-input
+            style="width: 517px"
             type="textarea"
             :rows="2"
             :column="8"
@@ -130,7 +130,7 @@ height: 1080px;
 background: rgb(241, 241, 241);
 }
 #box{
-width: 640px;
+width: 740px;
 height: 845px;
 background: #FFFFFF;
 border-radius: 10px 11px 10px 10px;
