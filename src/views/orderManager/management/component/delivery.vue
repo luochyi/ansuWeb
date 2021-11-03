@@ -6,8 +6,8 @@
         <el-col :span="6" class="item">
           <span class="item-box">运单号&nbsp;&nbsp;</span>
           <el-input placeholder="请输入" class="input" v-model="code" size="small">
-            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
-            <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i>
+            <!-- <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
+            <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i> -->
           </el-input>
         </el-col>
         <el-col :span="6">
@@ -18,8 +18,8 @@
       <el-row class="line"></el-row>
       <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
         <el-col :span='14' class="left">
-          <el-button class='stopBtn' @click="showTransships(this.waybillIds)" size="small">批量设置转单号</el-button>
-          <el-button class='stopBtn' @click="showExtracts(this.waybillIds)" size="small">批量设置提单号</el-button>
+          <el-button class='orangeBtn' @click="showTransships(this.waybillIds)" size="small">批量设置转单号</el-button>
+          <el-button class='orangeBtn' @click="showExtracts(this.waybillIds)" size="small">批量设置提单号</el-button>
         </el-col>
         <el-col :span='10' class="right">
         </el-col>
@@ -27,7 +27,6 @@
       <!-- 表格 -->
       <div class="table">
         <commonTable
-            :selection="selection"
             :columns="columns"
             :data="tableData"
             :pager="page"
@@ -91,7 +90,6 @@
 export default {
   data () {
     return {
-      selection: false,
       code: '',
       req: {
         waybillIds: []
@@ -327,7 +325,8 @@ export default {
 }
 .box{
     background: #fff;
-    padding: 14px 32px;
+    // padding: 14px 32px;
+    padding-top: 14px;
     text-align: left;
 }
 .item{

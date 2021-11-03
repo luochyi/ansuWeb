@@ -19,8 +19,8 @@
             <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
             <el-col :span='14' class="left">
                 <el-button class='orangeBtn' @click="updateRoad" size="small">批量更新轨迹</el-button>
-              <el-button class='stopBtn' @click="showTransships(this.waybillIds)" size="small">批量设置转单号</el-button>
-              <el-button class='stopBtn' @click="showExtracts(this.waybillIds)" size="small">批量设置提单号</el-button>
+              <el-button class='orangeBtn' @click="showTransships(this.waybillIds)" size="small">批量设置转单号</el-button>
+              <el-button class='orangeBtn' @click="showExtracts(this.waybillIds)" size="small">批量设置提单号</el-button>
             </el-col>
             <el-col :span='10' class="right">
             </el-col>
@@ -28,7 +28,6 @@
             <!-- 表格 -->
             <div class="table">
               <commonTable
-                :selection="selection"
                 :columns="columns"
                 :data="tableData"
                 :pager="page"
@@ -148,7 +147,6 @@
 export default {
   data () {
     return {
-      selection: false,
       code: '',
       dialogVisible: false,
       drawerSize: '40%',
@@ -447,7 +445,7 @@ export default {
 }
 .box{
     background: #fff;
-    padding: 14px 32px;
+    padding-top: 14px;
     text-align: left;
 }
 .item{

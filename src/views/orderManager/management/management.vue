@@ -1,7 +1,7 @@
 <template>
   <div>
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-         <span class='text'>运单管理</span>
+         <span  class='text'>运单管理</span>
          <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
           <el-tab-pane label='入仓' name='1'></el-tab-pane>
           <el-tab-pane label='出库' name='2'></el-tab-pane>
@@ -11,7 +11,7 @@
 
         </el-tabs>
       </el-row>
-      <div class="content">
+      <div  class="content">
         <component :is="componentsName"></component>
       </div>
   </div>
