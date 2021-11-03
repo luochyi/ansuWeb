@@ -37,7 +37,7 @@ steps:
   - name: build
     image: node:14
     commands:
-      - npm run build
+      - npm run build-test
   - name: scp files
     image: appleboy/drone-scp
     settings:
