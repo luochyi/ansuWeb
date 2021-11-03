@@ -50,7 +50,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .el-dialog{
   text-align: left;
 }

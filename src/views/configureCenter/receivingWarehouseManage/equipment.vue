@@ -201,7 +201,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .text{
     width: 100px;
     margin: 17px;

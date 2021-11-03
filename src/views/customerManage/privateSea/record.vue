@@ -63,7 +63,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 /* 写样式的地方，可以百度一下elementui怎么更改样式，要使用/deep/给组件改样式*/
 #boxx{
 width: 1440px;

@@ -131,7 +131,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .text{
     width: 100px;
     font-size: 16px;

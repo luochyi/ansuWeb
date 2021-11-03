@@ -242,7 +242,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .margin-top{
   margin-top: 10px;
 }

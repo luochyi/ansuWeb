@@ -19,8 +19,8 @@
             <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
             <el-col :span='14' class="left">
                 <el-button class='orangeBtn' @click="updateRoad" size="small">批量更新轨迹</el-button>
-              <el-button class='orangeBtn' @click="showTransships(this.waybillIds)" size="small">批量设置转单号</el-button>
-              <el-button class='orangeBtn' @click="showExtracts(this.waybillIds)" size="small">批量设置提单号</el-button>
+              <el-button class='orangeBtn' @click="showTransships(waybillIds)" size="small">批量设置转单号</el-button>
+              <el-button class='orangeBtn' @click="showExtracts(waybillIds)" size="small">批量设置提单号</el-button>
             </el-col>
             <el-col :span='10' class="right">
             </el-col>

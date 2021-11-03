@@ -120,7 +120,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss" scoped>
 .two {
   height: 371px;
   background: #ffffff;
