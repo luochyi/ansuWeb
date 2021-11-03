@@ -7,7 +7,7 @@
     <el-header class='head'>
       <el-row class='tilte' align='middle' type='flex'>
         <el-col :span='3'>
-          <!-- <img alt class='logoimg' src='@/assets/logo.png' /> -->
+          <img alt class='logoimg' src='@/assets/logo.png' />
           <span class='tit-text'>安速货运</span>
         </el-col>
         <el-col :span='18' class='firstMenu'>
@@ -40,7 +40,7 @@
       <el-aside class='aside main-left' width='200px'>
         <el-scrollbar style='height: calc(100vh - 60px)'>
           <!-- 导航栏 -->
-          <asides :num='Number(activeIndex)'></asides>
+          <asides :num='Number(activeIndex-1)'></asides>
         </el-scrollbar>
       </el-aside>
 
@@ -72,19 +72,19 @@ export default {
   data () {
     return {
       menu: [
-        {
-          name: 'summary',
-          meta: {
-            title: '概述',
-            icon: 'gaishuIcon',
-            hidden: false
-          },
-          ID: 0,
-          menuId: '0',
-          path: 'summary',
-          parentId: '0',
-          children: []
-        },
+        // {
+        //   name: 'summary',
+        //   meta: {
+        //     title: '概述',
+        //     icon: 'gaishuIcon',
+        //     hidden: false
+        //   },
+        //   ID: 0,
+        //   menuId: '0',
+        //   path: 'summary',
+        //   parentId: '0',
+        //   children: []
+        // },
         {
           name: 'orderManager',
           meta: {
@@ -133,30 +133,30 @@ export default {
               path: 'historyOrder',
               parentId: '1'
             },
-            {
-              name: 'portissues',
-              meta: {
-                title: '港前问题件',
-                icon: 'portissuesIcon',
-                hidden: false
-              },
-              ID: 13,
-              menuId: '13',
-              path: 'portissues',
-              parentId: '1'
-            },
-            {
-              name: 'Postportissues',
-              meta: {
-                title: '港后问题件',
-                icon: 'PostportissuesIcon',
-                hidden: false
-              },
-              ID: 14,
-              menuId: '14',
-              path: 'Postportissues',
-              parentId: '1'
-            },
+            // {
+            //   name: 'portissues',
+            //   meta: {
+            //     title: '港前问题件',
+            //     icon: 'portissuesIcon',
+            //     hidden: false
+            //   },
+            //   ID: 13,
+            //   menuId: '13',
+            //   path: 'portissues',
+            //   parentId: '1'
+            // },
+            // {
+            //   name: 'Postportissues',
+            //   meta: {
+            //     title: '港后问题件',
+            //     icon: 'PostportissuesIcon',
+            //     hidden: false
+            //   },
+            //   ID: 14,
+            //   menuId: '14',
+            //   path: 'Postportissues',
+            //   parentId: '1'
+            // },
             {
               name: 'sjmssq',
               meta: {
@@ -170,26 +170,50 @@ export default {
               parentId: '1'
             },
             {
-              name: 'gmbxyd',
               meta: {
-                title: '购买保险运单',
-                icon: 'gmbxyd',
+                title: '保险',
+                icon: 'finance',
                 hidden: false
               },
               ID: 16,
-              menuId: '16',
-              path: 'gmbxyd',
-              parentId: '1'
+              menuId: '20',
+              parentId: '1',
+              children: [
+                {
+                  name: 'gmbxyd',
+                  meta: {
+                    title: '购买保险运单',
+                    icon: 'gmbxyd',
+                    hidden: false
+                  },
+                  ID: 1,
+                  menuId: '1',
+                  path: 'gmbxyd',
+                  parentId: '16'
+                },
+                {
+                  name: 'safeOrder',
+                  meta: {
+                    title: '保单管理',
+                    icon: 'safeOrder',
+                    hidden: false
+                  },
+                  ID: 2,
+                  menuId: '2',
+                  path: 'safeOrder',
+                  parentId: '16'
+                }
+              ]
             }, {
-              name: 'ccd',
+              name: 'eject',
               meta: {
                 title: '出仓单',
-                icon: 'ccd',
+                icon: 'eject',
                 hidden: false
               },
               ID: 17,
               menuId: '17',
-              path: 'ccd',
+              path: 'eject',
               parentId: '1'
             }
           ]
@@ -353,31 +377,31 @@ export default {
                   menuId: '221',
                   path: 'Payablemanagement',
                   parentId: '22'
-                },
-                {
-                  name: 'Paymentapplication',
-                  meta: {
-                    title: '付款申请',
-                    icon: 'Paymentapplication',
-                    hidden: false
-                  },
-                  ID: 222,
-                  menuId: '222',
-                  path: 'Paymentapplication',
-                  parentId: '22'
-                },
-                {
-                  name: 'Paymentapproval',
-                  meta: {
-                    title: '付款审核',
-                    icon: 'Paymentapproval',
-                    hidden: false
-                  },
-                  ID: 223,
-                  menuId: '223',
-                  path: 'Paymentapproval',
-                  parentId: '22'
                 }
+                // {
+                //   name: 'Paymentapplication',
+                //   meta: {
+                //     title: '付款申请',
+                //     icon: 'Paymentapplication',
+                //     hidden: false
+                //   },
+                //   ID: 222,
+                //   menuId: '222',
+                //   path: 'Paymentapplication',
+                //   parentId: '22'
+                // },
+                // {
+                //   name: 'Paymentapproval',
+                //   meta: {
+                //     title: '付款审核',
+                //     icon: 'Paymentapproval',
+                //     hidden: false
+                //   },
+                //   ID: 223,
+                //   menuId: '223',
+                //   path: 'Paymentapproval',
+                //   parentId: '22'
+                // }
               ]
             },
             {
@@ -403,19 +427,19 @@ export default {
                   menuId: '231',
                   path: 'Losssheet',
                   parentId: '231'
-                },
-                {
-                  name: 'Deductgrossprofit',
-                  meta: {
-                    title: '扣毛利',
-                    icon: 'Deductgrossprofit',
-                    hidden: false
-                  },
-                  ID: 232,
-                  menuId: '232',
-                  path: 'Deductgrossprofit',
-                  parentId: '23'
                 }
+                // {
+                //   name: 'Deductgrossprofit',
+                //   meta: {
+                //     title: '扣毛利',
+                //     icon: 'Deductgrossprofit',
+                //     hidden: false
+                //   },
+                //   ID: 232,
+                //   menuId: '232',
+                //   path: 'Deductgrossprofit',
+                //   parentId: '23'
+                // }
               ]
             }
           ]
@@ -481,31 +505,31 @@ export default {
                   parentId: '31'
                 }
               ]
-            },
-            {
-              name: 'subsidiaryChannel',
-              meta: {
-                title: '子公司渠道',
-                icon: 'subsidiaryChannel',
-                hidden: false
-              },
-              ID: 32,
-              menuId: '32',
-              path: 'subsidiaryChannel',
-              parentId: '3'
-            },
-            {
-              name: 'invoiceTemplate',
-              meta: {
-                title: '发票模板',
-                icon: 'invoiceTemplate',
-                hidden: false
-              },
-              ID: 33,
-              menuId: '33',
-              path: 'invoiceTemplate',
-              parentId: '3'
             }
+            // {
+            //   name: 'subsidiaryChannel',
+            //   meta: {
+            //     title: '子公司渠道',
+            //     icon: 'subsidiaryChannel',
+            //     hidden: false
+            //   },
+            //   ID: 32,
+            //   menuId: '32',
+            //   path: 'subsidiaryChannel',
+            //   parentId: '3'
+            // },
+            // {
+            //   name: 'invoiceTemplate',
+            //   meta: {
+            //     title: '发票模板',
+            //     icon: 'invoiceTemplate',
+            //     hidden: false
+            //   },
+            //   ID: 33,
+            //   menuId: '33',
+            //   path: 'invoiceTemplate',
+            //   parentId: '3'
+            // }
           ]
         },
         {
@@ -543,19 +567,19 @@ export default {
               menuId: '41',
               path: 'privateSea',
               parentId: '4'
-            },
-            {
-              name: 'myCustomer',
-              meta: {
-                title: '我的客户',
-                icon: 'predictionIcon',
-                hidden: false
-              },
-              ID: 42,
-              menuId: '42',
-              path: 'myCustomer',
-              parentId: '4'
             }
+            // {
+            //   name: 'myCustomer',
+            //   meta: {
+            //     title: '我的客户',
+            //     icon: 'predictionIcon',
+            //     hidden: false
+            //   },
+            //   ID: 42,
+            //   menuId: '42',
+            //   path: 'myCustomer',
+            //   parentId: '4'
+            // }
           ]
         },
         {
@@ -604,6 +628,18 @@ export default {
               ID: 52,
               menuId: '52',
               path: 'Employeeaccount',
+              parentId: '5'
+            },
+            {
+              name: 'menuManagement',
+              meta: {
+                title: '菜单管理',
+                icon: 'menuManagement',
+                hidden: false
+              },
+              ID: 53,
+              menuId: '53',
+              path: 'menuManagement',
               parentId: '5'
             },
             // driverManagementIcon
@@ -656,6 +692,18 @@ export default {
               parentId: '5'
             },
             {
+              name: 'Settlementperiod',
+              meta: {
+                title: '结算账期',
+                icon: 'Settlementperiod',
+                hidden: false
+              },
+              ID: 56,
+              menuId: '56',
+              path: 'Settlementperiod',
+              parentId: '5'
+            },
+            {
               name: 'receivingWarehouseManage',
               meta: {
                 title: '收货仓管理',
@@ -689,6 +737,18 @@ export default {
               ID: 59,
               menuId: '59',
               path: 'currencyExchangerate',
+              parentId: '5'
+            },
+            {
+              name: 'materialCate',
+              meta: {
+                title: '材质分类',
+                icon: 'materialCate',
+                hidden: false
+              },
+              ID: 60,
+              menuId: '60',
+              path: 'materialCate',
               parentId: '5'
             },
             {
@@ -753,12 +813,12 @@ export default {
       item.children.forEach(items => {
         console.log(items.name)
         if (items.name === arr) {
-          this.activeIndex = String(index)
+          this.activeIndex = String(index + 1)
         }
         if (items.children) {
           items.children.forEach(itms => {
             if (itms.name === this.$route.name || itms.name === arr) {
-              this.activeIndex = String(index)
+              this.activeIndex = String(index + 1)
             }
           })
         }
@@ -774,7 +834,7 @@ export default {
       this.menu.forEach((item, index) => {
         item.children.forEach(items => {
           if (items.name === arr) {
-            this.activeIndex = String(index)
+            this.activeIndex = String(index + 1)
           }
         })
       })
@@ -805,3 +865,14 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.logoimg{
+  width: 52.5px;
+  height: 25px;
+  margin-right: 10px;
+}
+.tit-text{
+  font-size: 20px;
+  font-weight: 500;
+}
+</style>

@@ -13,6 +13,7 @@ color: rgba(0, 0, 0, 0.85);
 @mixin whitebtn {
 padding: 0px 16px;
 border-radius: 4px;
+cursor: pointer;
 height: 32px;
 border: 1px solid #FB4702;
 @include frontsmall(#FB4702);
@@ -33,6 +34,10 @@ border-radius: 4px;
   @include frontsmall(#ffffff);
 }
 
+html, body {
+  height: 100%;
+  margin: 0px;
+}
 .left {
   text-align: left;
 }
@@ -44,6 +49,9 @@ border-radius: 4px;
 }
 .red {
   color: red !important;
+}
+.content{
+  min-height: 700px;
 }
 .orangeCricle{
   display: inline-block;

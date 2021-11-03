@@ -162,6 +162,16 @@ export default [
     component: () => import('@/views/Financialexpensesicon/Rmanagement/Billwriteoff/bill.vue')
   },
   {
+    path: '/childrenBill',
+    name: 'childrenBill',
+    meta: {
+      title: '账单核销',
+      icon: 'childrenBill',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Rmanagement/Billwriteoff/childrenBill.vue')
+  },
+  {
     path: '/Writeoffrecord',
     name: 'Writeoffrecord',
     meta: {
@@ -171,7 +181,17 @@ export default [
     },
     component: () => import('@/views/Financialexpensesicon/Rmanagement/Writeoffrecord/Writeoffrecord.vue')
   },
-
+  // WriteoffDetail
+  {
+    path: '/WriteoffDetail',
+    name: 'WriteoffDetail',
+    meta: {
+      title: '核销记录',
+      icon: 'Writeoffrecord',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Rmanagement/Writeoffrecord/WriteoffDetail.vue')
+  },
   {
     path: '/Payablemanagement',
     name: 'Payablemanagement',
@@ -181,6 +201,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/Financialexpensesicon/Payablemanagement/Payablemanagement/Payablemanagement.vue')
+  }, // createAccountsReceivable
+  {
+    path: '/createAccountsReceivable',
+    name: 'createAccountsReceivable',
+    meta: {
+      title: '应付管理',
+      icon: 'Payablemanagement',
+      hidden: false
+    },
+    component: () => import('@/views/Financialexpensesicon/Payablemanagement/Payablemanagement/createAccountsReceivable.vue')
   },
   {
     path: '/Payablemanagement',

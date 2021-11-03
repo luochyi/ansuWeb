@@ -13,48 +13,10 @@
               <span class='text'>付款单号</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='PaymentNo' placeholder='请输入'></el-input>
+              <el-input placeholder='请输入'></el-input>
             </el-col>
           </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>付款金额</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='amount' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>代理编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='code' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>审核状态</span>
-            </el-col>
-            <el-col :span='13'>
-                <el-input v-model='status' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>申请状态</span>
-            </el-col>
-            <el-col :span='13'>
-           <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='17' class='right'>
+          <el-col :span='6' class='right'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
           </el-col>
@@ -91,7 +53,7 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
+      total: 0, // 数据数量
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码
 
@@ -106,15 +68,15 @@ export default {
         { prop: 'PaymentNo', label: '付款单号', width: '212', align: 'center' },
         { prop: 'apply', label: '申请金额', width: '82', align: 'center' },
         { prop: 'agent', label: '代款代理', width: '255', align: 'center' },
-        { prop: 'code', label: '代理编码', width: '142', align: 'center' },
+        { prop: 'code', label: '代理编码', width: '300', align: 'center' },
         { prop: 'status', label: '审核状态', width: '95', align: 'center' },
-        { prop: 'date', label: '申请日期', width: '129', align: 'center' },
-        { prop: 'applicant', label: '申请人', width: '73', align: 'center' }
+        { prop: 'date', label: '申请日期', width: '229', align: 'center' },
+        { prop: 'applicant', label: '申请人', align: 'center' }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
       }

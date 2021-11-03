@@ -13,48 +13,10 @@
               <span class='text'>付款单号</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='PaymentNo' placeholder='请输入'></el-input>
+              <el-input  placeholder='请输入'></el-input>
             </el-col>
           </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>付款金额</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='amount' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>代理编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='code' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>审核状态</span>
-            </el-col>
-            <el-col :span='13'>
-                <el-input v-model='status' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>申请状态</span>
-            </el-col>
-            <el-col :span='13'>
-           <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='17' class='right'>
+          <el-col :span='6' class='right'>
             <el-button class='orangeBtn long1'>查 询</el-button>
             <el-button class='wuBtn long1'>重 置</el-button>
           </el-col>
@@ -65,14 +27,15 @@
                <el-button class='stopBtn' @click="changes=true">批量审核</el-button>
           </el-col>
           </el-row>
-          <br>
           <!-- 组件 -->
     <commonTable
+      style="marginTop:10px"
       :columns="columns"
       :data="tableData"
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
+      @handleSelectionChange="handleSelectionChange"
     >
       <el-table-column
         slot="table_oper"
@@ -82,12 +45,10 @@
         width="156"
         :resizable="false"
       >
-         <template slot-scoped="scoped">
-            <el-button type="text" @click="password= true"> 查看 </el-button>
-            <span style="color: #0084FF; margin: 0px 5px">|</span>
-          <el-button type="text" @click="detailspage"> 通过</el-button>
-          <span style="color: #0084FF; margin: 0px 5px">|</span>
-          <el-button type="text" @click="detailspage"> 驳回</el-button>
+         <template slot-scope="scoped">
+          <el-button type="text" @click="adopt([scoped.row.id])" v-if="scoped.row.audit_status === 1"> 通过</el-button>
+          <span style="color: #0084FF; margin: 0px 5px" v-if="scoped.row.audit_status === 1">|</span>
+          <el-button type="text" @click="reject([scoped.row.id])" v-if="scoped.row.audit_status === 1"> 驳回</el-button>
         </template>
       </el-table-column>
     </commonTable>
@@ -99,67 +60,95 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
-      pageSize: 10, // 默认当前条数
-      currentPage: 1, // 当前页码
-
-      activeName: '1',
-      PaymentNo: '', // 付款单号
-      amount: '', // 付款金额
-      code: '', // 代理编码
-      status: '', // 审核状态
-      value: '',
-
       columns: [
-        { prop: 'PaymentNo', label: '付款单号', width: '212', align: 'center' },
-        { prop: 'apply', label: '申请金额', width: '82', align: 'center' },
-        { prop: 'agent', label: '代款代理', width: '255', align: 'center' },
-        { prop: 'code', label: '代理编码', width: '142', align: 'center' },
-        { prop: 'status', label: '审核状态', width: '95', align: 'center' },
-        { prop: 'date', label: '申请日期', width: '129', align: 'center' },
-        { prop: 'applicant', label: '申请人', width: '73', align: 'center' }
+        { prop: 'pay_no', label: '付款单号', width: '212', align: 'center' },
+        { prop: 'amount', label: '申请金额', width: '182', align: 'center' },
+        { prop: 'agent_name', label: '代款代理', width: '255', align: 'center' },
+        { prop: 'agent_code', label: '代理编码', width: '242', align: 'center' },
+        { prop: 'audit_status', label: '审核状态', width: '195', align: 'center', formatter: this.formatter },
+        { prop: 'created_at', label: '账单生成日期', width: '209', align: 'center', formatter: this.formatter },
+        { prop: 'created_user_name', label: '对账确认人', align: 'center' }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
+      },
+      billAgentIds: [],
+      rejectData: {
+        reason: ''
       }
     }
   },
   mounted () {
-    this.tableData = [
-      { PaymentNo: 'AS123123423412313', apply: '王小虎', code: '上海市普陀区金沙江路 1518 弄' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
+    getData () {
+      this.$api.finance.payabble.audit.lists({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.limit = res.data.total
+      })
+    },
     detailspage () {
       this.$router.push({ name: 'detailspage' })
     },
-    handleClick (val) {
-      console.log(val)
-    },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd')
+        case 'audit_status':
+          return row.audit_status === 0 ? '未申请' : row.audit_status === 1 ? '审核中' : row.audit_status === 2 ? '审核通过' : '审核驳回'
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
-    // 操作按钮列表
-    editTableData (row) {}
+    // 复选
+    handleSelectionChange (val) {
+      this.billAgentIds = []
+      val && val.forEach((item) => {
+        this.billAgentIds.push(item.id)
+      })
+    },
+    adopt (billAgentIds) {
+      this.$api.finance.payabble.audit.adopt({
+        billAgentIds: billAgentIds
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.$router.push({ name: 'Payablemanagement' })
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    },
+    reject (billAgentIds) {
+      this.$api.finance.payabble.audit.reject({
+        billAgentIds: billAgentIds,
+        reason: this.rejectData.reason
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.$router.push({ name: 'Payablemanagement' })
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    }
   }
 }
 </script>

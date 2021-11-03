@@ -9,7 +9,7 @@
       <!-- 搜索栏 -->
       <el-row  class='searchbox1'>
         <el-col :span='2' class='colboxx justify-center'>
-          <el-button @click="currency" class='orangeBtn long3'> 新增货币</el-button>
+          <el-button @click="dialogVisible=true;dialogTitile='新增货币'" class='orangeBtn long3'> 新增货币</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
@@ -17,6 +17,7 @@
       :columns="columns"
       :data="tableData"
       :pager="page"
+      :selection='selection'
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
       >
@@ -29,11 +30,26 @@
         :resizable="false"
         >
         <template slot-scope="scope">
-          <el-button type="text" @click="exchange(scope.row.id)"> 修改汇率</el-button>
+          <el-button type="text" @click="changeDefault(scope.row.id)"> 设置默认</el-button>
+          <el-button type="text" @click="edit(scope.row)"> 修改</el-button>
         </template>
       </el-table-column>
       </commonTable>
     </div>
+    <el-dialog
+      :title="dialogTitile"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose">
+      币种名称：
+      <el-input v-model="formData.name"></el-input>
+      汇率：
+      <el-input v-model="formData.exchangeRate" type="Number"></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addcurrency">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -41,70 +57,122 @@
 export default {
   data () {
     return {
-      activeName: '1', // 标签绑定
-      pageSize: 10,
-      currentPage: 1,
-      total: 50,
+      selection: false,
+      dialogVisible: false,
+      dialogTitile: '',
+      editId: null,
 
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
       columns: [
-        { prop: 'name', label: '货币名称', width: '200', align: 'center' },
-        { prop: 'rate', label: '人民币兑换汇率', width: '795', align: 'center', formatter: this.formatter }
+        { prop: 'name', label: '货币名称', width: '500', align: 'center' },
+        { prop: 'exchange_rate', label: '汇率', width: '500', align: 'center' },
+        { prop: 'is_default', label: '是否默认', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
+      },
+      formData: {
+        name: null,
+        exchangeRate: null
       }
 
     }
   },
   mounted () {
-    this.tableData = [
-      { name: '王小虎', rate: '上海市普陀区金沙江路 1518 弄' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
     getData () {
-      let params = {
-        status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
-      }
-      this.$api.agent.settingAgentLists(params).then((res) => {
-        console.log(res)
+      this.$api.setting.currency.lists({ page: this.page.pageNo, limit: this.page.limit }).then((res) => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
       })
     },
-    handleSelectionChange (val) {
-      console.log(val)
-      this.chooseArr = []
-      val && val.forEach((item) => {
-        this.chooseArr.push(item)
-      })
-    },
-    // 重新渲染name列
-    formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
-    },
+    // handleSelectionChange (val) {
+    //   console.log(val)
+    //   this.chooseArr = []
+    //   val && val.forEach((item) => {
+    //     this.chooseArr.push(item)
+    //   })
+    // },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val
+      this.getData()
+    },
+    edit (row) {
+      this.dialogVisible = true
+      this.dialogTitile = '修改货币'
+      this.editId = row.id
+      this.formData.name = row.name
+      this.formData.exchangeRate = row.exchange_rate
+    },
+    addcurrency () {
+      if (this.dialogTitile === '新增货币') {
+        this.$api.setting.currency.add({
+          name: this.formData.name,
+          exchangeRate: this.formData.exchangeRate
+        }).then((res) => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.handleClose()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else if (this.dialogTitile === '修改货币') {
+        this.$api.setting.currency.edit({
+          currencyId: this.editId,
+          name: this.formData.name,
+          exchangeRate: this.formData.exchangeRate
+        }).then((res) => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.handleClose()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+    },
+    handleClose () {
+      this.formData.name = ''
+      this.formData.exchangeRate = ''
+      this.editId = null
+      this.dialogVisible = false
+    },
+    changeDefault (id) {
+      this.$api.setting.currency.currencyDefault({ currencyId: id }).then((res) => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    formatter (row) {
+      switch (row.is_default) {
+        case 1:
+          return '是'
+        case 0:
+          return '否'
+        default:
+          break
+      }
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val
+      this.getData()
     },
     // 操作按钮列表
     editTableData (row) {}

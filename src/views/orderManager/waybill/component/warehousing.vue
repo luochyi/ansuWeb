@@ -414,17 +414,30 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="coordination" label="协同" min-width="80" key="50"></el-table-column>
+                <el-table-column prop="coordination" label="发票导出" min-width="144" key="50">
+                    <template>
+                        <div class="alignment flex align-center">
+                            <div class="dot"></div>
+                            <span class="ele" style="color:#333333;margin-right:10px">发票已导出</span>
+                        </div>
+                        <div class="alignment flex align-center">
+                            <div class="dot" style="background:#FF0000"></div>
+                            <span class="ele" style="color:#333333;margin-right:10px">发票未导出</span>
+                        </div>
+                    </template>
+                </el-table-column>
                 <!-- 操作 -->
-                <el-table-column label="操作" min-width="220" key="51" fixed="right">
+                <el-table-column label="操作" min-width="241" key="51" fixed="right">
                     <template slot-scope="scope">
                         <el-button type="text" @click="check(scope.row)">查看详情</el-button>
                         <span class="ele">｜</span>
+                        <!-- <el-button type="text" @click="RELEASE(scope.row)">放货</el-button> -->
                         <el-button type="text" @click="detentionCargo(scope.row)">扣货</el-button>
                         <span class="ele">｜</span>
-                        <el-button type="text" @click="RELEASE(scope.row)">放货</el-button>
-                        <!-- <el-button type="text" @click="checkInvoice(scope.row)">查看发票</el-button> -->
-                        <span class="ele">｜</span>
                         <el-button type="text" @click="Delivery(scope.row)">出库</el-button>
+                        <span class="ele">｜</span>
+                        <el-button type="text" @click="Problempiece(scope.row)">问题件</el-button>
+                        <!-- <el-button type="text" @click="checkInvoice(scope.row)">查看发票</el-button> -->
                     </template>
                 </el-table-column>
             </el-table>
@@ -1406,7 +1419,7 @@ export default {
         }
       ],
       hide: 0,
-      total: 50, // 表格数据总条数
+      total: 0, // 表格数据总条数
       currentPage: 1,
       pageSize: 10,
       // 表格数据

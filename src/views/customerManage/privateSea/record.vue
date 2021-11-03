@@ -1,99 +1,104 @@
 <template>
-<div id='boxx'>
-  <div class="box">
-    <!--  标签页 -->
-    <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span class='text'>拜访记录详情</span>
-    </el-row>
-    <div>
-    <div class="en" >
-         <el-descriptions title="深圳大成亚马逊科技有限公司">
-         <el-descriptions-item label="拜访时间">2021年12月12日</el-descriptions-item>
-         <el-descriptions-item class='tele' label="拜访业务员">张三</el-descriptions-item>
-         <br />
-         </el-descriptions>
-         <el-descriptions >
-         <el-descriptions-item label="随行人员">李四、王五</el-descriptions-item>
-</el-descriptions>
-    </div>
-    <div >
-      <el-descriptions direction="vertical">
-         <el-descriptions-item label="拜访记录">和李总喝了个茶、吃了个饭</el-descriptions-item>
-         </el-descriptions>
-    </div>
-    <el-divider></el-divider>
-        <div >
-      <el-descriptions direction="vertical">
-         <el-descriptions-item label="拜访总结">李总很认可我们的产品，但是产品的价格太高了</el-descriptions-item>
-         </el-descriptions>
-    </div>
-    <div class="left">
-          <span slot="footer" class="left" style="margin:30px">
-             <el-button @click="modify" class='orangeBtn long2'>修改</el-button>
-             <el-button @click="aildds" class='wuBtn long2' >返回</el-button>
-          </span>
-    </div>
-  </div>
+<div id="boxx">
+<div id="box">
+  <div class="add">
+    <span class='text'>拜访时间</span>
+      <el-input v-model="visitTime" placeholder="请选择拜访时间"></el-input>
+      <span class='text'>随行人员</span>
+      <el-input v-model="personnelIds" placeholder="请选择随性人员"></el-input>
+      <span class='text'>拜访记录</span>
+      <el-input v-model="record" type="textarea" :rows="2" placeholder="请输入拜访记录"  >
+</el-input>
+      <span class='text'>拜访总结</span>
+      <el-input v-model="remark" type="textarea" :rows="2" placeholder="请输入拜访总结" >
+</el-input>
+      <el-button @click="submit" class='orangeBtn long1'>确 定</el-button>
+      <el-button @click="submit" class='wuBtn long1'>取 消</el-button>
   </div>
 </div>
+</div>
 </template>
-
 <script>
 export default {
   data () {
     return {
-      methods: {
+      provinceOptions: [],
+      dialogVisible: false,
+      add: '',
+      visitTime: '',
+      record: '',
+      remark: '',
+      personnelIds: '',
+      countyId: 4
 
+    }
+  },
+  methods: {
+    submit () {
+      // 给请求参数赋值
+      let resData = {
+        countyId: this.countyId,
+        visitTime: this.visitTime,
+        record: this.record,
+        remark: this.remark,
+        personnelIds: this.personnelIds
       }
+      // 把请求参数传输至后端，并且获取接口返回的结果res
+      this.$api.customer.recordAdd(resData).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.$router.push({ name: 'recordLists' }) // 添加成功后返回拜访记录
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    },
+    // 级联选择器选择
+    handleChange (val) {
+      console.log(val)
+      console.log(this.provinceOptions) // 打印级联选择器的options
+      this.countyId = val[2] // 区域id
     }
   }
 }
 </script>
 
 <style>
-.el-dialog{
-  text-align: left;
-}
-.title{
-width: 120px;
-font-size: 16px;
-font-family: PingFangSC-Medium, PingFang SC;
-color: #333333;;
-margin: 20px;
-}
-.el-dialog{
-  display: block;
-  width: 1128px;
-  height: 1px;
-  margin:-1px 0 ;
-  background-color: #f3f3f3;
-}
+/* 写样式的地方，可以百度一下elementui怎么更改样式，要使用/deep/给组件改样式*/
 #boxx{
-width: 1191px;
-height: 854px;
+width: 1440px;
+height: 1080px;
+background: rgb(241, 241, 241);
+}
+#box{
+width: 640px;
+height: 845px;
 background: #FFFFFF;
-border-radius: 4px;
+border-radius: 10px 11px 10px 10px;
+margin: 53px 300px ;
 border: 1px solid #E8E8E8;
 }
-.tele{
-  width:728px ;
+.text{
+width: 64px;
+height: 22px;
+font-size: 16px;
+color: rgba(0, 0, 0, 0.85);
+line-height: 22px;
 }
-.en{
-  width: 100%;
-  height: 180px;
-  border: 1px solid #E8E8E8;
+.add{
+  width: 392px;
+  margin: 53px 124px ;
+  text-align: left;
 }
-.el-descriptions__title{
-width: 234px;
-height: 25px;
-font-size: 18px;
-font-family: PingFangSC-Semibold, PingFang SC;
-font-weight: 600;
-color: #FB4702;
-line-height: 25px;
-margin: 19px 32px ;
+.el-input__inner{
+  width: 390px;
 }
-.el-descriptions__table{
-margin: 19px 32px ;
+.el-textarea__inner{
+   width: 390px;
+}
+.el-descriptions {
+  font-size: 16px;
+  color: #303133;
+  line-height: 22px;
 }
 </style>

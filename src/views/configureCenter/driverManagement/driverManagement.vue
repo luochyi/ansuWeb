@@ -7,51 +7,57 @@
     <!-- 主要内容 -->
     <div class='content'>
       <!-- 搜索栏 -->
-     <div class='contenta'>
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>司机名称</span>
-            </el-col>
-            <el-col :span='16'>
-              <el-input v-model='predictionNo' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>区域分配</span>
-            </el-col>
-           <el-select v-model="distribution"  placeholder="请选择">
-         <el-option v-for="item in distributionOpts" :key="item.id" :label="item.name" :value="item.id">
-         </el-option>
-         </el-select>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>账号状态</span>
-            </el-col>
-            <el-select v-model="status" multiple placeholder="请选择">
-         <el-option v-for="item in statusOpts" :key="item.id" :label="item.name" :value="item.id"> </el-option>
-         </el-select>
-          </el-col>
-                   <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
-          </el-col>
-         </el-row>
-           </div>
+<!--     <div class='contenta'>-->
+<!--        <el-row class='searchbox1'>-->
+<!--          <el-col :span='6' class='colbox'>-->
+<!--            <el-col :span='6'>-->
+<!--              <span class='text'>司机名称</span>-->
+<!--            </el-col>-->
+<!--            <el-col :span='16'>-->
+<!--              <el-input v-model='predictionNo' placeholder='请输入'></el-input>-->
+<!--            </el-col>-->
+<!--          </el-col>-->
+<!--          <el-col :span='6' class='colbox'>-->
+<!--            <el-col :span='6'>-->
+<!--              <span class='text'>区域分配</span>-->
+<!--            </el-col>-->
+<!--           <el-select v-model="distribution"  placeholder="请选择">-->
+<!--         <el-option v-for="item in distributionOpts" :key="item.id" :label="item.name" :value="item.id">-->
+<!--         </el-option>-->
+<!--         </el-select>-->
+<!--          </el-col>-->
+<!--          <el-col :span='6' class='colbox'>-->
+<!--            <el-col :span='6'>-->
+<!--              <span class='text'>账号状态</span>-->
+<!--            </el-col>-->
+<!--            <el-select v-model="status" multiple placeholder="请选择">-->
+<!--         <el-option v-for="item in statusOpts" :key="item.id" :label="item.name" :value="item.id"> </el-option>-->
+<!--         </el-select>-->
+<!--          </el-col>-->
+<!--                   <el-col :span='6' class='colbox'>-->
+<!--            <el-button class='orangeBtn long1'>查 询</el-button>-->
+<!--            <el-button class='wuBtn long1'>重 置</el-button>-->
+<!--          </el-col>-->
+<!--         </el-row>-->
+<!--           </div>-->
       <!-- 表格 -->
       <div>
        <commonTable
       :columns="columns"
+      :selection='selection'
       :data="tableData"
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
       >
       <!-- slot -->
-      <template v-slot:chakan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看更多</span>
+      <template v-slot:city='slotData'>
+         {{format(slotData.data, 'city')}}
+         <!-- <span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看更多</span> -->
+      </template>
+      <template v-slot:area='slotData'>
+         {{format(slotData.data, 'area')}}
+         <!-- <span style="color: #0084FF;cursor:pointer" @click="check(slotData)">查看更多</span> -->
       </template>
             <!-- 操作 -->
       <el-table-column
@@ -63,25 +69,13 @@
         :resizable="false"
         >
         <template slot-scope="scope">
-          <el-button type="text" @click="distributionDriver(scope.row.id)"> 分配区域</el-button>
+          <el-button type="text" @click="distributionDriver(scope.row)"> 分配区域</el-button>
         </template>
       </el-table-column>
       </commonTable>
       </div>
 
     </div>
-   <!-- 指派业务 -->
-   <el-dialog title="指派业务" :visible.sync="stopAgentis" width="30%">
-               <div class="input">
-               <br><span>是否将客户“深圳市沙马家居有限公司”指派给业务员</span><br>
-               <br>
-               <span>业务员&nbsp; <el-select v-model="agentName" size="small" placeholder="请选择业务员"></el-select></span>
-               </div>
-               <span slot="footer" class="stopAgent-footer">
-                 <el-button @click="stopAgentis = false" class='wuBtn'>取 消</el-button>
-                 <el-button type="primary" @click="stopAgentis = false" class='orangeBtn'>确 定</el-button>
-               </span>
-            </el-dialog>
   </div>
 </template>
 
@@ -89,6 +83,7 @@
 export default {
   data () {
     return {
+      selection: false,
       dialogVisible: false, // 对话框可见
       stopAgentis: false,
       activeName: '1', // 标签绑定
@@ -103,17 +98,17 @@ export default {
       agentCode: '',
       agentAccount: '',
       columns: [
-        { prop: 'driver', label: '司机', width: '152', align: 'center' },
-        { prop: 'position', label: '职位', width: '151', align: 'center', formatter: this.formatter },
-        { prop: 'distribution', label: '区域分配', width: '183', align: 'center', formatter: this.formatter },
-        { prop: 'City', label: '所属城市', width: '198', align: 'center', type: 'slot', slotName: 'chakan' },
-        { prop: 'area', label: '收货区域', width: '198', align: 'center', type: 'slot', slotName: 'chakan' },
-        { prop: 'status', label: '账号状态', width: '171', align: 'center', formatter: this.formatter }
+        { prop: 'name', label: '司机', width: '252', align: 'center' },
+        { prop: 'position_name', label: '职位', width: '251', align: 'center' },
+        { prop: 'distribution', label: '区域分配', align: 'center', formatter: this.formatter },
+        { prop: 'city', label: '所属城市', width: '198', align: 'center', type: 'slot', slotName: 'city' },
+        { prop: 'area', label: '收货区域', width: '198', align: 'center', type: 'slot', slotName: 'area' },
+        { prop: 'status', label: '账号状态', width: '271', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
       },
@@ -129,87 +124,61 @@ export default {
     }
   },
   mounted () {
-    this.tableData = [
-      {
-        date: '2016-05-02',
-        driver: '王小虎',
-        area: '上海市普陀区金沙江路 1518 弄',
-        City: '深圳'
-      }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
     // 区域分配
-    distributionDriver () {
-      this.$router.push({ name: 'distributionDriver' })
-    },
-    handleClose (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    stopAgent (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    into (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    batchStop (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
+    distributionDriver (row) {
+      this.$router.push({ name: 'distributionDriver', params: row })
     },
     getData () {
       let params = {
         status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
         name: this.agentName,
-        code: this.agentCode
+        code: this.agentCode,
+        page: this.page.pageNo,
+        limit: this.page.limit
       }
-      this.$api.agent.settingAgentLists(params).then((res) => {
-        console.log(res)
-      })
-    },
-    handleSelectionChange (val) {
-      console.log(val)
-      this.chooseArr = []
-      val && val.forEach((item) => {
-        this.chooseArr.push(item)
+      this.$api.configure.driver.lists(params).then((res) => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
       })
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
+      switch (column.property) {
+        case 'distribution':
+          return row.regions.length > 0 ? '已分配区域' : '未分配区域'
+        case 'status':
+          return row.status === 1 ? '正常' : '停用'
+      }
     },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+    format (row, column) {
+      let city = []
+      let area = []
+      switch (column) {
+        case 'city':
+          row.regions.forEach(item => {
+            city.push(item.city_name)
+          })
+          return city.slice(0, 2).join('、')
+        case 'area':
+          row.regions.forEach(item => {
+            area.push(item.county_name)
+          })
+          return area.slice(0, 2).join('、')
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
-    },
-    // 操作按钮列表
-    editTableData (row) {}
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
+    }
   }
 
 }

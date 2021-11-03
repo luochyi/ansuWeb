@@ -50,11 +50,22 @@ export default [
     },
     component: () => import('@/views/orderManager/waybill/waybill.vue')
   },
+  // waybillDetail
+  {
+    path: '/waybillDetail',
+    name: 'waybillDetail',
+    meta: {
+      title: '预报运单',
+      icon: 'waybillIcon',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/waybill/orderDetials.vue')
+  },
   {
     path: '/management',
     name: 'management',
     meta: {
-      title: '订单详情',
+      title: '运单管理',
       icon: 'management',
       hidden: false
     },
@@ -100,6 +111,17 @@ export default [
     },
     component: () => import('@/views/orderManager/sjmssq/sjmssq.vue')
   },
+  // sjmssqDetail
+  {
+    path: '/sjmssqDetail',
+    name: 'sjmssqDetail',
+    meta: {
+      title: '收件免扫申请',
+      icon: 'sjmssq',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/sjmssq/sjmssqDetail.vue')
+  },
   {
     path: '/gmbxyd',
     name: 'gmbxyd',
@@ -111,14 +133,34 @@ export default [
     component: () => import('@/views/orderManager/gmbxyd/gmbxyd.vue')
   },
   {
-    path: '/ccd',
-    name: 'ccd',
+    path: '/safeOrder',
+    name: 'safeOrder',
     meta: {
-      title: '出仓单',
-      icon: 'ccd',
+      title: '保单管理',
+      icon: 'safeOrder',
       hidden: false
     },
-    component: () => import('@/views/orderManager/ccd/ccd.vue')
+    component: () => import('@/views/orderManager/gmbxyd/safeOrder.vue')
+  },
+  {
+    path: '/eject',
+    name: 'eject',
+    meta: {
+      title: '出仓单',
+      icon: 'eject',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/eject/eject.vue')
+  },
+  {
+    path: '/ejectWaybill',
+    name: 'ejectWaybill',
+    meta: {
+      title: '出仓单',
+      icon: 'eject',
+      hidden: false
+    },
+    component: () => import('@/views/orderManager/eject/ejectWaybill.vue')
   }
 
 ]

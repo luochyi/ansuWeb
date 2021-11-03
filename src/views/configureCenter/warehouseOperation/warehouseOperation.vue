@@ -7,43 +7,44 @@
     <!-- 主要内容 -->
     <div class='content'>
       <!-- 搜索栏 -->
-     <div class='content'>
-        <el-row class='searchbox1'>
-          <el-col  class='colbox'>
-            <el-col :span='5'>
-              <span class='text'>操作名称</span>
-            </el-col>
-            <el-col :span='15'>
-              <el-input v-model='predictionNo' placeholder='请输入'></el-input>
-            </el-col>
-            <el-col class='colbox'>
-            <el-col :span='5'>
-              <span class='text'>所属仓库</span>
-            </el-col>
-            <el-col :span='15'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
-            </el-col>
-           </el-col>
-           <el-col :span='5'>
-              <span class='text'>账号状态</span>
-            </el-col>
-            <el-col :span='20'>
-           <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-          </el-col>
-           <el-col :span='8' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
-          </el-col>
-           </el-col>
-        </el-row>
-     </div>
+<!--     <div class='content'>-->
+<!--        <el-row class='searchbox1'>-->
+<!--          <el-col  class='colbox'>-->
+<!--            <el-col :span='5'>-->
+<!--              <span class='text'>操作名称</span>-->
+<!--            </el-col>-->
+<!--            <el-col :span='15'>-->
+<!--              <el-input v-model='predictionNo' placeholder='请输入'></el-input>-->
+<!--            </el-col>-->
+<!--            <el-col class='colbox'>-->
+<!--            <el-col :span='5'>-->
+<!--              <span class='text'>所属仓库</span>-->
+<!--            </el-col>-->
+<!--            <el-col :span='15'>-->
+<!--              <el-input v-model='customerCode' placeholder='请输入'></el-input>-->
+<!--            </el-col>-->
+<!--           </el-col>-->
+<!--           <el-col :span='5'>-->
+<!--              <span class='text'>账号状态</span>-->
+<!--            </el-col>-->
+<!--            <el-col :span='20'>-->
+<!--           <el-select v-model="value" placeholder="请选择">-->
+<!--         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">-->
+<!--         </el-option>-->
+<!--         </el-select>-->
+<!--          </el-col>-->
+<!--           <el-col :span='8' class='colbox'>-->
+<!--            <el-button class='orangeBtn long1'>查 询</el-button>-->
+<!--            <el-button class='wuBtn long1'>重 置</el-button>-->
+<!--          </el-col>-->
+<!--           </el-col>-->
+<!--        </el-row>-->
+<!--     </div>-->
       <!-- 表格 -->
 <commonTable
       :columns="columns"
       :data="tableData"
+      :selection='selection'
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
@@ -57,9 +58,9 @@
         :resizable="false"
         >
         <template slot-scope="scope">
-          <el-button type="text" @click="responsibleWarehouse(scope.row.id)"> 负责仓库</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="password= true"> 设为负责人 </el-button>
+          <el-button type="text" @click="responsibleWarehouse(scope.row)"> 负责仓库</el-button>
+                <span style="color: #0084FF; margin: 0px 5px" v-show="scope.row.warehouse_type === 2">|</span>
+                <el-button type="text" @click="setPrincipal(scope.row.id)" v-show="scope.row.warehouse_type === 2"> 设为负责人 </el-button>
         </template>
       </el-table-column>
       </commonTable>
@@ -68,16 +69,18 @@
 </template>
 
 <script>
+
 export default {
   data () {
     return {
+      selection: false,
       dialogVisible: false, // 对话框可见
       stopAgentis: false,
       activeName: '1', // 标签绑定
 
       pageSize: 10,
       currentPage: 1,
-      total: 150,
+      total: 0,
       a: 1,
       b: 9,
 
@@ -85,31 +88,37 @@ export default {
       agentCode: '',
       agentAccount: '',
       columns: [
-        { prop: 'name', label: '仓库操作员', width: '110', align: 'center' },
-        { prop: 'position', label: '职位', width: '91', align: 'center', formatter: this.formatter },
-        { prop: 'Responsible', label: '负责仓库', width: '122', align: 'center', formatter: this.formatter },
-        { prop: 'Warehouse', label: '所属仓库', width: '457', align: 'center', formatter: this.formatter },
+        { prop: 'name', label: '仓库操作员', width: '210', align: 'center' },
+        { prop: 'position_name', label: '职位', width: '191', align: 'center' },
+        { prop: 'responsible', label: '负责仓库', width: '222', align: 'center', formatter: this.formatter },
+        { prop: 'warehouse', label: '所属仓库', width: '457', align: 'center', formatter: this.formatter },
         { prop: 'person', label: '仓库负责人', width: '101', align: 'center', formatter: this.formatter },
-        { prop: 'status', label: '账号状态', width: '82', align: 'center', formatter: this.formatter }
+        { prop: 'status', label: '账号状态', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
-        sizes: [1, 5, 10],
+        limit: 15,
+        sizes: [15, 50, 100],
         total: 0
       }
     }
   },
   mounted () {
-    this.tableData = [
-      { date: '2016-05-02', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
-    responsibleWarehouse () {
-      this.$router.push({ name: 'responsibleWarehouse' })
+    getData () {
+      this.$api.configure.warehouse.lists({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
+    responsibleWarehouse (row) {
+      this.$router.push({ name: 'responsibleWarehouse', params: row })
     },
     handleSelectionChange (val) {
       console.log(val)
@@ -120,23 +129,41 @@ export default {
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'responsible':
+          return row.warehouse_type === 0 ? '未分配仓库' : '已分配仓库'
+        case 'warehouse':
+          return row.warehouse_type === 0 ? '——' : row.warehouse_name
+        case 'person':
+          return row.warehouse_type === 0 ? '——' : row.warehouse_type === 1 ? '仓库负责人' : '普通仓库人员'
+        case 'status':
+          return row.status === 1 ? '启用' : '停用'
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // 操作按钮列表
-    editTableData (row) {}
+    editTableData (row) {},
+    setPrincipal (userId) {
+      this.$api.configure.warehouse.setPrincipal({
+        userId: userId
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData()
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    }
   }
 
 }

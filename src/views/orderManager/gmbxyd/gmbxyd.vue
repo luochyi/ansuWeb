@@ -3,125 +3,24 @@
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
       <span class='text' style="height:43px;lineHeight:43px">购买保险运单</span>
+      <el-tabs v-model="activeName" type="card" @tab-click="getData">
+        <el-tab-pane label="可投保" name="1"></el-tab-pane>
+        <el-tab-pane label="不可投保" name="2"></el-tab-pane>
+        <el-tab-pane label="全部" name="0"></el-tab-pane>
+      </el-tabs>
     </el-row>
     <!-- 主要内容 -->
     <div class='content'>
-      <!-- 搜索栏 -->
-      <el-row class='searchbox1'>
-        <!-- 预报单号 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>保单号</span>
-          <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'>
-                <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
-                            <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i>
-            </el-input>
-          </el-col>
-        </el-col>
-        <!-- 客户名称 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>客户名称</span>
-          <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 客户编码 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>客户编码</span>
-          <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 订单类型 -->
-         <el-col :span='6' class='colbox'>
-          <span class='text'>订单类型</span>
-          <el-col :span='16'>
-            <el-select v-model='msg' placeholder='请输入'></el-select>
-          </el-col>
-        </el-col>
-      </el-row>
-      <el-row class='searchbox1'>
-        <!-- 货件编号 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>货件编号</span>
-          <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 运输方式 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>运输方式</span>
-          <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 目的地 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>目的地</span>
-          <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!--  -->
-        <el-col :span='6' class='colbox justify-center'>
-          <el-button class='orangeBtn long1'>查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
-        </el-col>
-      </el-row>
-
       <!-- 表格 -->
       <div>
-        <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
-          <el-col :span='12' class="left" >
-            <el-button class='stopBtn'>批量导出Excel</el-button>
-            <el-button class='stopBtn'>批量设置加成比例</el-button>
-          </el-col>
-          <!-- <el-col :span='12' class="right">
-            <el-button class='whiteBtn' @click="toAdd">新增渠道</el-button>
-            <el-button class='whiteBtn'>列表显示设置</el-button>
-          </el-col> -->
-        </el-row>
         <commonTable
+          :selection="selection"
           :columns="columns"
           :data="tableData"
           :pager="page"
           @handleSizeChange="handleSizeChange"
           @handleCurrentChange="handleCurrentChange"
-          @handleSelectionChange="handleSelectionChange"
         >
-             <!-- slot -->
-          <template v-slot:yewuyuan="slotData">
-            {{ slotData.data.ywy
-            }}&nbsp;<span
-              style="color: #0084FF; cursor: pointer"
-              @click="check(slotData)"
-              >查看</span
-            >
-          </template>
-          <template v-slot:piaoshu="slotData">
-            {{ slotData.data.num
-            }}&nbsp;<span
-              style="color: #0084FF; cursor: pointer"
-              @click="check(slotData)"
-              >查看</span
-            >
-          </template>
-          <template v-slot:diver="slotData">
-            {{ slotData.data.diver
-            }}&nbsp;<span
-              style="color: #0084FF; cursor: pointer"
-              @click="check(slotData)"
-              >查看</span
-            >
-          </template>
-          <!-- <template v-slot:status="slotData">
-            {{ slotData.data.status
-            }}
-          </template>
-          <template v-slot:spr="slotData">
-            {{ slotData.data.spr
-            }}
-          </template> -->
           <!-- 操作 -->
           <el-table-column
             slot="table_oper"
@@ -132,14 +31,22 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <span @click="detail(scope.row)" class="blue">查看保单</span>
-              <span @click="detail(scope.row)" class="blue">&nbsp;|&nbsp;查看运单</span>
+              <span @click="change(scope.row)" class="blue" v-if="scope.row.safe_status === 2">修改货值</span>
             </template>
           </el-table-column>
         </commonTable>
       </div>
-
     </div>
+    <el-dialog
+        title="修改货值"
+        :visible.sync="dialog.change.visable"
+        width="30%">
+      <el-input-number v-model="formChange.safe_declared_value" :precision="2"></el-input-number>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialog.change.visable = false">取 消</el-button>
+        <el-button type="primary" @click="submitChange">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -147,198 +54,98 @@
 export default {
   data () {
     return {
-      msg: '',
-      activeName: '1', // 标签绑定
-      serviceName: null,
-      fenquzhongliang: true,
-      columns: [
-        {
-          prop: 'code',
-          label: '预报单号',
-          width: '200',
-          align: 'center'
-        },
-        // 定义表格列的类型为slot，slot插槽名字为 slotbtn
-        {
-          prop: 'type',
-          label: '预报类型',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'num',
-          label: '票数',
-          width: '100',
-          align: 'center',
-          type: 'slot',
-          slotName: 'piaoshu'
-        },
-        {
-          prop: 'name',
-          label: '客户名称',
-          width: '250',
-          align: 'center'
-        },
-        {
-          prop: 'khbh',
-          label: '客户编号',
-          width: '100',
-          align: 'center'
-
-        },
-        // 已处理才有
-        // {
-        //   prop: 'status',
-        //   label: '处理状态',
-        //   width: '200',
-        //   align: 'center',
-        //   type: 'slot',
-        //   slotName: 'status'
-        // },
-        // {
-        //   prop: 'spr',
-        //   label: '审批人',
-        //   width: '200',
-        //   align: 'center',
-        //   type: 'slot',
-        //   slotName: 'spr'
-        // },
-        {
-          prop: 'diver',
-          label: '收货司机',
-          width: '100',
-          align: 'center',
-          type: 'slot',
-          slotName: 'diver'
-        },
-        {
-          prop: 'js',
-          label: '预报件数',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'address',
-          label: '收货地址',
-          width: '300',
-          align: 'center'
-        },
-        {
-          prop: 'ybzl',
-          label: '预报重量',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'ybfs',
-          label: '预报方数',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'time',
-          label: '预报时间',
-          width: '200',
-          align: 'center'
-        },
-        {
-          prop: 'hhsj',
-          label: '货好时间',
-          width: '100',
-          align: 'center'
-        },
-        {
-          prop: 'ywy',
-          label: '业务员',
-          width: '100',
-          align: 'center',
-          type: 'slot',
-          slotName: 'yewuyuan'
+      selection: false,
+      dialog: {
+        change: {
+          visable: false
         }
+      },
+      columns: [
+        { prop: 'safe_no', label: '保单号', width: '100', align: 'center' },
+        { prop: 'waybill_no', label: '运单号', width: '100', align: 'center' },
+        { prop: 'type', label: '运单类型', width: '100', align: 'center', formatter: this.formatter },
+        { prop: 'safe_status', label: '保险', width: '100', align: 'center', formatter: this.formatter },
+        { prop: 'customer_name', label: '客户名称', width: '100', align: 'center' },
+        { prop: 'customer_code', label: '客户编码', width: '100', align: 'center' },
+        { prop: 'channel_name', label: '渠道名称', width: '100', align: 'center' },
+        { prop: 'channel_cate', label: '渠道类型', width: '100', align: 'center' },
+        { prop: 'country_name', label: '目的国', width: '100', align: 'center' },
+        { prop: 'cargoes_num', label: '货件数', width: '100', align: 'center' },
+        { prop: 'bill_weight', label: '入仓结算重', width: '100', align: 'center' },
+        { prop: 'declared_value', label: '申报价值', width: '100', align: 'center' },
+        { prop: 'currency_name', label: '申报币种', width: '100', align: 'center' },
+        { prop: 'safe_declared_value', label: '投保货值', width: '100', align: 'center' },
+        { prop: 'unit_safe_declared_value', label: '每公斤货值', width: '100', align: 'center' },
+        { prop: 'created_at', label: '下单时间', width: '100', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
+      },
+      activeName: '1',
+      formChange: {
+        safe_declared_value: null
       }
     }
   },
   created () {
-    this.tableData = [
-      {
-        code: 'YBSZ213232232',
-        type: '已建计划',
-        num: '2票',
-        name: 'sz沙马家具毛衣公司',
-        khbh: 'smjj',
-        status: '通过审批',
-        spr: '张三',
-        diver: '王师傅',
-        js: '2件',
-        address: '上海市普陀区金沙江路 1518 弄',
-        ybzl: '80公斤',
-        ybfs: '90立方',
-        time: '2020年12月9日',
-        hhsj: '14.50',
-        ywy: '张三'
-      },
-      {
-        code: 'YBSZ213232232',
-        type: '已建计划',
-        num: '2票',
-        name: 'sz沙马家具毛衣公司',
-        khbh: 'smjj',
-        status: '通过审批',
-        spr: '张三',
-        diver: '王师傅',
-        js: '2件',
-        address: '上海市普陀区金沙江路 1518 弄',
-        ybzl: '80公斤',
-        ybfs: '90立方',
-        time: '2020年12月9日',
-        hhsj: '14.50',
-        ywy: '张三'
-      }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
+    getData () {
+      this.$api.order.waybill.safe.lists({
+        page: this.page.pageNo,
+        limit: this.page.limit,
+        status: Number(this.activeName)
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'type':
+          return row.type === 1 ? 'FBA运单' : '非FBA运单'
+        case 'safe_status':
+          return row.safe_status === 1 ? '允许投保' : '货值错误'
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd')
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-      console.log(val)
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        {
-          date: '2016-05-03',
-          name: '王小虎111',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-      ]
-    },
-    // checkbox选中获取数据
-    handleSelectionChange (val) {
-      console.log(val)
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // 查看
-    detail (val) {
-      console.log(val.data)
-      this.$route.push('name:sjmssqDetail')
+    change (val) {
+      this.dialog.change.visable = true
+      this.formChange.waybillId = val.id
+      this.formChange.safe_declared_value = val.safe_declared_value
     },
-    handleClick (tab, event) { console.log(tab, event) },
-    // 操作按钮列表
-    editTableData (row) {}
-    // 关闭抽屉
+    submitChange () {
+      this.$api.order.waybill.safe.change({
+        waybillId: this.formChange.waybillId,
+        safeAmount: this.formChange.safe_declared_value
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.getData()
+          this.dialog.change.visable = false
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    }
   }
 }
 </script>

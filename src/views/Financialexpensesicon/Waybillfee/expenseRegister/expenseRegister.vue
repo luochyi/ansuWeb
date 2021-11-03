@@ -3,7 +3,7 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>运单费用</span>
+        <span class='text'>费用登记</span>
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
@@ -13,136 +13,36 @@
               <span class='text'>客户名称</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
+              <el-input v-model='search.customerName' placeholder='请输入'></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>客户编码</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>收据单号</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='waybillNo' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>对账状态</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>结算方式</span>
-            </el-col>
-            <el-col :span='13'>
-            <el-input v-model='destination' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>结算周期</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>业务员</span>
-            </el-col>
-             <el-col :span='13'>
-                <el-input v-model='zipcode' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
-            <el-button class='wuBtn long1'>展开全部</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
+            <!-- <el-button class='wuBtn long1'>展开全部</el-button> -->
           </el-col>
         </el-row>
         <el-divider></el-divider>
          <el-row class='searchbox1'>
           <el-col :span='10' class="left">
-            <el-button class='stopBtn' @click="Batchregistration">批量登记费用</el-button></el-col>
+            <!-- <el-button class='stopBtn' @click="Batchregistration">批量登记费用</el-button> -->
+            </el-col>
             <el-col :span='12' class='right'>
-                <el-button class='whiteBtn '>查询条件设置</el-button>
-              <el-button class='whiteBtn '>列表显示设置</el-button>
+                <!-- <el-button class='whiteBtn '>查询条件设置</el-button>
+              <el-button class='whiteBtn '>列表显示设置</el-button> -->
             </el-col>
           </el-row>
           <br>
           <!-- 组件 -->
     <commonTable
       :columns="columns"
+      :selection='selection'
       :data="tableData"
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
     <!-- slot -->
-      <template v-slot:jianshu='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="list(slotData)">装箱清单</span>
-      </template>
-      <template v-slot:guiji='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="track(slotData)">更新轨迹</span>
-      </template>
-      <template v-slot:fapiao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Print(slotData)">打印|修改</span>
-      </template>
-      <template v-slot:jiesuan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="details(slotData)">详情</span>
-      </template>
-       <template v-slot:gaihuo='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="modify(slotData)">修改</span>
-      </template>
-      <template v-slot:bianhao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="whole(slotData)">全部</span>
-      </template>
-      <template v-slot:rucang='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Warehousing(slotData)">修改</span>
-      </template>
-      <template v-slot:chucang='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Outwarehouse(slotData)">修改</span>
-      </template>
-      <template v-slot:daili='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="agent(slotData)">修改</span>
-      </template>
-      <template v-slot:dailijiesuan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="settlement(slotData)">详情</span>
-      </template>
-      <template v-slot:zhuandanhao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="website(slotData)">查看官网|修改</span>
-      </template>
-       <template v-slot:jiedanhao='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Receipt(slotData)">修改</span>
-      </template>
-      <template v-slot:pinming='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="Name(slotData)">查看</span>
-      </template>
-      <template v-slot:neibu='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="inside(slotData)">查看</span>
-      </template>
-      <template v-slot:yewuyuan='slotData'>
-         {{slotData.data.info}}<span style="color: #0084FF;cursor:pointer" @click="salesman(slotData)">查看</span>
-      </template>
       <el-table-column
         slot="table_oper"
         align="center"
@@ -151,12 +51,12 @@
         width="226"
         :resizable="false"
       >
-         <template slot-scoped="scoped">
-          <el-button type="text" @click="registration"> 费运登记</el-button>
+         <template slot-scope="scoped">
+          <el-button type="text" @click="registration(scoped.row)"> 费运登记</el-button>
+                <span style="color: #0084FF; margin: 0px 5px" v-if="scoped.row.status > 1">|</span>
+                <el-button type="text" @click="showDrawerCargoes(scoped.row)" v-if="scoped.row.status > 1"> 修改尺寸 </el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="adopt= true"> 修改尺寸 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="reject= true"> 查看详情 </el-button>
+                <el-button type="text" @click="waybillInfo(scoped.row)"> 查看详情 </el-button>
         </template>
       </el-table-column>
     </commonTable>
@@ -222,6 +122,78 @@
         </button>
       </div>
     </commonDrawer>
+
+    <commonDrawer
+        :drawerVrisible="drawer.visabled.cargoes" drawerTitle="客户改重" :drawerSize='drawer.size.cargoes'
+        size="50%">
+      <div class="dra-content" style="textAlign:left;padding:10px">
+        <el-row class="orderId">{{drawer.data.cargoes.waybill_no}}</el-row>
+        <el-row style="margin-top:16px">
+          <span class="item1">客户名称：</span>
+          <span class="item2">{{drawer.data.cargoes.customer_name}}</span>
+        </el-row>
+        <el-row><el-button @click="edit()" class="orangeBtn" :disabled="drawer.formData.cargoes.ids.length === 0">批量修改</el-button></el-row>
+        <el-row class="line"></el-row>
+        <!-- <el-row style="margin-top:16px">
+            <span class="item1">预报渠道：</span>
+            <span class="item2">{{forecastChannel}}</span>
+        </el-row>
+        <el-row style="margin-top:16px">
+            <span class="item1">件数：</span>
+            <span class="item2">{{number}}</span>
+        </el-row> -->
+        <div class="table" style="margin-top:16px">
+          <el-table ref="multipleTable" :data="drawer.data.cargoes.tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="selectionChange"
+                    :header-cell-style="{background: '#F5F5F6'}" @row-dblclick="showCargoEdit">
+            <el-table-column type="selection"></el-table-column>
+            <el-table-column prop="cargo_no" label="货件编号" min-width="180"></el-table-column>
+            <el-table-column prop="length" label="长（cm）"></el-table-column>
+            <el-table-column prop="width" label="宽（cm）"></el-table-column>
+            <el-table-column prop="height" label="高（cm）"></el-table-column>
+            <el-table-column prop="weight" label="重（kg）"></el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <!-- 抽屉底部按钮 -->
+      <div slot="footer">
+        <button class="btn-orange" @click="submit()">
+          <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button>
+        <button class="btn-gray" @click="drawer.visabled.cargoes = false">
+          <span>取消</span>
+        </button>
+      </div>
+    </commonDrawer>
+    <el-dialog
+        title="改货重"
+        :visible.sync="dialog.visable.cargo"
+        width="26%">
+            <span style="textAlign:left;marginLeft:20px">
+                <el-row><el-input size="mini" type="Number" v-model="drawer.formData.cargo.length" class="ipt"><template slot="prepend">长</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="drawer.formData.cargo.width" class="ipt"><template slot="prepend">宽</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="drawer.formData.cargo.height" class="ipt"><template slot="prepend">高</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="drawer.formData.cargo.weight" class="ipt"><template slot="prepend">重</template><template slot="append">kg</template></el-input></el-row>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialog.visable.cargo = false">取 消</el-button>
+                <el-button class="orangeBtn" type="primary" @click="cargoEdit">确 定</el-button>
+            </span>
+    </el-dialog>
+    <el-dialog
+        title="批量改货"
+        :visible.sync="dialog.visable.cargoes"
+        width="26%">
+          <span style="textAlign:left;marginLeft:20px">
+              <el-row><el-checkbox v-model="drawer.formData.cargoes.lengthSwitch">长</el-checkbox><el-input size="mini" type="Number" v-model="drawer.formData.cargoes.length" :disabled="!drawer.formData.cargoes.lengthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="drawer.formData.cargoes.widthSwitch">宽</el-checkbox><el-input size="mini" type="Number" v-model="drawer.formData.cargoes.width" :disabled="!drawer.formData.cargoes.widthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="drawer.formData.cargoes.heightSwitch">高</el-checkbox><el-input size="mini" type="Number" v-model="drawer.formData.cargoes.height" :disabled="!drawer.formData.cargoes.heightSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="drawer.formData.cargoes.weightSwitch">重</el-checkbox><el-input size="mini" type="Number" v-model="drawer.formData.cargoes.weight" :disabled="!drawer.formData.cargoes.weightSwitch" class="ipt"><template slot="append">kg</template></el-input></el-row>
+          </span>
+      <span slot="footer" class="dialog-footer">
+              <el-button @click="dialog.visable.cargoes = false">取 消</el-button>
+              <el-button class="orangeBtn" type="primary" @click="batchChange">确 定</el-button>
+          </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -229,10 +201,11 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
+      selection: false,
+      total: 0, // 数据数量
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码
-
+      size: 'small',
       activeName: '1',
       waybillNo: '', // 运单号
       customerName: '', // 客户名称
@@ -245,81 +218,94 @@ export default {
       drawerTitle: '装箱清单', // 抽屉标题
 
       columns: [
-        { prop: 'WaybillNo', label: '运单号', width: '140', align: 'center' },
-        { prop: 'OrderNo', label: '预报单号', width: '133', align: 'center' },
-        { prop: 'ForecastNo', label: '客户名称', width: '193', align: 'center', formatter: this.formatter },
-        { prop: 'customerCode', label: '客户编号', width: '118', align: 'center', formatter: this.formatters },
-        { prop: 'Waybillstatus', label: '运单状态', width: '90', align: 'center' },
-        { prop: 'Chargeablefreight', label: '应收费运', width: '90', align: 'center' },
-        { prop: 'registration', label: '应收登级', width: '84', align: 'center' },
-        { prop: 'Collectionconfirmation', label: '收款账单确认', width: '109', align: 'center' },
-        { prop: 'Collectionbill', label: '收款账单收款', width: '107', align: 'center' },
-        { prop: 'Freightpayable', label: '应付费运', width: '89', align: 'center' },
-        { prop: 'registration', label: '应付登记', width: '84', align: 'center' },
-        { prop: 'Paymentbillconfirmation', label: '付款账单确认', width: '109', align: 'center' },
-        { prop: 'Paymentbillpayment', label: '付款账单付款', width: '107', align: 'center' },
-        { prop: 'Singleticketprofit', label: '单票利润', width: '82', align: 'center' },
-        { prop: 'Duedate', label: '应收日期', width: '137', align: 'center' },
-        { prop: 'duedate', label: '应付日期', width: '137', align: 'center' },
-        { prop: 'ReceivingNumber', label: '收货件数', width: '88', align: 'center' },
-        { prop: 'Forecastnumber', label: '预报件数', width: '164', align: 'center', type: 'slot', slotName: 'jianshu' },
-        { prop: 'Problempiece', label: '问题件', width: '89', align: 'center' },
-        { prop: 'Transportationtrack', label: '运输轨迹', width: '133', align: 'center', type: 'slot', slotName: 'guiji' },
-        { prop: 'invoice', label: '发票', width: '188', align: 'center', type: 'slot', slotName: 'fapiao' },
-        { prop: 'Forecasttime', label: '预报时间', width: '179', align: 'center' },
-        { prop: 'Sendingmethod', label: '寄件方式', width: '81', align: 'center' },
-        { prop: 'Squarenumber', label: '方数', width: '70', align: 'center' },
-        { prop: 'Realweight', label: '实重', width: '70', align: 'center' },
-        { prop: 'Volumeweight', label: '材积重', width: '70', align: 'center' },
-        { prop: 'Settlementweight', label: '结算重', width: '111', align: 'center', type: 'slot', slotName: 'jiesuan' },
-        { prop: 'Predictedweight', label: '预报重量', width: '80', align: 'center' },
-        { prop: 'Predictionsquare', label: '预报方数', width: '80', align: 'center' },
-        { prop: 'goodschanged', label: '改货方数', width: '95', align: 'center' },
-        { prop: 'Modifiedweight', label: '改货重量', width: '95', align: 'center' },
-        { prop: 'Modifiedvolumeweight', label: '改货材积重', width: '95', align: 'center' },
-        { prop: 'Changesettlementweight', label: '改货结算重', width: '115', align: 'center', type: 'slot', slotName: 'gaihuo' },
-        { prop: 'Shipmentnumber', label: '货件编号', width: '165', align: 'center', type: 'slot', slotName: 'bianhao' },
-        { prop: 'Ordertype', label: '订单类型', width: '89', align: 'center' },
-        { prop: 'Destinationcountry', label: '目的国', width: '66', align: 'center' },
-        { prop: 'destination', label: '目的地', width: '66', align: 'center' },
-        { prop: 'Destinationzipcode', label: '目的地邮编', width: '123', align: 'center' },
-        { prop: 'Forecastchannel', label: '预报渠道', width: '179', align: 'center' },
-        { prop: 'Warehousingchannel', label: '入仓渠道', width: '179', align: 'center', type: 'slot', slotName: 'rucang' },
-        { prop: 'Exitchannel', label: '出仓渠道', width: '178', align: 'center', type: 'slot', slotName: 'chucang' },
-        { prop: 'Outboundagent', label: '出仓代理', width: '206', align: 'center', type: 'slot', slotName: 'daili' },
-        { prop: 'Agencysettlement', label: '代理结算重', width: '111', align: 'center', type: 'slot', slotName: 'dailijiesuan' },
-        { prop: 'Dispatchtype', label: '派送类型', width: '80', align: 'center' },
-        { prop: 'Dispatchstatus', label: '派送状态', width: '80', align: 'center' },
-        { prop: 'TransferorderNo', label: '转单号', width: '260', align: 'center', type: 'slot', slotName: 'zhuandanhao' },
-        { prop: 'ReceiptNo', label: '接单号', width: '145', align: 'center', type: 'slot', slotName: 'jiedanhao' },
-        { prop: 'declarationtype', label: '报关类型', width: '122', align: 'center' },
-        { prop: 'customs clearance', label: '单独清关', width: '115', align: 'center' },
-        { prop: 'ProductName', label: '品名', width: '103', align: 'center', type: 'slot', slotName: 'pinming' },
-        { prop: 'Declaredvalue', label: '申报价值', width: '81', align: 'center' },
-        { prop: 'Ordertime', label: '下单时间', width: '182', align: 'center' },
-        { prop: 'Customercomments', label: '客户备注', width: '110', align: 'center' },
-        { prop: 'Internalremarks', label: '内部备注', width: '152', align: 'center', type: 'slot', slotName: 'neibu' },
-        { prop: 'Isthereinsurance', label: '是否有保险', width: '92', align: 'center' },
-        { prop: 'salesman', label: '业务员', width: '108', align: 'center', type: 'slot', slotName: 'yewuyuan' }
+        { prop: 'waybill_no', label: '运单号', width: '150', align: 'center' },
+        { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
+        { prop: 'customer_code', label: '客户编号', width: '118', align: 'center' },
+        { prop: 'type', label: '订单类型', width: '90', align: 'center', formatter: this.formatter },
+        { prop: 'status', label: '运单状态', width: '90', align: 'center', formatter: this.formatter },
+        { prop: 'cargoes_num', label: '件数', width: '90', align: 'center' },
+        { prop: 'channel_name', label: '渠道名称', width: '84', align: 'center' },
+        { prop: 'channel_code', label: '渠道编码', width: '109', align: 'center' },
+        { prop: 'created_at', label: '下单时间', width: '189', align: 'center', formatter: this.formatter },
+        { prop: 'trade_type', label: '贸易类型', width: '84', align: 'center', formatter: this.formatter },
+        { prop: 'is_separate_customs_clearance', label: '单独清关', width: '109', align: 'center', formatter: this.formatter },
+        { prop: 'bill_weight', label: '客户结算重', width: '107', align: 'center' },
+        { prop: 'agent_delivery_bill_weight', label: '代理结算重', width: '82', align: 'center' },
+        { prop: 'have_safe', label: '是否投保', width: '137', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
-        sizes: [1, 5, 10],
+        limit: 10,
+        sizes: [15, 50, 100],
         total: 0
+      },
+      drawer: {
+        visabled: {
+          cargoes: false
+        },
+        size: {
+          cargoes: '50%'
+        },
+        data: {
+          cargoes: {
+            waybillId: 0,
+            customer_name: null,
+            waybill_no: null,
+            tableData: []
+          }
+        },
+        formData: {
+          cargoes: {
+            ids: [],
+            length: null,
+            width: null,
+            height: null,
+            weight: null,
+            lengthSwitch: false,
+            widthSwitch: false,
+            heightSwitch: false,
+            weightSwitch: false
+          },
+          cargo: {
+            id: null,
+            length: null,
+            width: null,
+            height: null,
+            weight: null
+          }
+        }
+      },
+      dialog: {
+        visable: {
+          cargo: false,
+          cargoes: false
+        }
+      },
+      search: {
+        customerName: null
       }
     }
   },
   mounted () {
-    this.tableData = [
-      { OrderNo: 'AS123123423412313', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
-    registration () {
-      this.$router.push({ name: 'registration' })
+    getData () {
+      this.$api.finance.fare.waybill.lists({
+        customerName: this.search.customerName,
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
+    searchReset () {
+      this.search.customerName = null
+    },
+    registration (row) {
+      this.$router.push({ name: 'registration', params: row })
     },
     Batchregistration () {
       this.$router.push({ name: 'Batchregistration' })
@@ -329,20 +315,42 @@ export default {
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'type':
+          return row.type === 1 ? 'FBA运单' : '非FBA运单'
+        case 'status':
+          switch (row.status) {
+            case 2:
+              return '已入仓'
+            case 3:
+              return '已出库'
+            case 4:
+              return '已出仓'
+            case 5:
+              return '运输'
+            case 6:
+              return '已签收'
+          }
+          return ''
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd hh:mm:ss')
+        case 'trade_type':
+          return row.created_at === 2 ? '非一般贸易报关' : '一般贸易报关'
+        case 'is_separate_customs_clearance':
+          return row.is_separate_customs_clearance === 1 ? '单独清关' : '非单独清关'
+        case 'have_safe':
+          return row.have_safe === 1 ? '投保' : '不投保'
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // 操作按钮列表
     editTableData (row) {},
@@ -373,6 +381,102 @@ export default {
     details (val) {
       console.log(val.data)
       this.drawerVrisiblb = true
+    },
+    waybillInfo (row) {
+      this.$router.push({ name: 'waybillDetail', params: { id: row.id } })
+    },
+    showDrawerCargoes (row) {
+      this.drawer.data.cargoes.waybillId = row.id
+      this.drawer.data.cargoes.customer_name = row.customer_name
+      this.drawer.data.cargoes.waybill_no = row.waybill_no
+      this.$api.order.waybill.cargoSpec.agentGet(row.id).then(res => {
+        this.drawer.data.cargoes.tableData = res.data.cargoes
+      })
+      this.drawer.visabled.cargoes = true
+    },
+    selectionChange (val) {
+      this.drawer.formData.cargoes.ids = []
+      val && val.forEach((item) => {
+        this.drawer.formData.cargoes.ids.push(item.id)
+      })
+    },
+    showCargoEdit (row, column) {
+      if (!column.property) {
+        return
+      }
+      this.drawer.formData.cargo.id = row.id
+      this.drawer.formData.cargo.length = row.length
+      this.drawer.formData.cargo.width = row.width
+      this.drawer.formData.cargo.height = row.height
+      this.drawer.formData.cargo.weight = row.weight
+      this.dialog.visable.cargo = true
+    },
+    cargoEdit () {
+      this.drawer.data.cargoes.tableData.forEach((item, key) => {
+        if (item.id === this.drawer.formData.cargo.id) {
+          this.drawer.data.cargoes.tableData[key].length = this.drawer.formData.cargo.length
+          this.drawer.data.cargoes.tableData[key].width = this.drawer.formData.cargo.width
+          this.drawer.data.cargoes.tableData[key].height = this.drawer.formData.cargo.height
+          this.drawer.data.cargoes.tableData[key].weight = this.drawer.formData.cargo.weight
+        }
+      })
+      this.dialog.visable.cargo = false
+    },
+    batchChange () {
+      this.drawer.data.cargoes.tableData.forEach((item, key) => {
+        this.drawer.formData.cargoes.ids.forEach(id => {
+          if (item.id === id) {
+            if (this.drawer.formData.cargoes.lengthSwitch && this.drawer.formData.cargoes.length) {
+              this.drawer.data.cargoes.tableData[key].length = this.drawer.formData.cargoes.length
+            }
+            if (this.drawer.formData.cargoes.widthSwitch && this.drawer.formData.cargoes.width) {
+              this.drawer.data.cargoes.tableData[key].width = this.drawer.formData.cargoes.width
+            }
+            if (this.drawer.formData.cargoes.heightSwitch && this.drawer.formData.cargoes.height) {
+              this.drawer.data.cargoes.tableData[key].height = this.drawer.formData.cargoes.height
+            }
+            if (this.drawer.formData.cargoes.weightSwitch && this.drawer.formData.cargoes.weight) {
+              this.drawer.data.cargoes.tableData[key].weight = this.drawer.formData.cargoes.weight
+            }
+          }
+        })
+      })
+      this.dialog.visable.cargoes = false
+    },
+    edit () {
+      this.drawer.formData.cargoes.length = null
+      this.drawer.formData.cargoes.width = null
+      this.drawer.formData.cargoes.height = null
+      this.drawer.formData.cargoes.weight = null
+      this.drawer.formData.cargoes.lengthSwitch = false
+      this.drawer.formData.cargoes.widthSwitch = false
+      this.drawer.formData.cargoes.heightSwitch = false
+      this.drawer.formData.cargoes.weightSwitch = false
+      this.dialog.visable.cargoes = true
+    },
+    submit () {
+      let cargoSpecs = []
+      this.drawer.data.cargoes.tableData.forEach(item => {
+        cargoSpecs.push({
+          cargoId: item.id,
+          length: item.length,
+          width: item.width,
+          height: item.height,
+          weight: item.weight
+        })
+      })
+      this.$api.order.waybill.cargoSpec.agentEdit({
+        waybillId: this.drawer.data.cargoes.waybillId,
+        cargoSpecs: cargoSpecs
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+          this.drawer.visabled.cargoes = false
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     }
   }
 }
@@ -411,5 +515,9 @@ export default {
     font-family: PingFangSC-Regular, PingFang SC;
     font-weight: 400;
   }
+}
+.ipt{
+  width: 200px;
+  margin:8px
 }
 </style>

@@ -30,6 +30,16 @@ export default [
     },
     component: () => import('@/views/configureCenter/Subsidiarymanagement/subsidiaries.vue')
   },
+  {
+    path: '/Subsidiarymanagement/subsidiaryDetails',
+    name: 'subsidiaryDetails',
+    meta: {
+      title: '子公司详情',
+      icon: 'subsidiaryDetails',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/Subsidiarymanagement/subsidiaryDetails.vue')
+  },
   // 代理管理
   {
     path: '/organizationalStructure',
@@ -60,6 +70,26 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/Employeeaccount/employeeaccounta.vue')
+  },
+  {
+    path: '/menuManagement',
+    name: 'menuManagement',
+    meta: {
+      title: '菜单管理',
+      icon: 'menuManagement',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/menuManagement/menuManagement.vue')
+  },
+  {
+    path: '/apiManagement',
+    name: 'apiManagement',
+    meta: {
+      title: 'api管理',
+      icon: 'apiManagement',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/menuManagement/apiManagement.vue')
   },
   {
     path: '/driverManagement',
@@ -132,6 +162,16 @@ export default [
     component: () => import('@/views/configureCenter/Customerlevel/Customerlevel.vue')
   },
   {
+    path: '/Settlementperiod',
+    name: 'Settlementperiod',
+    meta: {
+      title: '结算账期',
+      icon: 'Settlementperiod',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/Settlementperiod/Settlementperiod.vue')
+  },
+  {
     path: '/receivingWarehouseManage',
     name: 'receivingWarehouseManage',
     meta: {
@@ -160,6 +200,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/receivingWarehouseManage/addWarehouse.vue')
+  },
+  {
+    path: '/receivingWarehouseManage/receivingWarehouseDetails',
+    name: 'receivingWarehouseDetails',
+    meta: {
+      title: '仓库详情',
+      icon: 'receivingWarehouseDetails',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/receivingWarehouseManage/receivingWarehouseDetails.vue')
   },
   // 仓库操作
   {
@@ -191,6 +241,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/currencyExchangerate/currencyExchangerate.vue')
+  },
+  {
+    path: '/materialCate',
+    name: 'materialCate',
+    meta: {
+      title: '材质分类',
+      icon: 'materialCate',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/materialCate/materialCate.vue')
   },
   {
     path: '/countryManagement',

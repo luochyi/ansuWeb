@@ -12,7 +12,7 @@
         <el-col :span='6' class='colbox'>
         <span class='text'>国家名称</span>
           <el-col :span='15'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
+            <el-input v-model='name' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <el-col :span='17' class='right'>
@@ -23,6 +23,7 @@
     <commonTable
       :columns="columns"
       :data="tableData"
+      :selection='selection'
       :pager="page"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
@@ -36,7 +37,7 @@
         :resizable="false"
         >
         <template slot-scope="scope">
-          <el-button type="text" @click="toDetail(scope.row.id)"> 编辑</el-button>
+          <el-button type="text" @click="edit(scope.row)">修改</el-button>
         </template>
       </el-table-column>
       </commonTable>
@@ -48,23 +49,18 @@
 export default {
   data () {
     return {
+      selection: false,
+      name: '',
       activeName: '1', // 标签绑定
-      pageSize: 10,
-      currentPage: 1,
-      total: 50,
-
-      agentName: '', // 代理名称
-      agentCode: '', // 代理编码
-      agentAccount: '', // 代理账期
       columns: [
-        { prop: 'country', label: '目的国', width: '331', align: 'center' },
-        { prop: 'code', label: '国家电话区号', width: '331', align: 'center', formatter: this.formatter },
-        { prop: 'quantity', label: '仓库数量', width: '331', align: 'center', formatter: this.formatter }
+        { prop: 'name', label: '目的国', align: 'center' },
+        { prop: 'area_code', label: '国家区号', align: 'center', formatter: this.formatter },
+        { prop: 'storehouse_count', label: '仓库数量', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
       }
@@ -72,26 +68,28 @@ export default {
     }
   },
   mounted () {
-    this.tableData = [
-      { country: '王小虎', code: '上海市普陀区金沙江路 1518 弄', quantity: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
+    getData () {
+      this.tableData = []
+      this.$api.configure.countryLists({ page: this.page.pageNo, limit: this.page.limit }).then(res => {
+        console.log(res)
+        res.data.list && res.data.list.forEach(ele => {
+          let obj = {
+            id: ele.id,
+            name: ele.name,
+            icon: ele.icon,
+            area_code: ele.area_code,
+            storehouse_count: ele.storehouse_count
+          }
+          this.tableData.push(obj)
+          this.page.total = res.data.total
+        })
+      })
+    },
     addCountry () {
       this.$router.push({ name: 'addCountry' })
-    },
-    getData () {
-      let params = {
-        status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
-      }
-      this.$api.agent.settingAgentLists(params).then((res) => {
-        console.log(res)
-      })
     },
     handleSelectionChange (val) {
       console.log(val)
@@ -100,25 +98,29 @@ export default {
         this.chooseArr.push(item)
       })
     },
-    // 重新渲染name列
-    formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
-    },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val
+      this.getData()
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val
+      this.getData()
     },
     // 操作按钮列表
-    editTableData (row) {}
+    editTableData (row) {},
+    edit (data) {
+      this.$router.push({
+        name: 'addCountry',
+        params: {
+          id: data.id,
+          name: data.name,
+          icon: data.icon,
+          area_code: data.area_code
+        }
+      })
+    }
   }
 }
 </script>

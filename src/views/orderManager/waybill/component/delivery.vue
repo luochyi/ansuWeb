@@ -657,7 +657,7 @@
                         <el-table-column prop="settingName" label="列表名" key="1"></el-table-column>
                         <el-table-column label="操作" key="2">
                             <template slot-scope="scope">
-                                <el-button type="text" @click="Edit(scope.row)">编辑</el-button>
+                                <el-button type="text" @click="Edit(scope.row)">修改</el-button>
                                 <el-button type="text" @click="Edit(scope.row)">重命名</el-button>
                                 <el-button type="text" @click="Delete(scope.row)" style="color:#FF0000">删除</el-button>
                             </template>
@@ -922,7 +922,7 @@ export default {
         warehousingChannel: '' // 入仓渠道
       },
 
-      total: 50, // 表格数据总条数
+      total: 0, // 表格数据总条数
       currentPage: 1,
       pageSize: 10,
 

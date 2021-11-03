@@ -10,10 +10,18 @@
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
+              <span class='text'>运单号</span>
+            </el-col>
+            <el-col :span='13'>
+              <el-input placeholder='请输入' v-model="search.waybillNo"></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span='6' class='colbox'>
+            <el-col :span='6'>
               <span class='text'>客户名称</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='customerName' placeholder='请输入'></el-input>
+              <el-input placeholder='请输入' v-model="search.customerName"></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -21,97 +29,34 @@
               <span class='text'>客户编码</span>
             </el-col>
             <el-col :span='13'>
-              <el-input v-model='customerCode' placeholder='请输入'></el-input>
+              <el-input placeholder='请输入' v-model="search.customerCode"></el-input>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>运单号</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-input v-model='waybillNo' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>情况登记</span>
-            </el-col>
-            <el-col :span='13'>
-               <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-        </el-row>
-        <!--  -->
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>扣毛利状态</span>
-            </el-col>
-            <el-col :span='13'>
-             <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>目的地</span>
-            </el-col>
-            <el-col :span='13'>
-              <el-select v-model="valuea" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
-              <span class='text'>渠道</span>
-            </el-col>
-             <el-col :span='13'>
-                <el-input v-model='destination' placeholder='请输入'></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
-            <el-button class='wuBtn long1'>展开全部</el-button>
+            <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
+            <el-button class='wuBtn long1' @click="searchReset">重 置</el-button>
           </el-col>
         </el-row>
         <el-divider></el-divider>
-         <el-row class='tableBtn'>
-             <el-col :span='10' class="left">
-               <el-button class='stopBtn' @click="changes=true">批量扣毛利</el-button>
-          </el-col>
-            <el-col :span='10' class='right'>
-              <el-button class='whiteBtn '>操作日志</el-button>
-                <el-button class='whiteBtn '>查询条件设置</el-button>
-              <el-button class='whiteBtn '>列表显示设置</el-button>
-            </el-col>
-          </el-row>
-          <br>
           <!-- 组件 -->
     <commonTable
       :columns="columns"
       :data="tableData"
       :pager="page"
+      :selection="selection"
       @handleSizeChange="handleSizeChange"
       @handleCurrentChange="handleCurrentChange"
     >
       <el-table-column
         slot="table_oper"
-        align="center"
+        align="left"
         fixed="right"
         label="操作"
-        width="101"
+        width="200"
         :resizable="false"
       >
-         <template slot-scoped="scoped">
-            <el-button type="text" @click="password= true"> 查看详情 </el-button>
+         <template slot-scope="scoped">
+            <el-button type="text" @click="waybillInfo(scoped.row)"> 查看详情 </el-button>
         </template>
       </el-table-column>
     </commonTable>
@@ -123,75 +68,75 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
-      pageSize: 10, // 默认当前条数
-      currentPage: 1, // 当前页码
-
-      activeName: '1',
-      customerName: '', // 客户名称
-      customerCode: '', // 客户编号
-      waybillNo: '', // 运单号
-      destination: '', // 渠道
-      value: '',
-      valuea: '',
-
+      selection: false,
       columns: [
-        { prop: 'WaybillNo', label: '运单号', width: '212', align: 'center' },
-        { prop: 'Grossprofit', label: '单票毛利', width: '82', align: 'center' },
-        { prop: 'Situation', label: '情况登记', width: '255', align: 'center' },
-        { prop: 'deductionstatus', label: '扣毛利状态', width: '142', align: 'center' },
-        { prop: 'customer', label: '客户', width: '95', align: 'center' },
-        { prop: 'Customercode', label: '客户编码', width: '129', align: 'center' },
-        { prop: 'destination', label: '目的地', width: '73', align: 'center' },
-        { prop: 'channel', label: '渠道', width: '82', align: 'center' },
-        { prop: 'number', label: '件数', width: '255', align: 'center' },
-        { prop: 'weight', label: '结算重', width: '142', align: 'center' },
-        { prop: 'settlement', label: '代理结算重', width: '95', align: 'center' },
-        { prop: 'salesman', label: '业务员', width: '129', align: 'center' },
-        { prop: 'Orderdate', label: '下单日期', width: '73', align: 'center' },
-        { prop: 'registration', label: '登记日期', width: '129', align: 'center' }
+        { prop: 'waybill_no', label: '运单号', width: '212', align: 'center' },
+        { prop: 'customer_name', label: '客户名称', width: '182', align: 'center' },
+        { prop: 'customer_code', label: '客户编码', width: '135', align: 'center' },
+        { prop: 'channel_name', label: '渠道', width: '142', align: 'center' },
+        { prop: 'cargoes_num', label: '件数', width: '95', align: 'center' },
+        { prop: 'customer_bill_weight', label: '客户结算重', width: '129', align: 'center' },
+        { prop: 'agent_bill_weight', label: '代理结算重', width: '73', align: 'center' },
+        { prop: 'salesman_name', label: '业务员', width: '120', align: 'center' },
+        { prop: 'created_at', label: '下单日', width: '255', align: 'center', formatter: this.formatter }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
-        sizes: [1, 5, 10],
+        limit: 10,
+        sizes: [10, 50, 100],
         total: 0
+      },
+      search: {
+        waybillNo: null,
+        customerName: null,
+        customerCode: null
       }
     }
   },
   mounted () {
-    this.tableData = [
-      { PaymentNo: 'AS123123423412313', apply: '王小虎', code: '上海市普陀区金沙江路 1518 弄' }
-    ]
-    this.page.total = 2
+    this.getData()
   },
   methods: {
-    detailspage () {
-      this.$router.push({ name: 'detailspage' })
+    getData () {
+      this.$api.finance.other.profit.lists({
+        waybillNo: this.search.waybillNo,
+        customerName: this.search.customerName,
+        customerCode: this.search.customerCode,
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
     },
-    handleClick (val) {
-      console.log(val)
+    searchReset () {
+      this.search = {
+        waybillNo: null,
+        customerName: null,
+        customerCode: null
+      }
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd')
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
-    // 操作按钮列表
-    editTableData (row) {}
+    waybillInfo (row) {
+      this.$router.push({ name: 'waybillDetail', params: { id: row.id } })
+    }
   }
 }
 </script>

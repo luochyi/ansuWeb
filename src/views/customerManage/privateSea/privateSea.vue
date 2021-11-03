@@ -12,59 +12,51 @@
         <el-col :span='6' class='colbox'>
           <span class='text'>客户名称</span>
           <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
+            <el-input v-model='name' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <!--  -->
-        <el-col :span='6' class='colbox justify-center'>
-          <el-button class='orangeBtn long1'>查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
+        <el-col :span='6' >
+          <el-button @click="search()"  class='orangeBtn long1'>查 询</el-button>
+          <el-button @click="reset()" class='wuBtn long1'>重 置</el-button>
         </el-col>
-        <el-col :span='12' class='colbox justify-center'>
-          <el-button @click="add" class='orangeBtn long2'>⊕ 添加客户</el-button>
+        <el-col :span='12' >
+          <el-button @click="addcustomerp" class='orangeBtn long2'>添加客户</el-button>
         </el-col>
       </el-row>
       <!-- 表格 -->
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button class='stopBtn' @click="changes=true">批量转回公海</el-button>
+            <el-button class='stopBtn' @click="changes=true" :disabled='table_row.length===0'>批量转回公海</el-button>
           </el-col>
         </el-row>
-
-        <div class="table">
-          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
-            :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column type="selection" width="55"></el-table-column>
-             <el-table-column prop="name" label="客户名称" width="218"></el-table-column>
-             <el-table-column prop="contacts" label="客户联系人" width="94"></el-table-column>
-             <el-table-column prop="number" label="客户联系电话" width="117"></el-table-column>
-             <el-table-column prop="address" label="客户地址" width="425"></el-table-column>
-            <el-table-column fixed="right" label="操作" min-width="169">
-              <template slot-scope="scope">
-                <el-button type="text" @click="informationis = true"> 编辑</el-button>
+  <!-- 组件 -->
+    <commonTable
+      :columns="columns"
+      :data="tableData"
+      :pager="page"
+      @handleSizeChange="handleSizeChange"
+      @handleCurrentChange="handleCurrentChange"
+      @handleSelectionChange="handleSelectionChange"
+    >
+      <el-table-column
+        slot="table_oper"
+        align="center"
+        fixed="right"
+        label="操作"
+        width="270"
+        :resizable="false"
+      >
+        <template slot-scope="scope">
+                <!-- <el-button type="text" @click="informationis = true"> 修改</el-button> -->
+                <!-- <span style="color: #0084FF; margin: 0px 5px">|</span> -->
+                <el-button v-if="activeName === '1'" type="text" @click="open(scope.row)">转回公海</el-button>
                 <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="dialogVisible = true">转回公海</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" class="visi" @click="Visitrecord"> 拜访记录</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">开户</el-button>
+                <el-button type="text" class="visi" @click="recordLists(scope.row)"> 拜访记录</el-button>
               </template>
-            </el-table-column>
-          </el-table>
-
-          <!-- 分页 -->
-          <div class='block'>
-            <el-pagination
-              :current-page.sync='currentPage'
-              :pager-count='9'
-               :page-size='pageSize'
-               :page-sizes='[10, 20, 50, 100]'
-              layout='total, sizes, prev, pager, next, jumper'
-              :total='150'>
-              </el-pagination>
-          </div>
-        </div>
+      </el-table-column>
+    </commonTable>
       </div>
     </div>
     <!-- 转回公海 -->
@@ -75,22 +67,22 @@
   :before-close="handleClose">
   <div class="input">
     <br>
-  <span>是否将客户“深圳市沙马家居有限公司”转回公海客户</span>
+  <span>是否将客户{{kehuname}}转回公海客户</span>
   </div>
   <span slot="footer" class="dialog-footer">
     <el-button @click="dialogVisible = false" class='wuBtn'>取 消</el-button>
-    <el-button type="primary" @click="dialogVisible = false" class='orangeBtn'>确 定</el-button>
+    <el-button type="primary" @click="toG" class='orangeBtn'>确 定</el-button>
   </span>
 </el-dialog>
 <!-- 批量转回公海 -->
   <el-dialog title="转回公海" :visible.sync="changes" width="30%" >
   <div class="input">
     <br>
-  <span>是否批量将这34个客户转入公海客户</span>
+  <span>是否批量将这{{table_row.length}}个客户转入公海客户</span>
   </div>
   <span slot="footer" class="change-footer">
     <el-button @click="changes = false" class='wuBtn'>取 消</el-button>
-    <el-button type="primary" @click="changes = false" class='orangeBtn'>确 定</el-button>
+    <el-button type="primary" @click="allchange" class='orangeBtn'>确 定</el-button>
   </span>
 </el-dialog>
 <!-- 完善信息 -->
@@ -107,95 +99,129 @@
 </el-dialog>
   </div>
 </template>
-
 <script>
 export default {
   data () {
     return {
+      table_row: [],
       changes: false,
       dialogVisible: false,
       informationis: false,
       activeName: '1', // 标签绑定
-      pageSize: 10,
-      currentPage: 1,
-      total: 50,
-
+      Uid: [],
+      kehuname: '',
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      name: '',
+      columns: [
+        { prop: 'name', label: '客户名称', width: '218', align: 'center' },
+        { prop: 'contact', label: '客户联系人', width: '94', align: 'center' },
+        { prop: 'number', label: '客户联系电话', width: '117', align: 'center' },
+        { prop: 'address', label: '客户地址', align: 'center' },
+        { prop: 'salesman', label: '业务员', width: '91', align: 'center' }
+      ],
+      tableData: [],
+      page: {
+        pageNo: 1, // 当前页码
+        limit: 10, // 页容量
+        sizes: [1, 5, 10],
+        total: 0
+      }
 
     }
   },
+  mounted () {
+    // 在页面加载前调用获取列表数据函数
+    this.getData()
+  },
   methods: {
-    add () {
+    addcustomerp () {
       this.$router.push({ name: 'addcustomerp' })
     },
-    Visitrecord () {
-      this.$router.push({ name: 'Visitrecord' })
+    recordLists (data) {
+      this.$router.push({ name: 'recordLists', params: { id: data.id, name: data.name } })
     },
-    handleClose (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    change (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
-    information (done) {
-      this.$confirm('确认转入')
-        .then(_ => {
-          done()
-        })
-        .catch(_ => {})
-    },
+    // 获取列表数据
     getData () {
-      let params = {
-        status: Number(this.activeName),
-        page: this.currentPage,
-        limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
-      }
-      this.$api.agent.settingAgentLists(params).then((res) => {
-        console.log(res)
+      // 初始的表格数据清空
+      this.tableData = []
+      // limit: this.page.limit, page: this.page.pageNo 页码和页容量
+      this.$api.customer.privateLists({ limit: this.page.limit, page: this.page.pageNo, name: this.name }).then(res => {
+        console.log(res.data) // res是接口返回的结果
+        res.data.list && res.data.list.forEach(ele => {
+          let obj = {
+            id: ele.id,
+            name: ele.name,
+            contact: ele.liaison,
+            number: ele.phone,
+            address: ele.address
+          }
+          this.tableData.push(obj)
+        })
+        this.page.total = res.data.total // 数据总量
       })
     },
-    batchStop () {
-
-    },
     handleSelectionChange (val) {
-      console.log(val)
-      this.chooseArr = []
-      val && val.forEach((item) => {
-        this.chooseArr.push(item)
+      val && val.forEach(item => {
+        this.table_row.push(item.id)
+      })
+    },
+    // 改变页面大小处理
+    handleSizeChange (val) {
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
+    },
+    // 翻页处理
+    handleCurrentChange (val) {
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
+    },
+    // 操作按钮列表
+    editTableData (row) {},
+    search () {
+      this.getData()
+    },
+    reset () {
+      this.name = ''
+      this.getData()
+      console.log('111')
+    },
+    open (data) {
+      console.log(data)
+      this.Uid = []
+      this.Uid.push(data.id)
+      this.kehuname = data.name
+      this.dialogVisible = true
+    },
+    handleClose () {
+      this.dialogVisible = false
+    },
+    allchange () {
+      this.$api.customer.privatePublic({ customerIds: this.table_row }).then(res => {
+        console.log(res)
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.changes = false
+          this.getData()
+        } else {
+          this.$message.success(res.msg)
+        }
+      })
+    },
+    toG () {
+      // let obj = {
+      //   customerIds: this.Uid
+      // }
+      this.$api.customer.privatePublic({ customerIds: this.Uid }).then(res => {
+        console.log(res)
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.dialogVisible = false
+          this.getData()
+        } else {
+          this.$message.success(res.msg)
+        }
       })
     }
   }

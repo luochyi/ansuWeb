@@ -123,7 +123,7 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
+      total: 0, // 数据数量
       pageSize: 10, // 默认当前条数
       currentPage: 1, // 当前页码
 
@@ -153,7 +153,7 @@ export default {
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
       }

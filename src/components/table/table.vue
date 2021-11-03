@@ -9,6 +9,7 @@
       @selection-change="handleSelectionChange"
     >
       <el-table-column
+      v-if="selection===true"
       type="selection"
       width="50">
     </el-table-column>
@@ -41,6 +42,7 @@
     </el-table>
     <div class="block">
       <el-pagination
+      v-if="paginationShow"
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       style="text-align: center; margin: 20px 0"
@@ -59,12 +61,21 @@
 export default {
   name: 'commonTable',
   props: {
+    // 是否需要分页
+    paginationShow: {
+      type: Boolean,
+      default: true
+    },
     columns: Array,
     data: Array,
     pager: Object,
     maxHeight: {
       type: Number,
       default: 2000
+    },
+    selection: {
+      type: Boolean,
+      default: true
     }
   },
   methods: {
@@ -105,6 +116,7 @@ export default {
 .pagination-item p {
     color: #999999;
 }
+
 .el-pagination.is-background .el-pager li:not(.disabled).active {
     background-color: #fb4702 !important;
     color: #fff;

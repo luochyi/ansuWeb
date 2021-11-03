@@ -16,7 +16,7 @@
         <el-col :span='6' class='colbox'>
           <span class='text'>预报单号</span>
           <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'>
+            <el-input v-model='forecast_no' placeholder='请输入'>
                 <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
                             <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i>
             </el-input>
@@ -26,21 +26,21 @@
         <el-col :span='6' class='colbox'>
           <span class='text'>客户名称</span>
           <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
+            <el-input v-model='customer_name' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <!-- 客户编码 -->
         <el-col :span='6' class='colbox'>
           <span class='text'>客户编码</span>
           <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
+            <el-input v-model='customer_code' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <!-- 预报类型 -->
          <el-col :span='6' class='colbox'>
           <span class='text'>预报类型</span>
           <el-col :span='16'>
-            <el-select v-model='msg' placeholder='请输入'></el-select>
+            <el-select v-model='type' placeholder='请输入'></el-select>
           </el-col>
         </el-col>
       </el-row>
@@ -49,21 +49,21 @@
         <el-col :span='6' class='colbox'>
           <span class='text'>收货司机</span>
           <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
+            <el-input v-model='driver_name' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <!-- 预报时间 -->
         <el-col :span='6' class='colbox'>
           <span class='text'>预报时间</span>
           <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
+            <el-input v-model='forecast_created_at' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <!-- 业务员 -->
         <el-col :span='6' class='colbox'>
           <span class='text'>业务员</span>
           <el-col :span='16'>
-            <el-input v-model='msg' placeholder='请输入'></el-input>
+            <el-input v-model='salesman_name' placeholder='请输入'></el-input>
           </el-col>
         </el-col>
         <!--  -->
@@ -77,8 +77,8 @@
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left" v-if="activeName==='1'">
-            <el-button class='stopBtn'>批量通过审核</el-button>
-            <el-button class='stopBtn'>批量拒绝审核</el-button>
+            <!-- <el-button class='stopBtn'>批量通过审核</el-button>
+            <el-button class='stopBtn'>批量拒绝审核</el-button> -->
           </el-col>
           <!-- <el-col :span='12' class="right">
             <el-button class='whiteBtn' @click="toAdd">新增渠道</el-button>
@@ -86,6 +86,7 @@
           </el-col> -->
         </el-row>
         <commonTable
+          :selection="selection"
           :columns="columns"
           :data="tableData"
           :pager="page"
@@ -95,28 +96,31 @@
         >
              <!-- slot -->
           <template v-slot:yewuyuan="slotData">
-            {{ slotData.data.ywy
-            }}&nbsp;<span
+            {{ slotData.data.salesman_name
+            }}&nbsp;
+            <!-- <span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
               >查看</span
-            >
+            > -->
           </template>
           <template v-slot:piaoshu="slotData">
-            {{ slotData.data.num
-            }}&nbsp;<span
+            {{ slotData.data.forecast_waybill_count
+            }}&nbsp;
+            <!-- <span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
               >查看</span
-            >
+            > -->
           </template>
           <template v-slot:diver="slotData">
-            {{ slotData.data.diver
-            }}&nbsp;<span
+            {{ slotData.data.driver_name
+            }}&nbsp;
+            <!-- <span
               style="color: #0084FF; cursor: pointer"
               @click="check(slotData)"
               >查看</span
-            >
+            > -->
           </template>
           <!-- <template v-slot:status="slotData">
             {{ slotData.data.status
@@ -136,9 +140,9 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <span @click="detail(scope.row)" class="blue">查看详情</span>
-              <span v-if="activeName==='1'" @click="detail(scope.row)" class="blue">&nbsp;|&nbsp;通过&nbsp;|&nbsp;</span>
-              <span v-if="activeName==='1'" @click="detail(scope.row)" class="blue">拒绝</span>
+               <el-button type="text" @click="detail(scope.row)">查看详情</el-button>
+               <el-button type="text" v-if="activeName==='1'" @click="adopt(scope.row.id)" >通过</el-button>
+               <el-button type="text" v-if="activeName==='1'" @click="refuse(scope.row.id)">拒绝</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -152,26 +156,41 @@
 export default {
   data () {
     return {
-      msg: '',
+      selection: false,
+      forecast_no: '', // 预报单号
+      type: '', // 预报类型
+      forecast_waybill_count: '', // 运单数量
+      customer_name: '', // 客户名称
+      customer_code: '', // 客户编号
+      receipt_type: '', // 收货类型
+      driver_name: '', // 司机姓名
+      forecast_box_count: '', // 预报件数
+      forecast_weight: '', // 预报重量
+      forecast_volume: '', // 预报方数
+      forecast_good_time: '', // 货好时间
+      forecast_created_at: '', // 预报时间
+      salesman_name: '', // 业务员
+
       activeName: '1', // 标签绑定
       serviceName: null,
       fenquzhongliang: true,
       columns: [
         {
-          prop: 'code',
+          prop: 'forecast_no',
           label: '预报单号',
           width: '200',
           align: 'center'
         },
         // 定义表格列的类型为slot，slot插槽名字为 slotbtn
         {
-          prop: 'type',
+          prop: 'forecast_type',
           label: '预报类型',
           width: '100',
-          align: 'center'
+          align: 'center',
+          formatter: this.formatter
         },
         {
-          prop: 'num',
+          prop: 'forecast_waybill_count',
           label: '票数',
           width: '100',
           align: 'center',
@@ -179,81 +198,66 @@ export default {
           slotName: 'piaoshu'
         },
         {
-          prop: 'name',
+          prop: 'customer_name',
           label: '客户名称',
           width: '250',
           align: 'center'
         },
         {
-          prop: 'khbh',
+          prop: 'customer_code',
           label: '客户编号',
           width: '100',
           align: 'center'
 
         },
-        // 已处理才有
-        // {
-        //   prop: 'status',
-        //   label: '处理状态',
-        //   width: '200',
-        //   align: 'center',
-        //   type: 'slot',
-        //   slotName: 'status'
-        // },
-        // {
-        //   prop: 'spr',
-        //   label: '审批人',
-        //   width: '200',
-        //   align: 'center',
-        //   type: 'slot',
-        //   slotName: 'spr'
-        // },
         {
-          prop: 'diver',
+          prop: 'driver_name',
           label: '收货司机',
-          width: '100',
+          width: '200',
           align: 'center',
           type: 'slot',
           slotName: 'diver'
         },
         {
-          prop: 'js',
+          prop: 'forecast_box_count',
           label: '预报件数',
           width: '100',
           align: 'center'
         },
         {
-          prop: 'address',
+          prop: 'forecast_address',
           label: '收货地址',
           width: '300',
           align: 'center'
         },
         {
-          prop: 'ybzl',
+          prop: 'forecast_weight',
           label: '预报重量',
           width: '100',
           align: 'center'
         },
         {
-          prop: 'ybfs',
+          prop: 'forecast_volume',
           label: '预报方数',
           width: '100',
           align: 'center'
         },
         {
-          prop: 'time',
+          prop: 'forecast_created_at',
           label: '预报时间',
           width: '200',
-          align: 'center'
+          align: 'center',
+          formatter: this.formatter
         },
         {
-          prop: 'hhsj',
+          prop: 'forecast_good_time',
           label: '货好时间',
-          width: '100',
-          align: 'center'
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
         },
         {
-          prop: 'ywy',
+          prop: 'salesman_name',
           label: '业务员',
           width: '100',
           align: 'center',
@@ -264,83 +268,86 @@ export default {
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
       }
     }
   },
-  created () {
-    this.tableData = [
-      {
-        code: 'YBSZ213232232',
-        type: '已建计划',
-        num: '2票',
-        name: 'sz沙马家具毛衣公司',
-        khbh: 'smjj',
-        status: '通过审批',
-        spr: '张三',
-        diver: '王师傅',
-        js: '2件',
-        address: '上海市普陀区金沙江路 1518 弄',
-        ybzl: '80公斤',
-        ybfs: '90立方',
-        time: '2020年12月9日',
-        hhsj: '14.50',
-        ywy: '张三'
-      },
-      {
-        code: 'YBSZ213232232',
-        type: '已建计划',
-        num: '2票',
-        name: 'sz沙马家具毛衣公司',
-        khbh: 'smjj',
-        status: '通过审批',
-        spr: '张三',
-        diver: '王师傅',
-        js: '2件',
-        address: '上海市普陀区金沙江路 1518 弄',
-        ybzl: '80公斤',
-        ybfs: '90立方',
-        time: '2020年12月9日',
-        hhsj: '14.50',
-        ywy: '张三'
-      }
-    ]
-    this.page.total = 2
+  mounted () {
+    // 在页面加载前调用获取列表数据函数
+    this.getData()
   },
   methods: {
+    // 获取列表数据
+    getData () {
+      // 初始的表格数据清空
+      this.tableData = []
+      // limit: this.page.limit, page: this.page.pageNo 页码和页容量
+      this.$api.Ordermanagement.forecastDirect({ limit: this.page.limit, page: this.page.pageNo, status: Number(this.activeName) }).then(res => {
+        console.log(res.data) // res是接口返回的结果
+        this.page.total = res.data.total // 数据总量
+        this.tableData = res.data.list
+      })
+    },
+    // 通过
+    adopt: function (event) {
+      console.log(event)
+      this.$api.Ordermanagement.directAgree({ directId: Number(event) }).then((res) => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    // 拒绝
+    refuse: function (event) {
+      console.log(event)
+      this.$api.Ordermanagement.directReject({ directId: Number(event) }).then((res) => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'status':
+          return row.status === 1 ? '申请直接收获' : row.status === 2 ? '审核通过' : '审核驳回'
+        case 'forecast_type':
+          return row.forecast_type === 1 ? '计划下单' : '无计划下单'
+        case 'forecast_created_at':
+          return this.formatDate(row.forecast_created_at, 'yyyy-MM-dd hh:mm:ss')
+        case 'forecast_good_time':
+          return this.formatDate(row.forecast_good_time, 'yyyy-MM-dd hh:mm:ss')
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-      console.log(val)
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        {
-          date: '2016-05-03',
-          name: '王小虎111',
-          address: '上海市普陀区金沙江路 1518 弄'
-        }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
     },
     // checkbox选中获取数据
     handleSelectionChange (val) {
       console.log(val)
     },
     // 查看
-    detail (val) {
-      console.log(val.data)
-      this.$route.push('name:sjmssqDetail')
+    detail (data) {
+      this.$router.push({ name: 'sjmssqDetail', params: { id: data.id } })
     },
-    handleClick (tab, event) { console.log(tab, event) },
+    handleClick (tab, event) {
+      this.getData()
+    },
     // 操作按钮列表
     editTableData (row) {}
     // 关闭抽屉
@@ -356,10 +363,11 @@ export default {
             prop: 'status',
             label: '处理状态',
             width: '100',
-            align: 'center'
+            align: 'center',
+            formatter: this.formatter
           },
           {
-            prop: 'spr',
+            prop: 'approver_name',
             label: '审批人',
             width: '100',
             align: 'center'

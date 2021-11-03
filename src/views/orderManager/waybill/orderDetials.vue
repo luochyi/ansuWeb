@@ -1,30 +1,27 @@
 <template>
     <div>
         <!-- 扣货详情 （v-if="" ）-->
-        <div>
+        <!-- <div v-if="waybillInfo.is_lock === 1">
             <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:17px 6px;">
                 <span class='text' style="color:#FF0000">扣货件详情</span>
             </el-row>
             <el-row class="titleReason">
-                <span>扣货原因：{{titleReason}}</span>
+                <span>扣货原因：{{waybillInfo.lock_reason}}</span>
             </el-row>
-        </div>
+        </div> -->
         <!-- 不扣货详情 -->
         <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:17px 0">
             <span class='text'>订单详情</span>
         </el-row>
         <el-row class="box">
             <el-row style="display:flex;align-items:center;margin-bottom:20px">
-                <el-col :span="6">
-                    <span class="item" style="width:90px">运单号：</span>
-                    <span class="item">{{wayBill}}</span>
+                <el-col :span="8">
+                    <span class="item" style="width:90px">订单类型：</span>
+                    <span class="item">{{waybillInfo.type === 1 ? 'FBA运单' :  '非FBA运单'}}</span>
                 </el-col>
-                <el-col :span="6">
-                    <span class="item" style="width:120px">预报单号：</span>
-                    <span class="item">{{forecastNo}}</span>
-                </el-col>
-                <el-col :span="12" style="text-align:right">
-                    <el-button class="whiteBtn" @click="drawer = true" size="small">页面显示设置</el-button>
+                <el-col :span="8">
+                    <span class="item" style="width:120px">运单号：</span>
+                    <span class="item">{{waybillInfo.waybill_no}}</span>
                 </el-col>
             </el-row>
                 <!-- 客户信息 -->
@@ -35,11 +32,11 @@
                     <el-row style="margin-top:10px">
                         <el-col :span="8">
                             <span class="item1">客户名称：</span>
-                            <span class="item2">{{name}}</span>
+                            <span class="item2">{{waybillInfo.customer_name}}</span>
                         </el-col>
                         <el-col :span="8">
                             <span class="item1">客户编号：</span>
-                            <span class="item2">{{customerCode}}</span>
+                            <span class="item2">{{waybillInfo.customer_code}}</span>
                         </el-col>
                     </el-row>
                 </el-row>
@@ -52,25 +49,21 @@
                     <el-row style="margin-top:10px">
                         <el-col :span="8">
                             <span class="item1">所属业务员：</span>
-                            <span class="item2"></span>
+                            <span class="item2">{{waybillInfo.salesman_name}}</span>
                         </el-col>
                         <el-col :span="8">
                             <span class="item1">业务员手机：</span>
-                            <span class="item2"></span>
+                            <span class="item2">{{waybillInfo.salesman_phone}}</span>
                         </el-col>
                         <el-col :span="8">
                             <span class="item1">业务员职位：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8" style="margin-top:8px">
-                            <span class="item1">上级领导：</span>
-                            <span class="item2"></span>
+                            <span class="item2">{{waybillInfo.salesman_position_name}}</span>
                         </el-col>
                     </el-row>
                 </el-row>
                 <el-row class="line"></el-row>
                 <!-- 收货信息 -->
-                <el-row>
+                <el-row v-if="false">
                     <el-row>
                         <span class="headerTitle">收货信息</span>
                     </el-row>
@@ -97,9 +90,9 @@
                             </el-col>
                     </el-row>
                 </el-row>
-                <el-row class="line"></el-row>
+                <el-row class="line" v-if="false"></el-row>
                 <!-- 预报信息 -->
-                <el-row>
+                <el-row v-if="false">
                     <el-row>
                         <span class="headerTitle">预报信息</span>
                         <span class="item-info"></span>
@@ -127,44 +120,9 @@
                         </el-col>
                     </el-row>
                 </el-row>
-                <el-row class="line"></el-row>
-                 <!-- 入库入仓 -->
-                <el-row>
-                    <el-row>
-                        <span class="headerTitle">入库入仓</span>
-                        <span class="item-info"></span>
-                    </el-row>
-                    <el-row style="margin-top:10px">
-                        <el-col :span="8">
-                            <span class="item1">入库时间：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1">入库件数：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1">入仓件数：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8" style="margin-top:8px">
-                            <span class="item1">入仓时间：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8" style="margin-top:8px">
-                            <span class="item1">入仓员：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8" style="margin-top:8px">
-                            <span class="item1">入仓渠道：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text" @click="modify = true">修改</el-button>
-                        </el-col>
-                    </el-row>
-                </el-row>
-                <el-row class="line"></el-row>
+                <el-row class="line" v-if="false"></el-row>
                 <!-- 重量尺寸 -->
-                <el-row>
+                <el-row v-if="waybillInfo.status > 1">
                     <el-row>
                         <span class="headerTitle">重量尺寸</span>
                         <span class="item-info"></span>
@@ -173,56 +131,48 @@
                         <el-row style="margin-bottom:8px">
                             <el-col :span="8">
                                 <span class="item1">实重：</span>
-                                <span class="item2"></span>
+                                <span class="item2">{{ waybillInfo.weight }}</span>
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">方数：</span>
-                                <span class="item2"></span>
+                                <span class="item2">{{ waybillInfo.volume }}</span>
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">材积重：</span>
-                                <span class="item2"></span>
+                                <span class="item2">{{ waybillInfo.volume_weight }}</span>
                             </el-col>
                         </el-row>
                         <el-row style="margin-bottom:8px">
                             <el-col :span="8">
                                 <span class="item1">结算重：</span>
-                                <span class="item2"></span>
-                                <el-button type="text" style="padding:0" @click="changeAsettlement = true">查看</el-button>
+                                <span class="item2">{{ waybillInfo.bill_weight }}</span>
+                                <!-- <el-button type="text" style="padding:0" @click="changeAsettlement = true">查看</el-button> -->
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">改货重量：</span>
-                                <span class="item2"></span>
+                                <span class="item2">{{ waybillInfo.agent_weight }}</span>
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">改货方数：</span>
-                                <span class="item2"></span>
+                                <span class="item2">{{ waybillInfo.agent_volume }}</span>
                             </el-col>
                         </el-row>
                         <el-row style="margin-bottom:8px">
                             <el-col :span="8">
                                 <span class="item1">改货材积重：</span>
-                                <span class="item2"></span>
-                            </el-col>
-                            <el-col :span="8">
-                                <span class="item1">改货重量：</span>
-                                <span class="item2"></span>
+                                <span class="item2">{{ waybillInfo.agent_volume_weight }}</span>
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">改货结算重：</span>
-                                <span class="item2"></span>
-                                <el-button type="text" style="padding:0" @click="changeAsettlement = true">查看</el-button>
+                                <span class="item2">{{ waybillInfo.agent_bill_weight }}</span>
+                                <el-button type="text" style="padding:0" @click="setWeight">查看</el-button>
                             </el-col>
                         </el-row>
-                        <!-- <el-col :span="8">
-                            <span class="item1">代理结算重：</span>
-                            <span class="item2"></span>
-                        </el-col> -->
                     </el-row>
                 </el-row>
-                <el-row class="line"></el-row>
+                <el-row class="line" v-if="waybillInfo.status > 1"></el-row>
                 <!-- 物流 -->
-                <el-row>
+                <el-row v-if="waybillInfo.fba_address.country_name !== ''">
                     <el-row>
                         <span class="headerTitle">物流</span>
                         <span class="item-info"></span>
@@ -231,80 +181,102 @@
                         <el-row style="margin-bottom:8px">
                             <el-col :span="8">
                                 <span class="item1">目的国：</span>
-                                <span class="item2"></span>
+                                <span class="item2">{{ waybillInfo.fba_address.country_name }}</span>
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">目的地：</span>
-                                <span class="item2"></span>
+                                <span class="item2">{{ waybillInfo.fba_address.fba_name }}</span>
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">目的地邮编：</span>
-                                <span class="item2"></span>
+                                <span class="item2">{{ waybillInfo.fba_address.zip_code }}</span>
+                            </el-col>
+                        </el-row>
+                    </el-row>
+                </el-row>
+                <el-row v-if="waybillInfo.address.country_name !== ''">
+                    <el-row>
+                        <span class="headerTitle">物流</span>
+                        <span class="item-info"></span>
+                    </el-row>
+                    <el-row style="margin-top:10px">
+                        <el-row style="margin-bottom:8px">
+                            <el-col :span="8">
+                                <span class="item1">目的国：</span>
+                                <span class="item2">{{ waybillInfo.address.country_name }}</span>
+                            </el-col>
+                            <el-col :span="8">
+                                <span class="item1">目的地：</span>
+                                <span class="item2">{{ waybillInfo.address.address }}</span>
+                            </el-col>
+                            <el-col :span="8">
+                                <span class="item1">目的地邮编：</span>
+                                <span class="item2">{{ waybillInfo.address.zip_code }}</span>
+                            </el-col>
+                        </el-row>
+                    </el-row>
+                    <el-row style="margin-top:10px">
+                        <el-row style="margin-bottom:8px">
+                            <el-col :span="8">
+                                <span class="item1">收件人：</span>
+                                <span class="item2">{{ waybillInfo.address.name }}</span>
+                            </el-col>
+                            <el-col :span="8">
+                                <span class="item1">收件人手机号：</span>
+                                <span class="item2">{{ waybillInfo.address.phone }}</span>
+                            </el-col>
+                            <el-col :span="8">
+                                <span class="item1">收件人邮箱：</span>
+                                <span class="item2">{{ waybillInfo.address.email }}</span>
                             </el-col>
                         </el-row>
                     </el-row>
                 </el-row>
                 <el-row class="line"></el-row>
-                <!-- 产品信息 -->
-                <el-row>
-                    <el-row>
-                        <span class="headerTitle">产品信息</span>
-                        <span class="item-info"></span>
-                    </el-row>
-                    <el-row style="margin-top:10px">
-                        <el-col :span="8">
-                            <span class="item1">装箱清单：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text">查看装箱清单</el-button>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1">品名：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text">查看</el-button>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1">总申报价值：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                    </el-row>
-                </el-row>
-                <el-row class="line"></el-row>
                 <!-- 申报信息 -->
-                <el-row>
-                    <el-row>
-                        <span class="headerTitle">申报信息</span>
-                        <span class="item-info"></span>
-                    </el-row>
-                    <el-row style="margin-top:10px">
-                        <el-col :span="8">
-                            <span class="item1">单独清关：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1">报关类型：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1">发票：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text">查看发票</el-button>
-                        </el-col>
-                        <el-col :span="8" style="margin-top:-20px">
-                            <span class="item1">保险：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text">购买保险</el-button>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1" style="margin-top:-20px">VAT税号：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1" style="margin-top:-20px">递延：</span>
-                            <span class="item2"></span>
-                        </el-col>
-                    </el-row>
+                <el-row v-if="waybillInfo.invoice.has_invoice === 1">
+                  <el-row>
+                      <span class="headerTitle">申报信息</span>
+                      <span class="item-info"></span>
+                  </el-row>
+                  <el-row style="margin-top:10px">
+                    <el-col :span="8" style="margin-top:-20px">
+                      <span class="item1">装箱清单：</span>
+                      <span class="item2"></span>
+                      <el-button class="button" type="text">查看装箱清单</el-button>
+                    </el-col>
+                    <el-col :span="8">
+                      <span class="item1">货件数量：</span>
+                      <span class="item2">{{ waybillInfo.box_count }}</span>
+                    </el-col>
+                    <el-col :span="8">
+                      <span class="item1">申报价值：</span>
+                      <span class="item2">{{ waybillInfo.invoice.declared_value + waybillInfo.invoice.currency_name }}</span>
+                    </el-col>
+                    <el-col :span="8" style="margin-top:-20px">
+                        <span class="item1">单独清关：</span>
+                        <span class="item2">{{ waybillInfo.invoice.is_separate_customs_clearance === 1 ? '单独清关' : '非单独清关' }}</span>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="item1">报关类型：</span>
+                        <span class="item2">{{ waybillInfo.invoice.trade_type === 1 ? '一般贸易报关' : '非一般贸易报关' }}</span>
+                    </el-col>
+                    <el-col :span="8">
+                      <span class="item1" style="margin-top:-20px">VAT税号：</span>
+                      <span class="item2">{{ waybillInfo.invoice.vat }}</span>
+                    </el-col>
+                    <el-col :span="8" style="margin-top:-20px">
+                        <span class="item1">保险：</span>
+                        <span class="item2">{{ waybillInfo.invoice.have_safe === 1 ? '投保' : '不投保' }}</span>
+                        <el-button class="button" type="text">购买保险</el-button>
+                    </el-col>
+                    <el-col :span="8">
+                        <span class="item1" style="margin-top:-20px">递延：</span>
+                        <span class="item2">{{ waybillInfo.invoice.is_deferred === 1 ? '递延' : '不递延' }}</span>
+                    </el-col>
+                  </el-row>
                 </el-row>
-                <el-row class="line"></el-row>
+                <el-row class="line" v-if="waybillInfo.invoice.has_invoice === 1"></el-row>
                 <!-- 备注 -->
                 <el-row>
                     <el-row>
@@ -314,232 +286,289 @@
                     <el-row style="margin-top:10px">
                         <el-col :span="8">
                             <span class="item1">客户备注：</span>
-                            <span class="item2"></span>
+                            <span class="item2">{{ waybillInfo.remark }}</span>
                         </el-col>
                         <el-col :span="8" style="margin-top:-10px">
                             <span class="item1">内部备注：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text">查看详情</el-button>
-                        </el-col>
-                    </el-row>
-                </el-row>
-                <el-row class="line"></el-row>
-                <!-- 货件编号（FBA） -->
-                <el-row>
-                    <el-row>
-                        <span class="headerTitle">货件编号（12件）</span>
-                        <span class="item-info"></span>
-                    </el-row>
-                    <el-row style="margin-top:10px">
-                        <el-col :span="8">
-                            <span class="item1">客户备注：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text">下载FBA贴条</el-button>
-                        </el-col>
-                        <el-col :span="8">
-                            <span class="item1">内部备注：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text">下载FBA贴条</el-button>
-                        </el-col>
-                    </el-row>
-                </el-row>
-                <!-- 货件编号（非FBA） -->
-                <el-row v-if="a === false">
-                    <el-row>
-                        <span class="headerTitle">货件编号（12件）</span>
-                        <span class="item-info"></span>
-                    </el-row>
-                    <el-row style="margin-top:10px">
-                        <el-col :span="8">
-                            <span class="item1">客户备注：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text">下载FBA贴条</el-button>
-                        </el-col>
-                    </el-row>
-                    <el-row>
-                        <el-col :span="8">
-                            <span class="item1">内部备注：</span>
-                            <span class="item2"></span>
-                            <el-button class="button" type="text">下载FBA贴条</el-button>
+                            <span class="item2">{{ waybillInfo.interior_remark }}</span>
+                            <el-button class="button" type="text">查看所有</el-button>
                         </el-col>
                     </el-row>
                 </el-row>
         </el-row>
-        <el-drawer
-            :visible.sync="drawer"
+        <commonDrawer
+             :drawerVrisible="drawer" :drawerTitle="drawerTitle" :drawerSize='drawerSize'
             size="50%">
-            <div slot="title" class="headTitle">页面显示设置</div>
-           <el-row class="" style="padding:26px;text-align:left;background:#fff;margin-top:26px">
-               <el-row style="display:flex;align-items:center">
-                   <el-col :span="11" style="display:flex;align-items:center">
-                        <span class="formTitle">字段集名称&nbsp;&nbsp;</span>
-                        <span>
-                            <el-input size="small" style="width:100%" v-model="fieldName" placeholder="请输入"></el-input>
-                        </span>
-                   </el-col>
-                   <el-col :span="8">
-                       <el-button size="small" class="orangeBtn">查 询</el-button>
-                   </el-col>
-               </el-row>
-               <!-- 抽屉表格 -->
-          <div class="table" style="margin-top:16px">
-          <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"
-          :header-cell-style="{background: '#F5F5F6'}">
-          <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column prop="name" label="字段集名称" min-width="130"></el-table-column>
-            <el-table-column prop="display" label="是否显示" min-width="100">
-                <template>
-                    <div style="display:flex;align-items:center">
-                        <div style="width: 8px;height: 8px;background: #32AF05;border-radius: 50%;margin-right:8px"></div>
-                        <span>显示</span>
-                    </div>
-                </template>
-            </el-table-column>
-            <el-table-column type="expand" label="默认展开/收缩" :width="120">
-                <template v-slot="scope">
-                    <el-table :data="scope.row.view_detail" :row-class-name="tableRowClassName" :header-cell-style="{ background: '#EDF6FF' }">
-                        <el-table-column prop="goods_name" label="开票商品名称" min-width="120">
-                        </el-table-column>
-                        <el-table-column prop="tax_name" label="税收分类">
-                        </el-table-column>
-                        <el-table-column prop="unit" label="单位">
-                        </el-table-column>
-                        <el-table-column prop="unit_price" label="单价">
-                        </el-table-column>
-                    </el-table>
-                </template>
-            </el-table-column>
-            <el-table-column label="顺序" min-width="150">
-                <template>
-                    <span>{{(num+1)}}</span>
-                </template>
-            </el-table-column>
-          </el-table>
-          </div>
-           </el-row>
-        </el-drawer>
-        <!-- 入仓入库-入仓渠道修改 -->
-        <el-dialog
-            title="入仓渠道修改"
-            :visible.sync="modify"
-            top="12%"
-            width="30%">
-            <div class="line" style="margin-top:-20px;margin-bottom:40px"></div>
-            <el-row class="Flexcenter">
-                <span class="item1">去仓渠道：</span>
-                <el-input placeholder="请输入去仓渠道" size="small" style="width:60%">
-                    <i slot="suffix" class="search" style="line-height:32px;margin-right:6px">&#xe9a1;</i>
-                </el-input>
-                <!-- <el-button type="text" style="margin-left:20px">确认</el-button>
-                <span style="color:#0084FF">｜</span>
-                <el-button type="text">取消</el-button> -->
-            </el-row>
-            <span slot="footer" class="dialog-footer">
-                <el-row class="line"></el-row>
-                <el-button class="wuBtn" @click="fileError = false" size="small">取 消</el-button>
-                <el-button class="orangeBtn" @click="fileError = false" size="small">确 定</el-button>
-            </span>
-        </el-dialog>
-        <el-drawer
-            :visible.sync="changeAsettlement"
-            size="50%">
-            <div slot="title" class="headTitle">改货结算重</div>
-            <div class="body">
-                <el-row class="orderId">{{orderId}}</el-row>
+            <div class="dra-content" style="textAlign:left;padding:10px">
+                <el-row class="orderId">{{waybillInfo.waybill_no}}</el-row>
                 <el-row style="margin-top:16px">
                     <span class="item1">客户名称：</span>
-                    <span class="item2">{{name}}</span>
+                    <span class="item2">{{waybillInfo.customer_name}}</span>
                 </el-row>
+                <el-row><el-button @click="edit()" class="orangeBtn" :disabled="formData.cargoes.ids.length === 0" v-if="waybillInfo.status < 5">批量修改</el-button></el-row>
                 <el-row class="line"></el-row>
-                <el-row style="margin-top:16px">
+                <!-- <el-row style="margin-top:16px">
                     <span class="item1">预报渠道：</span>
                     <span class="item2">{{forecastChannel}}</span>
                 </el-row>
                 <el-row style="margin-top:16px">
                     <span class="item1">件数：</span>
                     <span class="item2">{{number}}</span>
-                </el-row>
-                <el-row style="margin-top:16px">
-                    <span class="item1">备注：</span>
-                    <span class="item2">{{note}}</span>
-                </el-row>
+                </el-row> -->
                 <div class="table" style="margin-top:16px">
-                    <el-table ref="multipleTable" :data="changeSettlementTable" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"
-                    :header-cell-style="{background: '#F5F5F6'}">
-                    <el-table-column prop="orderNum" label="货件编号" min-width="180" key="1"></el-table-column>
-                    <el-table-column prop="long" label="长（cm）" key="2"></el-table-column>
-                    <el-table-column prop="width" label="宽（cm）" key="3"></el-table-column>
-                    <el-table-column prop="high" label="高（cm）" key="4"></el-table-column>
-                    <el-table-column prop="squareNumber" label="方数（m³）" key="5"></el-table-column>
-                    <el-table-column prop="realWeight" label="实重（kg）" key="6"></el-table-column>
-                    <el-table-column prop="volumeWeight" label="材积重（kg）" min-width="120" key="7"></el-table-column>
+                    <el-table ref="multipleTable" :data="weightList" border  tooltip-effect="dark" style="width: 100%" @selection-change="tableChange"
+                    :header-cell-style="{background: '#F5F5F6'}" @row-dblclick="showCargoEdit">
+                        <el-table-column type="selection" v-if="waybillInfo.status < 5"></el-table-column>
+                        <el-table-column prop="cargo_no" label="货件编号" min-width="180"></el-table-column>
+                        <el-table-column prop="length" label="长（cm）"></el-table-column>
+                        <el-table-column prop="width" label="宽（cm）"></el-table-column>
+                        <el-table-column prop="height" label="高（cm）"></el-table-column>
+                        <el-table-column prop="weight" label="重（kg）"></el-table-column>
                     </el-table>
                 </div>
-                <el-row style="font-size: 14px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: #333333;margin-top:16px">
-                    <span>合计结算重：<span>{{total}}</span>公斤</span>
-                </el-row>
             </div>
-        </el-drawer>
+            <!-- 抽屉底部按钮 -->
+            <div slot="footer">
+                <button class="btn-orange" @click="submit()"   v-if="waybillInfo.status < 5">
+                <span> <i class="el-icon-circle-check"></i>提交</span>
+                </button>
+                <button class="btn-gray" @click="addClose">
+                <span>取消</span>
+                </button>
+            </div>
+        </commonDrawer>
+        <el-dialog
+            title="批量改货"
+            :visible.sync="dialog.visable.cargoes"
+            width="26%">
+          <span style="textAlign:left;marginLeft:20px">
+              <el-row><el-checkbox v-model="formData.cargoes.lengthSwitch">长</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.length" :disabled="!formData.cargoes.lengthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.widthSwitch">宽</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.width" :disabled="!formData.cargoes.widthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.heightSwitch">高</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.height" :disabled="!formData.cargoes.heightSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.weightSwitch">重</el-checkbox><el-input size="mini" type="Number" v-model="formData.cargoes.weight" :disabled="!formData.cargoes.weightSwitch" class="ipt"><template slot="append">kg</template></el-input></el-row>
+          </span>
+          <span slot="footer" class="dialog-footer">
+              <el-button @click="dialog.visable.cargoes = false">取 消</el-button>
+              <el-button class="orangeBtn" type="primary" @click="batchChange">确 定</el-button>
+          </span>
+        </el-dialog>
+        <el-dialog
+        title="改货重"
+        :visible.sync="dialog.visable.cargo"
+        width="26%">
+            <span style="textAlign:left;marginLeft:20px">
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.length" class="ipt"><template slot="prepend">长</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.width" class="ipt"><template slot="prepend">宽</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.height" class="ipt"><template slot="prepend">高</template><template slot="append">cm</template></el-input></el-row>
+                <el-row><el-input size="mini" type="Number" v-model="formData.cargo.weight" class="ipt"><template slot="prepend">重</template><template slot="append">kg</template></el-input></el-row>
+            </span>
+            <span slot="footer" class="dialog-footer">
+                <el-button @click="dialog.visable.cargo = false">取 消</el-button>
+                <el-button class="orangeBtn" type="primary" @click="cargoEdit">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      total: '10000元 ', // 已确认金额
-      titleReason: '10万元的货款没结清', // 扣货原因
-      note: '走以星',
-      changeAsettlement: false, // 改货结算重
-      number: 6, // 件数
-      // 改货结算重表格
-      changeSettlementTable: [
-        {
-          orderNum: 'FBA15RY33MN8U000001',
-          long: '10.1',
-          width: '10.1',
-          high: '10.1',
-          squareNumber: '100.1',
-          realWeight: '28.5',
-          volumeWeight: '30'
-        }
-      ],
-      forecastChannel: '香港UPS红单5000', // 预报渠道
-      orderId: 'AS2012090001', // 改货结算重orderId
-      fieldName: '',
-      num: 0,
-      drawer: false, // 页面显示设置
-      change: 1, // 变量改变
-      // 预报信息列表
-      predictionList: [{
-        date: '2020年12月09日 15:00',
-        goodsTime: '今日 16:00-17:00',
-        mailingMethod: '上门取件',
-        orderType: 'FBA订单'
-      }],
-      receivingDriver: '李四', // 收货司机
-      salesman: '张三', // 所属业务员
-      // 业务员列表
-      tableData: [
-        {
-          name: '客户信息'
+      weightList: [],
+      waybillId: null,
+      dialogVisible: false,
+      changeWeight: {
+        length: '',
+        width: '',
+        height: '',
+        weight: ''
+      },
+      drawer: false,
+      drawerTitle: '改重',
+      drawerSize: '50%',
+      waybillInfo: {
+        is_lock: 0,
+        lock_reason: '0',
+        type: 1,
+        status: 0,
+        waybill_no: '',
+        customer_name: '',
+        customer_code: '',
+        salesman_name: '',
+        salesman_phone: '',
+        salesman_position_name: '',
+        invoice: {
+          vat: '',
+          trade_type: 0,
+          is_deferred: 0,
+          is_separate_customs_clearance: 0,
+          amazon_reference_id: '',
+          declared_value: '0',
+          currency_name: '',
+          items: [],
+          material_cates: [],
+          have_safe: 0,
+          has_invoice: 0
         },
-        {
-          name: '业务员'
+        remark: '',
+        interior_remark: '',
+        bill_weight: '',
+        volume: '',
+        volume_weight: '',
+        weight: '',
+        agent_bill_weight: '',
+        agent_volume: '',
+        agent_volume_weight: '',
+        agent_weight: '',
+        fba_address: {
+          country_name: '',
+          fba_name: '',
+          zip_code: ''
+        },
+        address: {
+          address: '',
+          country_area_code: '',
+          country_name: '',
+          email: '',
+          name: '',
+          phone: '',
+          zip_code: ''
         }
-      ], // 表格数据
-      modify: false, // 去仓渠道修改弹窗
-      wayBill: 'AS202012120001', // 运单号
-      customerInfo: '深圳大成亚马逊贸易科技有限公司', // 客户信息
-      name: '深圳大成亚马逊贸易科技有限公司', // 客户名称
-      customerCode: 'DCYMX', // 客户编码
-      forecastNo: 'YB202012120001' // 预报单号
+      },
+      dialog: {
+        visable: {
+          cargo: false,
+          cargoes: false
+        }
+      },
+      formData: {
+        cargoes: {
+          ids: [],
+          length: null,
+          width: null,
+          height: null,
+          weight: null,
+          lengthSwitch: false,
+          widthSwitch: false,
+          heightSwitch: false,
+          weightSwitch: false
+        },
+        cargo: {
+          id: null,
+          length: null,
+          width: null,
+          height: null,
+          weight: null
+        }
+      }
     }
   },
+  mounted () {
+    this.waybillId = this.$route.params.id
+    this.getData()
+  },
   methods: {
+    getData () {
+      this.$api.Ordermanagement.waybillInfo(this.waybillId).then(res => {
+        this.waybillInfo = res.data
+      })
+    },
     // 关闭抽屉
-    handleClose () {},
-    // 抽屉表格
-    tableChange () {}
+    addClose () {
+      this.drawer = false
+    },
+    batchChange () {
+      this.weightList.forEach((item, key) => {
+        this.formData.cargoes.ids.forEach(id => {
+          if (item.id === id) {
+            if (this.formData.cargoes.lengthSwitch && this.formData.cargoes.length) {
+              this.weightList[key].length = this.formData.cargoes.length
+            }
+            if (this.formData.cargoes.widthSwitch && this.formData.cargoes.width) {
+              this.weightList[key].width = this.formData.cargoes.width
+            }
+            if (this.formData.cargoes.heightSwitch && this.formData.cargoes.height) {
+              this.weightList[key].height = this.formData.cargoes.height
+            }
+            if (this.formData.cargoes.weightSwitch && this.formData.cargoes.weight) {
+              this.weightList[key].weight = this.formData.cargoes.weight
+            }
+          }
+        })
+      })
+      this.dialog.visable.cargoes = false
+    },
+    tableChange (val) {
+      this.formData.cargoes.ids = []
+      val && val.forEach((item) => {
+        this.formData.cargoes.ids.push(item.id)
+      })
+    },
+    setWeight () {
+      this.drawer = true
+      this.$api.Ordermanagement.agentWeight({ waybillId: this.waybillId }).then(res => {
+        this.weightList = res.data.cargoes
+      })
+    },
+    edit () {
+      this.formData.cargoes.length = null
+      this.formData.cargoes.width = null
+      this.formData.cargoes.height = null
+      this.formData.cargoes.weight = null
+      this.formData.cargoes.lengthSwitch = false
+      this.formData.cargoes.widthSwitch = false
+      this.formData.cargoes.heightSwitch = false
+      this.formData.cargoes.weightSwitch = false
+      this.dialog.visable.cargoes = true
+    },
+    submit () {
+      let cargoSpecs = []
+      this.weightList.forEach(item => {
+        cargoSpecs.push({
+          cargoId: item.id,
+          length: item.length,
+          width: item.width,
+          height: item.height,
+          weight: item.weight
+        })
+      })
+      this.$api.Ordermanagement.agentWeightEdit({
+        waybillId: this.waybillId,
+        cargoSpecs: cargoSpecs
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+          this.addClose()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    showCargoEdit (row, column) {
+      if (this.waybillInfo.status >= 5) {
+        return
+      }
+      if (!column.property) {
+        return
+      }
+      this.formData.cargo.id = row.id
+      this.formData.cargo.length = row.length
+      this.formData.cargo.width = row.width
+      this.formData.cargo.height = row.height
+      this.formData.cargo.weight = row.weight
+      this.dialog.visable.cargo = true
+    },
+    cargoEdit () {
+      this.weightList.forEach((item, key) => {
+        if (item.id === this.formData.cargo.id) {
+          this.weightList[key].length = this.formData.cargo.length
+          this.weightList[key].width = this.formData.cargo.width
+          this.weightList[key].height = this.formData.cargo.height
+          this.weightList[key].weight = this.formData.cargo.weight
+        }
+      })
+      this.dialog.visable.cargo = false
+    }
   }
 }
 </script>
@@ -589,7 +618,6 @@ export default {
   padding-top: 0px;
   background: #E8EBF2;
     .el-drawer__header{
-      padding: 30px 26px;
       text-align: left;
       background: #FFFFFF;
       font-size: 16px;
@@ -645,5 +673,10 @@ export default {
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: 500;
     color: #FB4E0C;
+}
+.ipt{
+    width: 200px;
+    margin-left: 10px;
+    margin-top: 5px;
 }
 </style>

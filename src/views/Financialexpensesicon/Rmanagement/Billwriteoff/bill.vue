@@ -7,19 +7,19 @@
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
-          <el-col >
-              <span class='text' style="float: left;">深圳莱茵宝宝贸易有限公司</span>
-            </el-col>
+        <el-col>
+          <span class='text' style="float: left;">深圳莱茵宝宝贸易有限公司</span>
+        </el-col>
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
               <span class='text'>账单号</span>
             </el-col>
             <el-col :span='12'>
-            <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -27,10 +27,10 @@
               <span class='text'>核销状态</span>
             </el-col>
             <el-col :span='12'>
-            <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox'>
@@ -45,11 +45,11 @@
             <el-col :span='6'>
               <span class='text'>结算方式</span>
             </el-col>
-             <el-col :span='12'>
-                <el-select v-model="value" placeholder="请选择">
-         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-         </el-option>
-         </el-select>
+            <el-col :span='12'>
+              <el-select v-model="value" placeholder="请选择">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
+                </el-option>
+              </el-select>
             </el-col>
           </el-col>
           <el-col :span='6' class='colbox' style="float: right;">
@@ -57,28 +57,33 @@
             <el-button class='wuBtn long1'>重 置</el-button>
           </el-col>
         </el-row>
-          <!-- 组件 -->
-    <commonTable
-      :columns="columns"
-      :data="tableData"
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-    >
-      <el-table-column
-        slot="table_oper"
-        align="center"
-        fixed="right"
-        label="操作"
-        width="86"
-        :resizable="false"
-      >
-         <template slot-scoped="scoped">
-                <el-button type="text" @click="bill"> 核销账单 </el-button>
-        </template>
-      </el-table-column>
-    </commonTable>
-
+        <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
+          <el-col :span='12' class="left">
+            <el-button class='orangeBtn' @click="bill(billIds)">批量核销</el-button>
+          </el-col>
+        </el-row>
+        <!-- 组件 -->
+        <commonTable
+            :columns="columns"
+            :data="tableData"
+            :pager="page"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+            @handleSelectionChange="handleSelectionChange"
+        >
+          <el-table-column
+              slot="table_oper"
+              align="center"
+              fixed="right"
+              label="操作"
+              width="86"
+              :resizable="false"
+          >
+            <template slot-scope="scope">
+              <el-button type="text" @click="bill([scope.row.id])"> 核销账单</el-button>
+            </template>
+          </el-table-column>
+        </commonTable>
       </div>
     </div>
   </div>
@@ -88,65 +93,72 @@
 export default {
   data () {
     return {
-      total: 50, // 数据数量
-      pageSize: 10, // 默认当前条数
-      currentPage: 1, // 当前页码
-
-      activeName: '1',
-      waybillNo: '', // 运单号
-      customerName: '', // 客户名称
-      customerCode: '', // 客户编码
-      predictionChannel: '', // 预报渠道
-      destination: '', // 目的地
-      zipcode: '', // 目的地邮编
-
+      value: '',
+      options: [],
+      destination: '',
       columns: [
-        { prop: 'name', label: '账单号', width: '193', align: 'center', formatter: this.formatter },
-        { prop: 'Customercode', label: '部分核销', width: '118', align: 'center', formatter: this.formatters },
-        { prop: 'Unwrittenoffbill', label: '包含运单', width: '82', align: 'center' },
-        { prop: 'Unwrittenoffwaybill', label: '未核销运单', width: '220', align: 'center' },
-        { prop: 'Unwrittenoffamount', label: '未核销金额', width: '126', align: 'center' },
-        { prop: 'Accountamount', label: '账户金额', width: '189', align: 'center' },
-        { prop: 'Settlementmethod', label: '结算方式', width: '126', align: 'center' }
+        { prop: 'bill_no', label: '账单号', align: 'center' },
+        { prop: 'write_off_status', label: '核销状态', align: 'center', formatter: this.formatter },
+        { prop: 'wayill_count', label: '包含运单', align: 'center' },
+        { prop: 'amount', label: '应核销金额', align: 'center' },
+        { prop: 'write_off_amount', label: '已核销金额', width: '126', align: 'center' }
       ],
       tableData: [],
       page: {
         pageNo: 1,
-        limit: 1,
+        limit: 10,
         sizes: [1, 5, 10],
         total: 0
-      }
+      },
+      customerId: 0,
+      billIds: []
     }
   },
   mounted () {
-    this.tableData = [
-      { OrderNo: 'AS123123423412313', name: '王小虎', address: '上海市普陀区金沙江路 1518 弄', button: '<a>11</a>' }
-    ]
-    this.page.total = 2
+    this.customerId = this.$route.params.customerId
+    this.getData()
   },
   methods: {
-    bill () {
-      this.$router.push({ name: 'bill' })
+    getData () {
+      this.$api.finance.fare.writeOff.customer.bill({
+        customerId: this.customerId,
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
+    bill (billIds) {
+      this.$router.push({ name: 'childrenBill', params: { billIds: billIds, customerId: this.customerId } })
     },
     handleClick (val) {
       console.log(val)
     },
+    test () {},
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      return row.name + '测试'
-    },
-    formatters (row, column, cellValue) {
-      return row.address + '测试'
+      switch (column.property) {
+        case 'write_off_status':
+          return row.write_off_status === 1 ? '未核销' : row.write_off_status === 2 ? '部分核销' : '核销完成'
+      }
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-
+      this.page.limit = val // 设置当前页容量为val
+      this.getData() // 重新渲染表格
     },
     // 翻页处理
     handleCurrentChange (val) {
-      this.tableData = [
-        { date: '2016-05-03', name: '王小虎111', address: '上海市普陀区金沙江路 1518 弄' }
-      ]
+      this.page.pageNo = val // 设置当前页码为val
+      this.getData() // 重新渲染表格
+    },
+    // 复选
+    handleSelectionChange (val) {
+      this.billIds = []
+      val && val.forEach((item) => {
+        this.billIds.push(item.id)
+      })
     },
     // 操作按钮列表
     editTableData (row) {}
