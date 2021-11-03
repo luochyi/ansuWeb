@@ -83,6 +83,7 @@
             <div class="name">公司地址</div>
             <el-col :span="20">
               <el-cascader
+                filterable
                 v-model="form.countyId"
                 :options="regiondata"
                 clearable

@@ -240,7 +240,8 @@ export default {
           prop: 'forecast_volume',
           label: '预报方数',
           width: '100',
-          align: 'center'
+          align: 'center',
+          formatter: this.formatter
         },
         {
           prop: 'forecast_created_at',
@@ -325,6 +326,8 @@ export default {
           return this.formatDate(row.forecast_created_at, 'yyyy-MM-dd hh:mm:ss')
         case 'forecast_good_time':
           return this.formatDate(row.forecast_good_time, 'yyyy-MM-dd hh:mm:ss')
+        case 'forecast_volume':
+          return (row.forecast_volume / 1000000).toFixed(2) + 'm³'
       }
     },
     // 改变页面大小处理

@@ -37,7 +37,7 @@ export default [
     meta: {
       title: '添加代理',
       icon: 'addAgent',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/channel/agentManage/addAgent.vue')
   },
@@ -57,7 +57,7 @@ export default [
     meta: {
       title: '添加代理服务',
       icon: 'addAgentService',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/channel/agentManage/addAgentService.vue')
   },
@@ -80,7 +80,7 @@ export default [
     meta: {
       title: '渠道设置',
       icon: 'addChannel',
-      hidden: false
+      hidden: true
     },
     component: () =>
       import('@/views/channel/channelSetting/addChannel')

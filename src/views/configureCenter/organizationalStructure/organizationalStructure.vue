@@ -115,6 +115,7 @@
         <br />
         <span
           >上级部门<el-cascader
+            filterable
             :key="isResouceShow"
             :options="organizationOptions"
             v-model="parentId"
@@ -145,6 +146,7 @@
         <br />
         <span>上级角色
           <el-cascader
+            filterable
             :key="isRoleShow"
             :options="roleList"
             v-model="formRole.parentId"

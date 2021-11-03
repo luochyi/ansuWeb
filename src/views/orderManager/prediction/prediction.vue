@@ -72,7 +72,11 @@
             <!-- 预报重量 -->
             <el-table-column prop='weight' label='预报重量' min-width='80'>  </el-table-column>
             <!-- 预报方数 -->
-             <el-table-column prop='volume' label='预报方数' min-width='80'>  </el-table-column>
+             <el-table-column prop='volume' label='预报方数' min-width='80'>
+               <template slot-scope="scope">
+                 {{(scope.row.volume/1000000).toFixed(2)+'m³'}}
+               </template>
+             </el-table-column>
             <el-table-column label='货好时间' min-width='157' prop='good_time'>
               <template slot-scope='scope'>
                 {{formatDate(scope.row.good_time,'yyyy-MM-dd hh:mm:ss')}}

@@ -36,7 +36,7 @@
             <el-descriptions-item label="货好时间">{{formatDate(data.forecast_good_time, 'yyyy-MM-dd hh:mm:ss')}}</el-descriptions-item>
             <el-descriptions-item label="预报件数">{{data.forecast_box_count}}</el-descriptions-item>
             <el-descriptions-item label="预报重量">{{data.forecast_weight}}</el-descriptions-item>
-            <el-descriptions-item label="预报方数">{{data.forecast_volume}}</el-descriptions-item>
+            <el-descriptions-item label="预报方数">{{(data.forecast_volume/1000000).toFixed(2)+'m³'}}</el-descriptions-item>
           </el-descriptions>
         </div>
       </div>

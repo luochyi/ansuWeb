@@ -38,7 +38,7 @@
          <el-descriptions-item label="寄件方式">{{data.receive_type}}</el-descriptions-item>
          <el-descriptions-item label="预报件数">{{data.box_count}}</el-descriptions-item>
          <el-descriptions-item label="预报重量">{{data.weight}}</el-descriptions-item>
-         <el-descriptions-item label="预报方数">{{data.volume}}</el-descriptions-item>
+         <el-descriptions-item label="预报方数">{{(data.volume/1000000).toFixed(2)+'m³'}}</el-descriptions-item>
          </el-descriptions>
     </div>
    </div>

@@ -17,6 +17,7 @@
           <el-cascader
            :span="12"
           v-model="countyId"
+          filterable
           :options="provinceOptions"
           placeholder="客户地址"
           @change="handleChange"></el-cascader>

@@ -27,7 +27,7 @@
                 <div style="fontSize:14px;color:#000000A6;marginTop:10px">上传国家图标</div>
                 <div  style="fontSize:12px;color:#00000073;marginBottom:10px">图片像素为114*76px</div>
             <el-button @click="addSubmit" class="orangeBtn">确 认</el-button>
-            <!-- <el-button class="whiteBtn" @click="back()">取 消</el-button> -->
+            <el-button class="whiteBtn" @click="back()">取 消</el-button>
         </div>
     </div>
   </div>
@@ -105,7 +105,7 @@ export default {
       }
     },
     back () {
-      this.$router.push('name:countryManagement')
+      this.$router.go(-1)
     }
   }
 }

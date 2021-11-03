@@ -15,6 +15,7 @@
         <el-descriptions-item label="客户地址" :span="2">
           <!-- 级联选择器 三级联动 -->
           <el-cascader
+          filterable
            :span="12"
           v-model="countyId"
           :options="provinceOptions"

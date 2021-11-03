@@ -23,6 +23,9 @@
                     <span class="item" style="width:120px">运单号：</span>
                     <span class="item">{{waybillInfo.waybill_no}}</span>
                 </el-col>
+                <el-col :span="8">
+                    <el-button size="mini" @click="back" class="orangeBtn">返回</el-button>
+                </el-col>
             </el-row>
                 <!-- 客户信息 -->
                 <el-row>
@@ -135,7 +138,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">方数：</span>
-                                <span class="item2">{{ waybillInfo.volume/1000000+'m³' }}</span>
+                                <span class="item2">{{ (waybillInfo.volume/1000000).toFixed(2)+'m³' }}</span>
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">材积重：</span>
@@ -154,7 +157,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <span class="item1">改货方数：</span>
-                                <span class="item2">{{ waybillInfo.agent_volume/1000000+'m³'  }}</span>
+                                <span class="item2">{{ (waybillInfo.agent_volume/1000000).toFixed(2)+'m³'  }}</span>
                             </el-col>
                         </el-row>
                         <el-row style="margin-bottom:8px">
@@ -463,6 +466,9 @@ export default {
     }
   },
   mounted () {
+    if (this.$route.params.id === undefined) {
+      this.back()
+    }
     this.waybillId = this.$route.params.id
     this.getData()
   },
@@ -568,6 +574,9 @@ export default {
         }
       })
       this.dialog.visable.cargo = false
+    },
+    back () {
+      this.$router.go(-1)
     }
   }
 }

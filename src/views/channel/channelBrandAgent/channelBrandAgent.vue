@@ -140,6 +140,7 @@
       :before-close="handleClose">
       <span>代理服务</span>
       <el-cascader
+        filterable
         v-model="agentServiceId"
         :options="agentServiceList"
         @change="handleChange"

@@ -26,7 +26,7 @@ export default [
     meta: {
       title: '新增子公司',
       icon: 'subsidiariesIcon',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/configureCenter/Subsidiarymanagement/subsidiaries.vue')
   },
@@ -67,7 +67,7 @@ export default [
     meta: {
       title: '新建账号',
       icon: 'employeeaccounta',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/configureCenter/Employeeaccount/employeeaccounta.vue')
   },
@@ -127,7 +127,7 @@ export default [
     meta: {
       title: '新增车辆',
       icon: 'addTruck',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/configureCenter/truckManagement/addTruck.vue')
   },
@@ -147,7 +147,7 @@ export default [
     meta: {
       title: '新建客户账户',
       icon: 'addAccount',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/configureCenter/customerAccount/addAccount.vue')
   },
@@ -197,7 +197,7 @@ export default [
     meta: {
       title: '新建仓库',
       icon: 'addWarehouse',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/configureCenter/receivingWarehouseManage/addWarehouse.vue')
   },
@@ -228,7 +228,7 @@ export default [
     meta: {
       title: '操作员负责仓库',
       icon: 'responsibleWarehouse',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/configureCenter/warehouseOperation/responsibleWarehouse.vue')
   },
@@ -268,7 +268,7 @@ export default [
     meta: {
       title: '新增目的国',
       icon: 'countryManagement',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/configureCenter/countryManagement/addCountry.vue')
   },
