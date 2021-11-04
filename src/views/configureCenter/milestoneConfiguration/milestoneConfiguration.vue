@@ -4,7 +4,7 @@
       <el-col :xs="4" :sm="4" :md="4" :lg="2" :xl="2">
         <div class="left">
           <div class="lefta">
-            <el-row type="flex" justify="flex-start" align="middle"></el-row>
+            <el-row type="flex" justify="flex-start" align="middle" style="marginBottom:10px"></el-row>
             <div
               style="margintop: 10px"
               class="cate text"
@@ -426,7 +426,8 @@ export default {
 }
 .right {
   // float: left;
-  width: 100%;
+  width: calc(100%-40px);
+  margin-left: 40px;
   background: #ffffff;
   border-radius: 4px;
   border: 1px solid #e8e8e8;
@@ -437,7 +438,7 @@ export default {
 }
 .left {
   // float: left;
-  min-width: 124px;
+  min-width: 134px;
   height: 700px;
   background: #ffffff;
   border-radius: 4px;

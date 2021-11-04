@@ -80,12 +80,12 @@
       </div>
       <br>
       <div class="six">
-        <el-row style="float: left;">
+        <el-row style="float: left;marginTop:10px">
           <el-button class="orangeBtn" @click="dialogAddPrice" v-if="hasEdit">添加附加费</el-button>
         </el-row>
-        <el-row style="float: right;">
+        <el-row style="float: right;marginTop:10px">
           <el-button class="orangeBtn" icon="el-icon-circle-check" @click="formData.adjustPrice && formData.adjustPrice !== '0' ? showRemark() : offer()" v-if="hasEdit">确认报价</el-button>
-          <el-button class="wthBtn">取消</el-button>
+          <el-button class="whiteBtn" @click="back">取 消</el-button>
         </el-row>
       </div>
     </div>
@@ -341,6 +341,9 @@ export default {
     },
     del (index) {
       this.formData.surcharges.splice(index, 1)
+    },
+    back () {
+      this.$router.go(-1)
     },
     edit (index, row) {
       this.dialog.price = true

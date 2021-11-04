@@ -41,9 +41,6 @@
    <el-descriptions-item label="登陆密码">
        <el-input style="width: 200px" placeholder="请输入" v-model="formData.password" show-password></el-input>
    </el-descriptions-item>
-   <!-- <el-descriptions-item label="确认密码">
-       <el-input style="width: 200px" placeholder="请输入" v-model="formData.confirmPassword" show-password></el-input>
-   </el-descriptions-item> -->
    </el-descriptions>
    <el-form >
     <el-form-item size="large">
