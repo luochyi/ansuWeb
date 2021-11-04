@@ -40,6 +40,15 @@ export const waybillLists = (params) => {
     data: params
   })
 }
+// /order/waybill/invoice/export
+export const invoiceExport = (params) => {
+  return axios({
+    url: '/order/waybill/invoice/export',
+    method: 'post',
+    data: params,
+    responseType: 'blob'
+  })
+}
 // 运单详情
 export const waybillInfo = waybillId => {
   return axios({

@@ -38,11 +38,12 @@
                   align="center"
                   fixed="right"
                   label="操作"
-                  width="126"
+                  width="250"
                   :resizable="false"
                   >
                   <template slot-scope="scope">
-                    <span @click="detail(scope.row)" class="blue">详情</span>
+                    <el-button type="text" @click="detail(scope.row)"> 详情</el-button>
+                    <el-button type="text" @click="invoice(scope.row.id)">导出发票</el-button>
                     <el-button type="text" @click="eject(scope.row)"> 出库</el-button>
                   </template>
                 </el-table-column>
@@ -159,6 +160,11 @@ export default {
     },
     detail (data) {
       this.$router.push({ name: 'waybillDetail', params: { id: data.id } })
+    },
+    invoice (id) {
+      this.$api.Ordermanagement.invoiceExport({ waybillId: id }).then(res => {
+        this.downloadBlob(res, '发票.xlsx')
+      })
     },
     // 出库
     eject (data) {

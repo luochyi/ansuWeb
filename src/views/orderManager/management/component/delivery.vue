@@ -39,14 +39,15 @@
               align="center"
               fixed="right"
               label="操作"
-              width="300"
+              width="400"
               :resizable="false"
           >
             <template slot-scope="scope">
-              <span @click="detail(scope.row)" class="blue">详情</span>
-              <el-button type="text" @click="checkout(scope.row)">&nbsp; 出仓</el-button>
-              <el-button type="text" @click="showTransship(scope.row)">&nbsp; 设置转单号</el-button>
-              <el-button type="text" @click="showExtract(scope.row)">&nbsp; 设置提单号</el-button>
+              <el-button type="text" @click="detail(scope.row)">详情</el-button>
+              <el-button type="text" @click="checkout(scope.row)">出仓</el-button>
+              <el-button type="text" @click="invoice(scope.row.id)">导出发票</el-button>
+              <el-button type="text" @click="showTransship(scope.row)">设置转单号</el-button>
+              <el-button type="text" @click="showExtract(scope.row)">设置提单号</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -155,6 +156,11 @@ export default {
       this.$api.Ordermanagement.Ejectlists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
+      })
+    },
+    invoice (id) {
+      this.$api.Ordermanagement.invoiceExport({ waybillId: id }).then(res => {
+        this.downloadBlob(res, '发票.xlsx')
       })
     },
     getTransships () {
