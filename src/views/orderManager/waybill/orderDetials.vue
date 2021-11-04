@@ -301,7 +301,7 @@
         </el-row>
         <commonDrawer
              :drawerVrisible="drawer" :drawerTitle="drawerTitle" :drawerSize='drawerSize'
-            size="50%">
+            >
             <div class="dra-content" style="textAlign:left;padding:10px">
                 <el-row class="orderId">{{waybillInfo.waybill_no}}</el-row>
                 <el-row style="margin-top:16px">
@@ -387,7 +387,7 @@ export default {
       },
       drawer: false,
       drawerTitle: '改重',
-      drawerSize: '50%',
+      drawerSize: '60%',
       waybillInfo: {
         is_lock: 0,
         lock_reason: '0',

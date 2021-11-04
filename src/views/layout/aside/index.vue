@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-scrollbar style='height: calc( - 60px)'>
+    <el-scrollbar style='height: calc( - 30px)'>
       <transition
         :duration='{ enter: 800, leave: 100 }'
         mode='out-in'

@@ -54,11 +54,12 @@ export default {
 .bg{
   background-color: #E8EBF2;
   height: 100vh;
+  width: 100%;
 }
 .loginHead{
   background-color: #FFFFFF;
   height: 100px;
-  width: 100%;
+  width: 100vw;
   text-align: left;
   img{
     width: 88px;
@@ -74,7 +75,7 @@ export default {
   box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.5);
   border-radius: 7px;
   margin-top: 97px ;
-  margin-left: 40%;
+  margin-left: calc(50% - 143px);
   padding:35px 50px 0 50px;
   img{
     width: 105px;

@@ -48,7 +48,7 @@
       <el-main>
         <history></history>
         <!-- 主体内容 -->
-        <div style='padding: 0px 24px'>
+        <div class='main-box'>
           <transition mode='out-in' name='el-fade-in-linear'>
             <!-- <keep-alive> -->
             <router-view
@@ -874,5 +874,8 @@ export default {
 .tit-text{
   font-size: 20px;
   font-weight: 500;
+}
+.main-box{
+  padding:0 0 0 20px ;
 }
 </style>

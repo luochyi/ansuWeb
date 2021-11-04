@@ -79,8 +79,8 @@ export default {
         // if (this.isMobile) {
         //   width = 0
         // }
-        this.left = e.clientX
-        this.top = e.clientY + 10
+        this.left = e.clientX - 200
+        this.top = e.clientY - 40
         this.rightActive = e.srcElement.id.split('-')[1]
       }
     },
@@ -232,6 +232,11 @@ export default {
 
 <style lang='scss' scoped>
 .routerHistory {
+  position: fixed;
+  top: 61px;
+  height: 40px;
+  z-index: 9;
+  width: 100%;
   background: #fff;
   /deep/ .el-tabs {
     border-top: 1px solid #f2f2f2;
