@@ -43,7 +43,7 @@
                   >
                   <template slot-scope="scope">
                     <el-button type="text" @click="detail(scope.row)"> 详情</el-button>
-                    <el-button type="text" @click="invoice(scope.row.id)">导出发票</el-button>
+                    <el-button type="text" @click="invoice(scope.row)">导出发票</el-button>
                     <el-button type="text" @click="eject(scope.row)"> 出库</el-button>
                   </template>
                 </el-table-column>
@@ -161,8 +161,12 @@ export default {
     detail (data) {
       this.$router.push({ name: 'waybillDetail', params: { id: data.id } })
     },
-    invoice (id) {
-      this.$api.Ordermanagement.invoiceExport({ waybillId: id }).then(res => {
+    invoice (row) {
+      if (row.has_invoice === 0) {
+        this.$message.error('该运单还未制作发票')
+        return
+      }
+      this.$api.Ordermanagement.invoiceExport({ waybillId: row.id }).then(res => {
         this.downloadBlob(res, '发票.xlsx')
       })
     },

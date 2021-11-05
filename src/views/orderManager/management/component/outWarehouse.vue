@@ -160,6 +160,10 @@ export default {
       })
     },
     invoice (row) {
+      if (row.has_invoice === 0) {
+        this.$message.error('该运单还未制作发票')
+        return
+      }
       this.$api.Ordermanagement.invoiceExport({ waybillId: row.id }).then(res => {
         this.downloadBlob(res, '发票.xlsx')
       })

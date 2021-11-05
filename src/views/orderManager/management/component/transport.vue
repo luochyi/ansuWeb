@@ -40,15 +40,16 @@
                   align="center"
                   fixed="right"
                   label="操作"
-                  width="400"
+                  width="450"
                   :resizable="false"
                   >
                   <template slot-scope="scope">
                     <el-button type="text" @click="detail(scope.row)">详情</el-button>
                     <el-button type="text" @click="check(scope.row)"> 查看轨迹</el-button>
-                    <el-button type="text" @click="sign(scope.row)"> 签收</el-button>
-                    <el-button type="text" @click="showTransship(scope.row)">&nbsp; 设置转单号</el-button>
-                    <el-button type="text" @click="showExtract(scope.row)">&nbsp; 设置提单号</el-button>
+                    <el-button type="text" @click="invoice(scope.row)">导出发票</el-button>
+                    <el-button type="text" @click="sign(scope.row)">签收</el-button>
+                    <el-button type="text" @click="showTransship(scope.row)">设置转单号</el-button>
+                    <el-button type="text" @click="showExtract(scope.row)">设置提单号</el-button>
                   </template>
                 </el-table-column>
               </commonTable>
@@ -276,6 +277,15 @@ export default {
         return
       }
       this.dialogVisible = true
+    },
+    invoice (row) {
+      if (row.has_invoice === 0) {
+        this.$message.error('该运单还未制作发票')
+        return
+      }
+      this.$api.Ordermanagement.invoiceExport({ waybillId: row.id }).then(res => {
+        this.downloadBlob(res, '发票.xlsx')
+      })
     },
     updateRoadSubmit () {
       let obj = {

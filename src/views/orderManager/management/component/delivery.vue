@@ -45,7 +45,7 @@
             <template slot-scope="scope">
               <el-button type="text" @click="detail(scope.row)">详情</el-button>
               <el-button type="text" @click="checkout(scope.row)">出仓</el-button>
-              <el-button type="text" @click="invoice(scope.row.id)">导出发票</el-button>
+              <el-button type="text" @click="invoice(scope.row)">导出发票</el-button>
               <el-button type="text" @click="showTransship(scope.row)">设置转单号</el-button>
               <el-button type="text" @click="showExtract(scope.row)">设置提单号</el-button>
             </template>
@@ -158,8 +158,12 @@ export default {
         this.tableData = res.data.list
       })
     },
-    invoice (id) {
-      this.$api.Ordermanagement.invoiceExport({ waybillId: id }).then(res => {
+    invoice (row) {
+      if (row.has_invoice === 0) {
+        this.$message.error('该运单还未制作发票')
+        return
+      }
+      this.$api.Ordermanagement.invoiceExport({ waybillId: row.id }).then(res => {
         this.downloadBlob(res, '发票.xlsx')
       })
     },
