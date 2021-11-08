@@ -253,7 +253,6 @@ export default {
   margin: 17px;
 }
 .box {
-  height: 400px;
   margin: 25px;
   background: #ffffff;
 }

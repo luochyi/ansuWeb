@@ -97,7 +97,7 @@
           <el-dialog title="新建状态" :visible.sync="show" width="30%">
             <div class="input">
               <span
-                >名称<el-input
+                >名称&nbsp;<el-input
                   v-model="statusname"
                   style="width: 190px"
                   placeholder="请输入状态名称"
@@ -106,7 +106,7 @@
               <br />
               <br />
               <span
-                >状态<el-select
+                >状态&nbsp;<el-select
                   v-model="status"
                   size="small"
                   placeholder="请选择状态"
@@ -130,7 +130,7 @@
           <el-dialog title="修改状态" :visible.sync="modify" width="30%">
             <div class="input">
               <span
-                >名称<el-input
+                >名称&nbsp;<el-input
                   v-model="name"
                   style="width: 190px"
                   placeholder="请输入状态名称"
@@ -139,7 +139,7 @@
               <br />
               <br />
               <span
-                >状态<el-select
+                >状态&nbsp;<el-select
                   v-model="status"
                   size="small"
                   placeholder="港前状态"
