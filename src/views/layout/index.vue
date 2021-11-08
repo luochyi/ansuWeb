@@ -804,6 +804,9 @@ export default {
     }
   },
   mounted () {
+    if (this.activeIndex === '') {
+      this.activeIndex = sessionStorage.getItem('index')
+    }
     this.uid = sessionStorage.getItem('id')
     this.uname = sessionStorage.getItem('name')
     let arr = this.$route.path.split('/')[1]
@@ -835,6 +838,7 @@ export default {
         item.children.forEach(items => {
           if (items.name === arr) {
             this.activeIndex = String(index + 1)
+            sessionStorage.setItem('index', this.activeIndex)
           }
         })
       })

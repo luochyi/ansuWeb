@@ -348,13 +348,16 @@
               </template>
             </el-table-column>
           </el-table>
-          <span class="tips" v-if="!formData.isFirst">生效时间</span>
+          <div class="plantime">
+            <span class="tips" v-if="!formData.isFirst">生效时间&nbsp;</span>
           <el-date-picker v-if="!formData.isFirst"
               v-model="formData.planTime"
               type="datetime"
+              size="mini"
               value-format="yyyy-MM-dd HH:mm:ss"
               placeholder="选择日期时间">
           </el-date-picker>
+          </div>
         </el-row>
       </div>
       <!-- 抽屉底部按钮 -->
@@ -1484,5 +1487,8 @@ export default {
 .tips{
   color:#FB6024;
   font-size: 14px;
+}
+.plantime{
+  margin: 10px 0 10px 0;
 }
 </style>
