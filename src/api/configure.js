@@ -71,6 +71,16 @@ export const departmentEdit = (params) => {
     data: params
   })
 }
+// 删除部门
+export const departmentDelete = departmentId => {
+  return axios({
+    url: '/company/department/delete',
+    method: 'post',
+    data: {
+      departmentId: departmentId
+    }
+  })
+}
 // 角色list
 
 export const positionAll = (params) => {
@@ -93,6 +103,16 @@ export const positionEdit = (params) => {
     url: '/company/position/edit',
     method: 'post',
     data: params
+  })
+}
+// 职位删除
+export const positionDelete = positionId => {
+  return axios({
+    url: '/company/position/delete',
+    method: 'post',
+    data: {
+      positionId: positionId
+    }
   })
 }
 export const customerLevelLists = (params) => {

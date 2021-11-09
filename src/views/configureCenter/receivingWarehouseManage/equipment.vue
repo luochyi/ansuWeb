@@ -25,7 +25,7 @@
         </el-col>
         <el-col :span='8' class='colbox'>
           <el-button class='orangeBtn long1' @click="getData">查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
+          <el-button class='wuBtn long1' @click="resetSearch">重 置</el-button>
         </el-col>
         <el-col :span='8' class="left">
           <el-button @click="showAdd" class='orangeBtn long2' icon="el-icon-circle-plus-outline">添加设备</el-button>
@@ -87,7 +87,7 @@ export default {
         name: ''
       },
       columns: [
-        { prop: 'name', label: '设备名称', width: '300', align: 'center' },
+        { prop: 'name', label: '设备名称', align: 'center' },
         { prop: 'link', label: '设备连接', align: 'center' }
       ],
       tableData: [],
@@ -125,6 +125,9 @@ export default {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    resetSearch () {
+      this.search.name = null
     },
     // 改变页面大小处理
     handleSizeChange (val) {
