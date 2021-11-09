@@ -56,23 +56,23 @@
           <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
             :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column type="selection" width="50"></el-table-column>
-            <el-table-column prop="name" label="代理名称" min-width="200"></el-table-column>
             <el-table-column prop="code" label="代理编码" min-width="200"></el-table-column>
+            <el-table-column prop="name" label="代理名称" min-width="200"></el-table-column>
             <el-table-column prop="period_name" label="结算账期" min-width="200"></el-table-column>
             <el-table-column fixed="right" label="操作" min-width="150">
               <template slot-scope="scope">
                 <el-button type="text" @click="toDetail(scope.row.id)">
                   查看详情
                 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button v-if="activeName === '1'" type="text" @click="channelService(scope.row)">
-                  代理服务
-                </el-button>
+<!--                <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+<!--                <el-button v-if="activeName === '1'" type="text" @click="channelService(scope.row)">-->
+<!--                  代理服务-->
+<!--                </el-button>-->
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">
-                 |&nbsp; 停用代理
+                  |&nbsp; 停用代理
                 </el-button>
                 <el-button v-if="activeName === '2'" @click="stopAgent(scope.row)" type="text">
-                  启用代理
+                  |&nbsp; 启用代理
                 </el-button>
               </template>
             </el-table-column>
