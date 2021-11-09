@@ -9,8 +9,8 @@
       <div>
         <div class="en">
           <el-descriptions title="客户资料">
-            <el-descriptions-item label="代理名称">{{data.name}}</el-descriptions-item>
             <el-descriptions-item label="代理编码">{{data.code}}</el-descriptions-item>
+            <el-descriptions-item label="代理名称">{{data.name}}</el-descriptions-item>
             <el-descriptions-item label="公司地址">{{data.province_name}}{{data.city_name}}{{data.county_name}}</el-descriptions-item>
             <el-descriptions-item label="详细地址">{{data.address}}</el-descriptions-item>
           </el-descriptions>
@@ -21,7 +21,7 @@
           </el-descriptions>
         </div>
         <div class="en">
-          <el-descriptions title="代理账期">
+          <el-descriptions title="其他">
             <el-descriptions-item label="代理备注">{{data.remark}}</el-descriptions-item>
           </el-descriptions>
         </div>
@@ -59,32 +59,32 @@
         </el-table>
       </div>
       <!--  标签页 -->
-      <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>收货地址</span>
-      </el-row>
-      <el-divider></el-divider>
-      <div class="foot" >
-        <el-row class="left">
-          <!-- <span class='title' >票数：2票 货件数量：100箱</span> -->
-        </el-row>
-        <br>
-        <el-table ref="multipleTable" :data="data.addresses" border  tooltip-effect="dark" style="width: 80%"
-                  :header-cell-style="{background: '#F5F5F6'}">
-          <!-- 联系人姓名 -->
-          <el-table-column  prop='name'  label='负责人名称'  min-width='318'> </el-table-column>
-          <!-- 手机号 -->
-          <el-table-column  prop='phone'  label='负责人手机'  min-width='318'></el-table-column>
-          <!-- 微信 -->
-          <el-table-column  prop=''  label='公司地址'  min-width='318'>{{data.province_name}}{{data.city_name}}{{data.county_name}}</el-table-column>
-          <!-- qq -->
-          <el-table-column  prop='address'  label='详细地址'  min-width='318'></el-table-column>
-          <!-- <el-table-column label='操作' fixed='right' min-width='120'>
-           <template slot-scope="scope">
-              <el-button type="text" @click="Viewwaybill(scope.row.id)"> 查看运单</el-button>
-           </template>
-         </el-table-column> -->
-        </el-table>
-      </div>
+<!--      <el-row type='flex' justify='flex-start' class='title' align='middle'>-->
+<!--        <span class='text'>收货地址</span>-->
+<!--      </el-row>-->
+<!--      <el-divider></el-divider>-->
+<!--      <div class="foot" >-->
+<!--        <el-row class="left">-->
+<!--          &lt;!&ndash; <span class='title' >票数：2票 货件数量：100箱</span> &ndash;&gt;-->
+<!--        </el-row>-->
+<!--        <br>-->
+<!--        <el-table ref="multipleTable" :data="data.addresses" border  tooltip-effect="dark" style="width: 80%"-->
+<!--                  :header-cell-style="{background: '#F5F5F6'}">-->
+<!--          &lt;!&ndash; 联系人姓名 &ndash;&gt;-->
+<!--          <el-table-column  prop='name'  label='负责人名称'  min-width='318'> </el-table-column>-->
+<!--          &lt;!&ndash; 手机号 &ndash;&gt;-->
+<!--          <el-table-column  prop='phone'  label='负责人手机'  min-width='318'></el-table-column>-->
+<!--          &lt;!&ndash; 微信 &ndash;&gt;-->
+<!--          <el-table-column  prop=''  label='公司地址'  min-width='318'>{{data.province_name}}{{data.city_name}}{{data.county_name}}</el-table-column>-->
+<!--          &lt;!&ndash; qq &ndash;&gt;-->
+<!--          <el-table-column  prop='address'  label='详细地址'  min-width='318'></el-table-column>-->
+<!--          &lt;!&ndash; <el-table-column label='操作' fixed='right' min-width='120'>-->
+<!--           <template slot-scope="scope">-->
+<!--              <el-button type="text" @click="Viewwaybill(scope.row.id)"> 查看运单</el-button>-->
+<!--           </template>-->
+<!--         </el-table-column> &ndash;&gt;-->
+<!--        </el-table>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -108,15 +108,11 @@ export default {
   methods: {
     // this.msg = this.$route.params.mes
     getdata () {
-      console.log('111')
-      console.log(this.id)
       this.$api.agent.agentInfo({
         agentId: this.id
       }).then(res => {
         console.log(res)
         this.data = res.data
-        // this.data.good_time = this.formatDate(res.data.good_time, 'yyyy-MM-dd')
-        // this.data.created_at = this.formatDate(res.data.created_at, 'yyyy-MM-dd')
         this.tableData = res.data.contacts
       })
     },

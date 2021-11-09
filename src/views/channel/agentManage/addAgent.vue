@@ -112,59 +112,59 @@
         </el-row>
       </div>
       <!-- 收货地址 -->
-      <div class="infoBox">
-        <el-row class="box_title left">
-          收货地址
-        </el-row>
-        <el-row class="table">
-          <el-table :data="wareData" border style="width: 100%" @selection-change="handleSelectionChange2"  :header-cell-style="{background: '#F5F5F6'}">
-            <el-table-column
-      type="selection"
-      width="55">
-    </el-table-column>
-            <el-table-column label="仓库负责人" prop="name" min-width="80"></el-table-column>
-            <el-table-column label="负责人电话" prop="phone" min-width="90" ></el-table-column>
-            <el-table-column label="地址" prop="address" min-width="300"></el-table-column>
-            <el-table-column label="操作" width="150" fixed="right">
-              <template slot-scope="scope">
-                <el-button type="text">修改信息</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click.native.prevent="deleteRowe(scope.$index, wareData)">删除</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-            <!-- 添加 -->
-          <el-table :data="addWare" v-if="contactWare" border style="width: 100%"  :show-header="false">
-            <el-table-column type="selection" width="55"></el-table-column>
-            <el-table-column label="仓库负责人" min-width="70">
-              <template slot-scope="scope"><el-input v-model="scope.row.name"></el-input></template>
-            </el-table-column>
-            <el-table-column label="负责人电话" min-width="90">
-              <template slot-scope="scope"><el-input v-model="scope.row.phone"></el-input></template>
-            </el-table-column>
-            <el-table-column label="地址" min-width="200">
-              <template slot-scope="scope"><el-cascader
-                v-model="warecountyId"
-                :options="options"
-                clearable
-                :props="{value: 'id', label: 'name'}"
-                @change="handleChange"></el-cascader>
-                <el-input v-model="scope.row.address" style="width:50%" placeholder="请输入详细地址"></el-input></template>
-            </el-table-column>
-            <el-table-column label="操作" width="150" fixed="right">
-              <template v-slot="scope">
-                <el-button @click="addWaresubmit(scope.row)" type="text">确认</el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
-                <el-button type="text" @click="cancl1(scope.row)">取消</el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-row>
-        <el-row class="left">
-          <el-button @click="contactWare=true" class="orangeBtn">新建收货地址</el-button>
-          <!-- <el-button class="whiteBtn" @click="lotDel()">批量删除</el-button> -->
-        </el-row>
-      </div>
+<!--      <div class="infoBox">-->
+<!--        <el-row class="box_title left">-->
+<!--          收货地址-->
+<!--        </el-row>-->
+<!--        <el-row class="table">-->
+<!--          <el-table :data="wareData" border style="width: 100%" @selection-change="handleSelectionChange2"  :header-cell-style="{background: '#F5F5F6'}">-->
+<!--            <el-table-column-->
+<!--      type="selection"-->
+<!--      width="55">-->
+<!--    </el-table-column>-->
+<!--            <el-table-column label="仓库负责人" prop="name" min-width="80"></el-table-column>-->
+<!--            <el-table-column label="负责人电话" prop="phone" min-width="90" ></el-table-column>-->
+<!--            <el-table-column label="地址" prop="address" min-width="300"></el-table-column>-->
+<!--            <el-table-column label="操作" width="150" fixed="right">-->
+<!--              <template slot-scope="scope">-->
+<!--                <el-button type="text">修改信息</el-button>-->
+<!--                <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+<!--                <el-button type="text" @click.native.prevent="deleteRowe(scope.$index, wareData)">删除</el-button>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
+<!--          </el-table>-->
+<!--            &lt;!&ndash; 添加 &ndash;&gt;-->
+<!--          <el-table :data="addWare" v-if="contactWare" border style="width: 100%"  :show-header="false">-->
+<!--            <el-table-column type="selection" width="55"></el-table-column>-->
+<!--            <el-table-column label="仓库负责人" min-width="70">-->
+<!--              <template slot-scope="scope"><el-input v-model="scope.row.name"></el-input></template>-->
+<!--            </el-table-column>-->
+<!--            <el-table-column label="负责人电话" min-width="90">-->
+<!--              <template slot-scope="scope"><el-input v-model="scope.row.phone"></el-input></template>-->
+<!--            </el-table-column>-->
+<!--            <el-table-column label="地址" min-width="200">-->
+<!--              <template slot-scope="scope"><el-cascader-->
+<!--                v-model="warecountyId"-->
+<!--                :options="options"-->
+<!--                clearable-->
+<!--                :props="{value: 'id', label: 'name'}"-->
+<!--                @change="handleChange"></el-cascader>-->
+<!--                <el-input v-model="scope.row.address" style="width:50%" placeholder="请输入详细地址"></el-input></template>-->
+<!--            </el-table-column>-->
+<!--            <el-table-column label="操作" width="150" fixed="right">-->
+<!--              <template v-slot="scope">-->
+<!--                <el-button @click="addWaresubmit(scope.row)" type="text">确认</el-button>-->
+<!--                <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+<!--                <el-button type="text" @click="cancl1(scope.row)">取消</el-button>-->
+<!--              </template>-->
+<!--            </el-table-column>-->
+<!--          </el-table>-->
+<!--        </el-row>-->
+<!--        <el-row class="left">-->
+<!--          <el-button @click="contactWare=true" class="orangeBtn">新建收货地址</el-button>-->
+<!--          &lt;!&ndash; <el-button class="whiteBtn" @click="lotDel()">批量删除</el-button> &ndash;&gt;-->
+<!--        </el-row>-->
+<!--      </div>-->
       <!-- 代理账期 -->
       <div class="infoBox">
         <el-row class="box_title left">
@@ -190,7 +190,7 @@
       <!-- 其他 -->
       <div class="infoBox">
         <el-row class="box_title left">
-          代理账期
+          其他
         </el-row>
         <!--  -->
         <el-row class="info">
@@ -427,8 +427,8 @@ export default {
         address: this.address,
         periodId: this.agentAccount,
         remark: this.remark,
-        contacts: this.contactsData,
-        agentAddresses: this.wareData
+        contacts: this.contactsData
+        // agentAddresses: this.wareData
       }
       this.$api.agent.agentAdd(params).then(res => {
         if (res.code === 0) {
