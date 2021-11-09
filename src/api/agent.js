@@ -281,3 +281,27 @@ export const agentSelectAddress = (params) => {
     data: params
   })
 }
+// 渠道详情
+export const channelInfo = (params) => {
+  return axios({
+    url: '/setting/channel/info',
+    method: 'post',
+    data: params
+  })
+}
+// setting/channel/edit/describe
+export const channelEditDescribe = (params) => {
+  return axios({
+    url: '/setting/channel/edit/describe',
+    method: 'post',
+    data: params
+  })
+}
+// setting/channel/edit/other
+export const channelEditOther = (params) => {
+  return axios({
+    url: '/setting/channel/edit/other',
+    method: 'post',
+    data: params
+  })
+}

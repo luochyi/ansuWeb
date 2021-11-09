@@ -217,6 +217,14 @@
                                 :value="item.value">
                             </el-option>
                         </el-select>
+                        <el-select v-model="form.durationCate" type="number" size="small" style="margin-left:20px;width:16%" >
+                          <el-option
+                                v-for="item in durationCateOption"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                        </el-select>
                         </span>
                     </span>
                 </div>
@@ -389,6 +397,7 @@ export default {
         hasTax: null,
         hasClearanceFee: null,
         durationType: null,
+        durationCate: null,
         minDuration: null,
         maxDuration: null,
         weightRule: {
@@ -463,6 +472,16 @@ export default {
         {
           value: 0,
           label: '否'
+        }
+      ],
+      durationCateOption: [
+        {
+          value: 1,
+          label: '签收'
+        },
+        {
+          value: 2,
+          label: '提取'
         }
       ],
       durationTypeOption: [
@@ -572,13 +591,13 @@ export default {
     addSumbit () {
       let obj = [{ type: 1, content: this.text }]
       if (this.careful === 1) {
-        obj[1] = { type: 2, content: this.carefulText }
+        obj.push({ type: 2, content: this.carefulText })
       }
       if (this.Require === 1) {
-        obj[2] = { type: 3, content: this.RequireText }
+        obj.push({ type: 3, content: this.RequireText })
       }
       if (this.tip === 1) {
-        obj[3] = { type: 4, content: this.tiptext }
+        obj.push({ type: 4, content: this.tiptext })
       }
       this.$api.agent.channelAdd(
         {
@@ -593,6 +612,7 @@ export default {
           hasTax: this.form.hasTax,
           hasClearanceFee: this.form.hasClearanceFee,
           durationType: this.form.durationType,
+          durationCate: this.form.durationCate,
           minDuration: Number(this.form.minDuration),
           maxDuration: Number(this.form.maxDuration),
           weightRule: {

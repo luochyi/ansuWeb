@@ -73,6 +73,18 @@ export default [
     component: () =>
       import('@/views/channel/channelSetting/channelSetting')
   },
+  // channelDetail
+  {
+    path: '/channelDetail',
+    name: 'channelDetail',
+    meta: {
+      title: '渠道设置',
+      icon: 'channelDetail',
+      hidden: true
+    },
+    component: () =>
+      import('@/views/channel/channelSetting/channelDetail')
+  },
   // 渠道设置--新增渠道
   {
     path: '/channelSetting/addChannel',

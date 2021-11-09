@@ -78,7 +78,8 @@
               <span v-else-if="activeName === '0'" @click="stopAgent(scope.row)" class="blue">
                   启用<span style="margin:0px 5px 0px">|</span>
                 </span>
-              <span @click="edit(scope.row)" class="blue">修改</span>
+              <!-- <span @click="edit(scope.row)" class="blue">修改&nbsp;|&nbsp;</span> -->
+              <span @click="detail(scope.row.id)" class="blue">渠道详情</span>
             </template>
           </el-table-column>
         </commonTable>
@@ -692,6 +693,7 @@ export default {
       }
       this.$api.agent.channelLists(params).then(res => {
         this.tableData = res.data.list
+        this.page.total = res.data.total
       })
     },
     // 分区价格
@@ -1191,6 +1193,11 @@ export default {
     reset () {
       this.serviceName = ''
       this.getData()
+    },
+    detail (id) {
+      // /setting/channel/edit/describe
+      this.$router.push({ name: 'channelDetail', params: { id: id } })
+      // channelchannelDetail
     },
     formatters (row, column, cellValue) {
       switch (row.type) {
