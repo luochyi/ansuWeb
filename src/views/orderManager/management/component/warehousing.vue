@@ -117,11 +117,11 @@ export default {
         channelServiceId: null
       },
       columns: [
+        { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
+        { prop: 'forecast_no', label: '预报单号', width: '200', align: 'center' },
         { prop: 'type', label: '运单类型', align: 'center', width: '200', formatter: this.formatter },
         { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
         { prop: 'customer_code', label: '客户编码', width: '200', align: 'center' },
-        { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
-        { prop: 'forecast_no', label: '预报单号', width: '200', align: 'center' },
         { prop: 'channel_name', label: '渠道名称', width: '200', align: 'center' },
         { prop: 'has_invoice', label: '是否制作发票', width: '200', align: 'center', formatter: this.formatter },
         { prop: 'irikura_time', label: '入库时间', width: '200', align: 'center', formatter: this.formatter },

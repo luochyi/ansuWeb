@@ -202,6 +202,18 @@ export default {
       },
       columns: [
         {
+          prop: 'waybill_no',
+          label: '运单号',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'forecast_no',
+          label: '预报单号',
+          width: '200',
+          align: 'center'
+        },
+        {
           prop: 'type',
           label: '订单类型',
           width: '200',
@@ -233,18 +245,6 @@ export default {
           width: '200',
           align: 'center',
           formatter: this.formatter
-        },
-        {
-          prop: 'waybill_no',
-          label: '运单号',
-          width: '200',
-          align: 'center'
-        },
-        {
-          prop: 'forecast_no',
-          label: '预报单号',
-          width: '200',
-          align: 'center'
         },
         {
           prop: 'has_invoice',

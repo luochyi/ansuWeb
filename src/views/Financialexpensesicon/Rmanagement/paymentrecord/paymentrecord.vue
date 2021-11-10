@@ -159,11 +159,11 @@ export default {
         customerId: null
       },
       columns: [
+        { prop: 'customer_code', label: '客户编码', width: '150', align: 'center' },
+        { prop: 'customer_name', label: '来款客户', width: '214', align: 'center' },
         { prop: 'channel', label: '收款渠道', width: '200', align: 'center' },
         { prop: 'amount', label: '来款金额', width: '117', align: 'center' },
         { prop: 'is_confirm', label: '来款状态', width: '100', align: 'center', formatter: this.formatter },
-        { prop: 'customer_name', label: '来款客户', width: '214', align: 'center' },
-        { prop: 'customer_code', label: '客户编码', width: '150', align: 'center' },
         { prop: 'user_name', label: '操作人', width: '120', align: 'center' },
         { prop: 'amount_at', label: '来款时间', width: '200', align: 'center', formatter: this.formatter },
         { prop: 'created_at', label: '登记时间', align: 'center', width: '200', formatter: this.formatter }

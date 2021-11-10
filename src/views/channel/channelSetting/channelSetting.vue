@@ -578,15 +578,15 @@ export default {
       chooseArr: [], // 选中的代理
       columns: [
         {
-          prop: 'name',
-          label: '渠道名称',
+          prop: 'code',
+          label: '渠道编码',
           width: '200',
           align: 'center'
         },
         {
-          prop: 'code',
-          label: '渠道编码',
-          width: '220',
+          prop: 'name',
+          label: '渠道名称',
+          width: '200',
           align: 'center'
         },
         {

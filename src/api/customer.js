@@ -110,3 +110,10 @@ export const enabled = (params) => {
     data: params
   })
 }
+export const info = (params) => {
+  return axios({
+    url: '/customer/info',
+    method: 'post',
+    data: params
+  })
+}

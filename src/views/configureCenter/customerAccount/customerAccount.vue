@@ -64,7 +64,7 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <el-button type="text" @click="addAccount(scope.row)"> 修改详情</el-button>
+              <el-button type="text" @click="detail(scope.row.id)"> 详情</el-button>
               <span style="color: #0084ff; margin: 0px 5px">|</span>
               <el-button type="text" @click="resetP(scope.row)">
                 重置密码
@@ -190,6 +190,9 @@ export default {
     },
     addAccount () {
       this.$router.push({ name: 'addAccount' })
+    },
+    detail (id) {
+      this.$router.push({ name: 'detailAccount', params: { id: id } })
     },
     handleClick (val) {
       console.log(val)

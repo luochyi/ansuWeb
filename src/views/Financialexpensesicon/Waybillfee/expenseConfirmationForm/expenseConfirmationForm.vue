@@ -147,10 +147,10 @@ export default {
       confirmation: false, // 批量确认费用
 
       columns: [
+        { prop: 'waybill_no', label: '运单号', width: '239', align: 'center' },
         { prop: 'created_at', label: '下单日期', width: '133', align: 'center', formatter: this.formatter },
         { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
         { prop: 'customer_code', label: '客户编号', width: '118', align: 'center' },
-        { prop: 'waybill_no', label: '运单号', width: '239', align: 'center' },
         { prop: 'waybill_type', label: '运单类型', width: '171', align: 'center', formatter: this.formatter },
         { prop: 'is_confirm', label: '确认状态', width: '84', align: 'center', formatter: this.formatter },
         { prop: 'is_bill', label: '账单状态', width: '84', align: 'center', formatter: this.formatter },

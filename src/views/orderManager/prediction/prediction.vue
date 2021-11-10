@@ -14,7 +14,7 @@
       <div class='content'>
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
-            <el-col :span='6'>
+            <el-col :span='6' style="min-width:100px">
               <span class='text'>预报单号</span>
             </el-col>
             <el-col :span='12'>
