@@ -6,11 +6,11 @@
   >
     <el-header class='head'>
       <el-row class='tilte' align='middle' type='flex'>
-        <el-col :span='3'>
+        <el-col style="width:200px;min-width:200px">
           <img alt class='logoimg' src='@/assets/logo.png' />
           <span class='tit-text'>安速货运</span>
         </el-col>
-        <el-col :span='18' class='firstMenu'>
+        <el-col :xs="0" :sm="15" :md="15" :lg="18" :xl="18" class='firstMenu'>
           <el-menu
             :default-active='activeIndex'
             class='el-menu-demo'
@@ -28,7 +28,7 @@
             </el-menu-item>
           </el-menu>
         </el-col>
-        <el-col :span='3'>
+        <el-col :xs="0" :sm="3" :md="3" :lg="3" :xl="3">
           <span class='user'>你好，{{ uname }}</span>
           <el-button type='text' class='red' style='' @click="logout()">退出</el-button>
         </el-col>
@@ -878,6 +878,7 @@ export default {
 .tit-text{
   font-size: 20px;
   font-weight: 500;
+
 }
 .main-box{
   padding:0 0 0 20px ;

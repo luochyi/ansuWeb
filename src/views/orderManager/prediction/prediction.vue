@@ -117,7 +117,7 @@
              <!-- <el-table-column prop='coordination' label='协同' min-width='124'>
             </el-table-column> -->
             <!-- 操作 -->
-            <el-table-column label='操作' fixed='right' min-width='199'>
+            <el-table-column label='操作' fixed='right' width='120'>
               <template slot-scope="scope">
                  <el-button type="text" @click="Orderdetails(scope.row.id)"> 查看详情</el-button>
                 <!-- <el-button v-if="scope.row.type ===2" type="text" @click="delivery(scope.row)">|&nbsp;&nbsp;发货 </el-button> -->

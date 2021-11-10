@@ -9,7 +9,7 @@
       </el-tabs> -->
     </el-row>
     <el-row class="box-block flex">
-      <el-col :span="6" style="border: 1px solid #D9D9D9;border-top:none;height:750px;overflow:scroll">
+      <el-col style="border: 1px solid #D9D9D9;border-top:none;height:750px;overflow:scroll;width:280px;min-width:280px">
         <div style="background:#fff">
           <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
             <el-col :span="5" style="margin-top:-2px">
@@ -34,7 +34,7 @@
           </el-row>
         </div>
       </el-col>
-      <el-col :span="18">
+      <el-col style="overflow:scroll;height:750px;background:#ffffff">
         <!-- 主要内容 -->
     <div class='content'>
         <!-- 搜索栏 -->
@@ -507,5 +507,9 @@ export default {
     color: rgba(0, 0, 0, 0.65);
 
   }
+}
+::-webkit-scrollbar {
+/*隐藏滚轮*/
+display: none;
 }
 </style>

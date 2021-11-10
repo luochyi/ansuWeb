@@ -369,6 +369,10 @@ export default {
   margin-left: 10px;
   padding: 5px;
 }
+.content{
+  overflow: scroll;
+  height: 700px;
+}
 .active {
   border-left: 4px solid #fb4702;
 }
@@ -445,5 +449,9 @@ export default {
   border: 1px solid #e8e8e8;
   text-align: center;
   padding: 1px;
+}
+::-webkit-scrollbar {
+/*隐藏滚轮*/
+display: none;
 }
 </style>

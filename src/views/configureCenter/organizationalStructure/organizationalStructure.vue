@@ -171,7 +171,7 @@
 </template>
 
 <script>
-import { positionDelete } from '../../../api/configure'
+// import { positionDelete } from '../../../api/configure'
 
 export default {
   data () {
