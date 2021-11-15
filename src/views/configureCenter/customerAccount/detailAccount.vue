@@ -7,7 +7,7 @@
           <div class="cont">
             <el-descriptions title="客户信息">
                 <template slot="extra">
-                  <el-button type="primary" @click="goBack" size="small">返回</el-button>
+                  <el-button type="primary" @click="editInfo" size="small">修改</el-button>
                 </template>
                 <el-descriptions-item  label="客户编码">{{detail.code}}</el-descriptions-item>
                 <el-descriptions-item  label="客户名称">{{detail.name}}</el-descriptions-item>
@@ -22,10 +22,13 @@
                 <el-descriptions-item  label="小货金额">{{detail.small_goods_amount}}</el-descriptions-item>
             </el-descriptions>
             <el-descriptions title="联系人资料" :column="1">
-                 <template slot="extra">
-                  <el-button type="primary" size="small">修改</el-button>
-                </template>
+                 <!-- <template slot="extra">
+                  <el-button type="primary" @click="editContacts" size="small">修改</el-button>
+                </template> -->
             </el-descriptions>
+            <div style="text-align:left">
+              <el-button class="orangeBtn" @click="editContact" style="margin-bottom:10px;">新增联系人</el-button>
+            </div>
             <el-table :data="contacts"  border  tooltip-effect="dark" :header-cell-style="{background: '#F5F5F6'}">
                       <el-table-column prop='name' label='联系人姓名'></el-table-column>
                       <el-table-column prop='position' label='职位'>
@@ -36,21 +39,54 @@
                       <el-table-column prop='phone' label='手机号'></el-table-column>
                       <el-table-column prop='wechat' label='微信'></el-table-column>
                       <el-table-column prop='qq' label='qq'></el-table-column>
+                      <el-table-column
+                        fixed="right"
+                        label="操作"
+                        width="100">
+                        <template slot-scope="scope">
+                          <el-button type="text" @click="editContact(scope.row)" size="small">编辑</el-button>
+                        </template>
+                      </el-table-column>
             </el-table>
+            <el-button class="orangeBtn" @click="goBack" style="margin-top:20px">返 回</el-button>
           </div>
         </el-row>
-        <!-- -->
+        <!-- 修改信息-->
+         <el-dialog
+          title="基本信息修改"
+          :visible.sync="infoShow"
+          width="30%"
+          :before-close="infoClose">
+          <span>这是一段信息</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="infoShow = false">取 消</el-button>
+            <el-button type="primary" @click="infoShow = false">确 定</el-button>
+          </span>
+        </el-dialog>
+        <!-- 联系人 -->
+        <el-dialog
+          title="联系人资料修改"
+          :visible.sync="contactsShow"
+          width="30%"
+          :before-close="contactsClose">
+          <span>这是一段信息</span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="contactsShow = false">取 消</el-button>
+            <el-button type="primary" @click="contactsShow = false">确 定</el-button>
+          </span>
+        </el-dialog>
     </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      otherShow: false,
-      describeShow: false,
+      infoShow: false,
+      contactsShow: false,
       id: null,
       detail: { name: '' },
-      contacts: []
+      contacts: [],
+      form: {}
     }
   },
   mounted () {
@@ -69,8 +105,22 @@ export default {
     },
     goBack () {
       this.$router.go(-1)
-    }
-
+    },
+    editInfo () {
+      this.infoShow = true
+    },
+    editContact (data) {
+      this.contactsShow = true
+      console.log(data)
+      this.contact.id = data.id
+      this.contact.name = data.name
+      this.contact.phone = data.phone
+      this.contact.position = data.position
+      this.contact.wechat = data.wechat
+      this.contact.qq = data.qq
+    },
+    infoClose () {},
+    contactsClose () {}
   }
 }
 </script>

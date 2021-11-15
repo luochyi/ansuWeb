@@ -236,10 +236,11 @@ export default {
     },
     // 出仓
     checkout (data) {
-      this.req.waybillIds.push(data.id)
+      // this.req.waybillIds = data.id
+      // console.log(this.req)
       this.$confirm('确认出仓')
         .then(_ => {
-          this.$api.Ordermanagement.ejectJheckout(this.req).then(res => {
+          this.$api.Ordermanagement.ejectJheckout({ waybillIds: [data.id] }).then(res => {
             if (res.code === 0) {
               this.$message.success(res.msg)
               this.getData()
@@ -262,9 +263,11 @@ export default {
     },
     handleSelectionChange (val) {
       this.waybillIds = []
+      console.log(val)
       val && val.forEach(item => {
         this.waybillIds.push(item.id)
       })
+      console.log(this.waybillIds)
     },
     // 表格格式化
     formatter (row, column, cellValue) {
