@@ -457,7 +457,7 @@ export default {
           parentId: '0',
           children: [
             {
-              name: 'agentManage',
+              name: 'agentAllocation',
               meta: {
                 title: '代理管理',
                 icon: 'agentManage',
@@ -465,46 +465,46 @@ export default {
               },
               ID: 30,
               menuId: '30',
-              path: 'agentManage',
-              parentId: '3'
+              path: 'agentAllocation',
+              parentId: '3',
+              children: [
+                {
+                  name: 'agentManage',
+                  meta: {
+                    title: '代理设置',
+                    icon: 'agentManage',
+                    hidden: false
+                  },
+                  ID: 300,
+                  menuId: '300',
+                  path: 'agentManage',
+                  parentId: '30'
+                },
+                {
+                  name: 'channelService',
+                  meta: {
+                    title: '代理渠道',
+                    icon: 'channelService',
+                    hidden: false
+                  },
+                  ID: 301,
+                  menuId: '301',
+                  path: 'channelService',
+                  parentId: '30'
+                }
+              ]
             },
             {
-              name: 'channelAllocation',
+              name: 'channelSetting',
               meta: {
-                title: '渠道管理',
-                icon: 'channelAllocation',
+                title: '安速渠道',
+                icon: 'channelSetting',
                 hidden: false
               },
               ID: 31,
               menuId: '31',
-              path: 'channelAllocation',
-              parentId: '3',
-              children: [
-                {
-                  name: 'channelSetting',
-                  meta: {
-                    title: '渠道设置',
-                    icon: 'channelSetting',
-                    hidden: false
-                  },
-                  ID: 310,
-                  menuId: '310',
-                  path: 'channelSetting',
-                  parentId: '31'
-                },
-                {
-                  name: 'channelBrandAgent',
-                  meta: {
-                    title: '渠道下属代理',
-                    icon: 'channelBrandAgent',
-                    hidden: false
-                  },
-                  ID: 311,
-                  menuId: '311',
-                  path: 'channelBrandAgent',
-                  parentId: '31'
-                }
-              ]
+              path: 'channelSetting',
+              parentId: '3'
             }
             // {
             //   name: 'subsidiaryChannel',

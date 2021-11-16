@@ -89,6 +89,13 @@ export const agentServiceAdd = (params) => {
     data: params
   })
 }
+export const agentServiceEdit = (params) => {
+  return axios({
+    url: '/setting/agent/service/edit',
+    method: 'post',
+    data: params
+  })
+}
 
 // setting/agent/service/price/add
 export const priceAdd = (params) => {

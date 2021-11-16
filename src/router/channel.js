@@ -45,7 +45,7 @@ export default [
     path: '/agentManage/channelService',
     name: 'channelService',
     meta: {
-      title: '渠道服务',
+      title: '代理渠道',
       icon: 'channelService',
       hidden: false
     },

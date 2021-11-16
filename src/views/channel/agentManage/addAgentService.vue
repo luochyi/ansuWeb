@@ -2,25 +2,25 @@
   <div>
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span>新建代理服务</span>
+      <span>新建代理渠道</span>
     </el-row>
     <!-- 内容 -->
     <div class="content">
       <!-- 客户资料 -->
       <div class="infoBox">
         <el-row class="box_title left">
-          代理服务信息
+          代理渠道信息
         </el-row>
         <!--  -->
         <el-row class="info">
           <el-col :span="6" class="flex align-center">
-            <div class="name">代理服务名称</div>
+            <div class="name">代理渠道名称</div>
             <el-col :span="16">
               <el-input v-model="agentServiceName" placeholder="请输入" ></el-input>
             </el-col>
           </el-col>
           <el-col :span="6" class="flex  align-center">
-            <div class="name">服务分类</div>
+            <div class="name">渠道分类</div>
             <el-col :span="16">
               <el-select v-model="cate">
                 <el-option v-for="item in cateOption" :key="item.value" :label="item.label" :value="item.value"></el-option>

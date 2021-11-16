@@ -1,88 +1,136 @@
 <template>
   <div>
     <!--  标签页 -->
-    <el-row type="flex" justify="flex-start" class="title" align="middle">
-      <span class="text">代理服务</span>
-      <el-tabs v-model="activeName" type="card"  @tab-click="handleClick">
-        <el-tab-pane label="启用代理" name="1"></el-tab-pane>
-        <el-tab-pane label="停用代理" name="2"></el-tab-pane>
-      </el-tabs>
+    <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:10px 0px">
+      <span class="text">渠道</span>
     </el-row>
-    <!-- 主要内容 -->
-    <div class="content">
-      <!-- 搜索栏 -->
-      <el-row class="searchbox1">
-        <!-- 代理名称 -->
-        <el-col :span="6" class="colbox">
-          <span class="text">服务名称</span>
-          <el-col :span="16">
-            <el-input v-model="serviceName" placeholder="请输入"></el-input>
+    <el-row class="box-block flex">
+      <el-col style="min-width:240px;width:240px;border-right: 1px solid #D9D9D9;border-top:none;padding-bottom:20px;background:#ffffff">
+        <div class="box">
+          <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
+            <el-col :span="3" style="margin-top:-2px">
+              <span style="font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;font-weight: 500;color: #000000;">代理</span>
+            </el-col>
+            <el-col :span="14" type="flex">
+              <!-- <span style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #000000;">分类：</span>
+              <el-select size="small" style="width:90px" v-model="Class">
+                <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+                </el-option>
+              </el-select> -->
+            </el-col>
+          </el-row>
+          <el-row class="search-box">
+            <!-- <span class="input-box">
+              <img alt class='logoimg' src='@/assets/search.png' style="width: 14px;height: 14px;" />
+              <el-input class="elin" size="small" placeholder="请输入渠道名或编码" style="border:0" v-model="searchInput"></el-input>
+            </span>
+            <span class="search-font" style="">搜索</span> -->
+          </el-row>
+          <el-row style="padding:0px 30px 12px 40px;display:flex;align-items:center;"  v-for="item, index in agents" :key="index" @click.native="changeAgent(item.id, index)">
+            <el-row :class="index===red?'active':''" style="padding:12px;margin-bottom:20px;background: #F9F9F9;
+          border-radius: 3px;width: 88%;height: 68px;font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;color: rgba(0, 0, 0, 0.8);cursor: pointer;">
+              <div style="display:flex;align-items:center;margin-bottom:4px" >
+                <span>代理：</span><span>{{item.name}}</span>
+              </div>
+              <div style="display:flex;align-items:center;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;
+          color: rgba(0, 0, 0, 0.45);justify-content:space-between">
+                <span >编码：<span>{{item.code}}</span></span>
+                <!-- <span class="num">{{num}}家代理</span> -->
+              </div>
+            </el-row>
+          </el-row>
+        </div>
+      </el-col>
+      <el-col :span="18">
+      <!-- 主要内容 -->
+      <div class="content">
+        <!-- 搜索栏 -->
+        <el-row class="searchbox1">
+          <!-- 代理名称 -->
+          <el-col :span="6" class="colbox">
+            <span class="text">渠道名称</span>
+            <el-col :span="16">
+              <el-input v-model="serviceName" placeholder="请输入"></el-input>
+            </el-col>
           </el-col>
-        </el-col>
-        <!--  -->
-        <el-col :span="6" class="colbox justify-center">
-          <el-button class="orangeBtn long1" @click="search">查 询</el-button>
-          <el-button class="wuBtn long1" @click="reset">重 置</el-button>
-        </el-col>
-      </el-row>
-      <!-- 表格 -->
-      <div>
-        <el-row
-          class="searchbox1"
-          type="flex"
-          justify="space-between"
-          align="middle"
-        >
-          <el-col :span="12" class="left">
-            <el-button class='orangeBtn' v-if="activeName==='1'" @click="batchStop">批量停用</el-button>
-            <el-button class='orangeBtn' v-else @click="batchStop">批量启用</el-button>
+          <el-col :span="6" class="colbox">
+            <span class="text">渠道状态</span>
+            <el-col :span="16">
+              <el-select v-model="search.status" placeholder="请选择">
+                <el-option
+                    v-for="item in options.status"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-col>
           </el-col>
-          <el-col :span="12" class="right">
-            <el-button class="whiteBtn" @click="toAdd">新增代理服务</el-button>
+          <!--  -->
+          <el-col :span="6" class="colbox justify-center">
+            <el-button class="orangeBtn long1" @click="getData">查 询</el-button>
+            <el-button class="wuBtn long1" @click="reset">重 置</el-button>
           </el-col>
         </el-row>
-        <commonTable
-          :columns="columns"
-          :data="tableData"
-          :pager="page"
-          @handleSizeChange="handleSizeChange"
-          @handleCurrentChange="handleCurrentChange"
-          @handleSelectionChange="handleSelectionChange"
-        >
-          <!-- slot -->
-          <template v-slot:chakan="slotData">
-            {{ slotData.data.info }}<span
-              style="color: #0084FF; cursor: pointer"
-              @click="check(slotData)"
-              >查看</span
-            >
-          </template>
-          <!-- 操作 -->
-          <el-table-column
-            slot="table_oper"
-            align="center"
-            fixed="right"
-            label="操作"
-            width="500"
-            :resizable="false"
+        <!-- 表格 -->
+        <div>
+          <el-row
+            class="searchbox1"
+            type="flex"
+            justify="space-between"
+            align="middle"
           >
-            <template slot-scope="scope">
-              <!-- <span @click="editZone(scope.row)" class="blue" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span> -->
-              <span @click="price(scope.row)" class="blue" v-if="scope.row.has_price > 0">查看价格<span style="margin:0px 5px 0px">|</span></span>
-              <span @click="plan(scope.row)" class="blue" v-if="scope.row.has_price > 0">价格记录<span style="margin:0px 5px 0px">|</span></span>
-              <span @click="fqjg(scope.row)" class="blue" v-if="scope.row.has_price === 0">分区价格<span style="margin:0px 5px 0px">|</span></span>
-              <span @click="priceEdit(scope.row)" class="blue" v-if="scope.row.has_price === 1">价格修改<span style="margin:0px 5px 0px">|</span></span>
-              <!-- <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span> -->
-              <span  v-if="activeName === '1'" @click="stopAgent(scope.row)" class="blue">停用<span style="margin:0px 5px 0px">|</span></span>
-              <span v-else-if="activeName === '2'" @click="stopAgent(scope.row)" class="blue">
-                  启用<span style="margin:0px 5px 0px">|</span>
-                </span>
-              <span @click="edit(scope.row)" class="blue">修改</span>
+            <el-col :span="24" class="right">
+              <el-button class="whiteBtn" @click="showChannelAdd">新增渠道</el-button>
+            </el-col>
+          </el-row>
+          <commonTable
+            :selection="false"
+            :columns="columns"
+            :data="tableData"
+            :pager="page"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+          >
+            <!-- slot -->
+            <template v-slot:chakan="slotData">
+              {{ slotData.data.info }}<span
+                style="color: #0084FF; cursor: pointer"
+                @click="check(slotData)"
+                >查看</span
+              >
             </template>
-          </el-table-column>
-        </commonTable>
+            <!-- 操作 -->
+            <el-table-column
+              slot="table_oper"
+              align="left"
+              fixed="right"
+              label="操作"
+              width="290"
+              :resizable="false"
+            >
+              <template slot-scope="scope">
+                <!-- <span @click="editZone(scope.row)" class="blue" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span> -->
+                <span @click="price(scope.row)" class="blue" v-if="scope.row.has_price > 0">查看价格</span>
+                <span @click="plan(scope.row)" class="blue" v-if="scope.row.has_price > 0"> | 价格记录</span>
+                <span @click="fqjg(scope.row)" class="blue" v-if="scope.row.has_price === 0">分区价格</span>
+                <span @click="priceEdit(scope.row)" class="blue" v-if="scope.row.has_price === 1"> | 价格修改</span>
+                <!-- <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span> -->
+                <span  v-if="scope.row.status === 1" @click="stopAgent(scope.row)" class="blue"> | 停用</span>
+                <span v-else-if="scope.row.has_price === 1" @click="stopAgent(scope.row)" class="blue"> | 启用</span>
+                <span @click="showChannelEdit(scope.row)" class="blue"> | 编辑</span>
+              </template>
+            </el-table-column>
+          </commonTable>
+        </div>
       </div>
-    </div>
+      </el-col>
+    </el-row>
      <el-dialog
       :visible.sync="dialogStop"
       width="30%"
@@ -94,11 +142,11 @@
         <div class="iconfont" style="font-size: 58px; color: #FB4702;margin-right: 20px">
           &#xe77d;
         </div>
-        <div v-if="dialogTitle === '停用服务'" class="left">
+        <div v-if="dialogTitle === '停用渠道'" class="left">
           <el-row>你是否确认停用</el-row>
           <el-row>代理'{{chooseAgent.name}}'</el-row>
         </div>
-        <div v-else-if="dialogTitle === '启用服务'" class="left">
+        <div v-else-if="dialogTitle === '启用渠道'" class="left">
           <el-row>你是否确认启用</el-row>
           <el-row>代理'{{chooseAgent.name}}'</el-row>
         </div>
@@ -112,6 +160,38 @@
         <el-button class="orangeBtn" @click="stopOK">确 定</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog :visible.sync="dialog.channel.visable" :title="dialog.channel.title">
+      <el-form ref="channelForm" :model="dialog.channel.formData" :rules="dialog.channel.rules" size="medium" label-width="100px">
+        <el-form-item label="代理" prop="agentId">
+          <el-select v-model="dialog.channel.formData.agentId" placeholder="请选择代理" :disabled='dialog.channel.formData.agentChannelId' clearable :style="{width: '100%'}">
+            <el-option v-for="(item, index) in agents" :key="index" :label="item.name"
+                       :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="渠道名称" prop="name">
+          <el-input v-model="dialog.channel.formData.name" placeholder="请输入渠道名称" clearable :style="{width: '100%'}">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="渠道分类" prop="cate">
+          <el-select v-model="dialog.channel.formData.cate" placeholder="请选择渠道分类" clearable :style="{width: '100%'}">
+            <el-option v-for="(item, index) in options.cate" :key="index" :label="item.label"
+                       :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="派件类型" prop="type">
+          <el-select v-model="dialog.channel.formData.type" placeholder="请选择派件类型" :disabled='dialog.channel.formData.agentChannelId' clearable :style="{width: '100%'}">
+            <el-option v-for="(item, index) in options.type" :key="index" :label="item.label"
+                       :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="dialog.channel.visable = false">取消</el-button>
+        <el-button type="primary" @click="channelSubmit">确定</el-button>
+      </div>
+    </el-dialog>
+
     <commonDrawer :drawerVrisible="drawerVrisible" :drawerSize="drawerSize" :drawerTitle="drawerTitle" @click="check(slotData)">
       <div class="dra-content">
         <!-- 内容区域 -->
@@ -149,7 +229,7 @@
         </div>
         <el-row style="marginTop:10px;textAlign:left">
           <!-- <el-col :span="6">代理:{{agentName}}</el-col>
-          <del-col :span="6">渠道服务:{{agentServiceName}}</del-col> -->
+          <del-col :span="6">渠道渠道:{{agentServiceName}}</del-col> -->
         </el-row>
         <div v-if="inhere&&control===1">
           <el-table :data="formData.zones" :header-cell-style="{background: '#F5F5F6'}">
@@ -510,7 +590,7 @@ export default {
     return {
       drawer: false,
       priceList: [],
-
+      agentId: 0,
       zoneType: null, // 派件类型 1快递 2卡派
       saveData: [],
       control: 1,
@@ -525,6 +605,27 @@ export default {
       agentName: '',
       agentServiceName: '',
       fenquData: [], // 分区
+      search: {
+        status: 0
+      },
+      options: {
+        status: [
+          { value: 0, label: '全部' },
+          { value: 1, label: '正常' },
+          { value: 2, label: '停用' }
+        ],
+        cate: [
+          { value: 1, label: '海运' },
+          { value: 2, label: '空运' },
+          { value: 3, label: '快递' },
+          { value: 4, label: '铁路' },
+          { value: 5, label: '专车' }
+        ],
+        type: [
+          { value: 1, label: '快递' },
+          { value: 2, label: '卡派' }
+        ]
+      },
       priceTypeOptions: [
         // 计价方式
         {
@@ -568,6 +669,25 @@ export default {
       id: null,
       scopeType: true,
       zonename: '',
+      dialog: {
+        channel: {
+          visable: false,
+          title: '',
+          formData: {
+            agentChannelId: undefined,
+            agentId: undefined,
+            name: undefined,
+            cate: undefined,
+            type: undefined
+          },
+          rules: {
+            agentId: [{ required: true, message: '请选择代理', trigger: 'change' }],
+            name: [{ required: true, message: '请输入渠道名称', trigger: 'change' }],
+            cate: [{ required: true, message: '渠道分类', trigger: 'change' }],
+            type: [{ required: true, message: '派件类型', trigger: 'change' }]
+          }
+        }
+      },
       dialogStop: false,
       dialogTitle: '停用代理',
       activeName: '1', // 标签绑定
@@ -575,28 +695,14 @@ export default {
       fenquzhongliang: true,
       chooseAgent: [], // 选择停用的 代理
       chooseArr: [], // 选中的代理
+      agents: [],
       columns: [
-        {
-          prop: 'name',
-          label: '代理服务名称',
-          width: '400',
-          align: 'center'
-        },
-        // 定义表格列的类型为slot，slot插槽名字为 slotbtn
-        {
-          prop: 'cate',
-          label: '代理分类',
-          width: '300',
-          align: 'center',
-          formatter: this.formatter
-        },
-        {
-          prop: 'type',
-          label: '派送类型',
-          width: '300',
-          align: 'center',
-          formatter: this.formatters
-        }
+        { prop: 'agent_code', label: '代理编码', width: '100', align: 'center' },
+        { prop: 'status', label: '渠道状态', width: '100', align: 'center', formatter: this.formatter },
+        { prop: 'name', label: '渠道名称', width: '300', align: 'center' },
+        { prop: 'agent_name', label: '代理名称', width: '300', align: 'center' },
+        { prop: 'cate', label: '代理分类', width: '100', align: 'center', formatter: this.formatter },
+        { prop: 'type', label: '派送类型', width: '100', align: 'center', formatter: this.formatters }
       ],
       tableData: [],
       page: {
@@ -655,40 +761,96 @@ export default {
     }
   },
   created () {
-    // 获取代理id
-    this.id = Number(sessionStorage.getItem('agentId'))
     this.getData()
     // 国家
     this.selectFba()
+    this.getAgents()
   },
   methods: {
+    getAgents () {
+      this.$api.agent.select().then(res => {
+        this.agents = res.data
+      })
+    },
     getData () {
-      this.tableData = []
       let params = {
-        agentId: this.id,
+        agentId: this.agentId,
         name: this.serviceName,
-        status: Number(this.activeName),
+        status: this.search.status,
         page: this.page.pageNo,
         limit: this.page.limit
       }
       this.$api.agent.agentServiceLists(params).then(res => {
-        res.data.list && res.data.list.forEach(e => {
-          let obj = {
-            id: e.id,
-            name: e.name,
-            cate: e.cate,
-            type: e.type,
-            has_price: e.has_price,
-            material_cates: e.material_cates
-          }
-          this.tableData.push(obj)
-        })
+        this.tableData = res.data.list
+        this.page.total = res.data.total
       })
     },
     price (data) {
       this.$api.agent.agentServicePrice(data.id).then(res => {
         this.priceDetail(res)
       })
+    },
+    showChannelAdd () {
+      this.dialog.channel.formData = {
+        agentChannelId: undefined,
+        agentId: undefined,
+        name: undefined,
+        cate: undefined,
+        type: undefined
+      }
+      if (this.agentId > 0) {
+        this.dialog.channel.formData.agentId = this.agentId
+      }
+      this.dialog.channel.title = '添加代理渠道'
+      this.dialog.channel.visable = true
+    },
+    showChannelEdit (row) {
+      this.dialog.channel.formData = {
+        agentChannelId: row.id,
+        agentId: row.agent_id,
+        name: row.name,
+        cate: row.cate,
+        type: row.type
+      }
+      this.dialog.channel.title = '编辑代理渠道'
+      this.dialog.channel.visable = true
+    },
+    channelSubmit () {
+      this.$refs.channelForm.validate(valid => {
+        if (!valid) {
+          return false
+        }
+      })
+      if (!this.dialog.channel.formData.agentChannelId) {
+        this.$api.agent.agentServiceAdd({
+          agentId: this.dialog.channel.formData.agentId,
+          name: this.dialog.channel.formData.name,
+          cate: this.dialog.channel.formData.cate,
+          type: this.dialog.channel.formData.type
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialog.channel.visable = false
+          } else {
+            this.$message.success(res.msg)
+          }
+        })
+      } else {
+        this.$api.agent.agentServiceEdit({
+          agentServiceId: this.dialog.channel.formData.agentChannelId,
+          name: this.dialog.channel.formData.name,
+          cate: this.dialog.channel.formData.cate,
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialog.channel.visable = false
+          } else {
+            this.$message.success(res.msg)
+          }
+        })
+      }
     },
     getDrawerPriceData (data, zoneId, weightId, type) {
       for (let i in data) {
@@ -893,10 +1055,10 @@ export default {
       this.dialogStop = true
       this.chooseAgent = val
       if (this.activeName === '1') {
-        this.dialogTitle = '停用服务'
+        this.dialogTitle = '停用渠道'
         console.log(this.chooseAgent)
       } else if (this.activeName === '2') {
-        this.dialogTitle = '启用服务'
+        this.dialogTitle = '启用渠道'
       }
     },
     // 区域类型切换
@@ -1137,19 +1299,25 @@ export default {
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
-      switch (row.cate) {
-        case 1:
-          return '海运'
-        case 2:
-          return '空运'
-        case 3:
-          return '快递'
-        case 4:
-          return '铁路'
-        case 5:
-          return '专车'
-        default:
+      switch (column.property) {
+        case 'cate':
+          switch (row.cate) {
+            case 1:
+              return '海运'
+            case 2:
+              return '空运'
+            case 3:
+              return '快递'
+            case 4:
+              return '铁路'
+            case 5:
+              return '专车'
+            default:
+              break
+          }
           break
+        case 'status':
+          return row.status === 1 ? '正常' : '停用'
       }
     },
     // 重新渲染name列
@@ -1178,6 +1346,7 @@ export default {
     },
     reset () {
       this.serviceName = ''
+      this.search.status = 0
       this.getData()
     },
     formatters (row, column, cellValue) {
@@ -1215,10 +1384,6 @@ export default {
     // 翻页处理
     handleCurrentChange (val) {
       this.getData()
-    },
-    // checkbox选中获取数据
-    handleSelectionChange (val) {
-      console.log(val)
     },
     deleteRowe (index, rows) {
       rows.splice(index, 1)
@@ -1260,9 +1425,6 @@ export default {
     },
     handleClose () {
       this.dialogStop = false
-    },
-    search () {
-      this.getData()
     },
     handleClick (val) {
       // this.activeName = val
@@ -1398,6 +1560,11 @@ export default {
       this.tempData.changePrice = true
       this.tempData.weights = [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: 1 }]
     },
+    changeAgent (id, index) {
+      this.red = index
+      this.agentId = id
+      this.getData()
+    },
     submit () {
       this.formData.unitPrices = []
       if (this.tempData.unitPrices.length > 0) {
@@ -1437,6 +1604,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
+.active{
+  border:3px solid #FB4702
+}
 .dra-content{
   padding-top:10px ;
   padding-left:10px ;
