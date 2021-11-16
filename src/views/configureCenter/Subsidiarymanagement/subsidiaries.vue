@@ -5,84 +5,62 @@
       <span class="text" v-else>修改子公司</span>
     </el-row>
     <div class="box">
-      <!--  标签页 -->
-      <el-descriptions class="margin-top" :column="2" direction="vertical">
-        <el-descriptions-item label="运单起始号码">
-          <el-input
-            style="width: 265px"
-            v-model="startNo"
-            placeholder="请输入"
-          ></el-input>
-        </el-descriptions-item>
-        <el-descriptions-item label="公司名称">
-          <el-input
-            style="width: 265px"
-            v-model="name"
-            placeholder="请输入"
-          ></el-input>
-        </el-descriptions-item>
-      </el-descriptions>
-      <el-descriptions class="margin-top" :column="1" direction="vertical">
-        <el-descriptions-item label="公司地址" :span="2">
-          <!-- 级联选择器 三级联动 -->
-          <el-cascader
-          filterable
-          v-model="countyId"
-          :options="provinceOptions"
-          @change="handleChange"></el-cascader>
-        </el-descriptions-item>
-        <el-descriptions-item label="详细地址">
-          <el-input
-            style="width: 517px"
-            type="textarea"
-            :rows="2"
-            placeholder="请输入"
-            v-model="address"
-          ></el-input>
-        </el-descriptions-item>
-      </el-descriptions>
+      <el-row :gutter="15">
+        <el-form ref="elForm" :model="formData" :rules="rules" size="small" label-width="93px" label-position="top">
+          <el-col :span="12">
+            <el-form-item label="运单起始号码" prop="startNo">
+              <el-input v-model="formData.startNo" placeholder="请输入运单起始号码" clearable :style="{width: '100%'}">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="公司名称" prop="name">
+              <el-input v-model="formData.name" placeholder="请输入公司名称" clearable :style="{width: '100%'}"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="公司地址" prop="countyId">
+              <el-cascader v-model="formData.countyId" :options="provinceOptions"
+                :style="{width: '100%'}" placeholder="请选择公司地址" clearable filterable></el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="详情地址" prop="address">
+              <el-input v-model="formData.address" type="textarea" placeholder="请输入详情地址"
+                :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
       <div class="top" v-show="this.editId===undefined">
-        <el-descriptions class="margin-top" :column="2" direction="vertical">
-          <el-descriptions-item label="管理员名称">
-            <el-input
-              style="width: 265px"
-              v-model="admin.name"
-              placeholder=""
-            ></el-input>
-          </el-descriptions-item>
-          <el-descriptions-item label="管理员手机">
-            <el-input
-              style="width: 265px"
-              v-model="admin.phone"
-              placeholder=""
-            ></el-input>
-          </el-descriptions-item>
-        </el-descriptions>
-        <el-descriptions class="margin-top" :column="4" direction="vertical">
-          <el-descriptions-item label="登陆账号">
-            <el-input
-              style="width: 265px"
-              v-model="admin.username"
-              placeholder=""
-            ></el-input>
-          </el-descriptions-item>
-          <el-descriptions-item label="登陆密码">
-            <el-input
-              style="width: 265px"
-              placeholder=""
-              v-model="admin.password"
-              show-password
-            ></el-input>
-          </el-descriptions-item>
-          <!-- <el-descriptions-item label="确认密码">
-            <el-input
-              style="width: 265px"
-              placeholder=""
-              v-model="admin.confirmPassword"
-              show-password
-            ></el-input>
-          </el-descriptions-item> -->
-        </el-descriptions>
+        <el-row :gutter="15">
+          <el-form ref="adminForm" :model="admin" :rules="adminrules" size="small" label-width="93px" label-position="top">
+            <el-col :span="12">
+              <el-form-item label="管理员姓名" prop="name">
+                <el-input v-model="admin.name" placeholder="请输入管理员姓名" clearable :style="{width: '100%'}">
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="管理员手机号" prop="phone">
+                <el-input v-model="admin.phone" placeholder="请输入管理员手机号" clearable :style="{width: '100%'}">
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="登录账号" prop="username">
+                <el-input v-model="admin.username" placeholder="请输入登录账号" clearable :style="{width: '100%'}">
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="12">
+              <el-form-item label="登录密码" prop="password">
+                <el-input v-model="admin.password" placeholder="请输入登录密码" type="password" clearable :style="{width: '100%'}">
+                </el-input>
+              </el-form-item>
+            </el-col>
+          </el-form>
+        </el-row>
       </div>
       <el-form>
           <el-form-item size="large">
@@ -103,16 +81,63 @@ export default {
     return {
       editId: null,
       provinceOptions: [],
-      name: '',
-      startNo: '',
-      countyId: null,
-      address: null,
+      formData: {
+        name: '',
+        startNo: '',
+        countyId: null,
+        address: null
+      },
       admin: {
         name: null,
         phone: null,
         username: null,
         password: null,
         confirmPassword: null
+      },
+      rules: {
+        startNo: [{
+          required: true,
+          message: '请输入运单起始号码',
+          trigger: 'blur'
+        }],
+        name: [{
+          required: true,
+          message: '请输入公司名称',
+          trigger: 'blur'
+        }],
+        countyId: [{
+          required: true,
+          type: 'array',
+          message: '请至少选择一个公司地址',
+          trigger: 'change'
+        }],
+        address: [{
+          required: true,
+          message: '请输入详情地址',
+          trigger: 'blur'
+        }]
+      },
+      adminrules: {
+        name: [{
+          required: true,
+          message: '请输入姓名',
+          trigger: 'blur'
+        }],
+        phone: [{
+          required: true,
+          message: '请输入手机号',
+          trigger: 'blur'
+        }],
+        username: [{
+          required: true,
+          message: '请输入登录账号',
+          trigger: 'blur'
+        }],
+        password: [{
+          required: true,
+          message: '请输入密码',
+          trigger: 'blur'
+        }]
       }
     }
   },
@@ -125,10 +150,10 @@ export default {
       companyId: this.editId
     }).then(res => {
       console.log(res)
-      this.name = res.data.name
-      this.startNo = res.data.start_no
-      this.address = res.data.address
-      this.countyId = [res.data.province_id, res.data.city_id, res.data.county_id]
+      this.formData.name = res.data.name
+      this.formData.startNo = res.data.start_no
+      this.formData.address = res.data.address
+      this.formData.countyId = [res.data.province_id, res.data.city_id, res.data.county_id]
       console.log(this.countyId)
     })
     // 省市区三级联动
@@ -168,36 +193,42 @@ export default {
   methods: {
     submit () {
       if (this.editId === undefined) {
-        // 给请求参数赋值
-        let resData = {
-          name: this.name,
-          startNo: this.startNo,
-          countyId: this.countyId[2],
-          address: this.address,
-          admin: {
-            name: this.admin.name,
-            phone: this.admin.phone,
-            username: this.admin.username,
-            password: this.admin.password,
-            confirmPassword: this.admin.confirmPassword
-          }
-        }
-        // 把请求参数传输至后端，并且获取接口返回的结果res
-        this.$api.configure.companyAdd(resData).then(res => {
-          if (res.code === 0) {
-            this.$message.success(res.msg) // 成功提示
-            this.$router.push({ name: 'Subsidiarymanagement' }) // 添加成功后返回子公司列表
-          } else {
-            this.$message.error(res.msg) // 错误提示
-          }
+        this.$refs.elForm.validate(valid => {
+          if (!valid) return
+          this.$refs.adminForm.validate(valid => {
+            if (!valid) return
+            // 给请求参数赋值
+            let resData = {
+              name: this.formData.name,
+              startNo: this.formData.startNo,
+              countyId: this.formData.countyId[2],
+              address: this.formData.address,
+              admin: {
+                name: this.admin.name,
+                phone: this.admin.phone,
+                username: this.admin.username,
+                password: this.admin.password,
+                confirmPassword: this.admin.confirmPassword
+              }
+            }
+            // 把请求参数传输至后端，并且获取接口返回的结果res
+            this.$api.configure.companyAdd(resData).then(res => {
+              if (res.code === 0) {
+                this.$message.success(res.msg) // 成功提示
+                this.$router.push({ name: 'Subsidiarymanagement' }) // 添加成功后返回子公司列表
+              } else {
+                this.$message.error(res.msg) // 错误提示
+              }
+            })
+          })
         })
       } else {
         let resData = {
           companyId: this.editId,
-          name: this.name,
-          startNo: this.startNo,
-          countyId: this.countyId[2],
-          address: this.address
+          name: this.formData.name,
+          startNo: this.formData.startNo,
+          countyId: this.formData.countyId[2],
+          address: this.formData.address
         }
         // 把请求参数传输至后端，并且获取接口返回的结果res
         this.$api.configure.companyEdit(resData).then(res => {
@@ -255,6 +286,7 @@ export default {
 .box {
   margin: 25px;
   background: #ffffff;
+  width: 50%;
 }
 #boxx {
   background: #ffffff;

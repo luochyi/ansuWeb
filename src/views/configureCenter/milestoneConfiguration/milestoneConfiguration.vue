@@ -76,7 +76,7 @@
                 <template slot-scope="scope">
                   <el-button
                     type="text"
-                    @click="modify = true"
+                    @click="edit(scope.row)"
                     :disabled="scope.row.type === 1"
                   >
                     修改</el-button
@@ -94,9 +94,9 @@
             </commonTable>
           </div>
           <!-- 新建状态 -->
-          <el-dialog title="新建状态" :visible.sync="show" width="30%">
-            <div class="input">
-              <span
+          <el-dialog :title="diaTitle" :visible.sync="show" width="30%">
+            <div>
+              <!-- <span
                 >名称&nbsp;<el-input
                   v-model="statusname"
                   style="width: 190px"
@@ -106,8 +106,14 @@
               <br />
               <br />
               <span
-                >状态&nbsp;<el-select
-                  v-model="status"
+                >状态&nbsp;</span> -->
+              <el-form ref="elForm" :model="form" :rules="rules" size="small" label-width="93px" label-position="top">
+                <el-form-item label="名称" prop="statusname">
+                  <el-input v-model="form.statusname" placeholder="请输入状态名称" clearable :style="{width: '100%'}"></el-input>
+                </el-form-item>
+                <el-form-item label="状态" prop="status">
+                 <el-select
+                  v-model="form.status"
                   size="small"
                   placeholder="请选择状态"
                 >
@@ -117,10 +123,12 @@
                     :label="item.label"
                     :value="item.value"
                   ></el-option> </el-select
-              ></span>
+              >
+                </el-form-item>
+              </el-form>
             </div>
             <span slot="footer" class="status-footer">
-              <el-button @click="show = false" class="wuBtn">取 消</el-button>
+              <el-button @click="close" class="wuBtn">取 消</el-button>
               <el-button type="primary" class="orangeBtn" @click="addSubmit"
                 >确 定</el-button
               >
@@ -189,6 +197,7 @@
 export default {
   data () {
     return {
+      diaTitle: '新增状态',
       selection: false,
       input: '',
       isRed: 0,
@@ -205,21 +214,38 @@ export default {
       ],
       a: 1,
       b: 9,
+      editId: null,
       show: false,
       statusname: '',
+      form: {
+        statusname: '',
+        status: 1
+      },
       name: '',
-      status: '1',
+      status: '',
+      rules: {
+        statusname: [{
+          required: true,
+          message: '请输入名称',
+          trigger: 'blur'
+        }],
+        status: [{
+          required: true,
+          message: '请选择',
+          trigger: 'blur'
+        }]
+      },
       statusOptions: [
         {
-          value: '1',
+          value: 1,
           label: '港前'
         },
         {
-          value: '2',
+          value: 2,
           label: '港后'
         },
         {
-          value: '3',
+          value: 3,
           label: '派件'
         }
       ],
@@ -343,20 +369,54 @@ export default {
       this.getData()
     },
     addSubmit () {
-      let params = {
-        name: this.statusname,
-        status: Number(this.status),
-        cate: this.isRed + 1
-      }
-      this.$api.configure.milestone.add(params).then((res) => {
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.show = false
-          this.getData()
-        } else {
-          this.$message.error(res.msg)
+      if (this.diaTitle === '新增状态') {
+        let params = {
+          name: this.form.statusname,
+          status: Number(this.form.status),
+          cate: this.isRed + 1
         }
-      })
+        this.$refs.elForm.validate(valid => {
+          if (!valid) return
+          this.$api.configure.milestone.add(params).then((res) => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.close()
+              this.getData()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        })
+      } else {
+        this.$api.configure.milestone.edit({
+          milestoneId: this.editId,
+          status: this.form.status,
+          name: this.form.statusname
+        }).then((res) => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.close()
+            this.getData()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+    },
+    edit (row) {
+      this.show = true
+      console.log(row)
+      this.diaTitle = '修改状态'
+      this.form.status = row.status
+      this.form.statusname = row.name
+      this.editId = row.id
+    },
+    close () {
+      this.show = false
+      this.form = {
+        statusname: '',
+        status: 1
+      }
     },
     // 操作按钮列表
     editTableData (row) {}

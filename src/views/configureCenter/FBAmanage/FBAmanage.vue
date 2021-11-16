@@ -105,15 +105,22 @@
         width="30%"
         :before-close="handleClose">
         <div>
-          <el-row>
-            仓库名<el-input v-model="form.name"></el-input>
-            邮编<el-input v-model="form.zipCode"></el-input>
-            地址<el-input v-model="form.address" type="textarea"></el-input>
-          </el-row>
+          <el-form ref="elForm" :model="form" :rules="rules" size="small" label-width="93px" label-position="top">
+            <el-form-item label="仓库名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入仓库名" clearable :style="{width: '100%'}"></el-input>
+            </el-form-item>
+            <el-form-item label="邮编" prop="zipCode">
+              <el-input v-model="form.zipCode" placeholder="请输入邮编" clearable :style="{width: '100%'}"></el-input>
+            </el-form-item>
+            <el-form-item label="地址" prop="address">
+              <el-input v-model="form.address" type="textarea" placeholder="请输入地址"
+                :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
+            </el-form-item>
+          </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addSubmit">确 定</el-button>
+          <el-button class="whiteBtn" @click="dialogVisible = false">取 消</el-button>
+          <el-button class="orangeBtn" @click="addSubmit">确 定</el-button>
         </span>
       </el-dialog>
 
@@ -172,6 +179,23 @@ export default {
         name: '',
         zipCode: '',
         address: ''
+      },
+      rules: {
+        name: [{
+          required: true,
+          message: '请输入仓库名',
+          trigger: 'blur'
+        }],
+        zipCode: [{
+          required: true,
+          message: '请输入邮编',
+          trigger: 'blur'
+        }],
+        address: [{
+          required: true,
+          message: '请输入地址',
+          trigger: 'blur'
+        }]
       },
       keyword: '',
       visible: false,
@@ -267,19 +291,22 @@ export default {
         return
       }
       if (this.diatitle === '新增FBA仓') {
-        this.$api.configure.FBA.add({
-          name: this.form.name,
-          address: this.form.address,
-          zipCode: this.form.zipCode,
-          countryId: this.countryId
-        }).then(res => {
-          if (res.code === 0) {
-            this.$message.success(res.msg)
-            this.getData()
-            this.handleClose()
-          } else {
-            this.$message.error(res.msg)
-          }
+        this.$refs.elForm.validate(valid => {
+          if (!valid) return
+          this.$api.configure.FBA.add({
+            name: this.form.name,
+            address: this.form.address,
+            zipCode: this.form.zipCode,
+            countryId: this.countryId
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+              this.handleClose()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
         })
       } else if (this.diatitle === '修改FBA仓') {
         this.$api.configure.FBA.edit({

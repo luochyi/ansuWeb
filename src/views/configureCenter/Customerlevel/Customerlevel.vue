@@ -41,6 +41,7 @@
     <el-dialog :title="digTitle" :visible.sync="diaShow" :before-close="addClose" width="30%">
       <div class="input">
         <el-row>
+          <span style="color:red">*</span>
           <span>客户名称&nbsp;<el-input
                             v-model="name"
                             style="width: 190px"
@@ -49,6 +50,7 @@
                         ></span>
         </el-row>
         <el-row style="marginTop:20px">
+          <span style="color:red">*</span>
           <span>提醒天数&nbsp;<el-input
                             v-model="warn_day"
                             style="width: 190px"
@@ -137,7 +139,7 @@ export default {
             this.addClose() // 关闭新增框
           } else {
             this.$message.error(res.msg)
-            this.addClose()
+            // this.addClose()
           }
         })
       } else if (this.digTitle === '修改客户等级') {
@@ -153,7 +155,7 @@ export default {
             this.addClose()
           } else {
             this.$message.error(res.msg)
-            this.addClose()
+            // this.addClose()
           }
         })
       }

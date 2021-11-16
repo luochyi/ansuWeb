@@ -41,6 +41,7 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
+      <span style="color:red">*</span>
       材质名称：
       <el-input v-model="currencyName"></el-input>
       <span slot="footer" class="dialog-footer">

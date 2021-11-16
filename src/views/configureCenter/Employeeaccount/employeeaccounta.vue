@@ -6,42 +6,52 @@
     </el-row>
   <div class="box">
     <!--  标签页 -->
-   <el-descriptions class="margin-top" :column="4" direction="vertical">
-   <el-descriptions-item label="员工姓名">
-       <el-input style="width: 200px" v-model="formData.name" placeholder="请输入"></el-input>
-   </el-descriptions-item>
-   <el-descriptions-item label="员工手机">
-        <el-input style="width: 200px" v-model="formData.phone" placeholder="请输入"></el-input>
-        </el-descriptions-item>
-         </el-descriptions>
-        <el-descriptions class="margin" :column="4" direction="vertical">
-   <el-descriptions-item label="部门" >
-     <el-cascader
-         :options="departments"
-         v-model="formData.departmentId"
-         :show-all-levels="false"
-         :props="{  checkStrictly: true, expandTrigger: 'hover', label: 'name', value: 'id' }"
-         clearable filterable
-     ></el-cascader>
-   </el-descriptions-item>
-   <el-descriptions-item label="职位" >
-     <el-cascader
-         :options="positions"
-         v-model="formData.positionId"
-         :show-all-levels="false"
-         :props="{  checkStrictly: true, expandTrigger: 'hover', label: 'name', value: 'id' }"
-         clearable filterable
-     ></el-cascader>
-   </el-descriptions-item>
-   </el-descriptions>
-         <el-descriptions class="margin-top" :column="4" direction="vertical">
-   <el-descriptions-item label="登陆账号" >
-       <el-input style="width: 200px" v-model="formData.username" placeholder="请输入"></el-input>
-   </el-descriptions-item>
-   <el-descriptions-item label="登陆密码">
-       <el-input style="width: 200px" placeholder="请输入" v-model="formData.password" show-password></el-input>
-   </el-descriptions-item>
-   </el-descriptions>
+   <el-row :gutter="15">
+  <el-form ref="elForm" :model="formData" :rules="rules" size="small" label-width="93px" label-position="top">
+    <el-col :span="12">
+      <el-form-item label="员工姓名" prop="name">
+        <el-input v-model="formData.name" placeholder="请输入员工姓名" clearable :style="{width: '100%'}"></el-input>
+      </el-form-item>
+    </el-col>
+    <el-col :span="12">
+      <el-form-item label="员工手机" prop="phone">
+        <el-input v-model="formData.phone" placeholder="请输入员工手机" clearable :style="{width: '100%'}">
+        </el-input>
+      </el-form-item>
+    </el-col>
+    <el-col :span="12">
+      <el-form-item label="部门" prop="departmentId">
+        <el-select v-model="formData.departmentId" placeholder="请选择部门" clearable :style="{width: '100%'}">
+          <el-option v-for="(item, index) in departments" :key="index" :label="item.name"
+            :value="item.id" :disabled="item.disabled"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-col>
+    <el-col :span="12">
+      <el-form-item label="职位" prop="positionId">
+        <el-select v-model="formData.positionId" placeholder="请选择职位" clearable :style="{width: '100%'}">
+          <el-option v-for="(item, index) in positions" :key="index" :label="item.name"
+            :value="item.id" :disabled="item.disabled"></el-option>
+        </el-select>
+      </el-form-item>
+    </el-col>
+    <el-col :span="12">
+      <el-form-item label="登录账号" prop="username">
+        <el-input v-model="formData.username" placeholder="请输入登录账号" clearable :style="{width: '100%'}">
+        </el-input>
+      </el-form-item>
+    </el-col>
+    <el-col :span="12">
+      <el-form-item label="登录密码" prop="password">
+        <el-input v-model="formData.password" placeholder="请输入登录密码" clearable :style="{width: '100%'}">
+        </el-input>
+      </el-form-item>
+    </el-col>
+    <el-col :span="24">
+    </el-col>
+  </el-form>
+</el-row>
+
    <el-form >
     <el-form-item size="large">
     <el-button type="primary" @click="add" class="orangeBtn long2">确定</el-button>
@@ -50,7 +60,7 @@
    </el-form>
   </div>
   <!-- 生成随机密码 -->
-   <el-dialog title="生成随机密码" :visible.sync="password" width="30%">
+   <!-- <el-dialog title="生成随机密码" :visible.sync="password" width="30%">
                <div class="input" >
                <br><span>随机密码：LDKDLJ3432</span><br>
                </div>
@@ -58,7 +68,7 @@
                 <el-button  @click="password = false" class='orangeBtn'>复制密码</el-button>
                  <el-button @click="password = false" class='wuBtn'>返回</el-button>
                </span>
-            </el-dialog>
+            </el-dialog> -->
 </div>
 </template>
 
@@ -77,6 +87,38 @@ export default {
         confirmPassword: '',
         departmentId: [],
         positionId: []
+      },
+      rules: {
+        name: [{
+          required: true,
+          message: '请输入员工姓名',
+          trigger: 'blur'
+        }],
+        phone: [{
+          required: true,
+          message: '请输入员工手机',
+          trigger: 'blur'
+        }],
+        departmentId: [{
+          required: true,
+          message: '请选择部门',
+          trigger: 'blur'
+        }],
+        positionId: [{
+          required: true,
+          message: '请选择职位',
+          trigger: 'blur'
+        }],
+        username: [{
+          required: true,
+          message: '请输入登录账号',
+          trigger: 'blur'
+        }],
+        password: [{
+          required: true,
+          message: '请输入登录密码',
+          trigger: 'blur'
+        }]
       },
       departments: [], // 部门信息
       positions: [] // 职位信息
@@ -99,29 +141,24 @@ export default {
     },
     back () { this.$router.push({ name: 'Employeeaccount' }) },
     add () {
-      if (!this.formData.departmentId) {
-        this.$message.error('请选择部门') // 错误提示
-        return
-      }
-      if (!this.formData.positionId) {
-        this.$message.error('请选择职位') // 错误提示
-        return
-      }
-      this.$api.configure.personnel.add({
-        name: this.formData.name,
-        phone: this.formData.phone,
-        username: this.formData.username,
-        password: this.formData.password,
-        confirmPassword: this.formData.confirmPassword,
-        departmentId: Number(this.formData.departmentId.slice(-1)),
-        positionId: Number(this.formData.positionId.slice(-1))
-      }).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg) // 成功提示
-          this.$router.push({ name: 'Employeeaccount' }) // 添加成功后返回
-        } else {
-          this.$message.error(res.msg) // 错误提示
-        }
+      this.$refs.elForm.validate(valid => {
+        if (!valid) return
+        this.$api.configure.personnel.add({
+          name: this.formData.name,
+          phone: this.formData.phone,
+          username: this.formData.username,
+          password: this.formData.password,
+          confirmPassword: this.formData.confirmPassword,
+          departmentId: Number(this.formData.departmentId.slice(-1)),
+          positionId: Number(this.formData.positionId.slice(-1))
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.$router.push({ name: 'Employeeaccount' }) // 添加成功后返回
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
       })
     }
   }
@@ -136,6 +173,7 @@ export default {
     margin: 17px;
 }
 .box{
+  width: 50%;
   height: 400px;
   margin: 25px;
 background: #FFFFFF;

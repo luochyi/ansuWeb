@@ -41,8 +41,10 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
+      <span style="color:red">*</span>
       币种名称：
       <el-input v-model="formData.name"></el-input>
+      <span style="color:red">*</span>
       汇率：
       <el-input v-model="formData.exchangeRate" type="Number"></el-input>
       <span slot="footer" class="dialog-footer">
@@ -79,7 +81,7 @@ export default {
       },
       formData: {
         name: null,
-        exchangeRate: null
+        exchangeRate: 0
       }
 
     }

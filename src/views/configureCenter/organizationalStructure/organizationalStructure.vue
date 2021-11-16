@@ -111,6 +111,7 @@
     <!-- 新增部门 -->
     <el-dialog :title="dialog.department.title" :visible.sync="dialog.department.visabled" :before-close="departmentClose" width="30%">
       <div class="input">
+        <span style="color:red">*</span>
         <span
           >部门名称<el-input
             v-model="dialog.department.formData.name"
@@ -120,6 +121,7 @@
         ></span>
         <br />
         <br />
+        <span style="color:red">*</span>
         <span
           >上级部门
           <el-cascader
@@ -142,6 +144,7 @@
     <!-- 新增角色 -->
     <el-dialog :title="roleTitle" :visible.sync="toAdd" width="30%">
       <div class="input">
+        <span style="color:red">*</span>
         <span>角色名称
           <el-input
             v-model="formRole.name"
@@ -151,6 +154,7 @@
         </span>
         <br />
         <br />
+        <span style="color:red">*</span>
         <span>上级角色
           <el-cascader
             filterable

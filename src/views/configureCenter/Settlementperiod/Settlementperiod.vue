@@ -13,34 +13,35 @@
         </el-col>
       </el-row>
       <!-- 表格 -->
-<commonTable
-      :columns="columns"
-      :data="tableData"
-      :selection='selection'
-      :pager="page"
-      @handleSizeChange="handleSizeChange"
-      @handleCurrentChange="handleCurrentChange"
-      @handleSelectionChange="handleSelectionChange"
-      >
-      <el-table-column
-        slot="table_oper"
-        align="center"
-        fixed="right"
-        label="操作"
-        width="126"
-        :resizable="false"
+      <commonTable
+        :columns="columns"
+        :data="tableData"
+        :selection='selection'
+        :pager="page"
+        @handleSizeChange="handleSizeChange"
+        @handleCurrentChange="handleCurrentChange"
+        @handleSelectionChange="handleSelectionChange"
         >
-        <template slot-scope="scope">
-          <el-button type="text" @click="toDetail(scope.row)"> 修改</el-button>
-          <span style="color: #0084FF; margin: 0px 5px">|</span>
-            <el-button type="text" @click="delet(scope.row.id)"> 删除</el-button>
-        </template>
-      </el-table-column>
+        <el-table-column
+          slot="table_oper"
+          align="center"
+          fixed="right"
+          label="操作"
+          width="126"
+          :resizable="false"
+          >
+          <template slot-scope="scope">
+            <el-button type="text" @click="toDetail(scope.row)"> 修改</el-button>
+            <span style="color: #0084FF; margin: 0px 5px">|</span>
+              <el-button type="text" @click="delet(scope.row.id)"> 删除</el-button>
+          </template>
+        </el-table-column>
       </commonTable>
     </div>
     <el-dialog :title="digTitle" :visible.sync="diaShow" :before-close="addClose" width="30%">
       <div class="input">
         <el-row>
+          <span style="color:red">*</span>
           <span>账期名称&nbsp;<el-input
                             v-model="name"
                             style="width: 190px"
@@ -49,6 +50,7 @@
                         ></span>
         </el-row>
         <el-row style="marginTop:20px">
+          <span style="color:red">*</span>
           <span>账&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;期&nbsp;<el-input
                             v-model="period_Day"
                             style="width: 190px"
@@ -151,7 +153,6 @@ export default {
             this.addClose()
           } else {
             this.$message.error(res.msg)
-            this.addClose()
           }
         })
       } else if (this.digTitle === '修改账期') {
@@ -167,7 +168,6 @@ export default {
             this.addClose()
           } else {
             this.$message.error(res.msg)
-            this.addClose()
           }
         })
       }
