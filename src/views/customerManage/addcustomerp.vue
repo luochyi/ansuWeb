@@ -2,38 +2,42 @@
 <div id="boxx">
 <div id="box">
   <div class="add">
-       <el-descriptions class="margin-top" :column="1" direction="vertical">
-         <el-descriptions-item label="客户名称" :span="2">
-           <el-input v-model="name" placeholder="请输入客户名称"></el-input>
-         </el-descriptions-item>
-         <el-descriptions-item label="客户联系人" :span="2">
-           <el-input v-model="liaison" placeholder="请输入客户名称"></el-input>
-         </el-descriptions-item>
-         <el-descriptions-item label="客户联系电话" :span="2">
-           <el-input v-model="phone" placeholder="请输入客户名称"></el-input>
-         </el-descriptions-item>
-        <el-descriptions-item label="客户地址" :span="2">
-          <!-- 级联选择器 三级联动 -->
-          <el-cascader
-           :span="12"
-          v-model="countyId"
-          :options="provinceOptions"
-          placeholder="客户地址"
-          @change="handleChange"></el-cascader>
-        </el-descriptions-item>
-        <el-descriptions-item label="详细地址">
-          <el-input
-            style="width: 517px"
-            type="textarea"
-            :rows="2"
-            :column="8"
-            placeholder="请输入"
-            v-model="address"
-          ></el-input>
-        </el-descriptions-item>
-      </el-descriptions>
+      <el-row :gutter="15">
+        <el-form ref="elForm" :model="formData" :rules="rules" size="small" label-width="100px"
+          label-position="top">
+          <el-col :span="24">
+            <el-form-item label="客户名称" prop="name">
+              <el-input v-model="formData.name" placeholder="请输入客户名称" clearable :style="{width: '100%'}"></el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="客户联系人" prop="liaison">
+              <el-input v-model="formData.liaison" placeholder="请输入客户联系人" clearable :style="{width: '100%'}">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="客户联系电话" prop="phone">
+              <el-input v-model="formData.phone" placeholder="请输入客户联系电话" clearable :style="{width: '100%'}">
+              </el-input>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="客户地址" prop="countyId">
+              <el-cascader v-model="formData.countyId" :options="provinceOptions" :props="countyIdProps"
+                :style="{width: '100%'}" placeholder="请选择客户地址" clearable filterable></el-cascader>
+            </el-form-item>
+          </el-col>
+          <el-col :span="24">
+            <el-form-item label="详细地址" prop="address">
+              <el-input v-model="formData.address" type="textarea" placeholder="请输入详细地址"
+                :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-form>
+      </el-row>
       <el-button @click="submit" class='orangeBtn long1'>确 定</el-button>
-      <el-button @click="Cancel" class='wuBtn long1'>取 消</el-button>
+      <el-button @click="cancl" class='wuBtn long1'>取 消</el-button>
   </div>
 </div>
 </div>
@@ -45,32 +49,68 @@ export default {
       provinceOptions: [],
       dialogVisible: false,
       add: '',
-      name: null,
-      liaison: '',
-      phone: '',
-      address: null,
-      countyId: null
+      formData: {
+        name: null,
+        liaison: '',
+        phone: '',
+        address: null,
+        countyId: null
+      },
+      rules: {
+        name: [{
+          required: true,
+          message: '请输入客户名称',
+          trigger: 'blur'
+        }],
+        liaison: [{
+          required: true,
+          message: '请输入客户联系人',
+          trigger: 'blur'
+        }],
+        phone: [{
+          required: true,
+          message: '请输入客户联系电话',
+          trigger: 'blur'
+        }],
+        countyId: [{
+          required: true,
+          type: 'array',
+          message: '请至少选择一个客户地址',
+          trigger: 'change'
+        }],
+        address: [{
+          required: true,
+          message: '请输入详细地址',
+          trigger: 'blur'
+        }]
+      }
 
     }
   },
   methods: {
     submit () {
-      // 给请求参数赋值
-      let resData = {
-        countyId: this.countyId,
-        name: this.name,
-        liaison: this.liaison,
-        phone: this.phone,
-        address: this.address
-      }
-      // 把请求参数传输至后端，并且获取接口返回的结果res
-      this.$api.customer.privateAdd(resData).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg) // 成功提示
-          this.$router.push({ name: 'privateSea' }) // 添加成功后返回私海客户
-        } else {
-          this.$message.error(res.msg) // 错误提示
+      // 给请求参数赋值privateAdd
+      this.$refs.elForm.validate(valid => {
+        if (!valid) {
+          return
         }
+        // 给请求参数赋值
+        let resData = {
+          countyId: this.formData.countyId[2],
+          name: this.formData.name,
+          liaison: this.formData.liaison,
+          phone: this.formData.phone,
+          address: this.formData.address
+        }
+        // 把请求参数传输至后端，并且获取接口返回的结果res
+        this.$api.customer.privateAdd(resData).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.$router.go(-1)
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
       })
     },
     // 级联选择器选择
@@ -79,7 +119,7 @@ export default {
       console.log(this.provinceOptions) // 打印级联选择器的options
       this.countyId = val[2] // 区域id
     },
-    Cancel () {
+    cancl () {
       this.$router.go(-1)
     }
   },
