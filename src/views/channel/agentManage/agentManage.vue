@@ -64,9 +64,8 @@
                 <el-button type="text" @click="toDetail(scope.row.id)">
                   查看详情
                 </el-button>
-<!--                <span style="color: #0084FF; margin: 0px 5px">|</span>-->
 <!--                <el-button v-if="activeName === '1'" type="text" @click="channelService(scope.row)">-->
-<!--                  代理服务-->
+<!--                  |&nbsp; 代理渠道-->
 <!--                </el-button>-->
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">
                   |&nbsp; 停用代理
