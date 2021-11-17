@@ -15,7 +15,7 @@ export default [
     name: 'prediction',
     meta: {
       title: '预报管理',
-      icon: 'predictionIcon',
+      icon: 'sell',
       hidden: false
     },
     component: () => import('@/views/orderManager/prediction/prediction.vue')

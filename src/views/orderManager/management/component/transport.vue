@@ -272,10 +272,10 @@ export default {
       })
     },
     updateRoad () {
-      if (this.table_choose.length < 1) {
-        this.$message.error('请选择')
-        return
-      }
+      // if (this.table_choose.length < 1) {
+      //   this.$message.error('请选择')
+      //   return
+      // }
       this.dialogVisible = true
     },
     invoice (row) {

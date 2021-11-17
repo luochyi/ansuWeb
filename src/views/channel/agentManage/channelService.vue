@@ -2,13 +2,14 @@
   <div>
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:10px 0px">
-      <span class="text">渠道</span>
+      <span class="text">代理渠道</span>
     </el-row>
-    <el-row class="box-block flex">
+   <div class="content">
+      <el-row class="box-block flex">
       <el-col style="min-width:240px;width:240px;border-right: 1px solid #D9D9D9;border-top:none;padding-bottom:20px;background:#ffffff">
         <div class="box">
           <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
-            <el-col :span="3" style="margin-top:-2px">
+            <el-col :span="5" style="margin-top:-2px">
               <span style="font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;font-weight: 500;color: #000000;">代理</span>
             </el-col>
             <el-col :span="14" type="flex">
@@ -30,7 +31,7 @@
             </span>
             <span class="search-font" style="">搜索</span> -->
           </el-row>
-          <el-row style="padding:0px 30px 12px 40px;display:flex;align-items:center;"  v-for="item, index in agents" :key="index" @click.native="changeAgent(item.id, index)">
+          <el-row style="padding:0px 10px 12px 10px;display:flex;align-items:center;"  v-for="item, index in agents" :key="index" @click.native="changeAgent(item.id, index)">
             <el-row :class="index===red?'active':''" style="padding:12px;margin-bottom:20px;background: #F9F9F9;
           border-radius: 3px;width: 88%;height: 68px;font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;
           font-weight: 500;color: rgba(0, 0, 0, 0.8);cursor: pointer;">
@@ -46,9 +47,9 @@
           </el-row>
         </div>
       </el-col>
-      <el-col :span="18">
+      <el-col>
       <!-- 主要内容 -->
-      <div class="content">
+      <div class="content1">
         <!-- 搜索栏 -->
         <el-row class="searchbox1">
           <!-- 代理名称 -->
@@ -78,7 +79,7 @@
           </el-col>
         </el-row>
         <!-- 表格 -->
-        <div>
+        <div class="form1">
           <el-row
             class="searchbox1"
             type="flex"
@@ -468,6 +469,7 @@
     <!-- 查看分区价格 -->
     <commonDrawer :drawerVrisible="drawer" :drawerSize="drawerSize" @handleClose='priceClose' drawerTitle="查看分区价格">
       <div class="dra-content" v-if="drawerData.price.wightCol.unitWeights.length > 0">
+        <span class="tips">单价计价&nbsp;</span><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span>
         <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
           <el-table-column>
             <template slot-scope="scope">
@@ -492,6 +494,7 @@
         </el-table>
       </div>
       <div class="dra-content" v-if="drawerData.price.wightCol.amountWeights.length > 0">
+        <span class="tips">金额计价&nbsp;</span><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span>
         <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
           <el-table-column prop="name">
             <template slot-scope="scope">
@@ -516,6 +519,7 @@
         </el-table>
       </div>
       <div class="dra-content" v-if="drawerData.price.wightCol.firstWeights.length > 0">
+        <span class="tips"> 首续重计价&nbsp;</span><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span>
         <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
           <el-table-column prop="name">
             <template slot-scope="scope">
@@ -580,6 +584,7 @@
         </button>
       </div>
     </commonDrawer>
+   </div>
   </div>
 </template>
 
@@ -591,6 +596,7 @@ export default {
       drawer: false,
       priceList: [],
       agentId: 0,
+      red: 0,
       zoneType: null, // 派件类型 1快递 2卡派
       saveData: [],
       control: 1,
@@ -697,12 +703,12 @@ export default {
       chooseArr: [], // 选中的代理
       agents: [],
       columns: [
-        { prop: 'agent_code', label: '代理编码', width: '100', align: 'center' },
-        { prop: 'status', label: '渠道状态', width: '100', align: 'center', formatter: this.formatter },
-        { prop: 'name', label: '渠道名称', width: '300', align: 'center' },
-        { prop: 'agent_name', label: '代理名称', width: '300', align: 'center' },
-        { prop: 'cate', label: '代理分类', width: '100', align: 'center', formatter: this.formatter },
-        { prop: 'type', label: '派送类型', width: '100', align: 'center', formatter: this.formatters }
+        { prop: 'agent_code', label: '代理编码', align: 'center' },
+        { prop: 'status', label: '渠道状态', width: '80', align: 'center', formatter: this.formatter },
+        { prop: 'name', label: '渠道名称', width: '200', align: 'center' },
+        { prop: 'agent_name', label: '代理名称', width: '160', align: 'center' },
+        { prop: 'cate', label: '代理分类', width: '80', align: 'center', formatter: this.formatter },
+        { prop: 'type', label: '派送类型', width: '80', align: 'center', formatter: this.formatters }
       ],
       tableData: [],
       page: {
@@ -756,7 +762,9 @@ export default {
             sizes: [10, 50, 100],
             total: 0
           }
-        }
+        },
+        startTime: '',
+        endTime: ''
       }
     }
   },
@@ -840,7 +848,7 @@ export default {
         this.$api.agent.agentServiceEdit({
           agentServiceId: this.dialog.channel.formData.agentChannelId,
           name: this.dialog.channel.formData.name,
-          cate: this.dialog.channel.formData.cate,
+          cate: this.dialog.channel.formData.cate
         }).then(res => {
           if (res.code === 0) {
             this.$message.success(res.msg)
@@ -865,6 +873,8 @@ export default {
       this.drawerData.price.first_prices = res.data.first_prices
       this.drawerData.price.zones = res.data.zones
       this.drawerData.price.type = res.data.type
+      this.startTime = this.formatDate(res.data.start_time, 'yyyy-MM-dd hh:mm:ss')
+      this.endTime = this.formatDate(res.data.end_time, 'yyyy-MM-dd hh:mm:ss')
       this.drawerData.price.wightCol.unitWeights = []
       this.drawerData.price.wightCol.amountWeights = []
       this.drawerData.price.wightCol.firstWeights = []
@@ -1660,5 +1670,11 @@ export default {
 }
 .plantime{
   margin: 10px 0 10px 0;
+}
+.form1{
+  width: calc(100% - 20px);
+}
+.content1{
+  padding:20px 30px;
 }
 </style>

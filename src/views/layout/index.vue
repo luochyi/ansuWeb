@@ -101,7 +101,7 @@ export default {
               name: 'prediction',
               meta: {
                 title: '预报管理',
-                icon: 'predictionIcon',
+                icon: 'icon-rejected-order',
                 hidden: false
               },
               ID: 10,
@@ -113,7 +113,7 @@ export default {
               name: 'waybill',
               meta: {
                 title: '预报运单',
-                icon: 'waybillIcon',
+                icon: 'icon-image-text',
                 hidden: false
               },
               ID: 11,
@@ -125,7 +125,7 @@ export default {
               name: 'management',
               meta: {
                 title: '运单管理',
-                icon: 'managementIcon',
+                icon: 'icon-inspection',
                 hidden: false
               },
               ID: 12,
@@ -161,7 +161,7 @@ export default {
               name: 'sjmssq',
               meta: {
                 title: '收件免扫申请',
-                icon: 'sjmssq',
+                icon: 'icon-print',
                 hidden: false
               },
               ID: 15,
@@ -183,7 +183,7 @@ export default {
                   name: 'gmbxyd',
                   meta: {
                     title: '购买保险运单',
-                    icon: 'gmbxyd',
+                    icon: 'icon-daikuan',
                     hidden: false
                   },
                   ID: 1,
@@ -195,7 +195,7 @@ export default {
                   name: 'safeOrder',
                   meta: {
                     title: '保单管理',
-                    icon: 'safeOrder',
+                    icon: 'icon-copy',
                     hidden: false
                   },
                   ID: 2,
@@ -208,7 +208,7 @@ export default {
               name: 'eject',
               meta: {
                 title: '出仓单',
-                icon: 'eject',
+                icon: 'icon-shouhuoicon',
                 hidden: false
               },
               ID: 17,
@@ -246,7 +246,7 @@ export default {
                   name: 'expenseConfirmation',
                   meta: {
                     title: '费用确认',
-                    icon: 'expenseConfirmation',
+                    icon: 'icon-inquiry-template',
                     hidden: false
                   },
                   ID: 201,
@@ -258,7 +258,7 @@ export default {
                   name: 'expenseAudit',
                   meta: {
                     title: '费用审核',
-                    icon: 'expenseAudit',
+                    icon: 'icon-banzhengfuwu',
                     hidden: false
                   },
                   ID: 202,
@@ -270,7 +270,7 @@ export default {
                   name: 'expenseConfirmationForm',
                   meta: {
                     title: '费用确认单',
-                    icon: 'expenseConfirmationForm',
+                    icon: 'icon-image-text',
                     hidden: false
                   },
                   ID: 203,
@@ -282,7 +282,7 @@ export default {
                   name: 'expenseRegister',
                   meta: {
                     title: '费用登记',
-                    icon: 'expenseRegister',
+                    icon: 'icon-writing',
                     hidden: false
                   },
                   ID: 204,
@@ -308,7 +308,7 @@ export default {
                   name: 'receivablestatement',
                   meta: {
                     title: '应收对账单',
-                    icon: 'receivablestatement',
+                    icon: 'icon-wuliudingdan',
                     hidden: false
                   },
                   ID: 211,
@@ -320,7 +320,7 @@ export default {
                   name: 'paymentrecord',
                   meta: {
                     title: '来款记录',
-                    icon: 'paymentrecord',
+                    icon: 'icon-training',
                     hidden: false
                   },
                   ID: 212,
@@ -332,7 +332,7 @@ export default {
                   name: 'Billwriteoff',
                   meta: {
                     title: '账单核销',
-                    icon: 'Billwriteoff',
+                    icon: 'icon-inspection',
                     hidden: false
                   },
                   ID: 213,
@@ -344,7 +344,7 @@ export default {
                   name: 'Writeoffrecord',
                   meta: {
                     title: '核销记录',
-                    icon: 'Writeoffrecord',
+                    icon: 'icon-form',
                     hidden: false
                   },
                   ID: 214,
@@ -370,7 +370,7 @@ export default {
                   name: 'Payablemanagement',
                   meta: {
                     title: '应付管理',
-                    icon: 'Payablemanagement',
+                    icon: 'icon-rmb',
                     hidden: false
                   },
                   ID: 221,
@@ -420,7 +420,7 @@ export default {
                   name: 'Losssheet',
                   meta: {
                     title: '亏损单',
-                    icon: 'Losssheet',
+                    icon: 'icon-tuishui',
                     hidden: false
                   },
                   ID: 231,
@@ -460,7 +460,7 @@ export default {
               name: 'agentAllocation',
               meta: {
                 title: '代理管理',
-                icon: 'agentManage',
+                icon: 'icon-costoms-alearance',
                 hidden: false
               },
               ID: 30,
@@ -472,7 +472,7 @@ export default {
                   name: 'agentManage',
                   meta: {
                     title: '代理设置',
-                    icon: 'agentManage',
+                    icon: 'icon-assessed-badge',
                     hidden: false
                   },
                   ID: 300,
@@ -484,7 +484,7 @@ export default {
                   name: 'channelService',
                   meta: {
                     title: '代理渠道',
-                    icon: 'channelService',
+                    icon: 'icon-logistics-icon',
                     hidden: false
                   },
                   ID: 301,
@@ -498,7 +498,7 @@ export default {
               name: 'channelSetting',
               meta: {
                 title: '安速渠道',
-                icon: 'channelSetting',
+                icon: 'icon-kuaidiwuliu',
                 hidden: false
               },
               ID: 31,
@@ -548,7 +548,7 @@ export default {
               name: 'highSeaCustomers',
               meta: {
                 title: '公海客户',
-                icon: 'predictionIcon',
+                icon: 'icon-Customermanagement',
                 hidden: false
               },
               ID: 40,
@@ -560,7 +560,7 @@ export default {
               name: 'privateSea',
               meta: {
                 title: '私海客户',
-                icon: 'predictionIcon',
+                icon: 'icon-bussiness-man',
                 hidden: false
               },
               ID: 41,
@@ -598,7 +598,7 @@ export default {
               name: 'Subsidiarymanagement',
               meta: {
                 title: '子公司管理',
-                icon: 'predictionIcon',
+                icon: 'icon-company',
                 hidden: false
               },
               ID: 50,
@@ -610,7 +610,7 @@ export default {
               name: 'organizationalStructure',
               meta: {
                 title: '组织架构',
-                icon: 'predictionIcon',
+                icon: 'icon-connections',
                 hidden: false
               },
               ID: 51,
@@ -622,7 +622,7 @@ export default {
               name: 'Employeeaccount',
               meta: {
                 title: '员工账号',
-                icon: 'Employeeaccount',
+                icon: 'icon-zhanghucaozuo',
                 hidden: false
               },
               ID: 52,
@@ -634,7 +634,7 @@ export default {
               name: 'menuManagement',
               meta: {
                 title: '菜单管理',
-                icon: 'menuManagement',
+                icon: 'icon-viewgallery',
                 hidden: false
               },
               ID: 53,
@@ -647,7 +647,7 @@ export default {
               name: 'driverManagement',
               meta: {
                 title: '司机管理',
-                icon: 'driverManagement',
+                icon: 'icon-office-supplies',
                 hidden: false
               },
               ID: 53,
@@ -659,7 +659,7 @@ export default {
               name: 'truckManagement',
               meta: {
                 title: '车辆管理',
-                icon: 'truckManagement',
+                icon: 'icon-landtransportation',
                 hidden: false
               },
               ID: 54,
@@ -671,7 +671,7 @@ export default {
               name: 'customerAccount',
               meta: {
                 title: '客户账号',
-                icon: 'customerAccount',
+                icon: 'icon-bussiness-man',
                 hidden: false
               },
               ID: 55,
@@ -683,7 +683,7 @@ export default {
               name: 'Customerlevel',
               meta: {
                 title: '客户等级',
-                icon: 'Customerlevel',
+                icon: 'icon-kehuquanyi',
                 hidden: false
               },
               ID: 56,
@@ -695,7 +695,7 @@ export default {
               name: 'Settlementperiod',
               meta: {
                 title: '结算账期',
-                icon: 'Settlementperiod',
+                icon: 'icon-jiehui',
                 hidden: false
               },
               ID: 56,
@@ -707,7 +707,7 @@ export default {
               name: 'receivingWarehouseManage',
               meta: {
                 title: '收货仓管理',
-                icon: 'receivingWarehouseManage',
+                icon: 'icon-warehouse',
                 hidden: false
               },
               ID: 57,
@@ -719,7 +719,7 @@ export default {
               name: 'warehouseOperation',
               meta: {
                 title: '仓库操作管理',
-                icon: 'warehouseOperation',
+                icon: 'icon-rejected-order',
                 hidden: false
               },
               ID: 58,
@@ -731,7 +731,7 @@ export default {
               name: 'currencyExchangerate',
               meta: {
                 title: '货币汇率',
-                icon: 'currencyExchangerate',
+                icon: 'icon-zijin',
                 hidden: false
               },
               ID: 59,
@@ -743,7 +743,7 @@ export default {
               name: 'materialCate',
               meta: {
                 title: '材质分类',
-                icon: 'materialCate',
+                icon: 'icon-bags',
                 hidden: false
               },
               ID: 60,
@@ -755,7 +755,7 @@ export default {
               name: 'countryManagement',
               meta: {
                 title: '目的国管理',
-                icon: 'countryManagement',
+                icon: 'icon-earth',
                 hidden: false
               },
               ID: 591,
@@ -767,7 +767,7 @@ export default {
               name: 'milestoneConfiguration',
               meta: {
                 title: '里程碑配置',
-                icon: 'milestoneConfiguration',
+                icon: 'icon-map',
                 hidden: false
               },
               ID: 592,
@@ -779,7 +779,7 @@ export default {
               name: 'FBAmanage',
               meta: {
                 title: 'FBA仓管理',
-                icon: 'FBAmanage',
+                icon: 'icon-kuaidiwuliu',
                 hidden: false
               },
               ID: 593,

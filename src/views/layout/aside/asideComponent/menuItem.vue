@@ -4,7 +4,7 @@
     :index='routerInfo.name'
     :route='{ name: routerInfo.name }'
   >
-    <i :class="'el-icon-' + routerInfo.meta.icon"></i>
+    <i :class="'iconfont' + ' ' + routerInfo.meta.icon"></i>
     <span slot='title' class='menufont'>{{ routerInfo.meta.title }}</span>
   </el-menu-item>
 </template>
@@ -22,4 +22,6 @@ export default {
   }
 }
 </script>
-<style lang='scss'></style>
+
+<style lang='scss'>
+</style>

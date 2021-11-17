@@ -42,7 +42,7 @@ export default [
     component: () => import('@/views/channel/agentManage/addAgent.vue')
   },
   {
-    path: '/agentManage/channelService',
+    path: '/channelService',
     name: 'channelService',
     meta: {
       title: '代理渠道',
