@@ -4,78 +4,72 @@
             <span class='text'>新建渠道</span>
         </el-row>
         <el-row style="background:#fff;text-align:left;padding:16px 43px">
-            <!-- <el-row style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);">
-                渠道模版
-            </el-row>
-            <el-row style="margin-top:16px">
-                <el-button size="small" class='whiteBtn' @click="dialogChannel = true" style="">参考其他渠道</el-button>
-            </el-row> -->
             <el-row style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);
             margin-top:16px">
                 渠道信息
             </el-row>
-            <el-row style="margin-top:16px">
-              <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">渠道编号&nbsp;</span>
-                    <span><el-input style="width:108%" v-model="form.code" size="small" placeholder="请输入"></el-input></span>
+            <el-row :gutter="15">
+              <el-form ref="elForm" :model="form" :rules="rules" size="small" label-width="93px" label-position="top">
+                <el-col :span="8">
+                  <el-form-item label="渠道编号" prop="code">
+                    <el-input v-model="form.code" placeholder="请输入渠道编号" clearable :style="{width: '60%'}"></el-input>
+                  </el-form-item>
                 </el-col>
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">渠道名称&nbsp;</span>
-                    <span><el-input style="width:108%" v-model="form.name" size="small" placeholder="请输入"></el-input></span>
+                <el-col :span="8">
+                  <el-form-item label="渠道名称" prop="name">
+                    <el-input v-model="form.name" placeholder="请输入渠道名称" clearable :style="{width: '60%'}"></el-input>
+                  </el-form-item>
                 </el-col>
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">渠道英文&nbsp;</span><span>
-                    <el-input style="width:108%" v-model="form.enName" size="small" placeholder="请输入"></el-input></span>
-                 </el-col>
-            </el-row>
-            <!--  -->
-            <el-row style="margin-top:16px">
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">渠道分类&nbsp;</span>
-                    <span><el-select v-model="form.cate" size="small" placeholder="请选择">
+                <el-col :span="8">
+                  <el-form-item label="渠道英文名" prop="enName">
+                    <el-input v-model="form.enName" placeholder="请输入渠道英文名" clearable :style="{width: '60%'}">
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="渠道分类" prop="cate">
+                    <el-select v-model="form.cate" size="small" placeholder="请选择">
                             <el-option
                                 v-for="item in cateOption"
                                 :key="item.value"
                                 :value="item.value"
                                 :label="item.label"
                             ></el-option>
-                        </el-select></span>
+                        </el-select>
+                  </el-form-item>
                 </el-col>
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">派送类型&nbsp;</span>
-                    <span><el-select v-model="form.type" size="small" placeholder="请选择">
+                <el-col :span="8">
+                  <el-form-item label="派送类型" prop="type">
+                    <el-select v-model="form.type" size="small" placeholder="请选择">
                             <el-option
                                 v-for="item in typeOption"
                                 :key="item.value"
                                 :value="item.value"
                                 :label="item.label"
                             ></el-option>
-                        </el-select></span>
+                        </el-select>
+                  </el-form-item>
                 </el-col>
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">渠道评分&nbsp;</span><span>
-                    <el-input v-model="form.score" style="width:108%" type="number" size="small" placeholder="请输入"></el-input></span>
-                 </el-col>
-            </el-row>
-            <el-row style="margin-top:16px">
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">币种&nbsp;</span>
-                    <span><el-select v-model="form.currencyId" size="small" placeholder="请选择">
+                <el-col :span="8">
+                  <el-form-item label="渠道评分" prop="score">
+                    <el-input v-model="form.score" placeholder="请输入渠道评分" type="number" clearable :style="{width: '60%'}">
+                    </el-input>
+                  </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                  <el-form-item label="币种" prop="currencyId">
+                    <el-select v-model="form.currencyId" size="small" placeholder="请选择">
                             <el-option
                                 v-for="item in currencyOption"
                                 :key="item.id"
                                 :value="item.id"
                                 :label="item.name"
                             ></el-option>
-                        </el-select></span>
+                        </el-select>
+                  </el-form-item>
                 </el-col>
-            </el-row>
-             <el-row class="line"></el-row>
-            <el-row style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);
-            margin-top:16px">
-                接收货物
-                <el-col style="display:flex;align-items:center">
-                    <span>
+                  <el-col :span="8">
+                    <el-form-item label="接收货物" prop="materialCates">
                         <el-select v-model="form.materialCates" multiple placeholder="请选择">
                             <el-option
                                 v-for="item in materialCatesOptions"
@@ -84,152 +78,449 @@
                                 :value="item.id">
                             </el-option>
                         </el-select>
-                    </span>
-                </el-col>
-            </el-row>
-
-            <!--  -->
-            <el-row class="line"></el-row>
-            <el-row style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);
-            margin-top:16px">
-                计算规则
-            </el-row>
-             <el-row style="margin-top:16px">
-                <el-col :span="6" style="display:flex;align-items:center">
-                    <span class="item">材积除&nbsp;</span>
-                    <span><el-select v-model="form.weightRule.volumeDivide" size="small" placeholder="请选择">
-                            <el-option
+                    </el-form-item>
+                  </el-col>
+                  <el-col>
+                    <el-form-item>
+                      <template>
+                        <el-divider></el-divider>
+                      </template>
+                    </el-form-item>
+                  </el-col>
+                  <el-col>
+                    <div style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);
+                    margin-top:16px">
+                        计算规则
+                    </div>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="材积除" prop="weightRule.volumeDivide">
+                      <el-select v-model="form.weightRule.volumeDivide" placeholder="请选择材积除" clearable
+                        :style="{width: '60%'}">
+                        <el-option
                                 v-for="item in volumeDivideOption"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select></span>
-                </el-col>
-                <el-col :span="6" style="display:flex;align-items:center">
-                    <span class="item">结算重&nbsp;</span>
-                    <span><el-select v-model="form.weightRule.settlementWeight" size="small" placeholder="请选择">
-                            <el-option
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="结算重" prop="weightRule.settlementWeight">
+                      <el-select v-model="form.weightRule.settlementWeight" placeholder="请选择结算重" clearable
+                        :style="{width: '60%'}">
+                        <el-option
                                 v-for="item in settlementWeightOption"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select></span>
-                </el-col>
-
-                <!-- comparisonWeight -->
-                 <el-col :span="6" style="display:flex;align-items:center">
-                    <span class="item">比较重&nbsp;</span>
-                    <span><el-input v-model="form.weightRule.comparisonWeight" size="small" placeholder="请输入"> <template slot="append">KG</template></el-input></span>
-                </el-col>
-                <el-col :span="6" style="display:flex;align-items:center">
-                    <span class="item">大货起始重&nbsp;</span>
-                    <span><el-input v-model="form.weightRule.bigStartingWeight" size="small" placeholder="请选择"> <template slot="append">KG</template></el-input></span>
-                </el-col>
-            </el-row>
-             <el-row style="margin-top:16px">
-                 <el-col :span="6" style="display:flex;align-items:center">
-                    <span class="item">多件重量计算方式&nbsp;</span>
-                    <span><el-select v-model="form.weightRule.multiPieceWeight" size="small" placeholder="请选择">
-                            <el-option
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="比较重" prop="weightRule.comparisonWeight">
+                      <el-input v-model="form.weightRule.comparisonWeight" placeholder="请输入比较重" clearable
+                        :style="{width: '60%'}">
+                        <template slot="append">KG</template>
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="大货起始重" prop="weightRule.bigStartingWeight">
+                      <el-input v-model="form.weightRule.bigStartingWeight" placeholder="请输入大货起始重" clearable
+                        :style="{width: '60%'}">
+                        <template slot="append">KG</template>
+                      </el-input>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="多件重量计算方式" prop="weightRule.multiPieceWeight">
+                      <el-select v-model="form.weightRule.multiPieceWeight" placeholder="请选择多件重量计算方式" clearable
+                        :style="{width: '60%'}">
+                        <el-option
                                 v-for="item in multiPieceWeightOption"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select></span>
-                </el-col>
-                <el-col :span="6" style="display:flex;align-items:center">
-                    <span class="item">结算重进位规则&nbsp;</span>
-                    <span><el-select v-model="form.weightRule.carryRule" size="small" placeholder="请选择">
-                            <el-option
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="结算重进位规则" prop="weightRule.carryRule">
+                      <el-select v-model="form.weightRule.carryRule" placeholder="请选择结算重进位规则" clearable
+                        :style="{width: '60%'}">
+                        <el-option
                                 v-for="item in carryRuleOption"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select></span>
-                </el-col>
-                <el-col :span="6" style="display:flex;align-items:center">
-                    <span class="item">方数 &nbsp;</span>
-                    <span><el-select v-model="form.weightRule.realWeightCube" size="small" placeholder="请选择">
-                            <el-option
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="方数" prop="weightRule.realWeightCube">
+                      <el-select v-model="form.weightRule.realWeightCube" placeholder="请选择方数" clearable
+                        :style="{width: '60%'}">
+                        <el-option
                                 v-for="item in realWeightCubeOption"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select></span>
-                </el-col>
-            </el-row>
-            <!--  -->
-            <el-row class="line"></el-row>
-            <el-row style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);
-            margin-top:16px">
-                其他
-            </el-row>
-            <el-row style="margin-top:16px">
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">是否含燃料费&nbsp;</span>
-                    <span><el-select v-model="form.hasFuel" size="small" placeholder="请选择">
-                            <el-option
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col>
+                    <div style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);
+                    margin-top:16px">
+                        其他
+                    </div>
+                  </el-col>
+                  <el-col :span="7">
+                    <el-form-item label="是否含燃料费" prop="hasFuel">
+                      <el-select v-model="form.hasFuel" placeholder="请选择是否含燃料费" clearable :style="{width: '60%'}">
+                        <el-option
                                 v-for="item in option"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select></span>
-                </el-col>
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">是否含税&nbsp;</span>
-                    <span><el-select v-model="form.hasTax" size="small" placeholder="请选择">
-                            <el-option
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="7">
+                    <el-form-item label="是否含税" prop="hasTax">
+                      <el-select v-model="form.hasTax" placeholder="请选择是否含税" clearable :style="{width: '60%'}">
+                        <el-option
                                 v-for="item in option"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select></span>
-                </el-col>
-                <el-col :span="8" style="display:flex;align-items:center">
-                    <span class="item">是否含税清关费&nbsp;</span>
-                    <span><el-select v-model="form.hasClearanceFee" size="small" placeholder="请选择">
-                            <el-option
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="7">
+                    <el-form-item label="是否含清关费" prop="hasClearanceFee">
+                      <el-select v-model="form.hasClearanceFee" placeholder="请选择是否含清关费" clearable
+                        :style="{width: '60%'}">
+                        <el-option
                                 v-for="item in option"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select></span>
-                </el-col>
-            </el-row>
-            <el-row style="text-align:left;margin-top:28px;">
-                <div style="display:flex;align-items:center">
-                    <span class="item">运输时间&nbsp;
-                        <span><el-input v-model="form.minDuration" style="width:20%" size="small" placeholder="最短时间"><template slot="append">天</template></el-input>  ——
-                        <el-input style="width:20%" v-model="form.maxDuration"  type="number" size="small" placeholder="最长时间"><template slot="append">天</template></el-input>
-                        <el-select v-model="form.durationType" type="number" size="small" style="margin-left:20px;width:16%" >
-                          <el-option
+                      </el-select>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="24">
+                    <el-row :gutter="15">
+                      <el-col>运输时间：</el-col>
+                      <el-col :span="4">
+                        <el-form-item label="" prop="minDuration">
+                          <el-input v-model="form.minDuration" placeholder="请输入" clearable :style="{width: '100%'}">
+                            <template slot="append">天</template>
+                          </el-input>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="1">&nbsp;——</el-col>
+                      <el-col :span="4">
+                        <el-form-item label="" prop="maxDuration">
+                          <el-input v-model="form.maxDuration" placeholder="请输入" clearable :style="{width: '100%'}">
+                            <template slot="append">天</template>
+                          </el-input>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="" prop="durationType">
+                          <el-select v-model="form.durationType" placeholder="请选择" clearable
+                            :style="{width: '60%'}">
+                            <el-option
                                 v-for="item in durationTypeOption"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select>
-                        <el-select v-model="form.durationCate" type="number" size="small" style="margin-left:20px;width:16%" >
-                          <el-option
+                          </el-select>
+                        </el-form-item>
+                      </el-col>
+                      <el-col :span="4">
+                        <el-form-item label="" prop="durationCate">
+                          <el-select v-model="form.durationCate" placeholder="请选择" clearable
+                            :style="{width: '60%'}">
+                            <el-option
                                 v-for="item in durationCateOption"
                                 :key="item.value"
                                 :label="item.label"
                                 :value="item.value">
                             </el-option>
-                        </el-select>
-                        </span>
-                    </span>
-                </div>
+                          </el-select>
+                        </el-form-item>
+                      </el-col>
+                    </el-row>
+                  </el-col>
+              </el-form>
             </el-row>
-            <el-row class="line"></el-row>
+
+<!--
+  <template>
+  <div>
+    <el-row :gutter="15">
+      <el-form ref="elForm" :model="form" :rules="rules" size="small" label-width="93px"
+        label-position="top">
+        <el-col :span="6">
+          <el-form-item label="材积除" prop="weightRule.volumeDivide">
+            <el-select v-model="form.weightRule.volumeDivide" placeholder="请选择材积除" clearable
+              :style="{width: '60%'}">
+              <el-option v-for="(item, index) in weightRule.volumeDivideOptions" :key="index"
+                :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="结算重" prop="weightRule.settlementWeight">
+            <el-select v-model="form.weightRule.settlementWeight" placeholder="请选择结算重" clearable
+              :style="{width: '60%'}">
+              <el-option v-for="(item, index) in weightRule.settlementWeightOptions" :key="index"
+                :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="比较重" prop="weightRule.comparisonWeight">
+            <el-input v-model="form.weightRule.comparisonWeight" placeholder="请输入比较重" clearable
+              :style="{width: '60%'}">
+              <template slot="append">KG</template>
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="大货起始重" prop="weightRule.bigStartingWeight">
+            <el-input v-model="form.weightRule.bigStartingWeight" placeholder="请输入大货起始重" clearable
+              :style="{width: '60%'}">
+              <template slot="append">KG</template>
+            </el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="多件重量计算方式" prop="weightRule.multiPieceWeight">
+            <el-select v-model="form.weightRule.multiPieceWeight" placeholder="请选择多件重量计算方式" clearable
+              :style="{width: '60%'}">
+              <el-option v-for="(item, index) in weightRule.multiPieceWeightOptions" :key="index"
+                :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="结算重进位规则" prop="weightRule.carryRule">
+            <el-select v-model="form.weightRule.carryRule" placeholder="请选择结算重进位规则" clearable
+              :style="{width: '60%'}">
+              <el-option v-for="(item, index) in weightRule.carryRuleOptions" :key="index" :label="item.label"
+                :value="item.value" :disabled="item.disabled"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="6">
+          <el-form-item label="方数" prop="weightRule.realWeightCube">
+            <el-select v-model="form.weightRule.realWeightCube" placeholder="请选择方数" clearable
+              :style="{width: '60%'}">
+              <el-option v-for="(item, index) in weightRule.realWeightCubeOptions" :key="index"
+                :label="item.label" :value="item.value" :disabled="item.disabled"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="7">
+          <el-form-item label="是否含燃料费" prop="hasFuel">
+            <el-select v-model="form.hasFuel" placeholder="请选择是否含燃料费" clearable :style="{width: '60%'}">
+              <el-option v-for="(item, index) in hasFuelOptions" :key="index" :label="item.label"
+                :value="item.value" :disabled="item.disabled"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="7">
+          <el-form-item label="是否含税" prop="hasTax">
+            <el-select v-model="form.hasTax" placeholder="请选择是否含税" clearable :style="{width: '60%'}">
+              <el-option v-for="(item, index) in hasTaxOptions" :key="index" :label="item.label"
+                :value="item.value" :disabled="item.disabled"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="7">
+          <el-form-item label="是否含清关费" prop="hasClearanceFee">
+            <el-select v-model="form.hasClearanceFee" placeholder="请选择是否含清关费" clearable
+              :style="{width: '60%'}">
+              <el-option v-for="(item, index) in hasClearanceFeeOptions" :key="index" :label="item.label"
+                :value="item.value" :disabled="item.disabled"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="24">
+          <el-row gutter="15">
+            <el-col :span="4">
+              <el-form-item label="" prop="minDuration">
+                <el-input v-model="form.minDuration" placeholder="请输入" clearable :style="{width: '60%'}">
+                  <template slot="append">天</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="" prop="maxDuration">
+                <el-input v-model="form.maxDuration" placeholder="请输入" clearable :style="{width: '60%'}">
+                  <template slot="append">天</template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="" prop="durationType">
+                <el-select v-model="form.durationType" placeholder="请选择" clearable
+                  :style="{width: '60%'}">
+                  <el-option v-for="(item, index) in durationTypeOptions" :key="index" :label="item.label"
+                    :value="item.value" :disabled="item.disabled"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="" prop="durationCate">
+                <el-select v-model="form.durationCate" placeholder="请选择" clearable
+                  :style="{width: '60%'}">
+                  <el-option v-for="(item, index) in durationCateOptions" :key="index" :label="item.label"
+                    :value="item.value" :disabled="item.disabled"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-col>
+        <el-col :span="24">
+          <el-form-item size="large">
+            <el-button type="primary" @click="submitForm">提交</el-button>
+            <el-button @click="resetForm">重置</el-button>
+          </el-form-item>
+        </el-col>
+      </el-form>
+    </el-row>
+  </div>
+</template>
+<script>
+export default {
+  components: {},
+  props: [],
+  data() {
+    return {
+      form: {
+        weightRule.volumeDivide: undefined,
+        weightRule.settlementWeight: undefined,
+        weightRule.comparisonWeight: undefined,
+        weightRule.bigStartingWeight: undefined,
+        weightRule.multiPieceWeight: undefined,
+        weightRule.carryRule: undefined,
+        weightRule.realWeightCube: undefined,
+        hasFuel: undefined,
+        hasTax: undefined,
+        hasClearanceFee: undefined,
+        minDuration: undefined,
+        maxDuration: undefined,
+        durationType: undefined,
+        durationCate: undefined,
+      },
+      rules: {
+        weightRule.volumeDivide: [{
+          required: true,
+          message: '请选择材积除',
+          trigger: 'change'
+        }],
+        weightRule.settlementWeight: [{
+          required: true,
+          message: '请选择结算重',
+          trigger: 'change'
+        }],
+        weightRule.comparisonWeight: [{
+          required: true,
+          message: '请输入比较重',
+          trigger: 'blur'
+        }],
+        weightRule.bigStartingWeight: [{
+          required: true,
+          message: '请输入大货起始重',
+          trigger: 'blur'
+        }],
+        weightRule.multiPieceWeight: [{
+          required: true,
+          message: '请选择多件重量计算方式',
+          trigger: 'change'
+        }],
+        weightRule.carryRule: [{
+          required: true,
+          message: '请选择结算重进位规则',
+          trigger: 'change'
+        }],
+        weightRule.realWeightCube: [{
+          required: true,
+          message: '请选择方数',
+          trigger: 'change'
+        }],
+        hasFuel: [{
+          required: true,
+          message: '请选择是否含燃料费',
+          trigger: 'change'
+        }],
+        hasTax: [{
+          required: true,
+          message: '请选择是否含税',
+          trigger: 'change'
+        }],
+        hasClearanceFee: [{
+          required: true,
+          message: '请选择是否含清关费',
+          trigger: 'change'
+        }],
+        minDuration: [{
+          required: true,
+          message: '请输入',
+          trigger: 'blur'
+        }],
+        maxDuration: [{
+          required: true,
+          message: '请输入',
+          trigger: 'blur'
+        }],
+        durationType: [{
+          required: true,
+          message: '请选择',
+          trigger: 'change'
+        }],
+        durationCate: [{
+          required: true,
+          message: '请选择',
+          trigger: 'change'
+        }],
+      },
+  },
+  computed: {},
+  watch: {},
+  created() {},
+  mounted() {},
+  methods: {
+    submitForm() {
+      this.$refs['elForm'].validate(valid => {
+        if (!valid) return
+        // TODO 提交表单
+      })
+    },
+    resetForm() {
+      this.$refs['elForm'].resetFields()
+    },
+  }
+}
+
+</script>
+<style>
+</style>
+
+ -->
             <el-row style="font-size: 16px;font-family: PingFangSC-Semibold, PingFang SC;font-weight: 600;color: rgba(0, 0, 0, 0.85);
             margin-top:16px">
                 渠道简介
@@ -430,6 +721,134 @@ export default {
         ],
         materialCates: []
       },
+      rules: {
+        code: [
+          {
+            required: true,
+            message: '请输入编号',
+            trigger: 'blur'
+          }
+        ],
+        name: [
+          {
+            required: true,
+            message: '请输入名称',
+            trigger: 'blur'
+          }
+        ],
+        enName: [
+          {
+            required: true,
+            message: '请输入英文名',
+            trigger: 'blur'
+          }
+        ],
+        cate: [
+          {
+            required: true,
+            message: '请选择',
+            trigger: 'change'
+          }
+        ],
+        score: [
+          {
+            required: true,
+            message: '请输入',
+            trigger: 'blur'
+          }
+        ],
+        type: [
+          {
+            required: true,
+            message: '请选择',
+            trigger: 'change'
+          }
+        ],
+        materialCates: [
+          {
+            required: true,
+            message: '请选择',
+            trigger: 'change'
+          }
+        ],
+        currencyId: [
+          {
+            required: true,
+            message: '请选择',
+            trigger: 'change'
+          }
+        ],
+        'weightRule.volumeDivide': [{
+          required: true,
+          message: '请选择材积除',
+          trigger: 'change'
+        }],
+        'weightRule.settlementWeight': [{
+          required: true,
+          message: '请选择结算重',
+          trigger: 'change'
+        }],
+        'weightRule.comparisonWeight': [{
+          required: true,
+          message: '请输入比较重',
+          trigger: 'blur'
+        }],
+        'weightRule.bigStartingWeight': [{
+          required: true,
+          message: '请输入大货起始重',
+          trigger: 'blur'
+        }],
+        'weightRule.multiPieceWeight': [{
+          required: true,
+          message: '请选择多件重量计算方式',
+          trigger: 'change'
+        }],
+        'weightRule.carryRule': [{
+          required: true,
+          message: '请选择结算重进位规则',
+          trigger: 'change'
+        }],
+        'weightRule.realWeightCube': [{
+          required: true,
+          message: '请选择方数',
+          trigger: 'change'
+        }],
+        hasFuel: [{
+          required: true,
+          message: '请选择是否含燃料费',
+          trigger: 'change'
+        }],
+        hasTax: [{
+          required: true,
+          message: '请选择是否含税',
+          trigger: 'change'
+        }],
+        hasClearanceFee: [{
+          required: true,
+          message: '请选择是否含清关费',
+          trigger: 'change'
+        }],
+        minDuration: [{
+          required: true,
+          message: '请输入',
+          trigger: 'blur'
+        }],
+        maxDuration: [{
+          required: true,
+          message: '请输入',
+          trigger: 'blur'
+        }],
+        durationType: [{
+          required: true,
+          message: '请选择',
+          trigger: 'change'
+        }],
+        durationCate: [{
+          required: true,
+          message: '请选择',
+          trigger: 'change'
+        }]
+      },
       // 选项
       cateOption: [
         {
@@ -589,51 +1008,55 @@ export default {
       this.$router.go(-1)
     },
     addSumbit () {
-      let obj = [{ type: 1, content: this.text }]
-      if (this.careful === 1) {
-        obj.push({ type: 2, content: this.carefulText })
-      }
-      if (this.Require === 1) {
-        obj.push({ type: 3, content: this.RequireText })
-      }
-      if (this.tip === 1) {
-        obj.push({ type: 4, content: this.tiptext })
-      }
-      this.$api.agent.channelAdd(
-        {
-          name: this.form.name,
-          enName: this.form.enName,
-          code: this.form.code,
-          cate: this.form.cate,
-          type: this.form.type,
-          score: Number(this.form.score),
-          currencyId: this.form.currencyId,
-          hasFuel: this.form.hasFuel,
-          hasTax: this.form.hasTax,
-          hasClearanceFee: this.form.hasClearanceFee,
-          durationType: this.form.durationType,
-          durationCate: this.form.durationCate,
-          minDuration: Number(this.form.minDuration),
-          maxDuration: Number(this.form.maxDuration),
-          weightRule: {
-            volumeDivide: this.form.weightRule.volumeDivide,
-            settlementWeight: this.form.weightRule.settlementWeight,
-            comparisonWeight: Number(this.form.weightRule.comparisonWeight),
-            bigStartingWeight: Number(this.form.weightRule.bigStartingWeight),
-            multiPieceWeight: this.form.weightRule.multiPieceWeight,
-            carryRule: this.form.weightRule.carryRule,
-            realWeightCube: this.form.weightRule.realWeightCube
-          },
-          materialCates: this.form.materialCates,
-          describes: obj
+      this.$refs.elForm.validate(valid => {
+        if (!valid) return
+        // TODO 提交表单
+        let obj = [{ type: 1, content: this.text }]
+        if (this.careful === 1) {
+          obj.push({ type: 2, content: this.carefulText })
         }
-      ).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.$router.push({ name: 'channelSetting' })
-        } else {
-          this.$message.error(res.msg)
+        if (this.Require === 1) {
+          obj.push({ type: 3, content: this.RequireText })
         }
+        if (this.tip === 1) {
+          obj.push({ type: 4, content: this.tiptext })
+        }
+        this.$api.agent.channelAdd(
+          {
+            name: this.form.name,
+            enName: this.form.enName,
+            code: this.form.code,
+            cate: this.form.cate,
+            type: this.form.type,
+            score: Number(this.form.score),
+            currencyId: this.form.currencyId,
+            hasFuel: this.form.hasFuel,
+            hasTax: this.form.hasTax,
+            hasClearanceFee: this.form.hasClearanceFee,
+            durationType: this.form.durationType,
+            durationCate: this.form.durationCate,
+            minDuration: Number(this.form.minDuration),
+            maxDuration: Number(this.form.maxDuration),
+            weightRule: {
+              volumeDivide: this.form.weightRule.volumeDivide,
+              settlementWeight: this.form.weightRule.settlementWeight,
+              comparisonWeight: Number(this.form.weightRule.comparisonWeight),
+              bigStartingWeight: Number(this.form.weightRule.bigStartingWeight),
+              multiPieceWeight: this.form.weightRule.multiPieceWeight,
+              carryRule: this.form.weightRule.carryRule,
+              realWeightCube: this.form.weightRule.realWeightCube
+            },
+            materialCates: this.form.materialCates,
+            describes: obj
+          }
+        ).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.$router.push({ name: 'channelSetting' })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
       })
     },
     onEditorChange ({ quill, html, text }) {
