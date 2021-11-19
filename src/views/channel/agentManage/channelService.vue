@@ -112,7 +112,7 @@
               align="left"
               fixed="right"
               label="操作"
-              width="290"
+              width="350"
               :resizable="false"
             >
               <template slot-scope="scope">
@@ -121,6 +121,7 @@
                 <span @click="plan(scope.row)" class="blue" v-if="scope.row.has_price > 0"> | 价格记录</span>
                 <span @click="fqjg(scope.row)" class="blue" v-if="scope.row.has_price === 0">分区价格</span>
                 <span @click="priceEdit(scope.row)" class="blue" v-if="scope.row.has_price === 1"> | 价格修改</span>
+                <span @click="showAdditive(scope.row)" class="blue"> | 附加费</span>
                 <!-- <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span> -->
                 <span  v-if="scope.row.status === 1" @click="stopAgent(scope.row)" class="blue"> | 停用</span>
                 <span v-else-if="scope.row.has_price === 1" @click="stopAgent(scope.row)" class="blue"> | 启用</span>
@@ -584,6 +585,56 @@
         </button>
       </div>
     </commonDrawer>
+     <!-- 附加费 -->
+     <commonDrawer :drawerVrisible="drawerData.additive.visabled" :drawerSize="drawerData.additive.size" @handleClose='drawerData.additive.visabled = false' drawerTitle="附加费">
+       <div class="dra-content">
+         <el-button @click="showAdditiveAdd">添加</el-button>
+         <el-table :data="drawerData.additive.data" >
+           <el-table-column prop="name" label="品类"></el-table-column>
+           <el-table-column prop="price" label="加价"></el-table-column>
+           <el-table-column label="操作" width="100">
+             <template slot-scope="scope">
+               <span @click="showAdditiveEdit(scope.row)" class="blue">编辑</span>
+               <el-popconfirm title="确认删除该费用？" @confirm="additiveDelete(scope.row)">
+                 <span class="blue" slot="reference"> 删除</span>
+               </el-popconfirm>
+             </template>
+           </el-table-column>
+         </el-table>
+       </div>
+       <div slot="footer">
+         <button class="btn-gray" @click="drawerData.additive.visabled=false">
+           <span>关闭</span>
+         </button>
+       </div>
+     </commonDrawer>
+
+     <el-dialog :visible.sync="dialog.additive.visabled" :title="dialog.additive.title">
+       <el-form ref="additiveForm" :model="dialog.additive.formData" :rules="dialog.additive.rules" size="medium" label-width="100px">
+         <el-form-item label="代理渠道" prop="channelName">
+           <el-input v-model="drawerData.additive.channelName" :disabled='true'
+                     :style="{width: '100%'}"></el-input>
+         </el-form-item>
+         <el-form-item label="品类" prop="materialCateId">
+           <el-select v-model="dialog.additive.formData.materialCateId" placeholder="请选择下拉选择下拉选择" filterable clearable :style="{width: '100%'}"
+                      :disabled="dialog.additive.formData.additiveId"
+           >
+             <el-option v-for="(item, index) in options.material" :key="index" :label="item.name"
+                        :value="item.id"></el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="单价" prop="price">
+           <el-input v-model="dialog.additive.formData.price" placeholder="请输入单价" clearable type="Number" min="0"
+                     :style="{width: '100%'}">
+             <template slot="append">元每公斤（结算重）</template>
+           </el-input>
+         </el-form-item>
+       </el-form>
+       <div slot="footer">
+         <el-button @click="dialog.additive.visabled = false">取消</el-button>
+         <el-button type="primary" @click="additiveSubmit">确定</el-button>
+       </div>
+     </el-dialog>
    </div>
   </div>
 </template>
@@ -630,7 +681,8 @@ export default {
         type: [
           { value: 1, label: '快递' },
           { value: 2, label: '卡派' }
-        ]
+        ],
+        material: []
       },
       priceTypeOptions: [
         // 计价方式
@@ -691,6 +743,24 @@ export default {
             name: [{ required: true, message: '请输入渠道名称', trigger: 'change' }],
             cate: [{ required: true, message: '渠道分类', trigger: 'change' }],
             type: [{ required: true, message: '派件类型', trigger: 'change' }]
+          }
+        },
+        additive: {
+          visabled: false,
+          title: undefined,
+          formData: {
+            additiveId: null,
+            materialCateId: null,
+            price: 0
+          },
+          rules: {
+            materialCateId: [
+              { required: true, message: '请选择品类', trigger: 'blur' }
+            ],
+            price: [
+              { required: true, message: '请输入单价', trigger: 'blur' },
+              { min: 0.01, message: '单价不能小于0.01', trigger: 'blur' }
+            ]
           }
         }
       },
@@ -764,7 +834,14 @@ export default {
           }
         },
         startTime: '',
-        endTime: ''
+        endTime: '',
+        additive: {
+          channelId: undefined,
+          channelName: undefined,
+          visabled: false,
+          size: '50%',
+          data: []
+        }
       }
     }
   },
@@ -773,6 +850,8 @@ export default {
     // 国家
     this.selectFba()
     this.getAgents()
+    // 品类
+    this.getMaterial()
   },
   methods: {
     getAgents () {
@@ -796,6 +875,98 @@ export default {
     price (data) {
       this.$api.agent.agentServicePrice(data.id).then(res => {
         this.priceDetail(res)
+      })
+    },
+    getMaterial () {
+      this.$api.setting.material.select().then(res => {
+        this.options.material = res.data
+      })
+    },
+    showAdditiveAdd () {
+      this.dialog.additive.title = '添加附加费'
+      this.dialog.additive.formData = {
+        additiveId: null,
+        materialCateId: null,
+        price: 0
+      }
+      this.dialog.additive.visabled = true
+    },
+    showAdditiveEdit (row) {
+      this.dialog.additive.title = '编辑附加费'
+      this.dialog.additive.formData = {
+        additiveId: row.id,
+        materialCateId: row.material_cate_id,
+        price: row.price
+      }
+      this.dialog.additive.visabled = true
+    },
+    additiveSubmit () {
+      this.$refs.additiveForm.validate(valid => {
+        if (!valid) {
+          return
+        }
+        if (this.dialog.additive.formData.additiveId) {
+          this.$api.agent.agentServiceAdditiveEdit({
+            additiveId: this.dialog.additive.formData.additiveId,
+            price: this.dialog.additive.formData.price
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.$api.agent.agentServiceAdditiveAll({
+                agentServiceId: this.drawerData.additive.channelId
+              }).then(res => {
+                this.drawerData.additive.data = res.data
+              })
+              this.dialog.additive.visabled = false
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        } else {
+          this.$api.agent.agentServiceAdditiveAdd({
+            agentServiceId: this.drawerData.additive.channelId,
+            materialCateId: this.dialog.additive.formData.materialCateId,
+            price: this.dialog.additive.formData.price
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.$api.agent.agentServiceAdditiveAll({
+                agentServiceId: this.drawerData.additive.channelId
+              }).then(res => {
+                this.drawerData.additive.data = res.data
+              })
+              this.dialog.additive.visabled = false
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        }
+      })
+    },
+    additiveDelete (row) {
+      this.$api.agent.agentServiceAdditiveDelete({
+        additiveId: row.id
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.$api.agent.agentServiceAdditiveAll({
+            agentServiceId: this.drawerData.additive.channelId
+          }).then(res => {
+            this.drawerData.additive.data = res.data
+          })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    showAdditive (row) {
+      this.$api.agent.agentServiceAdditiveAll({
+        agentServiceId: row.id
+      }).then(res => {
+        this.drawerData.additive.channelId = row.id
+        this.drawerData.additive.channelName = row.name
+        this.drawerData.additive.data = res.data
+        this.drawerData.additive.visabled = true
       })
     },
     showChannelAdd () {

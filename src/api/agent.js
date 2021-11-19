@@ -312,3 +312,67 @@ export const channelEditOther = (params) => {
     data: params
   })
 }
+
+export const channelAdditiveAll = (params) => {
+  return axios({
+    url: '/setting/channel/additive/all',
+    method: 'post',
+    data: params
+  })
+}
+
+export const channelAdditiveAdd = (params) => {
+  return axios({
+    url: '/setting/channel/additive/add',
+    method: 'post',
+    data: params
+  })
+}
+
+export const channelAdditiveEdit = (params) => {
+  return axios({
+    url: '/setting/channel/additive/edit',
+    method: 'post',
+    data: params
+  })
+}
+
+export const channelAdditiveDelete = (params) => {
+  return axios({
+    url: '/setting/channel/additive/delete',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentServiceAdditiveAll = (params) => {
+  return axios({
+    url: '/setting/agent/service/additive/all',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentServiceAdditiveAdd = (params) => {
+  return axios({
+    url: '/setting/agent/service/additive/add',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentServiceAdditiveEdit = (params) => {
+  return axios({
+    url: '/setting/agent/service/additive/edit',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentServiceAdditiveDelete = (params) => {
+  return axios({
+    url: '/setting/agent/service/additive/delete',
+    method: 'post',
+    data: params
+  })
+}
