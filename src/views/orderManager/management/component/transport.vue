@@ -461,7 +461,7 @@ export default {
 .diabox{
   text-align: left;
   /deep/.el-input__inner{
-    width: 200px;
+    width: 215px;
   }
 }
 </style>

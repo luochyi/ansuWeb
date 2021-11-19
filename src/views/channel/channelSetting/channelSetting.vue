@@ -390,6 +390,7 @@
     <!-- 查看分区价格 -->
     <commonDrawer :drawerVrisible="drawer" :drawerSize="drawerSize" @handleClose='priceClose' drawerTitle="查看分区价格">
       <div class="dra-content" v-if="drawerData.price.wightCol.unitWeights.length > 0">
+        <span class="tips">单价计价&nbsp;</span><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span>
         <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
           <el-table-column>
             <template slot-scope="scope">
@@ -414,6 +415,7 @@
         </el-table>
       </div>
       <div class="dra-content" v-if="drawerData.price.wightCol.amountWeights.length > 0">
+        <span class="tips">金额计价&nbsp;</span><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span>
         <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
           <el-table-column prop="name">
             <template slot-scope="scope">
@@ -438,6 +440,7 @@
         </el-table>
       </div>
       <div class="dra-content" v-if="drawerData.price.wightCol.firstWeights.length > 0">
+        <span class="tips"> 首续重计价&nbsp;</span><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span>
         <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
           <el-table-column prop="name">
             <template slot-scope="scope">
@@ -648,6 +651,8 @@ export default {
         firstPrices: [],
         planTime: ''
       },
+      startTime: '',
+      endTime: '',
       drawerData: {
         price: {
           type: null,
@@ -762,6 +767,8 @@ export default {
       this.drawerData.price.first_prices = res.data.first_prices
       this.drawerData.price.zones = res.data.zones
       this.drawerData.price.type = res.data.type
+      this.startTime = (res.data.start_time).replace('T', ' ').replace('+', ' ')
+      this.endTime = (res.data.end_time).replace('T', ' ').replace('+', ' ')
       this.drawerData.price.wightCol.unitWeights = []
       this.drawerData.price.wightCol.amountWeights = []
       this.drawerData.price.wightCol.firstWeights = []
