@@ -12,19 +12,66 @@
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
-        <el-row class='searchbox1'>
-          <el-col :span='6' class='colbox'>
-            <el-col :span='6' style="min-width:100px">
-              <span class='text'>预报单号</span>
+        <el-row :gutter="15">
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+            <el-col :span="4">
+              <el-form-item label="预报单号" prop="forecastNo">
+                <el-input
+                  v-model="searchForm.forecastNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '100%' }"
+                >
+                </el-input>
+              </el-form-item>
             </el-col>
-            <el-col :span='12'>
-              <el-input v-model='forecast_no' placeholder='请输入'></el-input>
+            <el-col :span="4">
+              <el-form-item label="客户编码" prop="customerCode">
+                <el-input
+                  v-model="searchForm.customerCode"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '100%' }"
+                >
+                </el-input>
+              </el-form-item>
             </el-col>
-          </el-col>
-          <el-col :span='6' class='colbox'>
-            <el-button class='orangeBtn long1'>查 询</el-button>
-            <el-button class='wuBtn long1'>重 置</el-button>
-          </el-col>
+            <el-col :span="4">
+              <el-form-item label="客户名称" prop="customerName">
+                <el-input
+                  v-model="searchForm.customerName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '100%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+              <el-form-item label="销售姓名" prop="salesmanName">
+                <el-input
+                  v-model="searchForm.salesmanName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '100%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="24">
+              <el-form-item size="large">
+                <el-button class="orangeBtn" @click="search">查询</el-button>
+                <el-button class="whiteBtn" @click="resetForm('elForm')">重置</el-button>
+              </el-form-item>
+            </el-col>
+          </el-form>
         </el-row>
         <el-divider></el-divider>
         <div class='table'>
@@ -253,7 +300,13 @@ export default {
 
       tableData: [
 
-      ]
+      ],
+      searchForm: {
+        forecastNo: '',
+        customerCode: '',
+        customerName: '',
+        salesmanName: ''
+      }
     }
   },
   mounted () {
@@ -267,7 +320,11 @@ export default {
       let params = {
         status: Number(this.activeName),
         page: this.currentPage,
-        limit: this.pageSize
+        limit: this.pageSize,
+        forecastNo: this.searchForm.forecastNo,
+        customerCode: this.searchForm.customerCode,
+        customerName: this.searchForm.customerName,
+        salesmanName: this.searchForm.salesmanName
       }
       this.$api.Ordermanagement.forecastLists(params).then(res => {
         console.log(res.data) // res是接口返回的结果
@@ -345,6 +402,10 @@ export default {
     search () {
       this.getData()
     },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
+    },
     waybill () {
       this.$router.push({ name: 'waybill' })
     },
@@ -367,6 +428,9 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.elForm{
+  text-align: left;
+}
 .dra-content{
   text-align: left;
   /deep/.cell{

@@ -119,7 +119,7 @@
           </el-table>
         </el-row>
         <el-row class="left">
-          <el-button @click="contactAdd=true" class="orangeBtn">新建联系人</el-button>
+          <el-button @click="contactAdd=true" style="margin-top:5px" class="orangeBtn">新建联系人</el-button>
           <!-- <el-button class="whiteBtn" @click="lotDel()">批量删除</el-button> -->
         </el-row>
       </div>

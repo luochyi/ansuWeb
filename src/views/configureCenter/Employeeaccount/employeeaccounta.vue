@@ -21,18 +21,18 @@
     </el-col>
     <el-col :span="12">
       <el-form-item label="部门" prop="departmentId">
-        <el-select v-model="formData.departmentId" placeholder="请选择部门" clearable :style="{width: '100%'}">
-          <el-option v-for="(item, index) in departments" :key="index" :label="item.name"
-            :value="item.id" :disabled="item.disabled"></el-option>
-        </el-select>
+        <el-cascader v-model="formData.departmentId" :props="{value: 'id', label: 'name',checkStrictly: true}" :options="departments" placeholder="请选择部门" clearable :style="{width: '100%'}">
+          <!-- <el-option v-for="(item, index) in departments" :key="index" :label="item.name"
+            :value="item.id" :disabled="item.disabled"></el-option> -->
+        </el-cascader>
       </el-form-item>
     </el-col>
     <el-col :span="12">
       <el-form-item label="职位" prop="positionId">
-        <el-select v-model="formData.positionId" placeholder="请选择职位" clearable :style="{width: '100%'}">
-          <el-option v-for="(item, index) in positions" :key="index" :label="item.name"
-            :value="item.id" :disabled="item.disabled"></el-option>
-        </el-select>
+        <el-cascader v-model="formData.positionId" :options="positions" placeholder="请选择职位"  :props="{value: 'id', label: 'name',checkStrictly: true}" clearable :style="{width: '100%'}">
+          <!-- <el-option v-for="(item, index) in positions" :key="index" :label="item.name"
+            :value="item.id" :disabled="item.disabled"></el-option> -->
+        </el-cascader>
       </el-form-item>
     </el-col>
     <el-col :span="12">
@@ -144,7 +144,7 @@ export default {
       this.$refs.elForm.validate(valid => {
         if (!valid) return
         this.$api.configure.personnel.add({
-          name: this.formData.name,
+          name: this.formData.name, // FY0733
           phone: this.formData.phone,
           username: this.formData.username,
           password: this.formData.password,

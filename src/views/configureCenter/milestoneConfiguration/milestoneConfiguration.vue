@@ -491,7 +491,7 @@ export default {
 .right {
   // float: left;
   width: calc(100%-40px);
-  margin-left: 40px;
+  margin-left: 10px;
   background: #ffffff;
   border-radius: 4px;
   border: 1px solid #e8e8e8;

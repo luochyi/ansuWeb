@@ -389,97 +389,100 @@
     </commonDrawer>
     <!-- 查看分区价格 -->
     <commonDrawer :drawerVrisible="drawer" :drawerSize="drawerSize" @handleClose='priceClose' drawerTitle="查看分区价格">
-      <div class="dra-content" v-if="drawerData.price.wightCol.unitWeights.length > 0">
-        <span class="tips">单价计价&nbsp;</span><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span>
-        <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
-          <el-table-column>
-            <template slot-scope="scope">
-              <el-popover
-                  placement="top-start"
-                  trigger="hover">
-                <el-table :data="scope.row.areas">
-                  <el-table-column property="country_name" label="国家"></el-table-column>
-                  <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
-                  <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
-                  <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
-                </el-table>
-                <div slot="reference">{{ scope.row.name }}</div>
-              </el-popover>
-            </template>
-          </el-table-column>
-          <el-table-column v-for="(item,index) in drawerData.price.wightCol.unitWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
-            <template slot-scope="scope">
-              {{ getDrawerPriceData(drawerData.price.unit_prices, scope.row.id, item.id, 'price') }}
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div class="dra-content" v-if="drawerData.price.wightCol.amountWeights.length > 0">
-        <span class="tips">金额计价&nbsp;</span><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span>
-        <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
-          <el-table-column prop="name">
-            <template slot-scope="scope">
-              <el-popover
-                  placement="top-start"
-                  trigger="hover">
-                <el-table :data="scope.row.areas">
-                  <el-table-column property="country_name" label="国家"></el-table-column>
-                  <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
-                  <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
-                  <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
-                </el-table>
-                <div slot="reference">{{ scope.row.name }}</div>
-              </el-popover>
-            </template>
-          </el-table-column>
-          <el-table-column v-for="(item,index) in drawerData.price.wightCol.amountWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
-            <template slot-scope="scope">
-              {{ getDrawerPriceData(drawerData.price.amounts, scope.row.id, item.id, 'price') }}
-            </template>
-          </el-table-column>
-        </el-table>
-      </div>
-      <div class="dra-content" v-if="drawerData.price.wightCol.firstWeights.length > 0">
-        <span class="tips"> 首续重计价&nbsp;</span><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span>
-        <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
-          <el-table-column prop="name">
-            <template slot-scope="scope">
-              <el-popover
-                  placement="top-start"
-                  trigger="hover">
-                <el-table :data="scope.row.areas">
-                  <el-table-column property="country_name" label="国家"></el-table-column>
-                  <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
-                  <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
-                  <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
-                </el-table>
-                <div slot="reference">{{ scope.row.name }}</div>
-              </el-popover>
-            </template>
-          </el-table-column>
-          <el-table-column v-for="(item,index) in drawerData.price.wightCol.firstWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
-            <el-table-column label="首重重量">
-              <template slot-scope="scope">
-                {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'first_weight') }}
-              </template>
-            </el-table-column>
-            <el-table-column label="首重价格">
-              <template slot-scope="scope">
-                {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'first_weight_price') }}
-              </template>
-            </el-table-column>
-            <el-table-column label="续重重量">
-              <template slot-scope="scope">
-                {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'additional_weight') }}
-              </template>
-            </el-table-column>
-            <el-table-column label="续重价格">
-              <template slot-scope="scope">
-                {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'additional_weight_price') }}
-              </template>
-            </el-table-column>
-          </el-table-column>
-        </el-table>
+      <div class="dra-content">
+          <div><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span></div>
+          <div class="dra-content" v-if="drawerData.price.wightCol.unitWeights.length > 0">
+            <span class="tips">单价计价&nbsp;</span>
+            <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
+              <el-table-column>
+                <template slot-scope="scope">
+                  <el-popover
+                      placement="top-start"
+                      trigger="hover">
+                    <el-table :data="scope.row.areas">
+                      <el-table-column property="country_name" label="国家"></el-table-column>
+                      <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
+                      <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
+                      <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
+                    </el-table>
+                    <div slot="reference">{{ scope.row.name }}</div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="(item,index) in drawerData.price.wightCol.unitWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
+                <template slot-scope="scope">
+                  {{ getDrawerPriceData(drawerData.price.unit_prices, scope.row.id, item.id, 'price') }}
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="dra-content" v-if="drawerData.price.wightCol.amountWeights.length > 0">
+            <span class="tips">金额计价&nbsp;</span>
+            <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
+              <el-table-column prop="name">
+                <template slot-scope="scope">
+                  <el-popover
+                      placement="top-start"
+                      trigger="hover">
+                    <el-table :data="scope.row.areas">
+                      <el-table-column property="country_name" label="国家"></el-table-column>
+                      <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
+                      <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
+                      <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
+                    </el-table>
+                    <div slot="reference">{{ scope.row.name }}</div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="(item,index) in drawerData.price.wightCol.amountWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
+                <template slot-scope="scope">
+                  {{ getDrawerPriceData(drawerData.price.amounts, scope.row.id, item.id, 'price') }}
+                </template>
+              </el-table-column>
+            </el-table>
+          </div>
+          <div class="dra-content" v-if="drawerData.price.wightCol.firstWeights.length > 0">
+            <span class="tips"> 首续重计价&nbsp;</span>
+            <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
+              <el-table-column prop="name">
+                <template slot-scope="scope">
+                  <el-popover
+                      placement="top-start"
+                      trigger="hover">
+                    <el-table :data="scope.row.areas">
+                      <el-table-column property="country_name" label="国家"></el-table-column>
+                      <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
+                      <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
+                      <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
+                    </el-table>
+                    <div slot="reference">{{ scope.row.name }}</div>
+                  </el-popover>
+                </template>
+              </el-table-column>
+              <el-table-column v-for="(item,index) in drawerData.price.wightCol.firstWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
+                <el-table-column label="首重重量">
+                  <template slot-scope="scope">
+                    {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'first_weight') }}
+                  </template>
+                </el-table-column>
+                <el-table-column label="首重价格">
+                  <template slot-scope="scope">
+                    {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'first_weight_price') }}
+                  </template>
+                </el-table-column>
+                <el-table-column label="续重重量">
+                  <template slot-scope="scope">
+                    {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'additional_weight') }}
+                  </template>
+                </el-table-column>
+                <el-table-column label="续重价格">
+                  <template slot-scope="scope">
+                    {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'additional_weight_price') }}
+                  </template>
+                </el-table-column>
+              </el-table-column>
+            </el-table>
+          </div>
       </div>
       <div slot="footer">
         <button class="btn-gray" @click="priceClose">
@@ -508,7 +511,7 @@
     <!-- 附加费 -->
     <commonDrawer :drawerVrisible="drawerData.additive.visabled" :drawerSize="drawerData.additive.size" @handleClose='drawerData.additive.visabled = false' drawerTitle="附加费">
       <div class="dra-content">
-        <el-button @click="showAdditiveAdd">添加</el-button>
+        <el-button class="orangeBtn" @click="showAdditiveAdd">添加</el-button>
         <el-table :data="drawerData.additive.data" >
           <el-table-column prop="name" label="品类"></el-table-column>
           <el-table-column prop="price" label="加价"></el-table-column>
@@ -1637,8 +1640,8 @@ export default {
 </script>
 <style lang="scss" scoped>
 .dra-content{
-  padding-top:10px ;
-  padding-left:10px ;
+  padding:5px ;
+  text-align: left;
 }
 .blue{
     color: #0084FFFF;
