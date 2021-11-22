@@ -282,7 +282,12 @@
             </el-table-column>
             <el-table-column label="最高重量" min-width="90">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.maxWeight" type="Number" min="0" max="99999999"></el-input>
+                <el-autocomplete
+                    class="inline-input"
+                    v-model="scope.row.maxWeight"
+                    :fetch-suggestions="querySearch"
+                    placeholder="请输入内容"
+                ></el-autocomplete>
               </template>
             </el-table-column>
             <el-table-column label="计价方式" min-width="200">
@@ -687,7 +692,7 @@ export default {
       tempData: {
         changePrice: false,
         zone: { zoneIndex: -1, name: '', areas: [] },
-        weights: [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: 1 }],
+        weights: [{}],
         unitWeights: [],
         unitPrices: [],
         amountWeights: [],
@@ -793,7 +798,7 @@ export default {
       this.tempData = {
         changePrice: false,
         zone: { zoneIndex: -1, name: '', areas: [] },
-        weights: [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: 1 }],
+        weights: [{}],
         unitWeights: [],
         unitPrices: [],
         amountWeights: [],
@@ -1216,11 +1221,13 @@ export default {
           this.control -= data
           return
         }
-        if (this.formData.weights.length === 0) {
-          this.formData.weights.push({ minWeight: 0, maxWeight: 99999999, priceType: 1 })
-        }
       }
       if (this.control === 3) {
+        if (this.formData.weights.length === 0) {
+          this.$message.error('重量段不能为空')
+          this.control -= data
+          return
+        }
         if (this.tempData.changePrice) {
           this.tempData.changePrice = false
           this.amounts = []
@@ -1433,7 +1440,7 @@ export default {
     columnFormat (row, col) {
       switch (col.property) {
         case 'maxWeight':
-          return row.maxWeight === 99999999 ? 'MAX' : row.maxWeight
+          return Number(row.maxWeight) === 99999999 ? 'MAX' : row.maxWeight
         case 'priceType':
           return row.priceType === 1 ? '单价' : row.priceType === 2 ? '金额' : '首续重'
         case 'name':
@@ -1508,18 +1515,7 @@ export default {
       this.tempData.zone.areas.splice(index, 1)
     },
     weightDel (index) {
-      if (this.formData.weights.length === 1) {
-        this.$message.error('价格不能为空')
-        return
-      }
       this.formData.weights.splice(index, 1)
-      if (index === 0) {
-        this.formData.weights[0].minWeight = 0
-      } else if (index === this.formData.weights.length) {
-        this.formData.weights[index - 1].maxWeight = 99999999
-      } else {
-        this.formData.weights[index].minWeight = this.formData.weights[index - 1].maxWeight
-      }
       this.tempData.changePrice = true
     },
     weightAdd () {
@@ -1548,15 +1544,58 @@ export default {
       }
       for (let weightsKey in this.formData.weights) {
         let item = this.formData.weights[weightsKey]
+        item.minWeight = Number(item.minWeight)
+        item.maxWeight = Number(item.maxWeight)
+        if (weight.maxWeight <= item.minWeight) {
+          this.formData.weights.splice(weightsKey, 0, {
+            minWeight: weight.minWeight,
+            maxWeight: weight.maxWeight,
+            priceType: weight.priceType
+          })
+          break
+        }
         if (weight.minWeight >= item.minWeight && weight.minWeight < item.maxWeight) {
           if (weight.minWeight > item.minWeight) {
-            this.formData.weights.splice(weightsKey, 0, {
-              minWeight: item.minWeight,
-              maxWeight: weight.minWeight,
-              priceType: item.priceType
-            })
-            item.minWeight = weight.minWeight
-            weightsKey++
+            if (weight.maxWeight < item.maxWeight) {
+              this.formData.weights.splice(weightsKey + 1, 0, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              }, {
+                minWeight: weight.maxWeight,
+                maxWeight: item.maxWeight,
+                priceType: item.priceType
+              })
+              this.formData.weights[weightsKey].maxWeight = weight.minWeight
+            } else if (weight.maxWeight === item.maxWeight) {
+              this.formData.weights.splice(weightsKey + 1, 0, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+              this.formData.weights[weightsKey].maxWeight = weight.minWeight
+            } else {
+              let delCount = 0
+              for (let i = weightsKey; i < this.formData.weights.length; i++) {
+                if (weight.maxWeight > this.formData.weights[i].maxWeight) {
+                  delCount++
+                } else if (weight.maxWeight === this.formData.weights[i].maxWeight) {
+                  delCount++
+                  break
+                } else {
+                  this.formData.weights[weightsKey].minWeight = weight.minWeight
+                  break
+                }
+              }
+              this.formData.weights.splice(weightsKey + 1, delCount, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+              item.maxWeight = weight.minWeight
+              weightsKey++
+              break
+            }
           }
           if (weight.minWeight === item.minWeight) {
             if (weight.maxWeight < item.maxWeight) {
@@ -1595,9 +1634,16 @@ export default {
           break
         }
       }
+      if (this.formData.weights.length === 0) {
+        this.formData.weights.push({
+          minWeight: weight.minWeight,
+          maxWeight: weight.maxWeight,
+          priceType: weight.priceType
+        })
+      }
       this.addweightsTable = false
       this.tempData.changePrice = true
-      this.tempData.weights = [{ weightIndex: -1, minWeight: 0, maxWeight: 99999999, priceType: 1 }]
+      this.tempData.weights = [{}]
     },
     submit () {
       this.formData.unitPrices = []
@@ -1634,6 +1680,10 @@ export default {
           this.$message.error(res.msg) // 错误提示
         }
       })
+    },
+    querySearch (queryString, cb) {
+      let result = [{ value: '99999999' }]
+      cb(result)
     }
   }
 }
