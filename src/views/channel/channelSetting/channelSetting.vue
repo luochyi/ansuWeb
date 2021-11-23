@@ -10,21 +10,52 @@
     </el-row>
     <!-- 主要内容 -->
     <div class="content">
-      <!-- 搜索栏 -->
-      <el-row class="searchbox1">
-        <!-- 代理名称 -->
-        <el-col :span="6" class="colbox">
-          <span class="text">渠道名称</span>
-          <el-col :span="16">
-            <el-input v-model="serviceName" placeholder="请输入"></el-input>
-          </el-col>
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+             <el-col :span="6">
+                <el-form-item label="渠道编码" prop="code">
+                  <el-input
+                    v-model="searchForm.code"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+                <el-form-item label="渠道名称" prop="name">
+                  <el-input
+                    v-model="searchForm.name"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
         </el-col>
-        <!--  -->
-        <el-col :span="6" class="colbox justify-center">
-          <el-button class="orangeBtn long1" @click="search">查 询</el-button>
-          <el-button class="wuBtn long1" @click="reset">重 置</el-button>
+          </el-form>
         </el-col>
       </el-row>
+      <el-divider></el-divider>
       <!-- 表格 -->
       <div>
         <el-row
@@ -572,6 +603,10 @@
 export default {
   data () {
     return {
+      searchForm: {
+        code: '',
+        name: ''
+      },
       selection: false,
       zoneType: null, // 派件类型 1快递 2卡派
       saveData: [],
@@ -785,12 +820,21 @@ export default {
       let params = {
         isStart: Number(this.activeName),
         page: this.page.pageNo,
-        limit: this.page.limit
+        limit: this.page.limit,
+        name: this.searchForm.name,
+        code: this.searchForm.code
       }
       this.$api.agent.channelLists(params).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    search () {
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     // 分区价格
     fqjg (data) {
@@ -1469,9 +1513,6 @@ export default {
     handleClose () {
       this.dialogStop = false
     },
-    search () {
-      this.getData()
-    },
     handleClick (tab, event) {
       console.log(this.activeName)
       this.getData()
@@ -1742,5 +1783,12 @@ export default {
 }
 .plantime{
   margin: 10px 0 10px 0;
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
 }
 </style>

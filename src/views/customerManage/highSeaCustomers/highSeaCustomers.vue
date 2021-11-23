@@ -171,7 +171,11 @@ export default {
       // 初始的表格数据清空
       this.tableData = []
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
-      this.$api.customer.publicLists({ limit: this.page.limit, page: this.page.pageNo, name: this.name }).then(res => {
+      this.$api.customer.publicLists({
+        limit: this.page.limit,
+        page: this.page.pageNo,
+        name: this.name
+      }).then(res => {
         console.log(res.data) // res是接口返回的结果
         res.data.list && res.data.list.forEach(ele => {
           let obj = {
@@ -185,6 +189,9 @@ export default {
         })
         this.page.total = res.data.total // 数据总量
       })
+    },
+    search () {
+      this.getData()
     },
     // 改变页面大小处理
     handleSizeChange (val) {

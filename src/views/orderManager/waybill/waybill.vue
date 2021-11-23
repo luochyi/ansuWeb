@@ -11,19 +11,106 @@
       </el-row>
       <!-- 主要内容 -->
       <div class="content">
-        <el-row class="searchbox1">
-          <el-col :span="6" class="colbox">
-            <el-col :span="6">
-              <span class="text">预报单号</span>
+        <el-row :gutter="15">
+          <el-col>
+            <el-form
+              class="elForm"
+              ref="elForm"
+              size="small"
+              :model="searchForm"
+              label-width="93px"
+              label-position="top"
+            >
+              <el-col :span="6">
+                <el-form-item label="预报单号" prop="forecastNo">
+                  <el-input
+                    v-model="searchForm.forecastNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="客户编码" prop="customerCode">
+                  <el-input
+                    v-model="searchForm.customerCode"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="客户名称" prop="customerName">
+                  <el-input
+                    v-model="searchForm.customerName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="销售姓名" prop="salesmanName">
+                  <el-input
+                    v-model="searchForm.salesmanName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="运单号" prop="waybillNo">
+                  <el-input
+                    v-model="searchForm.waybillNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="运单类型" prop="type">
+                  <el-select
+                    v-model="searchForm.type"
+                    placeholder="请选择"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  <el-option v-for="item in typeOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="是否制作发票" prop="hasInvoice">
+                  <el-select
+                    v-model="searchForm.hasInvoice"
+                    placeholder="请选择"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  <el-option v-for="item in hasInvoiceOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <!-- <el-form-item size="large"> -->
+                  <div class="searchBtn">
+                    <el-button class="orangeBtn" @click="search">查询</el-button>
+                    <el-button class="whiteBtn" @click="resetForm('elForm')">重置</el-button>
+                  </div>
+                <!-- </el-form-item> -->
             </el-col>
-            <el-col :span="12">
-              <el-input v-model="code" placeholder="请输入"></el-input>
-            </el-col>
+            </el-form>
           </el-col>
-          <el-col :span="6" class="colbox">
-            <el-button class="orangeBtn long1">查 询</el-button>
-            <el-button class="wuBtn long1">重 置</el-button>
-          </el-col>
+
         </el-row>
         <el-divider></el-divider>
         <div class="table">
@@ -311,7 +398,34 @@ export default {
           align: 'center'
         }
       ],
-      waybillInfo: {}
+      waybillInfo: {},
+      searchForm: {
+        forecastNo: '',
+        customerCode: '',
+        customerName: '',
+        salesmanName: '',
+        waybillNo: '',
+        type: null,
+        hasInvoice: null
+      },
+      typeOptions: [
+        {
+          label: 'FBA运单',
+          value: 1
+        }, {
+          label: '非FBA运单',
+          value: 2
+        }
+      ],
+      hasInvoiceOptions: [
+        {
+          label: '未制作',
+          value: 0
+        }, {
+          label: '已制作',
+          value: 1
+        }
+      ]
     }
   },
   mounted () {
@@ -319,10 +433,28 @@ export default {
   },
   methods: {
     getData () {
-      this.$api.Ordermanagement.waybillLists({ page: this.page.pageNo, limit: this.page.limit, status: Number(this.activeName) }).then(res => {
+      this.$api.Ordermanagement.waybillLists({
+        page: this.page.pageNo,
+        limit: this.page.limit,
+        status: Number(this.activeName),
+        forecastNo: this.searchForm.forecastNo,
+        customerName: this.searchForm.customerName,
+        customerCode: this.searchForm.customerCode,
+        salesmanName: this.searchForm.salesmanName,
+        waybillNo: this.searchForm.waybillNo,
+        type: this.searchForm.type,
+        hasInvoice: this.searchForm.hasInvoice
+      }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    search () {
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     getInfo (waybillId) {
       this.$api.Ordermanagement.waybillInfo(waybillId).then(res => {
@@ -554,5 +686,12 @@ export default {
   font-weight: 400;
   color: #1890FF;
   cursor: pointer;
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
 }
 </style>

@@ -13,65 +13,69 @@
       <!-- 主要内容 -->
       <div class='content'>
         <el-row :gutter="15">
-          <el-form
-            class="elForm"
-            ref="elForm"
-            size="small"
-            :model="searchForm"
-            label-width="93px"
-            label-position="top"
-          >
-            <el-col :span="4">
-              <el-form-item label="预报单号" prop="forecastNo">
-                <el-input
-                  v-model="searchForm.forecastNo"
-                  placeholder="请输入"
-                  clearable
-                  :style="{ width: '100%' }"
-                >
-                </el-input>
-              </el-form-item>
+          <el-col :span="20">
+            <el-form
+              class="elForm"
+              ref="elForm"
+              size="small"
+              :model="searchForm"
+              label-width="93px"
+              label-position="top"
+            >
+              <el-col :span="6">
+                <el-form-item label="预报单号" prop="forecastNo">
+                  <el-input
+                    v-model="searchForm.forecastNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="客户编码" prop="customerCode">
+                  <el-input
+                    v-model="searchForm.customerCode"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="客户名称" prop="customerName">
+                  <el-input
+                    v-model="searchForm.customerName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="销售姓名" prop="salesmanName">
+                  <el-input
+                    v-model="searchForm.salesmanName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+            </el-form>
             </el-col>
-            <el-col :span="4">
-              <el-form-item label="客户编码" prop="customerCode">
-                <el-input
-                  v-model="searchForm.customerCode"
-                  placeholder="请输入"
-                  clearable
-                  :style="{ width: '100%' }"
-                >
-                </el-input>
-              </el-form-item>
+           <el-col :span="4">
+                <!-- <el-form-item size="large"> -->
+                  <div class="searchBtn">
+                    <el-button class="orangeBtn" @click="search">查询</el-button>
+                    <el-button class="whiteBtn" @click="resetForm('elForm')">重置</el-button>
+                  </div>
+                <!-- </el-form-item> -->
             </el-col>
-            <el-col :span="4">
-              <el-form-item label="客户名称" prop="customerName">
-                <el-input
-                  v-model="searchForm.customerName"
-                  placeholder="请输入"
-                  clearable
-                  :style="{ width: '100%' }"
-                >
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="4">
-              <el-form-item label="销售姓名" prop="salesmanName">
-                <el-input
-                  v-model="searchForm.salesmanName"
-                  placeholder="请输入"
-                  clearable
-                  :style="{ width: '100%' }"
-                >
-                </el-input>
-              </el-form-item>
-            </el-col>
-            <el-col :span="24">
-              <el-form-item size="large">
-                <el-button class="orangeBtn" @click="search">查询</el-button>
-                <el-button class="whiteBtn" @click="resetForm('elForm')">重置</el-button>
-              </el-form-item>
-            </el-col>
-          </el-form>
         </el-row>
         <el-divider></el-divider>
         <div class='table'>
@@ -428,9 +432,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.elForm{
-  text-align: left;
-}
+
 .dra-content{
   text-align: left;
   /deep/.cell{
@@ -467,5 +469,11 @@ export default {
     margin-left: 10px;
   }
 }
-
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
+}
 </style>

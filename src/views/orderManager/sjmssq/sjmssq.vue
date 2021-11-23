@@ -10,69 +10,101 @@
     </el-row>
     <!-- 主要内容 -->
     <div class='content'>
-      <!-- 搜索栏 -->
-      <el-row class='searchbox1'>
-        <!-- 预报单号 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>预报单号</span>
-          <el-col :span='16'>
-            <el-input v-model='forecast_no' placeholder='请输入'>
-                <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
-                            <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i>
-            </el-input>
-          </el-col>
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+            <el-col :span="6">
+              <el-form-item label="预报单号" prop="forecastNo">
+                <el-input
+                  v-model="searchForm.forecastNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="客户编码" prop="customerCode">
+                <el-input
+                  v-model="searchForm.customerCode"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="客户名称" prop="customerName">
+                <el-input
+                  v-model="searchForm.customerName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="业务员姓名" prop="salesmanName">
+                <el-input
+                  v-model="searchForm.salesmanName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="司机姓名" prop="driverName">
+                <el-input
+                  v-model="searchForm.driverName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="预报类型" prop="forecastType">
+                <el-select
+                  v-model="searchForm.forecastType"
+                  placeholder="请选择"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                  <el-option
+                    v-for="item in forecastTypeOptions"
+                    :label="item.label"
+                    :value="item.value"
+                    :key="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
         </el-col>
-        <!-- 客户名称 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>客户名称</span>
-          <el-col :span='16'>
-            <el-input v-model='customer_name' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 客户编码 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>客户编码</span>
-          <el-col :span='16'>
-            <el-input v-model='customer_code' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 预报类型 -->
-         <el-col :span='6' class='colbox'>
-          <span class='text'>预报类型</span>
-          <el-col :span='16'>
-            <el-select v-model='type' placeholder='请输入'></el-select>
-          </el-col>
+          </el-form>
         </el-col>
       </el-row>
-      <el-row class='searchbox1'>
-        <!-- 收货司机 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>收货司机</span>
-          <el-col :span='16'>
-            <el-input v-model='driver_name' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 预报时间 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>预报时间</span>
-          <el-col :span='16'>
-            <el-input v-model='forecast_created_at' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 业务员 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>业务员</span>
-          <el-col :span='16'>
-            <el-input v-model='salesman_name' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!--  -->
-        <el-col :span='6' class='colbox justify-center'>
-          <el-button class='orangeBtn long1'>查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
-        </el-col>
-      </el-row>
-
       <!-- 表格 -->
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
@@ -272,7 +304,26 @@ export default {
         limit: 10,
         sizes: [1, 5, 10],
         total: 0
-      }
+      },
+      searchForm: {
+        forecastNo: '',
+        customerCode: '',
+        customerName: '',
+        salesmanName: '',
+        driverName: '',
+        forecastType: null
+      },
+      forecastTypeOptions: [
+        {
+          label: '计划下单',
+          value: 1
+        },
+        {
+          label: '无计划下单',
+          value: 2
+        }
+      ]
+
     }
   },
   mounted () {
@@ -285,11 +336,28 @@ export default {
       // 初始的表格数据清空
       this.tableData = []
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
-      this.$api.Ordermanagement.forecastDirect({ limit: this.page.limit, page: this.page.pageNo, status: Number(this.activeName) }).then(res => {
+      this.$api.Ordermanagement.forecastDirect({
+        limit: this.page.limit,
+        page: this.page.pageNo,
+        status: Number(this.activeName),
+        forecastNo: this.searchForm.forecastNo,
+        customerName: this.searchForm.customerName,
+        customerCode: this.searchForm.customerCode,
+        salesmanName: this.searchForm.salesmanName,
+        driverName: this.searchForm.driverName,
+        forecastType: this.searchForm.forecastType
+      }).then(res => {
         console.log(res.data) // res是接口返回的结果
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
+    },
+    search () {
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     // 通过
     adopt: function (event) {
@@ -439,5 +507,12 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
 }
 </style>

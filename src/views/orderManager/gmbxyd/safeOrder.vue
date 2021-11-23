@@ -6,6 +6,120 @@
     </el-row>
     <!-- 主要内容 -->
     <div class='content'>
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+             <el-col :span="6">
+                <el-form-item label="保单号" prop="safeNo">
+                  <el-input
+                    v-model="searchForm.safeNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+                <el-form-item label="预报单号" prop="forecastNo">
+                  <el-input
+                    v-model="searchForm.forecastNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="客户编码" prop="customerCode">
+                  <el-input
+                    v-model="searchForm.customerCode"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="客户名称" prop="customerName">
+                  <el-input
+                    v-model="searchForm.customerName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="销售姓名" prop="salesmanName">
+                  <el-input
+                    v-model="searchForm.salesmanName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="渠道名称" prop="channelName">
+                  <el-input
+                    v-model="searchForm.channelName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="运单号" prop="waybillNo">
+                  <el-input
+                    v-model="searchForm.waybillNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="运单类型" prop="type">
+                  <el-select
+                    v-model="searchForm.type"
+                    placeholder="请选择"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  <el-option v-for="item in typeOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
+        </el-col>
+          </el-form>
+        </el-col>
+      </el-row>
+      <!-- 表格 -->
+      <el-divider></el-divider>
       <!-- 表格 -->
       <div>
         <commonTable
@@ -52,7 +166,26 @@ export default {
         limit: 10,
         sizes: [1, 5, 10],
         total: 0
-      }
+      },
+      searchForm: {
+        safeNo: '',
+        forecastNo: '',
+        customerCode: '',
+        customerName: '',
+        salesmanName: '',
+        channelName: '',
+        waybillNo: '',
+        type: null
+      },
+      typeOptions: [
+        {
+          label: 'FBA运单',
+          value: 1
+        }, {
+          label: '非FBA运单',
+          value: 2
+        }
+      ]
     }
   },
   created () {
@@ -62,11 +195,26 @@ export default {
     getData () {
       this.$api.order.waybill.safe.order({
         page: this.page.pageNo,
-        limit: this.page.limit
+        limit: this.page.limit,
+        safeNo: this.searchForm.safeNo,
+        forecastNo: this.searchForm.forecastNo,
+        customerName: this.searchForm.customerName,
+        customerCode: this.searchForm.customerCode,
+        salesmanName: this.searchForm.salesmanName,
+        channelName: this.searchForm.channelName,
+        waybillNo: this.searchForm.waybillNo,
+        type: this.searchForm.type
       }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    search () {
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
@@ -148,5 +296,12 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  // top: 30px;
 }
 </style>
