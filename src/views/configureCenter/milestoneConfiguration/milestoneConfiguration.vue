@@ -33,29 +33,47 @@
           <!-- 主要内容 -->
           <div class="content">
             <!-- 搜索栏 -->
-            <div>
-              <el-row class="searchbox1">
-                <el-col :span="10" class="colbox">
+            <el-row :gutter="15">
+              <el-col>
+                <el-form
+                  class="elForm"
+                  ref="elForm"
+                  size="small"
+                  :model="searchForm"
+                  label-width="93px"
+                  label-position="top"
+                >
                   <el-col :span="6">
-                    <span class="text">客户编码</span>
-                  </el-col>
-                  <el-col :span="10">
-                    <el-input
-                      v-model="predictionNo"
-                      placeholder="请输入"
-                    ></el-input>
-                  </el-col>
-                </el-col>
-                <el-col :span="4" class="colbox">
-                  <el-button class="orangeBtn long1" @click="search"
-                    >查 询</el-button
+                      <el-form-item label="状态名称" prop="name">
+                        <el-input
+                          v-model="searchForm.name"
+                          placeholder="请输入"
+                          clearable
+                          :style="{ width: '60%' }"
+                        >
+                        </el-input>
+                      </el-form-item>
+                    </el-col>
+                  <el-col :span="6">
+                <!-- <el-form-item size="large"> -->
+                <div class="searchBtn">
+                  <el-button class="orangeBtn" @click="search">查询</el-button>
+                  <el-button class="whiteBtn" @click="resetForm('elForm')"
+                    >重置</el-button
                   >
-                </el-col>
-                <el-button @click="show = true" class="whiteBtn"
-                  >新建状态
-                </el-button>
-              </el-row>
-            </div>
+                </div>
+                <!-- </el-form-item> -->
+              </el-col>
+                </el-form>
+              </el-col>
+            </el-row>
+            <!-- 表格 -->
+            <el-divider></el-divider>
+            <el-row  class='searchbox1'>
+              <el-col :span='2' class='colboxx justify-center'>
+                <el-button @click="show=true" class='orangeBtn long3'> 新增状态</el-button>
+              </el-col>
+            </el-row>
             <!-- 表格 -->
             <commonTable
               :columns="columns"
@@ -265,6 +283,9 @@ export default {
         limit: 10,
         sizes: [1, 5, 10],
         total: 0
+      },
+      searchForm: {
+        name: ''
       }
     }
   },
@@ -278,7 +299,8 @@ export default {
         cate: this.isRed + 1,
         status: Number(this.activeName),
         page: this.page.pageNo,
-        limit: this.page.limit
+        limit: this.page.limit,
+        name: this.searchForm.name
       }
       if (this.activeName === '4') {
         // 全部
@@ -298,6 +320,10 @@ export default {
             this.page.total = res.data.total
           })
       })
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     handleSelectionChange (val) {
       console.log(val)
@@ -513,5 +539,12 @@ export default {
 ::-webkit-scrollbar {
 /*隐藏滚轮*/
 display: none;
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
 }
 </style>

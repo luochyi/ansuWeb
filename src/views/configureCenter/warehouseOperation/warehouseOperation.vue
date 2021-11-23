@@ -7,40 +7,98 @@
     <!-- 主要内容 -->
     <div class='content'>
       <!-- 搜索栏 -->
-<!--     <div class='content'>-->
-<!--        <el-row class='searchbox1'>-->
-<!--          <el-col  class='colbox'>-->
-<!--            <el-col :span='5'>-->
-<!--              <span class='text'>操作名称</span>-->
-<!--            </el-col>-->
-<!--            <el-col :span='15'>-->
-<!--              <el-input v-model='predictionNo' placeholder='请输入'></el-input>-->
-<!--            </el-col>-->
-<!--            <el-col class='colbox'>-->
-<!--            <el-col :span='5'>-->
-<!--              <span class='text'>所属仓库</span>-->
-<!--            </el-col>-->
-<!--            <el-col :span='15'>-->
-<!--              <el-input v-model='customerCode' placeholder='请输入'></el-input>-->
-<!--            </el-col>-->
-<!--           </el-col>-->
-<!--           <el-col :span='5'>-->
-<!--              <span class='text'>账号状态</span>-->
-<!--            </el-col>-->
-<!--            <el-col :span='20'>-->
-<!--           <el-select v-model="value" placeholder="请选择">-->
-<!--         <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">-->
-<!--         </el-option>-->
-<!--         </el-select>-->
-<!--          </el-col>-->
-<!--           <el-col :span='8' class='colbox'>-->
-<!--            <el-button class='orangeBtn long1'>查 询</el-button>-->
-<!--            <el-button class='wuBtn long1'>重 置</el-button>-->
-<!--          </el-col>-->
-<!--           </el-col>-->
-<!--        </el-row>-->
-<!--     </div>-->
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+             <el-col :span="6">
+                <el-form-item label="姓名" prop="name">
+                  <el-input
+                    v-model="searchForm.name"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="职位" prop="position">
+                  <el-input
+                    v-model="searchForm.position"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="仓库名" prop="warehouseName">
+                  <el-input
+                    v-model="searchForm.warehouseName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="账号状态" prop="status">
+                  <el-select
+                    v-model="searchForm.status"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  <el-option v-for="i in statusOptions"
+                    :key="i.value"
+                    :label="i.label"
+                    :value="i.value"
+                  >
+                  </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="仓库分配状态" prop="warehouseStatus">
+                  <el-select
+                    v-model="searchForm.warehouseStatus"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  <el-option v-for="i in warehouseStatusOptions"
+                    :key="i.value"
+                    :label="i.label"
+                    :value="i.value"
+                  >
+                  </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
+        </el-col>
+          </el-form>
+        </el-col>
+      </el-row>
       <!-- 表格 -->
+      <el-divider></el-divider>
 <commonTable
       :columns="columns"
       :data="tableData"
@@ -101,6 +159,32 @@ export default {
         limit: 15,
         sizes: [15, 50, 100],
         total: 0
+      },
+      warehouseStatusOptions: [
+        {
+          label: '已分配',
+          value: 1
+        }, {
+          label: '未分配',
+          value: 2
+        }
+      ],
+      statusOptions: [
+        {
+          label: '启用',
+          value: 1
+        },
+        {
+          label: '停用',
+          value: 2
+        }
+      ],
+      searchForm: {
+        name: '',
+        position: '',
+        warehouseName: '',
+        status: null,
+        warehouseStatus: null
       }
     }
   },
@@ -111,7 +195,12 @@ export default {
     getData () {
       this.$api.configure.warehouse.lists({
         page: this.page.pageNo,
-        limit: this.page.limit
+        limit: this.page.limit,
+        name: this.searchForm.name,
+        position: this.searchForm.position,
+        warehouseName: this.searchForm.warehouseName,
+        status: this.searchForm.status,
+        warehouseStatus: this.searchForm.warehouseStatus
       }).then(res => {
         this.tableData = res.data.list
         this.page.total = res.data.total
@@ -126,6 +215,13 @@ export default {
       val && val.forEach((item) => {
         this.chooseArr.push(item)
       })
+    },
+    search () {
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
@@ -226,5 +322,11 @@ export default {
  height: 56px;
  font-size: 16px;
 }
-
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
+}
 </style>
