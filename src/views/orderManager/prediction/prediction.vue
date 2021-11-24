@@ -404,6 +404,7 @@ export default {
       }
     },
     search () {
+      this.currentPage = 1
       this.getData()
     },
     resetForm (formName) {

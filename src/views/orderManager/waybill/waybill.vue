@@ -450,6 +450,7 @@ export default {
       })
     },
     search () {
+      this.page.pageNo = 1
       this.getData()
     },
     resetForm (formName) {

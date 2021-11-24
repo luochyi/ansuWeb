@@ -364,6 +364,7 @@ export default {
       console.log(data.id)
     },
     search () {
+      this.page.pageNo = 1
       this.getData()
     },
     // 重新渲染列

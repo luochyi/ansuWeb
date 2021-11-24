@@ -191,6 +191,7 @@ export default {
       })
     },
     search () {
+      this.page.pageNo = 1
       this.getData()
     },
     // 改变页面大小处理

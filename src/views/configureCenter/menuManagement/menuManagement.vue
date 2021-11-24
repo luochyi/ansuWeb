@@ -30,7 +30,7 @@
         </el-table-column>
         <el-table-column prop="hidden" label="是否隐藏" width="180">
         </el-table-column>
-        <el-table-column prop="component" label="文件路径"></el-table-column>
+        <!-- <el-table-column prop="component" label="文件路径"></el-table-column> -->
         <el-table-column prop="type" label="类型">
           <template slot-scope="scope">
             <div v-if="scope.row.type===1">目录</div>

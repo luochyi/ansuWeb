@@ -248,6 +248,7 @@ export default {
     },
     handleSelectionChange (arr) {},
     search () {
+      this.currentPage = 1
       this.getData()
     },
     reset () {
