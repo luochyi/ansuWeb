@@ -86,12 +86,21 @@
 
             </el-row>
              <el-row style="marginTop:20px">
-                <el-col :span="12">
+                <!-- <el-col :span="12">
                     <span
                         >前段文件路径&nbsp;<el-input
                             v-model="formData.component"
                             style="width: 390px"
                             placeholder="请输入文件路径"
+                        ></el-input
+                        ></span>
+                </el-col> -->
+                 <el-col :span="12">
+                    <span
+                        >图标&nbsp;<el-input
+                            v-model="formData.icon"
+                            style="width: 390px"
+                            placeholder="请输入图标路径"
                         ></el-input
                         ></span>
                 </el-col>
@@ -147,15 +156,7 @@
                         </el-select
                         ></span>
                 </el-col>
-                <el-col :span="12">
-                    <span
-                        >图标&nbsp;<el-input
-                            v-model="formData.icon"
-                            style="width: 390px"
-                            placeholder="请输入图标路径"
-                        ></el-input
-                        ></span>
-                </el-col>
+
             </el-row>
         <el-row>
           <el-col :span="24" style="margin:40px">
@@ -320,7 +321,7 @@ export default {
         path: this.formData.path,
         hidden: this.formData.hidden,
         component: this.formData.component,
-        sort: this.formData.sort,
+        sort: Number(this.formData.sort),
         type: this.formData.type,
         title: this.formData.title,
         icon: this.formData.icon,
