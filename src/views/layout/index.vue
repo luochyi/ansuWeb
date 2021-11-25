@@ -752,6 +752,18 @@ export default {
               parentId: '5'
             },
             {
+              name: 'productItem',
+              meta: {
+                title: '品名',
+                icon: 'icon-bags',
+                hidden: false
+              },
+              ID: 61,
+              menuId: '61',
+              path: 'productItem',
+              parentId: '5'
+            },
+            {
               name: 'countryManagement',
               meta: {
                 title: '目的国管理',
