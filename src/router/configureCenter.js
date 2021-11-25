@@ -264,6 +264,16 @@ export default [
     component: () => import('@/views/configureCenter/materialCate/materialCate.vue')
   },
   {
+    path: '/productItem',
+    name: 'productItem',
+    meta: {
+      title: '品名',
+      icon: 'productItem',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/product/item.vue')
+  },
+  {
     path: '/countryManagement',
     name: 'countryManagement',
     meta: {

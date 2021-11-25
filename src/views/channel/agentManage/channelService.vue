@@ -475,7 +475,7 @@
     <!-- 查看分区价格 -->
     <commonDrawer :drawerVrisible="drawer" :drawerSize="drawerSize" @handleClose='priceClose' drawerTitle="查看分区价格">
       <div class="dra-content">
-        <div><span style="font-size:14px">生效时间：{{startTime}}&nbsp;——&nbsp;{{endTime}}</span></div>
+        <div><span style="font-size:14px">生效时间：{{drawerData.startTime}}&nbsp;——&nbsp;{{drawerData.endTime}}</span></div>
         <div class="dra-content" v-if="drawerData.price.wightCol.unitWeights.length > 0">
           <span class="tips">单价计价&nbsp;</span>
           <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
@@ -598,7 +598,8 @@
        <div class="dra-content">
          <el-button class="orangeBtn" @click="showAdditiveAdd">添加</el-button>
          <el-table :data="drawerData.additive.data" >
-           <el-table-column prop="name" label="品类"></el-table-column>
+           <el-table-column prop="name" label="名称"></el-table-column>
+           <el-table-column prop="price_type" label="类型" :formatter="formatter"></el-table-column>
            <el-table-column prop="price" label="加价"></el-table-column>
            <el-table-column label="操作" width="100">
              <template slot-scope="scope">
@@ -623,8 +624,24 @@
            <el-input v-model="drawerData.additive.channelName" :disabled='true'
                      :style="{width: '100%'}"></el-input>
          </el-form-item>
-         <el-form-item label="品类" prop="materialCateId">
-           <el-select v-model="dialog.additive.formData.materialCateId" placeholder="请选择下拉选择下拉选择" filterable clearable :style="{width: '100%'}"
+         <el-form-item label="费用类型" prop="priceType">
+           <el-select v-model="dialog.additive.formData.priceType" placeholder="请选择下拉选择费用类型" filterable clearable :style="{width: '100%'}"
+                      :disabled="dialog.additive.formData.additiveId"
+           >
+             <el-option v-for="(item, index) in options.priceType" :key="index" :label="item.label"
+                        :value="item.value"></el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="费用" prop="itemId" v-if="dialog.additive.formData.priceType === 1">
+           <el-select v-model="dialog.additive.formData.itemId" placeholder="请选择下拉选择费用" filterable clearable :style="{width: '100%'}"
+                      :disabled="dialog.additive.formData.additiveId"
+           >
+             <el-option v-for="(item, index) in options.item" :key="index" :label="item.name"
+                        :value="item.id"></el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="费用" prop="materialId" v-else-if="dialog.additive.formData.priceType === 2">
+           <el-select v-model="dialog.additive.formData.materialId" placeholder="请选择下拉选择费用" filterable clearable :style="{width: '100%'}"
                       :disabled="dialog.additive.formData.additiveId"
            >
              <el-option v-for="(item, index) in options.material" :key="index" :label="item.name"
@@ -690,7 +707,13 @@ export default {
           { value: 1, label: '快递' },
           { value: 2, label: '卡派' }
         ],
-        material: []
+        priceType: [
+          { value: 1, label: '品名' },
+          { value: 2, label: '材质' }
+        ],
+        priceOptions: [],
+        material: [],
+        item: []
       },
       priceTypeOptions: [
         // 计价方式
@@ -758,12 +781,20 @@ export default {
           title: undefined,
           formData: {
             additiveId: null,
-            materialCateId: null,
+            priceType: null,
+            itemId: null,
+            materialId: null,
             price: 0
           },
           rules: {
-            materialCateId: [
-              { required: true, message: '请选择品类', trigger: 'blur' }
+            priceType: [
+              { required: true, message: '请选择费用类型', trigger: 'blur' }
+            ],
+            itemId: [
+              { required: true, message: '请选择费用', trigger: 'blur' }
+            ],
+            materialId: [
+              { required: true, message: '请选择费用', trigger: 'blur' }
             ],
             price: [
               { required: true, message: '请输入单价', trigger: 'blur' },
@@ -858,8 +889,10 @@ export default {
     // 国家
     this.selectFba()
     this.getAgents()
-    // 品类
+    // 材质
     this.getMaterial()
+    // 品名
+    this.getItem()
   },
   methods: {
     getAgents () {
@@ -890,11 +923,18 @@ export default {
         this.options.material = res.data
       })
     },
+    getItem () {
+      this.$api.setting.product.item.select().then(res => {
+        this.options.item = res.data
+      })
+    },
     showAdditiveAdd () {
       this.dialog.additive.title = '添加附加费'
       this.dialog.additive.formData = {
         additiveId: null,
-        materialCateId: null,
+        priceType: null,
+        itemId: null,
+        materialId: null,
         price: 0
       }
       this.dialog.additive.visabled = true
@@ -903,7 +943,9 @@ export default {
       this.dialog.additive.title = '编辑附加费'
       this.dialog.additive.formData = {
         additiveId: row.id,
-        materialCateId: row.material_cate_id,
+        priceType: row.price_type,
+        itemId: row.price_id,
+        materialId: row.price_id,
         price: row.price
       }
       this.dialog.additive.visabled = true
@@ -931,9 +973,19 @@ export default {
             }
           })
         } else {
+          let priceId = 0
+          switch (this.dialog.additive.formData.priceType) {
+            case 1:
+              priceId = this.dialog.additive.formData.itemId
+              break
+            case 2:
+              priceId = this.dialog.additive.formData.materialId
+              break
+          }
           this.$api.agent.agentServiceAdditiveAdd({
             agentServiceId: this.drawerData.additive.channelId,
-            materialCateId: this.dialog.additive.formData.materialCateId,
+            priceType: this.dialog.additive.formData.priceType,
+            priceId: priceId,
             price: this.dialog.additive.formData.price
           }).then(res => {
             if (res.code === 0) {
@@ -1509,6 +1561,8 @@ export default {
           break
         case 'status':
           return row.status === 1 ? '正常' : '停用'
+        case 'price_type':
+          return row.price_type === 1 ? '品名' : '材质'
       }
     },
     // 重新渲染name列
