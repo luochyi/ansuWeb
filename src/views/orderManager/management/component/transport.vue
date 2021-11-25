@@ -1,147 +1,363 @@
 <template>
-    <div>
-        <el-row class="box">
-              <!-- 运输 -->
-                <el-row>
-                    <el-col :span="6" class="item">
-                        <span class="item-box">运单号&nbsp;&nbsp;</span>
-                        <el-input placeholder="请输入" class="input" v-model="code" size="small">
-                            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
-                            <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i>
-                        </el-input>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button size="small" class="orangeBtn" style="margin-right:10px">查 询</el-button>
-                        <el-button size="small" class="wuBtn" style="margin-right:10px">重 置</el-button>
-                    </el-col>
-                </el-row>
-                <el-row class="line"></el-row>
-            <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
-            <el-col :span='14' class="left">
-                <el-button class='orangeBtn' @click="updateRoad" size="small">批量更新轨迹</el-button>
-              <el-button class='orangeBtn' @click="showTransships(waybillIds)" size="small">批量设置转单号</el-button>
-              <el-button class='orangeBtn' @click="showExtracts(waybillIds)" size="small">批量设置提单号</el-button>
-            </el-col>
-            <el-col :span='10' class="right">
-            </el-col>
-            </el-row>
-            <!-- 表格 -->
-            <div class="table">
-              <commonTable
-                :columns="columns"
-                :data="tableData"
-                :pager="page"
-                @handleSizeChange="handleSizeChange"
-                @handleSelectionChange='handleSelectionChange'
-                @handleCurrentChange="handleCurrentChange"
+  <div>
+    <el-row class="box">
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+            <el-col :span="6">
+              <el-form-item label="预报单号" prop="forecastNo">
+                <el-input
+                  v-model="searchForm.forecastNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
                 >
-                <el-table-column
-                  slot="table_oper"
-                  align="center"
-                  fixed="right"
-                  label="操作"
-                  width="450"
-                  :resizable="false"
-                  >
-                  <template slot-scope="scope">
-                    <el-button type="text" @click="detail(scope.row)">详情</el-button>
-                    <el-button type="text" @click="check(scope.row)"> 查看轨迹</el-button>
-                    <el-button type="text" @click="invoice(scope.row)">导出发票</el-button>
-                    <el-button type="text" @click="sign(scope.row)">签收</el-button>
-                    <el-button type="text" @click="showTransship(scope.row)">设置转单号</el-button>
-                    <el-button type="text" @click="showExtract(scope.row)">设置提单号</el-button>
-                  </template>
-                </el-table-column>
-              </commonTable>
-            </div>
-        </el-row>
-        <el-dialog
-          title="更新轨迹"
-          :visible.sync="dialogVisible"
-          width="30%"
-          :before-close="handleClose">
-          <div class="diabox">
-            <div>节点状态</div>
-            <el-select v-model="milestone.status">
-              <el-option v-for="item in options" :key="item.value" :value="item.value" :label="item.label"></el-option>
-            </el-select>
-            <div>
-              名称
-            <el-input v-model="milestone.name"></el-input>
-            </div>
-            <div>节点时间</div>
-            <el-date-picker
-              v-model="milestone.nodeTime"
-              type="datetime"
-              value-format="yyyy-MM-dd HH:mm:ss"
-              placeholder="选择日期时间">
-            </el-date-picker>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="客户编码" prop="customerCode">
+                <el-input
+                  v-model="searchForm.customerCode"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="客户名称" prop="customerName">
+                <el-input
+                  v-model="searchForm.customerName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="业务员姓名" prop="salesmanName">
+                <el-input
+                  v-model="searchForm.salesmanName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="运单号" prop="waybillNo">
+                <el-input
+                  v-model="searchForm.waybillNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="渠道名称" prop="channelName">
+                <el-input
+                  v-model="searchForm.channelName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <!-- <el-col :span="6">
+                      <el-form-item label="运单号批量搜索" prop="waybillNo">
+                        <el-input
+                          v-model="searchForm.waybillNo"
+                          placeholder="请输入"
+                          clearable
+                          :style="{ width: '60%' }"
+                        >
+                        </el-input>
+                      </el-form-item>
+                    </el-col> -->
+            <el-col :span="6">
+              <el-form-item label="运单类型" prop="type">
+                <el-select
+                  v-model="searchForm.type"
+                  placeholder="请选择"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                  <el-option
+                    v-for="item in typeOptions"
+                    :label="item.label"
+                    :value="item.value"
+                    :key="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="是否制作发票" prop="hasInvoice">
+                <el-select
+                  v-model="searchForm.hasInvoice"
+                  placeholder="请选择"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                  <el-option
+                    v-for="item in hasInvoiceOptions"
+                    :label="item.label"
+                    :value="item.value"
+                    :key="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="转单公司" prop="transshipCode">
+                <el-input
+                  v-model="searchForm.transshipCode"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="转单号" prop="transshipNo">
+                <el-input
+                  v-model="searchForm.transshipNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="提单号" prop="extractNo">
+                <el-input
+                  v-model="searchForm.extractNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
           </div>
-          <span slot="footer" class="dialog-footer">
-            <el-button @click="dialogVisible = false">取 消</el-button>
-            <el-button type="primary" @click="updateRoadSubmit()">确 定</el-button>
-          </span>
-        </el-dialog>
-        <commonDrawer :drawerVrisible="drawerVrisible"  @handleClose='addClose' :drawerSize='drawerSize' :drawerTitle="drawerTitle" style="textAlign:left">
-          <div class="dra-content">
-            <el-table  :data="milestoneList">
-              <el-table-column prop="user_name" label="操作人姓名" width="120"></el-table-column>
-              <el-table-column prop="status" label="状态" width="120">
-                <template slot-scope="scope">
-                  {{scope.row.status===1?'港前':scope.row.status===2?'港后':'派件'}}
-                </template>
-              </el-table-column>
-              <el-table-column prop="name" label="名称" width="200"></el-table-column>
-              <el-table-column prop="node_time" label="节点时间">
-                <template slot-scope="scope">
-                  {{formatDate(scope.row.node_time, 'yyyy-MM-dd hh:mm:ss')}}
-                </template>
-              </el-table-column>
-            </el-table>
-          </div>
-          <!-- 抽屉底部按钮 -->
-          <div slot="footer">
-            <!-- <button class="btn-orange" @click="ejectSubmit()">
+          <!-- </el-form-item> -->
+        </el-col>
+          </el-form>
+        </el-col>
+
+      </el-row>
+      <el-row class="line"></el-row>
+      <el-row
+        class="searchbox1"
+        type="flex"
+        justify="space-between"
+        align="middle"
+      >
+        <el-col :span="14" class="left">
+          <el-button class="orangeBtn" @click="updateRoad" size="small"
+            >批量更新轨迹</el-button
+          >
+          <el-button
+            class="orangeBtn"
+            @click="showTransships(waybillIds)"
+            size="small"
+            >批量设置转单号</el-button
+          >
+          <el-button
+            class="orangeBtn"
+            @click="showExtracts(waybillIds)"
+            size="small"
+            >批量设置提单号</el-button
+          >
+        </el-col>
+        <el-col :span="10" class="right"> </el-col>
+      </el-row>
+      <!-- 表格 -->
+      <div class="table">
+        <commonTable
+          :columns="columns"
+          :data="tableData"
+          :pager="page"
+          @handleSizeChange="handleSizeChange"
+          @handleSelectionChange="handleSelectionChange"
+          @handleCurrentChange="handleCurrentChange"
+        >
+          <el-table-column
+            slot="table_oper"
+            align="center"
+            fixed="right"
+            label="操作"
+            width="450"
+            :resizable="false"
+          >
+            <template slot-scope="scope">
+              <el-button type="text" @click="detail(scope.row)">详情</el-button>
+              <el-button type="text" @click="check(scope.row)">
+                查看轨迹</el-button
+              >
+              <el-button type="text" @click="invoice(scope.row)"
+                >导出发票</el-button
+              >
+              <el-button type="text" @click="sign(scope.row)">签收</el-button>
+              <el-button type="text" @click="showTransship(scope.row)"
+                >设置转单号</el-button
+              >
+              <el-button type="text" @click="showExtract(scope.row)"
+                >设置提单号</el-button
+              >
+            </template>
+          </el-table-column>
+        </commonTable>
+      </div>
+    </el-row>
+    <el-dialog
+      title="更新轨迹"
+      :visible.sync="dialogVisible"
+      width="30%"
+      :before-close="handleClose"
+    >
+      <div class="diabox">
+        <div>节点状态</div>
+        <el-select v-model="milestone.status">
+          <el-option
+            v-for="item in options"
+            :key="item.value"
+            :value="item.value"
+            :label="item.label"
+          ></el-option>
+        </el-select>
+        <div>
+          名称
+          <el-input v-model="milestone.name"></el-input>
+        </div>
+        <div>节点时间</div>
+        <el-date-picker
+          v-model="milestone.nodeTime"
+          type="datetime"
+          value-format="yyyy-MM-dd HH:mm:ss"
+          placeholder="选择日期时间"
+        >
+        </el-date-picker>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="updateRoadSubmit()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <commonDrawer
+      :drawerVrisible="drawerVrisible"
+      @handleClose="addClose"
+      :drawerSize="drawerSize"
+      :drawerTitle="drawerTitle"
+      style="textalign: left"
+    >
+      <div class="dra-content">
+        <el-table :data="milestoneList">
+          <el-table-column
+            prop="user_name"
+            label="操作人姓名"
+            width="120"
+          ></el-table-column>
+          <el-table-column prop="status" label="状态" width="120">
+            <template slot-scope="scope">
+              {{
+                scope.row.status === 1
+                  ? "港前"
+                  : scope.row.status === 2
+                  ? "港后"
+                  : "派件"
+              }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="name"
+            label="名称"
+            width="200"
+          ></el-table-column>
+          <el-table-column prop="node_time" label="节点时间">
+            <template slot-scope="scope">
+              {{ formatDate(scope.row.node_time, "yyyy-MM-dd hh:mm:ss") }}
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <!-- 抽屉底部按钮 -->
+      <div slot="footer">
+        <!-- <button class="btn-orange" @click="ejectSubmit()">
               <span> <i class="el-icon-circle-check"></i>提交</span>
             </button> -->
-            <button class="btn-gray" @click="addClose">
-              <span>关闭</span>
-            </button>
-          </div>
-        </commonDrawer>
+        <button class="btn-gray" @click="addClose">
+          <span>关闭</span>
+        </button>
+      </div>
+    </commonDrawer>
 
-      <el-dialog title="设置转单号" :visible.sync="dialog.transship.visable">
-        <el-form :model="dialog.transship.formData">
-          <el-form-item label="快递公司" label-width="120px">
-            <el-select v-model="dialog.transship.formData.transshipId" filterable placeholder="请选择转单快递公司">
-              <el-option
-                  v-for="item in dialog.transship.options.transships"
-                  :key="item.id"
-                  :label="item.code"
-                  :value="item.id"/>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="转单号" label-width="120px">
-            <el-input v-model="dialog.transship.formData.transshipNo" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialog.transship.visable = false">取 消</el-button>
-          <el-button type="primary" @click="setTransship">确 定</el-button>
-        </div>
-      </el-dialog>
-      <el-dialog title="设置提单号" :visible.sync="dialog.extract.visable">
-        <el-form :model="dialog.extract.formData">
-          <el-form-item label="提单号" label-width="120px">
-            <el-input v-model="dialog.extract.formData.extractNo" autocomplete="off"></el-input>
-          </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-          <el-button @click="dialog.extract.visable = false">取 消</el-button>
-          <el-button type="primary" @click="setExtract">确 定</el-button>
-        </div>
-      </el-dialog>
-    </div>
+    <el-dialog title="设置转单号" :visible.sync="dialog.transship.visable">
+      <el-form :model="dialog.transship.formData">
+        <el-form-item label="快递公司" label-width="120px">
+          <el-select
+            v-model="dialog.transship.formData.transshipId"
+            filterable
+            placeholder="请选择转单快递公司"
+          >
+            <el-option
+              v-for="item in dialog.transship.options.transships"
+              :key="item.id"
+              :label="item.code"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="转单号" label-width="120px">
+          <el-input
+            v-model="dialog.transship.formData.transshipNo"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialog.transship.visable = false">取 消</el-button>
+        <el-button type="primary" @click="setTransship">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="设置提单号" :visible.sync="dialog.extract.visable">
+      <el-form :model="dialog.extract.formData">
+        <el-form-item label="提单号" label-width="120px">
+          <el-input
+            v-model="dialog.extract.formData.extractNo"
+            autocomplete="off"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialog.extract.visable = false">取 消</el-button>
+        <el-button type="primary" @click="setExtract">确 定</el-button>
+      </div>
+    </el-dialog>
+  </div>
 </template>
 
 <script>
@@ -166,10 +382,12 @@ export default {
         {
           label: '港前',
           value: 1
-        }, {
+        },
+        {
           label: '港后',
           value: 2
-        }, {
+        },
+        {
           label: '派件',
           value: 3
         }
@@ -177,23 +395,88 @@ export default {
       table_choose: [],
       columns: [
         { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
-        { prop: 'forecast_no', label: '预报单号', width: '200', align: 'center' },
-        { prop: 'type', label: '运单类型', align: 'center', width: '200', formatter: this.formatter },
-        { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
-        { prop: 'customer_code', label: '客户编码', width: '200', align: 'center' },
-        { prop: 'channel_name', label: '渠道名称', width: '200', align: 'center' },
-        { prop: 'has_invoice', label: '是否制作发票', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'irikura_time', label: '入库时间', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'created_at', label: '下单时间', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'transship_code', label: '转单快递', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'transship_no', label: '转单号', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'extract_no', label: '提单号', width: '200', align: 'center', formatter: this.formatter },
+        {
+          prop: 'forecast_no',
+          label: '预报单号',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'type',
+          label: '运单类型',
+          align: 'center',
+          width: '200',
+          formatter: this.formatter
+        },
+        {
+          prop: 'customer_name',
+          label: '客户名称',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'customer_code',
+          label: '客户编码',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'channel_name',
+          label: '渠道名称',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'has_invoice',
+          label: '是否制作发票',
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
+        },
+        {
+          prop: 'irikura_time',
+          label: '入库时间',
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
+        },
+        {
+          prop: 'created_at',
+          label: '下单时间',
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
+        },
+        {
+          prop: 'transship_code',
+          label: '转单快递',
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
+        },
+        {
+          prop: 'transship_no',
+          label: '转单号',
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
+        },
+        {
+          prop: 'extract_no',
+          label: '提单号',
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
+        },
         { prop: 'remark', label: '客户备注', width: '200', align: 'center' },
-        { prop: 'interior_remark', label: '内部备注', width: '200', align: 'center' }
+        {
+          prop: 'interior_remark',
+          label: '内部备注',
+          width: '200',
+          align: 'center'
+        }
       ],
-      tableData: [
-
-      ],
+      tableData: [],
       page: {
         limit: 10,
         total: 0,
@@ -220,7 +503,40 @@ export default {
           }
         }
       },
-      waybillIds: []
+      waybillIds: [],
+      searchForm: {
+        forecastNo: '',
+        customerCode: '',
+        customerName: '',
+        salesmanName: '',
+        waybillNo: '',
+        channelName: '',
+        type: null,
+        hasInvoice: null,
+        transshipCode: '',
+        transshipNo: '',
+        extractNo: ''
+      },
+      typeOptions: [
+        {
+          label: 'FBA运单',
+          value: 1
+        },
+        {
+          label: '非FBA运单',
+          value: 2
+        }
+      ],
+      hasInvoiceOptions: [
+        {
+          label: '未制作',
+          value: 0
+        },
+        {
+          label: '已制作',
+          value: 1
+        }
+      ]
     }
   },
   mounted () {
@@ -235,17 +551,39 @@ export default {
       // signLists
       // checkoutLists
       // Ejectlists
-      this.$api.Ordermanagement.shipmentLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
+      this.$api.Ordermanagement.shipmentLists({
+        limit: this.page.limit,
+        page: this.page.pageNo,
+        forecastNo: this.searchForm.forecastNo,
+        customerName: this.searchForm.customerName,
+        customerCode: this.searchForm.customerCode,
+        salesmanName: this.searchForm.salesmanName,
+        waybillNo: this.searchForm.waybillNo,
+        type: this.searchForm.type,
+        hasInvoice: this.searchForm.hasInvoice,
+        channelName: this.searchForm.channelName,
+        transshipCode: this.searchForm.transshipCode,
+        transshipNo: this.searchForm.transshipNo,
+        extractNo: this.searchForm.extractNo
+      }).then((res) => {
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
+    },
+    search () {
+      this.page.pageNo = 1
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     // 签收
     sign (data) {
       this.req.waybillIds.push(data.id)
       this.$confirm('确认签收')
-        .then(_ => {
-          this.$api.Ordermanagement.shipmentSign(this.req).then(res => {
+        .then((_) => {
+          this.$api.Ordermanagement.shipmentSign(this.req).then((res) => {
             if (res.code === 0) {
               this.$message.success(res.msg)
               this.getData()
@@ -254,7 +592,7 @@ export default {
             }
           })
         })
-        .catch(_ => {})
+        .catch((_) => {})
     },
     detail (data) {
       this.$router.push({ name: 'waybillDetail', params: { id: data.id } })
@@ -262,14 +600,19 @@ export default {
     check (data) {
       console.log(data.id)
       this.drawerVrisible = true
-      this.$api.Ordermanagement.milestoneInfo({ waybillId: data.id }).then(res => { this.milestoneList = res.data })
+      this.$api.Ordermanagement.milestoneInfo({ waybillId: data.id }).then(
+        (res) => {
+          this.milestoneList = res.data
+        }
+      )
     },
     handleSelectionChange (val) {
       this.waybillIds = []
-      val && val.forEach(item => {
-        this.table_choose.push(item.id)
-        this.waybillIds.push(item.id)
-      })
+      val &&
+        val.forEach((item) => {
+          this.table_choose.push(item.id)
+          this.waybillIds.push(item.id)
+        })
     },
     updateRoad () {
       // if (this.table_choose.length < 1) {
@@ -283,9 +626,11 @@ export default {
         this.$message.error('该运单还未制作发票')
         return
       }
-      this.$api.Ordermanagement.invoiceExport({ waybillId: row.id }).then(res => {
-        this.downloadBlob(res, '发票.xlsx')
-      })
+      this.$api.Ordermanagement.invoiceExport({ waybillId: row.id }).then(
+        (res) => {
+          this.downloadBlob(res, '发票.xlsx')
+        }
+      )
     },
     updateRoadSubmit () {
       let obj = {
@@ -294,7 +639,7 @@ export default {
         name: this.milestone.name,
         nodeTime: this.milestone.nodeTime
       }
-      this.$api.Ordermanagement.milestoneAdd(obj).then(res => {
+      this.$api.Ordermanagement.milestoneAdd(obj).then((res) => {
         if (res.code === 0) {
           this.$message.success(res.msg)
           this.handleClose()
@@ -325,11 +670,23 @@ export default {
         case 'created_at':
           return this.formatDate(row.created_at, 'yyyy-MM-dd hh:mm:ss')
         case 'transship_code':
-          return row.channel_type === 2 ? '——' : row.transship_id > 0 ? row.transship_code : '——'
+          return row.channel_type === 2
+            ? '——'
+            : row.transship_id > 0
+              ? row.transship_code
+              : '——'
         case 'transship_no':
-          return row.channel_type === 2 ? '——' : row.transship_id > 0 ? row.transship_no : '——'
+          return row.channel_type === 2
+            ? '——'
+            : row.transship_id > 0
+              ? row.transship_no
+              : '——'
         case 'extract_no':
-          return row.channel_type === 2 ? '——' : row.extract_no !== '' ? row.extract_no : '——'
+          return row.channel_type === 2
+            ? '——'
+            : row.extract_no !== ''
+              ? row.extract_no
+              : '——'
       }
     },
     addClose () {
@@ -344,7 +701,7 @@ export default {
       this.dialogVisible = false
     },
     getTransships () {
-      this.$api.setting.transship.select().then(res => {
+      this.$api.setting.transship.select().then((res) => {
         this.dialog.transship.options.transships = res.data
       })
     },
@@ -379,33 +736,37 @@ export default {
       this.dialog.extract.visable = true
     },
     setTransship () {
-      this.$api.order.waybill.transship({
-        waybillIds: this.dialog.transship.formData.waybillIds,
-        transshipId: this.dialog.transship.formData.transshipId,
-        transshipNo: this.dialog.transship.formData.transshipNo
-      }).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.getData()
-          this.dialog.transship.visable = false
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+      this.$api.order.waybill
+        .transship({
+          waybillIds: this.dialog.transship.formData.waybillIds,
+          transshipId: this.dialog.transship.formData.transshipId,
+          transshipNo: this.dialog.transship.formData.transshipNo
+        })
+        .then((res) => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialog.transship.visable = false
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
     },
     setExtract () {
-      this.$api.order.waybill.extract({
-        waybillIds: this.dialog.extract.formData.waybillIds,
-        extractNo: this.dialog.extract.formData.extractNo
-      }).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.getData()
-          this.dialog.extract.visable = false
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+      this.$api.order.waybill
+        .extract({
+          waybillIds: this.dialog.extract.formData.waybillIds,
+          extractNo: this.dialog.extract.formData.extractNo
+        })
+        .then((res) => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialog.extract.visable = false
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
     }
   }
 }
@@ -414,54 +775,61 @@ export default {
 .el-select {
   display: block;
 }
-.line{
-    height: 1px;
-    background: #E9E9E9;
-    margin: 18px 0;
+.line {
+  height: 1px;
+  background: #e9e9e9;
+  margin: 18px 0;
 }
-.input{
-    width: 70%;
-    display: flex;
-    align-items: center;
+.input {
+  width: 70%;
+  display: flex;
+  align-items: center;
 }
-.box{
-    background: #fff;
-    padding-top: 14px;
-    text-align: left;
+.box {
+  background: #fff;
+  padding-top: 14px;
+  text-align: left;
 }
-.item{
-    display: flex;
-    align-items: center;
+.item {
+  display: flex;
+  align-items: center;
 }
-.item-box{
-    text-align: right;
-    width: 80px;
-    font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: rgba(0, 0, 0, 0.65);
+.item-box {
+  text-align: right;
+  width: 80px;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
 }
-.unit{
-    line-height: 32px;
-    font-size: 12px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #FE822F;
-    margin-right: 10px;
+.unit {
+  line-height: 32px;
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #fe822f;
+  margin-right: 10px;
 }
 .expend {
   font-family: "iconfont" !important;
   line-height: 32px;
   font-size: 14px;
   font-style: normal;
-  color: #FE822F;
+  color: #fe822f;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-.diabox{
+.diabox {
   text-align: left;
-  /deep/.el-input__inner{
+  /deep/.el-input__inner {
     width: 215px;
   }
+}
+.elForm {
+  text-align: left;
+}
+.searchBtn {
+  position: relative;
+  top: 30px;
 }
 </style>

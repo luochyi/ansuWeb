@@ -7,23 +7,52 @@
     <!-- 主要内容 -->
     <div class='content'>
       <!-- 搜索栏 -->
-      <el-row  class='searchbox1'>
-        <!-- 客户名称 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>客户名称</span>
-          <el-col :span='16'>
-            <el-input v-model='name' placeholder='请输入'></el-input>
-          </el-col>
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+             <el-col :span="6">
+                <el-form-item label="客户名称" prop="name">
+                  <el-input
+                    v-model="searchForm.name"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+                <el-form-item label="业务员" prop="salesmanName">
+                  <el-input
+                    v-model="searchForm.salesmanName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
         </el-col>
-        <!--  -->
-        <el-col :span='6' >
-          <el-button @click="search()"  class='orangeBtn long1'>查 询</el-button>
-          <el-button @click="reset()" class='wuBtn long1'>重 置</el-button>
-        </el-col>
-        <el-col :span='12' >
-          <el-button @click="addcustomerp" class='orangeBtn long2'>添加客户</el-button>
+          </el-form>
         </el-col>
       </el-row>
+      <el-divider></el-divider>
       <!-- 表格 -->
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
@@ -104,6 +133,10 @@ export default {
   data () {
     return {
       table_row: [],
+      searchForm: {
+        salesmanName: '',
+        name: ''
+      },
       changes: false,
       dialogVisible: false,
       informationis: false,
@@ -147,7 +180,12 @@ export default {
       // 初始的表格数据清空
       this.tableData = []
       // limit: this.page.limit, page: this.page.pageNo 页码和页容量
-      this.$api.customer.privateLists({ limit: this.page.limit, page: this.page.pageNo, name: this.name }).then(res => {
+      this.$api.customer.privateLists({
+        limit: this.page.limit,
+        page: this.page.pageNo,
+        name: this.searchForm.name,
+        salesmanName: this.searchForm.salesmanName
+      }).then(res => {
         console.log(res.data) // res是接口返回的结果
         res.data.list && res.data.list.forEach(ele => {
           let obj = {
@@ -161,6 +199,14 @@ export default {
         })
         this.page.total = res.data.total // 数据总量
       })
+    },
+    search () {
+      this.page.pageNo = 1
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     handleSelectionChange (val) {
       val && val.forEach(item => {
@@ -179,14 +225,6 @@ export default {
     },
     // 操作按钮列表
     editTableData (row) {},
-    search () {
-      this.getData()
-    },
-    reset () {
-      this.name = ''
-      this.getData()
-      console.log('111')
-    },
     open (data) {
       console.log(data)
       this.Uid = []
@@ -285,5 +323,12 @@ export default {
 /deep/ .title{
  height: 56px;
  font-size: 16px;
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
 }
 </style>

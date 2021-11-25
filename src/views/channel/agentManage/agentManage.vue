@@ -10,35 +10,63 @@
     </el-row>
     <!-- 主要内容 -->
     <div class='content'>
-      <!-- 搜索栏 -->
-      <el-row class='searchbox1'>
-        <!-- 代理名称 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>代理名称</span>
-          <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
-          </el-col>
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+             <el-col :span="6">
+                <el-form-item label="代理编码" prop="code">
+                  <el-input
+                    v-model="searchForm.code"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+                <el-form-item label="代理名称" prop="name">
+                  <el-input
+                    v-model="searchForm.name"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="账期" prop="periodName">
+                  <el-input
+                    v-model="searchForm.periodName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
         </el-col>
-        <!-- 代理编码 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>代理编码</span>
-          <el-col :span='16'>
-            <el-input v-model='agentCode' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 代理账期 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>代理账期</span>
-          <el-col :span='16'>
-            <el-input v-model='agentAccount' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!--  -->
-        <el-col :span='6' class='colbox justify-center'>
-          <el-button class='orangeBtn long1' @click="search">查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
+          </el-form>
         </el-col>
       </el-row>
+      <el-divider></el-divider>
       <!-- 表格 -->
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
@@ -142,7 +170,20 @@ export default {
       agentAccount: '', // 代理账期
       tableData: [
       ],
-
+      searchForm: {
+        code: '',
+        name: '',
+        periodName: ''
+      },
+      typeOptions: [
+        {
+          label: 'FBA运单',
+          value: 1
+        }, {
+          label: '非FBA运单',
+          value: 2
+        }
+      ],
       dialogTitle: '停用代理',
       chooseAgent: [], // 选择停用的 代理
       chooseArr: [], // 选中的代理
@@ -158,8 +199,9 @@ export default {
         status: Number(this.activeName),
         page: this.currentPage,
         limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
+        name: this.searchForm.name,
+        code: this.searchForm.code,
+        periodName: this.searchForm.periodName
       }
       this.$api.agent.settingAgentLists(params).then((res) => {
         console.log(res)
@@ -175,6 +217,14 @@ export default {
           this.total = res.data.total
         })
       })
+    },
+    search () {
+      this.currentPage = 1
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     handleSelectionChange (val) {
       console.log(val)
@@ -259,7 +309,6 @@ export default {
       this.status = val
       this.getData()
     },
-    search () { this.getData() },
     sizechange (val) {
       this.pageSize = val
       this.getData()
@@ -314,5 +363,12 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
 }
 </style>

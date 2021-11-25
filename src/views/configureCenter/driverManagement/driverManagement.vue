@@ -7,39 +7,76 @@
     <!-- 主要内容 -->
     <div class='content'>
       <!-- 搜索栏 -->
-<!--     <div class='contenta'>-->
-<!--        <el-row class='searchbox1'>-->
-<!--          <el-col :span='6' class='colbox'>-->
-<!--            <el-col :span='6'>-->
-<!--              <span class='text'>司机名称</span>-->
-<!--            </el-col>-->
-<!--            <el-col :span='16'>-->
-<!--              <el-input v-model='predictionNo' placeholder='请输入'></el-input>-->
-<!--            </el-col>-->
-<!--          </el-col>-->
-<!--          <el-col :span='6' class='colbox'>-->
-<!--            <el-col :span='6'>-->
-<!--              <span class='text'>区域分配</span>-->
-<!--            </el-col>-->
-<!--           <el-select v-model="distribution"  placeholder="请选择">-->
-<!--         <el-option v-for="item in distributionOpts" :key="item.id" :label="item.name" :value="item.id">-->
-<!--         </el-option>-->
-<!--         </el-select>-->
-<!--          </el-col>-->
-<!--          <el-col :span='6' class='colbox'>-->
-<!--            <el-col :span='6'>-->
-<!--              <span class='text'>账号状态</span>-->
-<!--            </el-col>-->
-<!--            <el-select v-model="status" multiple placeholder="请选择">-->
-<!--         <el-option v-for="item in statusOpts" :key="item.id" :label="item.name" :value="item.id"> </el-option>-->
-<!--         </el-select>-->
-<!--          </el-col>-->
-<!--                   <el-col :span='6' class='colbox'>-->
-<!--            <el-button class='orangeBtn long1'>查 询</el-button>-->
-<!--            <el-button class='wuBtn long1'>重 置</el-button>-->
-<!--          </el-col>-->
-<!--         </el-row>-->
-<!--           </div>-->
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+             <el-col :span="6">
+                <el-form-item label="姓名" prop="name">
+                  <el-input
+                    v-model="searchForm.name"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+                <el-form-item label="职位" prop="position">
+                  <el-input
+                    v-model="searchForm.position"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="员工状态" prop="status">
+                  <el-select
+                    v-model="searchForm.status"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="区域状态" prop="regionStatus">
+                  <el-select
+                    v-model="searchForm.regionStatus"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  <el-option v-for="item in regionStatusOptions" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
+        </el-col>
+          </el-form>
+        </el-col>
+      </el-row>
+      <el-divider></el-divider>
       <!-- 表格 -->
       <div>
        <commonTable
@@ -112,6 +149,32 @@ export default {
         sizes: [1, 5, 10],
         total: 0
       },
+      searchForm: {
+        name: '',
+        position: '',
+        status: null,
+        regionStatus: null
+      },
+      statusOptions: [
+        {
+          label: '正常',
+          value: 1
+        },
+        {
+          label: '停用',
+          value: 2
+        }
+      ],
+      regionStatusOptions: [
+        {
+          label: '已配置',
+          value: 1
+        },
+        {
+          label: '未配置',
+          value: 2
+        }
+      ],
       // 选择器
       distribution: '', // 区域分配
       distributionOpts: [{
@@ -133,16 +196,25 @@ export default {
     },
     getData () {
       let params = {
-        status: Number(this.activeName),
-        name: this.agentName,
-        code: this.agentCode,
         page: this.page.pageNo,
-        limit: this.page.limit
+        limit: this.page.limit,
+        name: this.searchForm.name,
+        position: this.searchForm.position,
+        status: this.searchForm.status,
+        regionStatus: this.searchForm.regionStatus
       }
       this.$api.configure.driver.lists(params).then((res) => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
+    },
+    search () {
+      this.page.pageNo = 1
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
@@ -245,5 +317,10 @@ export default {
   margin: 10px;
 
 }
-
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+}
 </style>
