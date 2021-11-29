@@ -40,7 +40,7 @@
       <el-aside class='aside main-left' width='200px'>
         <el-scrollbar style='height: calc(100vh - 60px)'>
           <!-- 导航栏 -->
-          <asides :num='Number(activeIndex-1)'></asides>
+          <asides :num='Number(activeIndex)'></asides>
         </el-scrollbar>
       </el-aside>
 
@@ -92,8 +92,8 @@ export default {
             icon: 'orderIcon',
             hidden: false
           },
-          ID: 1,
-          menuId: '1',
+          ID: 0,
+          menuId: '0',
           path: 'orderManager',
           parentId: '0',
           children: [
@@ -107,7 +107,7 @@ export default {
               ID: 10,
               menuId: '10',
               path: 'prediction',
-              parentId: '1'
+              parentId: '0'
             },
             {
               name: 'waybill',
@@ -119,7 +119,7 @@ export default {
               ID: 11,
               menuId: '11',
               path: 'waybill',
-              parentId: '1'
+              parentId: '0'
             },
             {
               name: 'management',
@@ -131,7 +131,7 @@ export default {
               ID: 12,
               menuId: '12',
               path: 'historyOrder',
-              parentId: '1'
+              parentId: '0'
             },
             // {
             //   name: 'portissues',
@@ -214,9 +214,33 @@ export default {
               ID: 17,
               menuId: '17',
               path: 'eject',
-              parentId: '1'
+              parentId: '0'
             }
           ]
+        },
+        {
+          name: 'priceManager',
+          meta: {
+            title: '运单报价',
+            icon: 'orderIcon',
+            hidden: false
+          },
+          ID: 1,
+          menuId: '1',
+          path: 'priceManager',
+          parentId: '0',
+          children: [{
+            name: 'waybillprice',
+            meta: {
+              title: '运单报价',
+              icon: 'icon-kuaidiwuliu',
+              hidden: false
+            },
+            ID: 31,
+            menuId: '31',
+            path: 'waybillprice',
+            parentId: '3'
+          }]
         },
         {
           name: 'Financialexpenses',
@@ -828,12 +852,12 @@ export default {
       item.children.forEach(items => {
         console.log(items.name)
         if (items.name === arr) {
-          this.activeIndex = String(index + 1)
+          this.activeIndex = String(index)
         }
         if (items.children) {
           items.children.forEach(itms => {
             if (itms.name === this.$route.name || itms.name === arr) {
-              this.activeIndex = String(index + 1)
+              this.activeIndex = String(index)
             }
           })
         }
@@ -849,7 +873,7 @@ export default {
       this.menu.forEach((item, index) => {
         item.children.forEach(items => {
           if (items.name === arr) {
-            this.activeIndex = String(index + 1)
+            this.activeIndex = String(index)
             sessionStorage.setItem('index', this.activeIndex)
           }
         })

@@ -104,10 +104,7 @@ export default {
     //   })
     // },
     // 改变页面大小处理
-    handleSizeChange (val) {
-      this.page.limit = val
-      this.getData()
-    },
+
     edit (row) {
       this.dialogVisible = true
       this.dialogTitile = '修改货币'
@@ -174,6 +171,10 @@ export default {
     // 翻页处理
     handleCurrentChange (val) {
       this.page.pageNo = val
+      this.getData()
+    },
+    handleSizeChange (val) {
+      this.page.limit = val
       this.getData()
     },
     // 操作按钮列表
