@@ -110,5 +110,25 @@ export default [
       hidden: true
     },
     component: () => import('@/views/priceManager/editWeight/editDetail.vue')
+  },
+  {
+    path: '/feeRegister',
+    name: 'feeRegister',
+    meta: {
+      title: '费用登记',
+      icon: 'sell',
+      hidden: true
+    },
+    component: () => import('@/views/priceManager/feeRegister/feeRegister.vue')
+  },
+  {
+    path: '/feeRegisterDetail',
+    name: 'feeRegisterDetail',
+    meta: {
+      title: '账单明细',
+      icon: 'sell',
+      hidden: true
+    },
+    component: () => import('@/views/priceManager/feeRegister/feeRegisterDetail.vue')
   }
 ]

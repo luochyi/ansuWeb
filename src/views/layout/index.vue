@@ -313,6 +313,42 @@ export default {
               menuId: '31',
               path: 'feeRegister',
               parentId: '3'
+            },
+            {
+              name: 'addFee',
+              meta: {
+                title: '追加费用',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'addFee',
+              parentId: '3'
+            },
+            {
+              name: 'addFeeExamine',
+              meta: {
+                title: '追加费用审批',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'addFeeExamine',
+              parentId: '3'
+            },
+            {
+              name: 'feeConfirmation',
+              meta: {
+                title: '费用确认书',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'feeConfirmation',
+              parentId: '3'
             }
           ]
         },
