@@ -229,18 +229,92 @@ export default {
           menuId: '1',
           path: 'priceManager',
           parentId: '0',
-          children: [{
-            name: 'waybillprice',
-            meta: {
-              title: '运单报价',
-              icon: 'icon-kuaidiwuliu',
-              hidden: false
+          children: [
+            {
+              name: 'waybillprice',
+              meta: {
+                title: '运单报价',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'waybillprice',
+              parentId: '3'
             },
-            ID: 31,
-            menuId: '31',
-            path: 'waybillprice',
-            parentId: '3'
-          }]
+            {
+              name: 'chiefExamine',
+              meta: {
+                title: '总监审批报价',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'chiefExamine',
+              parentId: '3'
+            },
+            {
+              name: 'presidentExamine',
+              meta: {
+                title: '总经理审批报价',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'presidentExamine',
+              parentId: '3'
+            },
+            {
+              name: 'receivableList',
+              meta: {
+                title: '应收明细管理',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'receivableList',
+              parentId: '3'
+            },
+            {
+              name: 'editWeight',
+              meta: {
+                title: '修改重量',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'editWeight',
+              parentId: '3'
+            },
+            {
+              name: 'extraCharge',
+              meta: {
+                title: '应付附加费',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'extraCharge',
+              parentId: '3'
+            },
+            {
+              name: 'feeRegister',
+              meta: {
+                title: '费用登记',
+                icon: '',
+                hidden: false
+              },
+              ID: 31,
+              menuId: '31',
+              path: 'feeRegister',
+              parentId: '3'
+            }
+          ]
         },
         {
           name: 'Financialexpenses',

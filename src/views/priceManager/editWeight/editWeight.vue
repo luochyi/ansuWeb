@@ -3,11 +3,12 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>报价单</span>
+        <span class='text'>修改重量</span>
         <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
-          <el-tab-pane label='未审核' name='1'></el-tab-pane>
-          <el-tab-pane label='已审核' name='2'></el-tab-pane>
-          <el-tab-pane label='全部' name='3'></el-tab-pane>
+          <el-tab-pane label='未改货' name='1'></el-tab-pane>
+          <el-tab-pane label='已改货' name='2'></el-tab-pane>
+          <el-tab-pane label='已驳回' name='3'></el-tab-pane>
+          <el-tab-pane label='全部' name='4'></el-tab-pane>
         </el-tabs>
       </el-row>
       <!-- 主要内容 -->
@@ -74,7 +75,7 @@
                 :resizable="false"
                 >
                 <template slot-scope="scope">
-                <el-button type="text" @click="detail(scope.row.id)"> 查看详情</el-button>
+                <el-button type="text" @click="edit(scope.row.id)"> 修改尺寸</el-button>
                 </template>
             </el-table-column>
         </commonTable>
@@ -162,8 +163,8 @@ export default {
       this.$refs[formName].resetFields()
       this.getData()
     },
-    detail (id) {
-      this.$router.push({ name: 'priceDetail' })
+    edit (id) {
+      this.$router.push({ name: 'editDetail' })
     },
     handleClick (tab, event) {
       console.log(tab, event)

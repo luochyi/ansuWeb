@@ -3,7 +3,7 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>报价单</span>
+        <span class='text'>报价审核</span>
         <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
           <el-tab-pane label='未审核' name='1'></el-tab-pane>
           <el-tab-pane label='已审核' name='2'></el-tab-pane>
@@ -163,7 +163,7 @@ export default {
       this.getData()
     },
     detail (id) {
-      this.$router.push({ name: 'priceDetail' })
+      this.$router.push({ name: 'presidentExamineDetail' })
     },
     handleClick (tab, event) {
       console.log(tab, event)
