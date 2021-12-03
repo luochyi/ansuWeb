@@ -70,7 +70,22 @@ export default {
   data () {
     return {
       select: '',
-      input: ''
+      input: '',
+      waybillId: null
+    }
+  },
+  mounted () {
+    if (this.$route.params.waybillId === undefined) {
+      this.$router.go(-1)
+    }
+    this.waybillId = this.$route.params.waybillId
+    this.getData()
+  },
+  methods: {
+    getData () {
+      this.$api.cost.price.offer.detail({ waybillId: this.waybillId }).then(res => {
+        console.log(res)
+      })
     }
   }
 }
