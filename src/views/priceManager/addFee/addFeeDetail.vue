@@ -1,6 +1,7 @@
 <template>
   <div>
-    <div class="box">
+    <div class="box" style="height:50px;line-height:50px">未审核</div>
+     <div class="box">
       <el-row type="flex" justify="flex-start" class="title" align="middle">
         <span class="text">运单信息</span>
       </el-row>
@@ -25,44 +26,29 @@
     </div>
     <div class="box">
       <el-row type="flex" justify="flex-start" class="title" align="middle">
-        <span class="text">申请追加费用</span>
+        <span class="text">费用明细</span>
       </el-row>
       <el-row style="line-height: 50px; font-size: 14px">
-        <el-col :span="4"><span style="color:#FB4702">合计应收：</span>2000元</el-col>
-        <el-col :span="4"><span style="color:#FB4702">合计应付：</span>800元</el-col>
-        <el-col :span="4"><span style="color:#FB4702">合计利润：</span>1200元</el-col>
-      </el-row>
-    </div>
-    <div class="box">
-      <el-row type="flex" justify="flex-start" class="title" align="middle">
-        <span class="text">费用登记单</span>
-      </el-row>
-      <el-row style="line-height: 50px; font-size: 14px">
-        <el-button class="orangeBtn"> 添加费用 </el-button>
-        <el-table :data="tableData"  border :header-cell-style="{background: '#F5F5F6'}">
+        <el-table :data="tableData" style="width:1000px" border :header-cell-style="{background: '#F5F5F6'}">
           <el-table-column fixed prop="type" label="类型" width="200">
           </el-table-column>
           <el-table-column  prop="name" label="费用名称" width="200">
           </el-table-column>
           <el-table-column prop="type" label="费用类型" width="120">
           </el-table-column>
-          <el-table-column prop="unitprice" label="结算对象" width="120">
+          <el-table-column prop="unitprice" label="结算对象" width="100">
           </el-table-column>
-          <el-table-column prop="unitprice" label="单价" width="120">
+          <el-table-column prop="unitprice" label="单价" width="100">
           </el-table-column>
-          <el-table-column prop="unit" label="单位" width="120">
+          <el-table-column prop="unit" label="单位" width="100">
           </el-table-column>
-          <el-table-column prop="num" label="数量" width="120">
+          <el-table-column prop="num" label="数量" width="100">
           </el-table-column>
-          <el-table-column prop="price" label="费用" width="120">
+          <el-table-column prop="price" label="费用" width="100">
           </el-table-column>
           <el-table-column prop="man" label="录价人" width="120">
           </el-table-column>
-          <el-table-column prop="price" label="是否确认" width="120">
-          </el-table-column>
-          <el-table-column prop="man" label="是否核销" width="120">
-          </el-table-column>
-          <el-table-column fixed="right" label="操作"  width="200">
+          <el-table-column fixed="right" label="操作"  width="100">
             <template slot-scope="scope">
               <el-button
                 @click="edit(scope.row)"
@@ -74,14 +60,56 @@
             </template>
           </el-table-column>
         </el-table>
-        <el-col><span style="color:#FB4702">附加费：</span>
-            2000元</el-col>
+        <el-divider></el-divider>
+        <el-row style="line-height: 10px;height:30px; font-size: 14px">
+            <el-col :span="4"><span style="color:#FB4702">合计应收：</span>2000元</el-col>
+            <el-col :span="4"><span style="color:#FB4702">合计应付：</span>800元</el-col>
+            <el-col :span="4"><span style="color:#FB4702">合计利润：</span>1200元</el-col>
+        </el-row>
       </el-row>
     </div>
+    <div class="box">
+      <el-row type="flex" justify="flex-start" class="title" align="middle">
+        <span class="text">申请追加费用</span>
+      </el-row>
+      <el-button class="orangeBtn">添加追加费用</el-button>
+      <el-table :data="tableData" style="width:1000px" border :header-cell-style="{background: '#F5F5F6'}">
+          <el-table-column fixed prop="type" label="类型" width="200">
+          </el-table-column>
+          <el-table-column  prop="name" label="费用名称" width="200">
+          </el-table-column>
+          <el-table-column prop="type" label="费用类型" width="120">
+          </el-table-column>
+          <el-table-column prop="unitprice" label="结算对象" width="100">
+          </el-table-column>
+          <el-table-column prop="unitprice" label="单价" width="100">
+          </el-table-column>
+          <el-table-column prop="unit" label="单位" width="100">
+          </el-table-column>
+          <el-table-column prop="num" label="数量" width="100">
+          </el-table-column>
+          <el-table-column prop="price" label="费用" width="100">
+          </el-table-column>
+          <el-table-column prop="man" label="录价人" width="120">
+          </el-table-column>
+        </el-table>
+        <el-divider></el-divider>
+    </div>
+    <div class="box" style="height:200px">
+      <el-row type="flex" justify="flex-start" class="title" align="middle">
+        <span class="text">追加费用说明</span>
+      </el-row>
+      <el-input
+        type="textarea"
+        :autosize="{ minRows: 4, maxRows: 7}"
+        placeholder="请输入内容"
+        v-model="textarea2">
+        </el-input>
+    </div>
     <div class="footer">
-      <!-- <span>报价合计：</span>
-      ￥ -->
-      <el-button class="orangeBtn">确认核单</el-button>
+      <span>合计追加：</span>
+      ￥
+      <el-button class="orangeBtn">确认</el-button>
       <el-button class="whiteBtn">取消</el-button>
     </div>
   </div>
@@ -95,29 +123,13 @@ export default {
       input: '',
       tableData: [
         {
-          name: '偏远地区附加费',
-          type: '附加费',
-          unitprice: '80元',
-          unit: '公斤',
-          num: '10',
-          price: '800元',
-          man: '张三'
-        }, {
-          name: '偏远地区附加费',
-          type: '附加费',
-          unitprice: '80元',
-          unit: '公斤',
-          num: '10',
-          price: '800元',
-          man: '张三'
-        }, {
-          name: '偏远地区附加费',
-          type: '附加费',
-          unitprice: '80元',
-          unit: '公斤',
-          num: '10',
-          price: '800元',
-          man: '张三'
+          code: 'AS1212121',
+          long: '10',
+          width: '2',
+          high: '5',
+          vol: '4',
+          weight: '20',
+          zhouchang: '30'
         }
       ]
     }
@@ -134,8 +146,9 @@ export default {
   line-height: 63px;
   box-shadow: 0px -2px 4px 0px rgba(0, 0, 0, 0.35);
   border-radius: 4px 4px 0px 0px;
-  border: 1px solid #E8E8E8;
+  border: 1px solid #e8e8e8;
   z-index: 999;
+  left:201px;
   // text-align: right;
 }
 .box {
@@ -152,9 +165,12 @@ export default {
   width: 300px;
 }
 .input-with-select .el-input-group__prepend {
-    background-color: #fff;
-  }
-/deep/.el-input-group__append .el-button, .el-input-group__append .el-select, .el-input-group__prepend .el-button, .el-input-group__prepend .el-select{
-    width:80px;
+  background-color: #fff;
+}
+/deep/.el-input-group__append .el-button,
+.el-input-group__append .el-select,
+.el-input-group__prepend .el-button,
+.el-input-group__prepend .el-select {
+  width: 80px;
 }
 </style>

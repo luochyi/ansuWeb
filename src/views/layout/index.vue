@@ -337,19 +337,19 @@ export default {
               menuId: '31',
               path: 'addFeeExamine',
               parentId: '3'
-            },
-            {
-              name: 'feeConfirmation',
-              meta: {
-                title: '费用确认书',
-                icon: '',
-                hidden: false
-              },
-              ID: 31,
-              menuId: '31',
-              path: 'feeConfirmation',
-              parentId: '3'
             }
+            // {
+            //   name: 'feeConfirmation',
+            //   meta: {
+            //     title: '费用确认书',
+            //     icon: '',
+            //     hidden: false
+            //   },
+            //   ID: 31,
+            //   menuId: '31',
+            //   path: 'feeConfirmation',
+            //   parentId: '3'
+            // }
           ]
         },
         {

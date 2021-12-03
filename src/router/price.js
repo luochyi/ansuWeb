@@ -77,7 +77,7 @@ export default [
     meta: {
       title: '应收明细',
       icon: 'sell',
-      hidden: true
+      hidden: false
     },
     component: () => import('@/views/priceManager/receivableList/receivableList.vue')
   },
@@ -97,7 +97,7 @@ export default [
     meta: {
       title: '修改重量',
       icon: 'sell',
-      hidden: true
+      hidden: false
     },
     component: () => import('@/views/priceManager/editWeight/editWeight.vue')
   },
@@ -117,7 +117,7 @@ export default [
     meta: {
       title: '费用登记',
       icon: 'sell',
-      hidden: true
+      hidden: false
     },
     component: () => import('@/views/priceManager/feeRegister/feeRegister.vue')
   },
@@ -130,5 +130,42 @@ export default [
       hidden: true
     },
     component: () => import('@/views/priceManager/feeRegister/feeRegisterDetail.vue')
+  },
+  {
+    path: '/addFee',
+    name: 'addFee',
+    meta: {
+      title: '追加费用',
+      icon: 'sell',
+      hidden: false
+    },
+    component: () => import('@/views/priceManager/addFee/addFee.vue')
+  }, {
+    path: '/addFeeDetail',
+    name: 'addFeeDetail',
+    meta: {
+      title: '追加费用',
+      icon: 'sell',
+      hidden: true
+    },
+    component: () => import('@/views/priceManager/addFee/addFeeDetail.vue')
+  }, {
+    path: '/addFeeExamine',
+    name: 'addFeeExamine',
+    meta: {
+      title: '追加费用审批',
+      icon: 'sell',
+      hidden: false
+    },
+    component: () => import('@/views/priceManager/addFeeExamine/addFeeExamine.vue')
+  }, {
+    path: '/addFeeExamineDetail',
+    name: 'addFeeExamineDetail',
+    meta: {
+      title: '确认报价',
+      icon: 'sell',
+      hidden: true
+    },
+    component: () => import('@/views/priceManager/addFeeExamine/addFeeExamineDetail.vue')
   }
 ]
