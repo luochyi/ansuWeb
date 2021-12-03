@@ -3,12 +3,7 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>追加费用审批</span>
-        <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
-          <el-tab-pane label='未审批' name='1'></el-tab-pane>
-          <el-tab-pane label='已审批' name='2'></el-tab-pane>
-          <el-tab-pane label='全部' name='3'></el-tab-pane>
-        </el-tabs>
+        <span class='text' style="height:50px;line-height:50px">运费确认</span>
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
@@ -45,6 +40,31 @@
             </el-col>
         </el-row>
         <el-divider></el-divider>
+        <el-row
+            class="searchbox1"
+            type="flex"
+            justify="space-between"
+            align="middle"
+        >
+            <el-col :span="14" class="left">
+            <el-button
+                class="orangeBtn"
+                size="small"
+                >生成账单</el-button
+            >
+            <el-button
+                class="orangeBtn"
+                size="small"
+                >批量导出Excel</el-button
+            >
+            <el-button
+                class="orangeBtn"
+                size="small"
+                >批量确认费用</el-button
+            >
+            </el-col>
+            <el-col :span="10" class="right"> </el-col>
+        </el-row>
         <div class='table'>
           <el-row class='tableBtn'>
             <el-col :span='12' class='left'>
@@ -163,7 +183,7 @@ export default {
       this.getData()
     },
     detail (id) {
-      this.$router.push({ name: 'addFeeExamineDetail' })
+      this.$router.push({ name: 'feeConfirmation' })
     },
     handleClick (tab, event) {
       console.log(tab, event)

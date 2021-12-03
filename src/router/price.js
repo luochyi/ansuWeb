@@ -167,5 +167,23 @@ export default [
       hidden: true
     },
     component: () => import('@/views/priceManager/addFeeExamine/addFeeExamineDetail.vue')
+  }, {
+    path: '/feeConfirm',
+    name: 'feeConfirm',
+    meta: {
+      title: '费用确认',
+      icon: 'sell',
+      hidden: false
+    },
+    component: () => import('@/views/priceManager/feeConfirm/feeConfirm.vue')
+  }, {
+    path: '/feeConfirmation',
+    name: 'feeConfirmation',
+    meta: {
+      title: '费用确认单',
+      icon: 'sell',
+      hidden: true
+    },
+    component: () => import('@/views/priceManager/feeConfirm/feeConfirmation.vue')
   }
 ]
