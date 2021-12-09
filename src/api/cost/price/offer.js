@@ -17,3 +17,17 @@ export const detail = (params) => {
     data: params
   })
 }
+export const history = (params) => {
+  return axios({
+    url: '/cost/offer/history',
+    method: 'post',
+    data: params
+  })
+}
+export const offer = (params) => {
+  return axios({
+    url: '/cost/offer/offer',
+    method: 'post',
+    data: params
+  })
+}
