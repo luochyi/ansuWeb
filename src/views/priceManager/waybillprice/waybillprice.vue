@@ -5,6 +5,7 @@
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
         <span class='text'>报价单</span>
         <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
+          <el-tab-pane label='全部' name='0'></el-tab-pane>
           <el-tab-pane label='不可报价' name='1'></el-tab-pane>
           <el-tab-pane label='未报价' name='2'></el-tab-pane>
           <el-tab-pane label='审核中' name='3'></el-tab-pane>
@@ -166,7 +167,7 @@
 export default {
   data () {
     return {
-      activeName: '1',
+      activeName: '0',
       page: {
         pageNo: 1,
         limit: 10,
@@ -220,11 +221,11 @@ export default {
       hasInvoiceOptions: [
         {
           label: '未制作',
-          value: 1
+          value: 0
         },
         {
           label: '已制作',
-          value: 2
+          value: 1
         }
       ]
     }
@@ -270,7 +271,7 @@ export default {
         case 'channel_cate':
           return row.channel_cate === 1 ? '海运' : row.channel_cate === 2 ? '空运' : row.channel_cate === 3 ? '快递' : row.channel_cate === 4 ? '铁路' : '专车'
         case 'has_invoice':
-          return row.has_invoice === 1 ? '未制作' : '已制作'
+          return row.has_invoice === 0 ? '未制作' : '已制作'
         case 'is_irikura':
           return row.is_irikura === 0 ? '未入仓' : '已入仓'
         case 'created_at':
