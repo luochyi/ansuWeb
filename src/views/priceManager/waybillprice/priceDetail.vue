@@ -35,7 +35,7 @@
             <el-row type='flex' justify='flex-start' class='title' align='middle'>
                 <span class='text'>基础运价确认</span>
             </el-row>
-            <el-row style="line-height:50px;font-size:14px" v-if="detailData.offer.type===1||!isSub">
+            <el-row style="line-height:50px;font-size:14px" v-if="detailData.offer.type===1&&!isSub">
                 <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
                     <el-col :span='10'>单价调整：<el-input placeholder="" v-model="adjust.adjustPrice" class="input-with-select">
                         <el-select v-model="adjust.adjustType" slot="prepend" placeholder="请选择" style="width:100px">
@@ -47,18 +47,18 @@
                     </el-col>
                 <el-col :span='6'><el-button class="orangeBtn" @click="submit()">确认</el-button></el-col>
             </el-row>
-            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type>1||!isSub">
+            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type>1&&!isSub">
                 <el-col :span='4'>运费模式：{{detailData.offer.type===2?'金额':'首续重'}}</el-col>
                 <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
                 <el-col :span='6'><el-button class="orangeBtn">确认</el-button></el-col>
                 <el-col>基础运费：元</el-col>
             </el-row>
-            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type===1||isSub">
+            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type===1&&isSub">
                 <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
                     <el-col :span='10'>单价调整：{{adjust.adjustType===1?'增加 ':'减少 '}}{{adjust.adjustPrice+'元/公斤'}}</el-col>
                     <el-col>基础运费：</el-col>
             </el-row>
-            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type >= 1||isSub">
+            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type > 1&&isSub">
                 <el-col :span='4'>运费模式：{{detailData.offer.type===2?'金额':'首续重'}}</el-col>
                 <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
                 <el-col>基础运费：元</el-col>
