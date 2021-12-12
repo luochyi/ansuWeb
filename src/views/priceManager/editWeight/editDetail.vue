@@ -44,15 +44,16 @@
           ></el-input
           ><el-button class="orangeBtn">查询</el-button>
         </el-col>
-        <el-button class="orangeBtn"> 批量修改尺寸 </el-button>
+        <el-button class="orangeBtn" @click="cargos" :disabled="formData.cargoes.ids.length === 0"> 批量修改尺寸 </el-button>
         <el-button class="whiteBtn" @click="editHistory"> 改重记录 </el-button>
         <el-table
           :data="cargoes"
           border
+          @selection-change="chooseRow"
           style="width: 1100px; margin-bottom: 100px"
           :header-cell-style="{ background: '#F5F5F6' }"
         >
-          <el-table-column fixed type="selection"> </el-table-column>
+          <el-table-column fixed type="selection" > </el-table-column>
           <el-table-column fixed prop="cargo_no" label="货件编号" width="200">
           </el-table-column>
           <el-table-column prop="length" label="长" width="120">
@@ -84,9 +85,10 @@
     <div class="footer">
       <span>报价合计：</span>
       ￥
-      <el-button class="orangeBtn">确认改货</el-button>
-      <el-button class="whiteBtn">驳回改货</el-button>
-      <el-button class="whiteBtn">取消</el-button>
+      <el-button class="orangeBtn" @click="adopt">确认改货</el-button>
+      <el-button class="whiteBtn" @click="reject">驳回改货</el-button>
+      <el-button class="whiteBtn" @click="calc">计算费用</el-button>
+      <el-button class="whiteBtn" @click="goback">取消</el-button>
     </div>
     <commonDrawer
       :drawerVrisible="hisDrawer"
@@ -156,14 +158,14 @@
       <div style="text-align: left">
         <el-form
           ref="elForm"
-          :model="formData"
+          :model="rowData"
           size="small"
           label-width="20px"
           label-position="left"
         >
           <el-form-item label="长" prop="field101">
             <el-input
-              v-model="formData.length"
+              v-model="rowData.length"
               placeholder="请输入"
               clearable
               :style="{ width: '80%' }"
@@ -173,7 +175,7 @@
           </el-form-item>
           <el-form-item label="宽" prop="field103">
             <el-input
-              v-model="formData.width"
+              v-model="rowData.width"
               placeholder="请输入"
               clearable
               :style="{ width: '80%' }"
@@ -183,7 +185,7 @@
           </el-form-item>
           <el-form-item label="高" prop="field102">
             <el-input
-              v-model="formData.height"
+              v-model="rowData.height"
               placeholder="请输入"
               clearable
               :style="{ width: '80%' }"
@@ -193,7 +195,7 @@
           </el-form-item>
           <el-form-item label="重" prop="field104">
             <el-input
-              v-model="formData.weight"
+              v-model="rowData.weight"
               placeholder="请输入"
               clearable
               :style="{ width: '80%' }"
@@ -204,9 +206,115 @@
         </el-form>
       </div>
       <div slot="footer">
-        <el-button @click="cargoClose">取消</el-button>
-        <el-button type="primary" @click="cargoSubmit">确定</el-button>
+        <el-button size="small" @click="cargoClose">取消</el-button>
+        <el-button  class="orangeBtn" @click="cargoSubmit">确定</el-button>
       </div>
+    </el-dialog>
+    <el-dialog
+            title="批量改货"
+            :visible.sync="cargosDia"
+            width="26%">
+          <span style="textAlign:left;marginLeft:20px">
+              <el-row><el-checkbox v-model="formData.cargoes.lengthSwitch">长</el-checkbox><el-input size="mini" :style="{ width: '80%' }" type="Number" v-model="formData.cargoes.length" :disabled="!formData.cargoes.lengthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.widthSwitch">宽</el-checkbox><el-input size="mini" :style="{ width: '80%' }" type="Number" v-model="formData.cargoes.width" :disabled="!formData.cargoes.widthSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.heightSwitch">高</el-checkbox><el-input size="mini" :style="{ width: '80%' }" type="Number" v-model="formData.cargoes.height" :disabled="!formData.cargoes.heightSwitch" class="ipt"><template slot="append">cm</template></el-input></el-row>
+              <el-row><el-checkbox v-model="formData.cargoes.weightSwitch">重</el-checkbox><el-input size="mini" :style="{ width: '80%' }" type="Number" v-model="formData.cargoes.weight" :disabled="!formData.cargoes.weightSwitch" class="ipt"><template slot="append">kg</template></el-input></el-row>
+          </span>
+          <span slot="footer" class="dialog-footer">
+              <el-button size="small" @click="cargosClose">取 消</el-button>
+              <el-button class="orangeBtn" type="primary" @click="cargosSubmit">确 定</el-button>
+          </span>
+    </el-dialog>
+    <commonDrawer
+      :drawerVrisible="calcDrawer"
+      drawerTitle="计算费用"
+      drawerSize="80%"
+    >
+      <div class="dra-content" style="textalign: left; padding: 10px">
+        <div class="box">
+          <el-row type="flex" justify="flex-start" class="title" align="middle">
+            <span class="text">改货前费用</span>
+          </el-row>
+          <el-row style="line-height: 50px; font-size: 14px">
+            <el-descriptions v-if="calcDrawer">
+                <el-descriptions-item label="计价方式">{{calcData.before_offer.type===1?'单价':calcData.before_offer.type===2?'金额':'首续重'}}</el-descriptions-item>
+                <el-descriptions-item label="单价/金额">{{calcData.before_offer.price}}</el-descriptions-item>
+                <el-descriptions-item v-if="calcData.before_offer.type===3"  label="首重">{{calcData.before_offer.first_weight}}</el-descriptions-item>
+                <el-descriptions-item v-if="calcData.before_offer.type===3"  label="首重金额">{{calcData.before_offer.first_weight_price}}</el-descriptions-item>
+                <el-descriptions-item v-if="calcData.before_offer.type===3"  label="续重">{{calcData.before_offer.additional_weight}}</el-descriptions-item>
+                <el-descriptions-item v-if="calcData.before_offer.type===3"  label="续重金额">{{calcData.before_offer.additional_weight_price}}</el-descriptions-item>
+                <el-descriptions-item label="调价类型">{{calcData.before_offer.adjust_type===1?'增加':'减少'}}</el-descriptions-item>
+                <el-descriptions-item label="调价金额">{{calcData.before_offer.adjust_price}}</el-descriptions-item>
+                <el-descriptions-item label="结算重">{{calcData.before_offer.bill_weight}}</el-descriptions-item>
+                <el-descriptions-item label="计费重">{{calcData.before_offer.cost_weight}}</el-descriptions-item>
+                <el-descriptions-item label="运费">{{calcData.before_offer.amount}}</el-descriptions-item>
+            </el-descriptions>
+
+          </el-row>
+        </div>
+        <div class="box">
+          <el-row type="flex" justify="flex-start" class="title" align="middle">
+            <span class="text">改货后费用</span>
+          </el-row>
+          <el-row style="line-height: 50px; font-size: 14px">
+            <el-descriptions v-if="calcDrawer">
+                <el-descriptions-item label="计价方式">{{calcData.after_offer.type===1?'单价':calcData.before_offer.type===2?'金额':'首续重'}}</el-descriptions-item>
+                <el-descriptions-item label="单价/金额">{{calcData.after_offer.price}}</el-descriptions-item>
+                <el-descriptions-item v-if="calcData.after_offer.type===3" label="首重">{{calcData.after_offer.first_weight}}</el-descriptions-item>
+                <el-descriptions-item v-if="calcData.after_offer.type===3"  label="首重金额">{{calcData.after_offer.first_weight_price}}</el-descriptions-item>
+                <el-descriptions-item v-if="calcData.after_offer.type===3" label="续重">{{calcData.after_offer.additional_weight}}</el-descriptions-item>
+                <el-descriptions-item v-if="calcData.after_offer.type===3" label="续重金额">{{calcData.after_offer.additional_weight_price}}</el-descriptions-item>
+                <el-descriptions-item label="调价类型">{{calcData.after_offer.adjust_type===1?'增加':'减少'}}</el-descriptions-item>
+                <el-descriptions-item label="调价金额">{{calcData.after_offer.adjust_price}}</el-descriptions-item>
+                <el-descriptions-item label="结算重">{{calcData.after_offer.bill_weight}}</el-descriptions-item>
+                <el-descriptions-item label="计费重">{{calcData.after_offer.cost_weight}}</el-descriptions-item>
+                <el-descriptions-item label="运费">{{calcData.after_offer.amount}}</el-descriptions-item>
+            </el-descriptions>
+          </el-row>
+        </div>
+      </div>
+       <div class="dra-content" style="textalign: left; padding: 10px">
+         <el-row type="flex" justify="flex-start" class="title" align="middle">
+            <span class="text">附加费明细</span>
+          </el-row>
+         <el-table :data="calcData.costs">
+           <el-table-column label="费用名称" prop="name"></el-table-column>
+           <el-table-column label="费用类型" prop="type">
+              <template slot-scope="scope">
+               {{scope.row.type===1?'基础运费':scope.row.type===2?'附加费':'其他'}}
+             </template>
+           </el-table-column>
+           <el-table-column label="单价" prop="price"></el-table-column>
+           <el-table-column label="单位" prop="unit">
+             <template slot-scope="scope">
+               {{scope.row.unit===1?'结算重':'票'}}
+             </template>
+           </el-table-column>
+           <el-table-column label="改前单位数量" prop="before_unit_num"></el-table-column>
+           <el-table-column label="改前费用" prop="before_amount"></el-table-column>
+           <el-table-column label="改后单位数量" prop="after_unit_num"></el-table-column>
+           <el-table-column label="改后费用" prop="after_amount"></el-table-column>
+         </el-table>
+      </div>
+      <!-- 抽屉底部按钮 -->
+      <div slot="footer">
+        <button class="btn-gray" @click="calcDrawer = false">
+          <span>关闭</span>
+        </button>
+      </div>
+    </commonDrawer>
+    <el-dialog
+      title="驳回理由"
+      :visible.sync="rejectDia"
+      width="30%"
+      >
+      <div>
+        <el-input type="textarea" v-model="failReason" :rows="5"></el-input>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="rejectDia=false">取 消</el-button>
+        <el-button type="primary" @click="rejectSubmit">确 定</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -217,6 +325,8 @@ export default {
     return {
       select: '',
       input: '',
+      failReason: '',
+      rejectDia: false,
       hisDrawer: false, // 改重历史抽屉
       hisData: [],
       waybillId: null,
@@ -224,11 +334,28 @@ export default {
       detailData: {},
       cargoes: [],
       cargoDia: false,
-      formData: {
+      cargosDia: false,
+      calcDrawer: false,
+      calcData: {},
+      rowData: {
+        index: undefined,
         length: undefined,
         width: undefined,
         height: undefined,
         weight: undefined
+      },
+      formData: {
+        cargoes: {
+          ids: [],
+          length: null,
+          width: null,
+          height: null,
+          weight: null,
+          lengthSwitch: false,
+          widthSwitch: false,
+          heightSwitch: false,
+          weightSwitch: false
+        }
       }
     }
   },
@@ -257,18 +384,147 @@ export default {
           this.hisDrawer = true
         })
     },
+    // 逐个改重
     cargo (scope) {
       console.log(scope)
-      // let index = scope.$index
+      this.rowData.index = scope.$index
       this.cargoDia = true
-      this.formData.length = scope.row.length
-      this.formData.width = scope.row.width
-      this.formData.height = scope.row.height
-      this.formData.weight = scope.row.weight
+      this.rowData.length = scope.row.length
+      this.rowData.width = scope.row.width
+      this.rowData.height = scope.row.height
+      this.rowData.weight = scope.row.weight
     },
-    cargoSubmit () {},
+    // 逐个改重提交
+    cargoSubmit () {
+      this.cargoes[this.rowData.index].length = this.rowData.length
+      this.cargoes[this.rowData.index].width = this.rowData.width
+      this.cargoes[this.rowData.index].height = this.rowData.height
+      this.cargoes[this.rowData.index].weight = this.rowData.weight
+      this.cargoDia = false
+    },
     cargoClose () {
       this.cargoDia = false
+    },
+    cargos () {
+      this.formData.cargoes.length = null
+      this.formData.cargoes.width = null
+      this.formData.cargoes.height = null
+      this.formData.cargoes.weight = null
+      this.formData.cargoes.lengthSwitch = false
+      this.formData.cargoes.widthSwitch = false
+      this.formData.cargoes.heightSwitch = false
+      this.formData.cargoes.weightSwitch = false
+      this.cargosDia = true
+    },
+    // 选择货物
+    chooseRow (val) {
+      this.formData.cargoes.ids = []
+      val && val.forEach((item) => {
+        this.formData.cargoes.ids.push(item.cargo_id)
+      })
+      console.log(this.formData)
+    },
+    // 批量改重提交
+    cargosSubmit () {
+      this.cargoes.forEach((item, key) => {
+        this.formData.cargoes.ids.forEach(id => {
+          if (item.cargo_id === id) {
+            if (this.formData.cargoes.lengthSwitch && this.formData.cargoes.length) {
+              this.cargoes[key].length = this.formData.cargoes.length
+            }
+            if (this.formData.cargoes.widthSwitch && this.formData.cargoes.width) {
+              this.cargoes[key].width = this.formData.cargoes.width
+            }
+            if (this.formData.cargoes.heightSwitch && this.formData.cargoes.height) {
+              this.cargoes[key].height = this.formData.cargoes.height
+            }
+            if (this.formData.cargoes.weightSwitch && this.formData.cargoes.weight) {
+              this.cargoes[key].weight = this.formData.cargoes.weight
+            }
+          }
+        })
+      })
+      this.cargosDia = false
+    },
+    cargosClose () {
+      this.cargosDia = false
+    },
+    // 通过
+    adopt () {
+      let cargoSpecs = []
+      this.cargoes.forEach(ele => {
+        let obj = {
+          cargoId: ele.cargo_id,
+          length: ele.length,
+          width: ele.width,
+          height: ele.height,
+          weight: ele.weight
+        }
+        cargoSpecs.push(obj)
+      })
+      console.log(cargoSpecs)
+      this.$api.cost.price.cargo
+        .adopt({
+          waybillId: this.waybillId,
+          cargoSpecs: cargoSpecs
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.goback()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+    },
+    // 驳回
+    reject () {
+      this.rejectDia = true
+    },
+    // 驳回提交
+    rejectSubmit () {
+      this.$api.cost.price.cargo
+        .reject({
+          waybillId: this.waybillId,
+          failReason: this.failReason
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.goback()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+    },
+    // 计算费用
+    calc () {
+      let cargoSpecs = []
+      this.cargoes.forEach(ele => {
+        let obj = {
+          cargoId: ele.cargo_id,
+          length: ele.length,
+          width: ele.width,
+          height: ele.height,
+          weight: ele.weight
+        }
+        cargoSpecs.push(obj)
+      })
+      console.log(cargoSpecs)
+      this.$api.cost.price.cargo
+        .calc({
+          waybillId: this.waybillId,
+          cargoSpecs: cargoSpecs
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.calcData = res.data
+            this.calcDrawer = true
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+    },
+    goback () {
+      this.$router.go(-1)
     }
   }
 }
@@ -309,5 +565,10 @@ export default {
 .el-input-group__prepend .el-button,
 .el-input-group__prepend .el-select {
   width: 80px;
+}
+.ipt{
+    width: 200px;
+    margin-left: 10px;
+    margin-top: 5px;
 }
 </style>
