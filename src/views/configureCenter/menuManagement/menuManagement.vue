@@ -19,7 +19,6 @@
         :header-cell-style="{ background: '#F5F5F6', color: '#999999FF',fontSize:'14px' }"
         border
         tooltip-effect="light"
-        default-expand-all
         :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
         <el-table-column prop="id" label="Id" width="180">

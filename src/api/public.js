@@ -36,3 +36,11 @@ export const settingRegionAll = () => {
     method: 'post'
   })
 }
+// /user/menu
+export const getMenu = (params) => {
+  return axios({
+    url: '/user/menu',
+    method: 'post',
+    data: params
+  })
+}
