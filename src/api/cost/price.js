@@ -5,6 +5,7 @@ import * as enrolment from './price/enrolment'
 import * as amount from './price/amount'
 import * as confirm from './price/confirm'
 import * as additional from './price/additional'
+import * as waybill from './price/waybill'
 export {
   offer,
   examine,
@@ -12,5 +13,6 @@ export {
   enrolment,
   amount,
   confirm,
-  additional
+  additional,
+  waybill
 }

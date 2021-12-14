@@ -111,6 +111,27 @@ export default [
     },
     component: () => import('@/views/priceManager/editWeight/editDetail.vue')
   },
+  // extraCharge
+  {
+    path: '/extraCharge',
+    name: 'extraCharge',
+    meta: {
+      title: '应付附加费',
+      icon: 'sell',
+      hidden: false
+    },
+    component: () => import('@/views/priceManager/extraCharge/extraCharge.vue')
+  },
+  {
+    path: '/extraChargeDetail',
+    name: 'extraChargeDetail',
+    meta: {
+      title: '应付附加费',
+      icon: 'sell',
+      hidden: true
+    },
+    component: () => import('@/views/priceManager/extraCharge/extraChargeDetail.vue')
+  },
   {
     path: '/feeRegister',
     name: 'feeRegister',

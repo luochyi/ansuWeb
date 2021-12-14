@@ -212,7 +212,7 @@
         </button>
       </div>
     </commonDrawer>
-     <!-- 查看审核历史 -->
+      <!-- 查看审核历史 -->
          <commonDrawer
              :drawerVrisible="hisDrawer" drawerTitle="审核历史"
             >
@@ -297,7 +297,7 @@ export default {
     },
     // 查看审核历史
     auditHistory () {
-      this.$api.cost.price.additional.history({ waybillId: this.waybillId }).then(res => {
+      this.$api.cost.price.additional.examineHistory({ waybillId: this.waybillId }).then(res => {
         this.historyData = res.data
         this.hisDrawer = true
       })
@@ -328,7 +328,10 @@ export default {
       })
     },
     reject () {
-      this.$api.cost.price.additional.examineReject({ waybillId: this.waybillId }).then(res => {
+      this.dialog = true
+    },
+    rejectSubmit () {
+      this.$api.cost.price.additional.examineReject({ waybillId: this.waybillId, rejectReason: this.rejectReason }).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg)
           this.goback()
