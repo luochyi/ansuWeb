@@ -968,9 +968,9 @@ export default {
     this.uid = sessionStorage.getItem('id')
     this.uname = sessionStorage.getItem('name')
     let arr = this.$route.path.split('/')[1]
-    this.$api.common.getMenu().then(res => {
-      this.menu = res.data
-    })
+    // this.$api.common.getMenu().then(res => {
+    //   this.menu = res.data
+    // })
     console.log(this.$route.name)
     console.log(this.menu)
     this.menu.forEach((item, index) => {
