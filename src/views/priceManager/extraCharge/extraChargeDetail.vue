@@ -83,8 +83,10 @@
     <div class="footer">
       <!-- <span>报价合计：</span>
       ￥ -->
+      <div style="margin-left:400px">
       <el-button class="orangeBtn">确认核单</el-button>
       <el-button class="whiteBtn" @click="goback()">取消</el-button>
+      </div>
     </div>
     <el-dialog
             title="添加费用"

@@ -34,16 +34,17 @@
       </el-row>
       <el-row style="line-height: 50px; font-size: 14px">
         <el-col
-          ><span style="color: #fb4e0c; font-size: 22px">预报单号</span
-          ><span> &nbsp;客户名称：{{ customerName }}</span></el-col
+          >
+          <!-- <span style="color: #fb4e0c; font-size: 22px">预报单号</span> -->
+          <span> &nbsp;客户名称：{{ customerName }}</span></el-col
         >
-        <el-col>
+        <!-- <el-col>
           运单号：<el-input
             style="width: 200px; margin-right: 10px"
             size="mini"
           ></el-input
           ><el-button class="orangeBtn">查询</el-button>
-        </el-col>
+        </el-col> -->
         <el-button class="orangeBtn" @click="cargos" :disabled="formData.cargoes.ids.length === 0"> 批量修改尺寸 </el-button>
         <el-button class="whiteBtn" @click="editHistory"> 改重记录 </el-button>
         <el-table
@@ -85,10 +86,12 @@
     <div class="footer">
       <!-- <span>报价合计：</span>
       ￥ -->
+      <div style="margin-left:400px">
       <el-button class="orangeBtn" @click="adopt" v-if="detailData.audit_status<2">确认改货</el-button>
       <el-button class="whiteBtn" @click="reject" v-if="detailData.audit_status<2">驳回改货</el-button>
       <el-button class="whiteBtn" @click="calc">计算费用</el-button>
       <el-button class="whiteBtn" @click="goback">取消</el-button>
+      </div>
     </div>
     <commonDrawer
       :drawerVrisible="hisDrawer"
