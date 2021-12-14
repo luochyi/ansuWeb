@@ -11,5 +11,8 @@ export const common = {
     }
   },
   getters: {
+    getPrint (state) {
+      return state.regiondata
+    }
   }
 }

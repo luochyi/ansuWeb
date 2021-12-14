@@ -211,34 +211,14 @@
         </el-row>
         <el-divider></el-divider>
         <el-form label-width="80px">
-          <el-form-item label="渠道">
-            <el-select
-              placeholder="请选择渠道"
-              v-model="channelId"
-              @change="changeChannel"
-            >
-              <el-option
-                v-for="item in channelOption"
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="渠道服务">
-            <el-select
-              placeholder="请选择渠道服务"
-              v-model="req.channelServiceId"
-            >
-              <el-option
-                v-for="item in channelServiceOption"
-                :key="item.id"
-                :label="item.agent_service_name"
-                :value="item.id"
-              >
-              </el-option>
-            </el-select>
+          <el-form-item label="代理渠道">
+            <el-cascader
+                filterable
+                v-model="agentChannelId"
+                :options="agentChannelOption"
+                clearable
+                :props="{value: 'id', label: 'name', expandTrigger: 'hover'}"
+                ></el-cascader>
           </el-form-item>
         </el-form>
       </div>
@@ -266,11 +246,12 @@ export default {
       userName: '',
       orderCode: '',
       channelId: null,
+      agentChannelId: [],
       channelOption: [],
+      agentChannelOption: [],
       channelServiceOption: [],
       req: {
-        waybillIds: [],
-        channelServiceId: null
+        waybillIds: []
       },
       columns: [
         { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
@@ -377,8 +358,8 @@ export default {
     // 在页面加载前调用获取列表数据函数
     this.getData()
     // this.tableData = [{ type: 1, id: 1, waybill_no: '212d12d2d2' }, { type: 2, id: 2, waybill_no: '12d1d12' }]
-    this.$api.agent.channelSelect().then((res) => {
-      this.channelOption = res.data
+    this.$api.agent.agentServiceAll().then((res) => {
+      this.agentChannelOption = res.data
     })
   },
   methods: {
@@ -434,19 +415,26 @@ export default {
       this.orderCode = data.waybill_no
     },
     ejectSubmit () {
-      this.$confirm('确认出库')
-        .then((_) => {
-          this.$api.Ordermanagement.irikuraEject(this.req).then((res) => {
-            if (res.code === 0) {
-              this.$message.success(res.msg)
-              this.addClose()
-              this.getData()
-            } else {
-              this.$message.error(res.msg)
-            }
+      if (this.agentChannelId.length < 2) {
+        this.$message.error('代理渠道错误')
+      } else {
+        this.$confirm('确认出库')
+          .then((_) => {
+            this.$api.Ordermanagement.irikuraEject({
+              waybillIds: this.req.waybillIds,
+              channelServiceId: this.agentChannelId[1]
+            }).then((res) => {
+              if (res.code === 0) {
+                this.$message.success(res.msg)
+                this.addClose()
+                this.getData()
+              } else {
+                this.$message.error(res.msg)
+              }
+            })
           })
-        })
-        .catch((_) => {})
+          .catch((_) => {})
+      }
     },
     handleSelectionChange (val) {
       console.log(val)
