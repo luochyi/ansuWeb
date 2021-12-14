@@ -23,9 +23,9 @@
               label-position="top"
             >
               <el-col :span="6">
-                <el-form-item label="预报单号" prop="forecastNo">
+                <el-form-item label="客户编号" prop="customerCode">
                   <el-input
-                    v-model="searchForm.forecastNo"
+                    v-model="searchForm.customerCode"
                     placeholder="请输入"
                     clearable
                     :style="{ width: '60%' }"
@@ -37,17 +37,6 @@
                 <el-form-item label="客户名称" prop="customerName">
                   <el-input
                     v-model="searchForm.customerName"
-                    placeholder="请输入"
-                    clearable
-                    :style="{ width: '60%' }"
-                  >
-                  </el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="客户编号" prop="customerCode">
-                  <el-input
-                    v-model="searchForm.customerCode"
                     placeholder="请输入"
                     clearable
                     :style="{ width: '60%' }"
@@ -78,14 +67,14 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="类型" prop="type">
+                <el-form-item label="结算状态" prop="billStatus">
                   <el-select
-                    v-model="searchForm.type"
+                    v-model="searchForm.billStatus"
                     placeholder="请选择"
                     clearable
                     :style="{ width: '60%' }"
                   >
-                  <el-option v-for="item in typeOptions"
+                  <el-option v-for="item in billStatusOptions"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -94,14 +83,14 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="制作发票" prop="hasInvoice">
+                <el-form-item label="核销状态" prop="writeOffStatus">
                   <el-select
-                    v-model="searchForm.hasInvoice"
+                    v-model="searchForm.writeOffStatus"
                     placeholder="请选择"
                     clearable
                     :style="{ width: '60%' }"
                   >
-                  <el-option v-for="item in hasInvoiceOptions"
+                  <el-option v-for="item in writeOffStatusOptions"
                     :key="item.value"
                     :label="item.label"
                     :value="item.value">
@@ -125,8 +114,8 @@
         <div class='table'>
           <el-row class='tableBtn'>
             <el-col :span='12' class='left'>
-              <!-- <el-button class='batch'></el-button> -->
-              <!-- <el-button class='batch'></el-button> -->
+              <el-button class='batch' @click="affirm(ids)" :disabled='ids.length===0'>批量确认</el-button>
+              <el-button class='batch' @click="cancel(ids)" :disabled='ids.length===0'>批量取消确认</el-button>
             </el-col>
             <el-col :span='20' class='right'>
               <!-- <el-button class='whiteBtn '></el-button> -->
@@ -140,6 +129,7 @@
             :pager="page"
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
+            @handleSelectionChange='handleSelectionChange'
             >
             <el-table-column
                 slot="table_oper"
@@ -151,8 +141,8 @@
                 >
                 <template slot-scope="scope">
                 <!-- <el-button type="text" @click="detail(scope.row.id)"> 查看详情</el-button> -->
-                <el-button type="text" @click="affirm(scope.row.id)"> 确认</el-button>
-                <el-button type="text" @click="cancel(scope.row.id)"> 取消确认</el-button>
+                <el-button type="text" @click="affirm([scope.row.id])"> 确认</el-button>
+                <el-button type="text" @click="cancel([scope.row.id])"> 取消确认</el-button>
                 </template>
             </el-table-column>
         </commonTable>
@@ -200,28 +190,35 @@ export default {
         waybillNo: '',
         channelName: '',
         type: null,
-        hasInvoice: null
+        hasInvoice: null,
+        billStatus: null,
+        writeOffStatus: null
       },
-      typeOptions: [
+      billStatusOptions: [
         {
-          label: 'FBA运单',
+          label: '未结算',
           value: 1
         },
         {
-          label: '非FBA运单',
+          label: '已结算',
           value: 2
         }
       ],
-      hasInvoiceOptions: [
+      writeOffStatusOptions: [
         {
-          label: '未制作',
-          value: 0
+          label: '未核销',
+          value: 1
         },
         {
-          label: '已制作',
-          value: 1
+          label: '部分核销',
+          value: 2
+        },
+        {
+          label: '已核销',
+          value: 3
         }
-      ]
+      ],
+      ids: []
     }
   },
   mounted () {
@@ -242,7 +239,9 @@ export default {
         waybillNo: this.searchForm.waybillNo,
         channelName: this.searchForm.channelName,
         type: this.searchForm.type,
-        hasInvoice: this.searchForm.hasInvoice
+        hasInvoice: this.searchForm.hasInvoice,
+        billStatus: this.searchForm.billStatus,
+        writeOffStatus: this.searchForm.writeOffStatus
       }
       this.$api.cost.price.confirm.lists(params).then(res => {
         console.log(res.data) // res是接口返回的结果
@@ -289,6 +288,33 @@ export default {
       console.log(tab, event)
       this.activeName = tab.name
       this.getData()
+    },
+    handleSelectionChange (val) {
+      console.log(val)
+      this.ids = []
+      val.forEach(ele => {
+        this.ids.push(ele.id)
+      })
+    },
+    affirm (ids) {
+      this.$api.cost.price.confirm.affirm({ confirmIds: ids }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.console.error(res.msg)
+        }
+      })
+    },
+    cancel (ids) {
+      this.$api.cost.price.confirm.cancel({ confirmIds: ids }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.console.error(res.msg)
+        }
+      })
     }
   }
 }
