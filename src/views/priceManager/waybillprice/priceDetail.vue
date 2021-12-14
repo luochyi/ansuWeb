@@ -115,6 +115,7 @@
             >
             <div class="dra-content" style="textAlign:left;padding:10px">
                 <div class="table" style="margin-top:16px">
+                        <div v-if="detailData.material_cates.length===0">无</div>
                         <div v-for="item,index in detailData.material_cates" :key="index">{{detailData.material_cates[index]}} <el-divider></el-divider></div>
                 </div>
             </div>
@@ -131,6 +132,7 @@
             >
             <div class="dra-content" style="textAlign:left;padding:10px">
                 <div class="table" style="margin-top:16px">
+                    <div v-if="detailData.items.length===0">无</div>
                     <div v-for="item,index in detailData.items" :key="index">{{detailData.items[index]}} <el-divider></el-divider></div>
                 </div>
             </div>
@@ -228,13 +230,16 @@ export default {
           trigger: 'change'
         }]
       },
-      unitOptions: [{
-        label: '结算重',
-        value: 1
-      }, {
-        label: '票',
-        value: 2
-      }]
+      unitOptions: [
+        {
+          label: '结算重',
+          value: 1
+        },
+        {
+          label: '票',
+          value: 2
+        }
+      ]
     }
   },
   mounted () {

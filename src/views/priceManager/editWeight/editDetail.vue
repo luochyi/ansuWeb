@@ -83,10 +83,10 @@
       </el-row>
     </div>
     <div class="footer">
-      <span>报价合计：</span>
-      ￥
-      <el-button class="orangeBtn" @click="adopt">确认改货</el-button>
-      <el-button class="whiteBtn" @click="reject">驳回改货</el-button>
+      <!-- <span>报价合计：</span>
+      ￥ -->
+      <el-button class="orangeBtn" @click="adopt" v-if="detailData.audit_status<2">确认改货</el-button>
+      <el-button class="whiteBtn" @click="reject" v-if="detailData.audit_status<2">驳回改货</el-button>
       <el-button class="whiteBtn" @click="calc">计算费用</el-button>
       <el-button class="whiteBtn" @click="goback">取消</el-button>
     </div>

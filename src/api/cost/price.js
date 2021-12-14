@@ -1,8 +1,14 @@
 import * as offer from './price/offer'
 import * as examine from './price/examine'
 import * as cargo from './price/cargo'
+import * as enrolment from './price/enrolment'
+import * as amount from './price/amount'
+import * as confirm from './price/confirm'
 export {
   offer,
   examine,
-  cargo
+  cargo,
+  enrolment,
+  amount,
+  confirm
 }

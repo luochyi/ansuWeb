@@ -290,18 +290,18 @@ export default {
               path: 'editWeight',
               parentId: '3'
             },
-            {
-              name: 'extraCharge',
-              meta: {
-                title: '应付附加费',
-                icon: '',
-                hidden: false
-              },
-              ID: 31,
-              menuId: '31',
-              path: 'extraCharge',
-              parentId: '3'
-            },
+            // {
+            //   name: 'extraCharge',
+            //   meta: {
+            //     title: '应付附加费',
+            //     icon: '',
+            //     hidden: false
+            //   },
+            //   ID: 31,
+            //   menuId: '31',
+            //   path: 'extraCharge',
+            //   parentId: '3'
+            // },
             {
               name: 'feeRegister',
               meta: {

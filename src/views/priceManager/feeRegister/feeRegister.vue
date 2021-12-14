@@ -5,15 +5,15 @@
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
         <span class='text'>费用登记</span>
         <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
+          <el-tab-pane label='全部' name='0'></el-tab-pane>
           <el-tab-pane label='未核单' name='1'></el-tab-pane>
           <el-tab-pane label='已核单' name='2'></el-tab-pane>
-          <el-tab-pane label='全部' name='3'></el-tab-pane>
         </el-tabs>
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
         <el-row :gutter="15">
-          <el-col :span="20">
+          <el-col>
             <el-form
               class="elForm"
               ref="elForm"
@@ -23,9 +23,9 @@
               label-position="top"
             >
               <el-col :span="6">
-                <el-form-item label="单号" prop="name">
+                <el-form-item label="预报单号" prop="forecastNo">
                   <el-input
-                    v-model="searchForm.name"
+                    v-model="searchForm.forecastNo"
                     placeholder="请输入"
                     clearable
                     :style="{ width: '60%' }"
@@ -33,9 +33,51 @@
                   </el-input>
                 </el-form-item>
               </el-col>
-            </el-form>
-            </el-col>
-           <el-col :span="4">
+              <el-col :span="6">
+                <el-form-item label="客户名称" prop="customerName">
+                  <el-input
+                    v-model="searchForm.customerName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="客户编号" prop="customerCode">
+                  <el-input
+                    v-model="searchForm.customerCode"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="运单编号" prop="waybillNo">
+                  <el-input
+                    v-model="searchForm.waybillNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="渠道名称" prop="channelName">
+                  <el-input
+                    v-model="searchForm.channelName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
                 <!-- <el-form-item size="large"> -->
                   <div class="searchBtn">
                     <el-button class="orangeBtn" @click="search">查询</el-button>
@@ -43,6 +85,9 @@
                   </div>
                 <!-- </el-form-item> -->
             </el-col>
+            </el-form>
+          </el-col>
+
         </el-row>
         <el-divider></el-divider>
         <div class='table'>
@@ -61,7 +106,6 @@
             :columns="columns"
             :data="tableData"
             :pager="page"
-            :selection='selection'
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
             >
@@ -88,40 +132,68 @@
 export default {
   data () {
     return {
-      activeName: '1',
+      activeName: '0',
       page: {
         pageNo: 1,
         limit: 10,
-        sizes: [1, 5, 10],
+        sizes: [10, 20, 50],
         total: 0
       },
       tableData: [
-
+        {}
       ],
       columns: [
-        { prop: 'name', label: '单号', width: '500', align: 'center' },
-        { prop: 'exchange_rate', label: '客户名称', width: '500', align: 'center' },
-        { prop: 'is_default', label: '客户编号', align: 'center' },
-        { prop: 'is_default', label: '审批状态', align: 'center', formatter: this.formatter },
-        { prop: 'is_default', label: '审批人', align: 'center' },
-        { prop: 'is_default', label: '订单类型', align: 'center' },
-        { prop: 'is_default', label: '预报渠道', align: 'center' },
-        { prop: 'is_default', label: '运输方式', align: 'center' },
-        { prop: 'is_default', label: '目的地', align: 'center' },
-        { prop: 'is_default', label: '下单时间', align: 'center' },
-        { prop: 'is_default', label: '结算重', align: 'center' },
-        { prop: 'is_default', label: '实重', align: 'center' },
-        { prop: 'is_default', label: '方数', align: 'center' },
-        { prop: 'is_default', label: '材积重', align: 'center' }
+        { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
+        { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
+        { prop: 'customer_code', label: '客户编码', width: '200', align: 'center' },
+        { prop: 'receivable', label: '应收款', width: '200', align: 'center' },
+        { prop: 'account_payable', label: '应付款', width: '200', align: 'center' },
+        { prop: 'check_status', label: '对账状态', align: 'center', width: '200', formatter: this.formatter },
+        { prop: 'created_at', width: '200', label: '下单时间', align: 'center', formatter: this.formatter },
+        { prop: 'customer_bill_weight', label: '客户结算重', width: '200', align: 'center' },
+        { prop: 'customer_cost_weight', label: '客户计费重', width: '200', align: 'center' },
+        { prop: 'agent_bill_weight', label: '代理结算重', width: '200', align: 'center' },
+        { prop: 'type', label: '运单类型', align: 'center', width: '200', formatter: this.formatter },
+        { prop: 'country', label: '国家', width: '200', align: 'center' },
+        { prop: 'channel_name', label: '渠道名称', width: '200', align: 'center' },
+        { prop: 'agent_name', label: '代理名称', width: '200', align: 'center' },
+        { prop: 'agent_channel_name', label: '代理渠道', width: '200', align: 'center' },
+        { prop: 'salesman_name', label: '业务员姓名', width: '200', align: 'center' }
       ],
       searchForm: {
-        name: ''
-      }
+        forecastNo: '',
+        customerName: '',
+        customerCode: '',
+        waybillNo: '',
+        channelName: '',
+        type: null,
+        hasInvoice: null
+      },
+      typeOptions: [
+        {
+          label: 'FBA运单',
+          value: 1
+        },
+        {
+          label: '非FBA运单',
+          value: 2
+        }
+      ],
+      hasInvoiceOptions: [
+        {
+          label: '未制作',
+          value: 0
+        },
+        {
+          label: '已制作',
+          value: 1
+        }
+      ]
     }
   },
   mounted () {
     // 在页面加载前调用获取列表数据函数
-    this.getData()
+    // this.getData()
   },
   methods: {
     getData () {
@@ -130,9 +202,14 @@ export default {
       let params = {
         status: Number(this.activeName),
         page: this.page.pageNo,
-        limit: this.page.limit
+        limit: this.page.limit,
+        forecastNo: this.searchForm.forecastNo,
+        customerName: this.searchForm.customerName,
+        customerCode: this.searchForm.customerCode,
+        waybillNo: this.searchForm.waybillNo,
+        channelName: this.searchForm.channelName
       }
-      this.$api.Ordermanagement.forecastLists(params).then(res => {
+      this.$api.cost.price.enrolment.lists(params).then(res => {
         console.log(res.data) // res是接口返回的结果
         this.tableData = res.data.list
         this.page.total = res.data.total
@@ -147,11 +224,13 @@ export default {
       this.getData()
     },
     formatter (row, column) {
-      // console.log(row)
-      if (row.type === 1) {
-        return '计划下单'
-      } else if (row.type === 2) {
-        return '无计划下单'
+      switch (column.property) {
+        case 'type':
+          return row.type === 1 ? 'FBA运单' : '非FBA运单'
+        case 'created_at':
+          return this.formatDate(row.created_at, 'yyyy-MM-dd')
+        case 'check_status':
+          return row.check_status === 0 ? '未对账' : row.check_status === 1 ? '对账中' : row.check_status === 2 ? '对账完成' : '无'
       }
     },
     search () {
@@ -163,7 +242,7 @@ export default {
       this.getData()
     },
     detail (id) {
-      this.$router.push({ name: 'feeRegisterDetail' })
+      this.$router.push({ name: 'feeRegisterDetail', params: { waybillId: id } })
     },
     handleClick (tab, event) {
       console.log(tab, event)

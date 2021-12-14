@@ -4,23 +4,33 @@
       <el-row type="flex" justify="flex-start" class="title" align="middle">
         <span class="text">运单信息</span>
       </el-row>
+      <div style="color:#FB4E0C;font-size:22px">{{detailData.waybill_no}}</div>
       <el-descriptions :column="4">
-        <el-descriptions-item label="客户编码">SMJJ</el-descriptions-item>
-        <el-descriptions-item label="客户名称">沙马</el-descriptions-item>
-        <el-descriptions-item label="目的国">美国</el-descriptions-item>
-        <el-descriptions-item label="目的国邮编">1111</el-descriptions-item>
-        <el-descriptions-item label="报关类型">一般贸易</el-descriptions-item>
-        <el-descriptions-item label="清关类型">单独清关</el-descriptions-item>
-        <el-descriptions-item label="是否有保险">是</el-descriptions-item>
-        <el-descriptions-item label="品名">玩具</el-descriptions-item>
-        <el-descriptions-item label="材质">带电</el-descriptions-item>
-        <el-descriptions-item label="方数">30立方</el-descriptions-item>
-        <el-descriptions-item label="实重">100公斤</el-descriptions-item>
-        <el-descriptions-item label="材积重">90公斤</el-descriptions-item>
-        <el-descriptions-item label="结算重">80公斤</el-descriptions-item>
-        <el-descriptions-item label="预报渠道">1111</el-descriptions-item>
-        <el-descriptions-item label="备注">1111</el-descriptions-item>
-        <el-descriptions-item label="内部备注">1111</el-descriptions-item>
+        <el-descriptions-item label="客户编码">{{detailData.customer_code}}</el-descriptions-item>
+        <el-descriptions-item label="客户名称">{{detailData.customer_name}}</el-descriptions-item>
+        <el-descriptions-item label="目的国">{{detailData.country_name}}</el-descriptions-item>
+        <el-descriptions-item label="目的国邮编">{{detailData.zipcode}}</el-descriptions-item>
+        <el-descriptions-item label="报关类型">{{detailData.trade_type===1?'一般贸易报关':'非一般贸易报关'}}</el-descriptions-item>
+        <el-descriptions-item label="清关类型">{{detailData.is_separate_customs_clearance===0?'非单独清关':'单独清关'}}</el-descriptions-item>
+        <el-descriptions-item label="是否有保险">{{detailData.have_safe===0?'不购买':'购买'}}</el-descriptions-item>
+        <el-descriptions-item label="品名">{{detailData.items}}</el-descriptions-item>
+        <el-descriptions-item label="材质">{{detailData.material_cates}}</el-descriptions-item>
+        <el-descriptions-item label="预报渠道">{{detailData.channel_name}}</el-descriptions-item>
+        <el-descriptions-item label="代理名称">{{detailData.agent_name}}</el-descriptions-item>
+        <el-descriptions-item label="代理渠道">{{detailData.agent_channel_name}}</el-descriptions-item>
+
+        <el-descriptions-item label="客户结算重">{{detailData.customer_bill_weight}}</el-descriptions-item>
+        <el-descriptions-item label="客户体积">{{detailData.customer_volume}}</el-descriptions-item>
+        <el-descriptions-item label="客户重量">{{detailData.customer_weight}}</el-descriptions-item>
+        <el-descriptions-item label="客户材积">{{detailData.customer_volume_weight}}</el-descriptions-item>
+        <el-descriptions-item label="客户计费重">{{detailData.cost_weight}}</el-descriptions-item>
+        <el-descriptions-item label="代理结算重">{{detailData.agent_bill_weight}}</el-descriptions-item>
+        <el-descriptions-item label="代理体积">{{detailData.agent_volume}}</el-descriptions-item>
+        <el-descriptions-item label="代理重量">{{detailData.agent_weight}}</el-descriptions-item>
+        <el-descriptions-item label="代理材积">{{detailData.agent_volume_weight}}</el-descriptions-item>
+        <el-descriptions-item label="备注">{{detailData.remark}}</el-descriptions-item>
+        <el-descriptions-item label="内部备注">{{detailData.interior_remark}}</el-descriptions-item>
+
       </el-descriptions>
     </div>
     <div class="box">
@@ -28,9 +38,9 @@
         <span class="text">申请追加费用</span>
       </el-row>
       <el-row style="line-height: 50px; font-size: 14px">
-        <el-col :span="4"><span style="color:#FB4702">合计应收：</span>2000元</el-col>
-        <el-col :span="4"><span style="color:#FB4702">合计应付：</span>800元</el-col>
-        <el-col :span="4"><span style="color:#FB4702">合计利润：</span>1200元</el-col>
+        <el-col :span="4"><span style="color:#FB4702">合计应收：</span>{{detailData.amount_info.receivable}}元</el-col>
+        <el-col :span="4"><span style="color:#FB4702">合计应付：</span>{{detailData.amount_info.account_payable}}元</el-col>
+        <el-col :span="4"><span style="color:#FB4702">合计利润：</span>{{detailData.amount_info.receivable-detailData.amount_info.account_payable}}元</el-col>
       </el-row>
     </div>
     <div class="box">
@@ -38,43 +48,65 @@
         <span class="text">费用登记单</span>
       </el-row>
       <el-row style="line-height: 50px; font-size: 14px">
-        <el-button class="orangeBtn"> 添加费用 </el-button>
-        <el-table :data="tableData"  border :header-cell-style="{background: '#F5F5F6'}">
+        <el-button class="orangeBtn" @click="addFee"> 添加费用 </el-button>
+        <el-table :data="amount_costs"  border :header-cell-style="{background: '#F5F5F6'}">
           <el-table-column fixed prop="type" label="类型" width="200">
           </el-table-column>
           <el-table-column  prop="name" label="费用名称" width="200">
           </el-table-column>
           <el-table-column prop="type" label="费用类型" width="120">
+            <template slot-scope="scope">
+              {{scope.row.type===1?'基础运费':scope.row.type===2?'附加费':'其他'}}
+            </template>
           </el-table-column>
-          <el-table-column prop="unitprice" label="结算对象" width="120">
-          </el-table-column>
-          <el-table-column prop="unitprice" label="单价" width="120">
+          <el-table-column prop="price" label="单价" width="120">
           </el-table-column>
           <el-table-column prop="unit" label="单位" width="120">
+            <template slot-scope="scope">
+              {{scope.row.unit===1?'结算重':scope.row.unit===2?'票':'无'}}
+            </template>
           </el-table-column>
-          <el-table-column prop="num" label="数量" width="120">
+          <el-table-column prop="unit_num" label="单位数量" width="120">
           </el-table-column>
-          <el-table-column prop="price" label="费用" width="120">
+          <el-table-column prop="formula" label="公式" width="120">
           </el-table-column>
-          <el-table-column prop="man" label="录价人" width="120">
+          <el-table-column prop="bill_amount" label="金额" width="120">
           </el-table-column>
-          <el-table-column prop="price" label="是否确认" width="120">
+          <el-table-column prop="bill_target" label="结算对象" width="120">
+            <template slot-scope="scope">
+              {{scope.row.bill_target===1?'客户':scope.row.bill_target===2?'代理':'无'}}
+            </template>
           </el-table-column>
-          <el-table-column prop="man" label="是否核销" width="120">
+          <el-table-column prop="bill_target_name" label="结算对象名称" width="120">
+          </el-table-column>
+          <el-table-column prop="user_name" label="录入人姓名" width="120">
+          </el-table-column>
+          <!-- <el-table-column prop="has_edit" label="是否允许修改" width="120">
+          </el-table-column> -->
+          <el-table-column prop="is_confirm" label="是否确认" width="120">
+            <template slot-scope="scope">
+              {{scope.row.is_confirm===1?'是':'否'}}
+            </template>
+          </el-table-column>
+          <el-table-column prop="is_write_off" label="是否核销" width="120">
+            <template slot-scope="scope">
+              {{scope.row.is_write_off===1?'是':'否'}}
+            </template>
           </el-table-column>
           <el-table-column fixed="right" label="操作"  width="200">
             <template slot-scope="scope">
               <el-button
                 @click="edit(scope.row)"
+                :disabled='scope.row.has_edit===false'
                 type="text"
                 size="small"
                 >修改</el-button
               >
-              <el-button type="text" size="small">删除</el-button>
+              <el-button type="text" size="small" :disabled='scope.row.has_edit===false'>删除</el-button>
             </template>
           </el-table-column>
         </el-table>
-        <el-col><span style="color:#FB4702">附加费：</span>
+        <el-col  style="margin-bottom:50px"><span style="color:#FB4702">附加费：</span>
             2000元</el-col>
       </el-row>
     </div>
@@ -93,6 +125,9 @@ export default {
     return {
       select: '',
       input: '',
+      waybillId: undefined,
+      detailData: {},
+      amount_costs: [],
       tableData: [
         {
           name: '偏远地区附加费',
@@ -118,8 +153,19 @@ export default {
           num: '10',
           price: '800元',
           man: '张三'
-        }
+        }, {}, {}, {}, {}, {}, {}, {}, {}
       ]
+    }
+  },
+  mounted () {
+    this.getData()
+  },
+  methods: {
+    getData () {
+      this.$api.cost.price.enrolment.detail({ waybillId: this.waybillId }).then(res => {
+        this.detailData = res.data
+        this.amount_costs = res.data.amount_info.amount_costs
+      })
     }
   }
 }
