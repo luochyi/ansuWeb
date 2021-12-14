@@ -625,6 +625,18 @@ export default {
                   menuId: '301',
                   path: 'channelService',
                   parentId: '30'
+                },
+                {
+                  name: 'agentAddress',
+                  meta: {
+                    title: '代理地址',
+                    icon: 'icon-logistics-icon',
+                    hidden: false
+                  },
+                  ID: 301,
+                  menuId: '302',
+                  path: 'agentAddress',
+                  parentId: '30'
                 }
               ]
             },

@@ -42,6 +42,16 @@ export default [
     component: () => import('@/views/channel/agentManage/addAgent.vue')
   },
   {
+    path: '/agentAddress',
+    name: 'agentAddress',
+    meta: {
+      title: '代理地址',
+      icon: 'agentAddress',
+      hidden: false
+    },
+    component: () => import('@/views/channel/agentManage/agentAddress.vue')
+  },
+  {
     path: '/channelService',
     name: 'channelService',
     meta: {

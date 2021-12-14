@@ -376,3 +376,35 @@ export const agentServiceAdditiveDelete = (params) => {
     data: params
   })
 }
+
+export const agentAddressLists = (params) => {
+  return axios({
+    url: '/setting/agent/address/lists',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentAddressAdd = (params) => {
+  return axios({
+    url: '/setting/agent/address/add',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentAddressEdit = (params) => {
+  return axios({
+    url: '/setting/agent/address/edit',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentAddressDelete = (params) => {
+  return axios({
+    url: '/setting/agent/address/delete',
+    method: 'post',
+    data: params
+  })
+}
