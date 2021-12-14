@@ -27,10 +27,10 @@
         <span class="text">应收合计</span>
       </el-row>
       <el-row style="line-height: 50px; font-size: 14px">
-        <el-col :span="4"><span style="color:#FB4702">基础运费：</span>{{detailData.amount.base_amount}}元</el-col>
+        <!-- <el-col :span="4"><span style="color:#FB4702">基础运费：</span>{{detailData.amount.base_amount}}元</el-col>
         <el-col :span="4"><span style="color:#FB4702">附加费：</span>{{detailData.amount.surcharge_amount}}元</el-col>
         <el-col :span="4"><span style="color:#FB4702">其他费用：</span>{{detailData.amount.other_amount}}元</el-col>
-        <el-col :span="4"><span style="color:#FB4702">合计费用：</span>{{Number(detailData.amount.base_amount) + Number(detailData.amount.surcharge_amount) + Number(detailData.amount.other_amount)}}元</el-col>
+        <el-col :span="4"><span style="color:#FB4702">合计费用：</span>{{Number(detailData.amount.base_amount) + Number(detailData.amount.surcharge_amount) + Number(detailData.amount.other_amount)}}元</el-col> -->
       </el-row>
     </div>
     <div class="box">
@@ -163,7 +163,9 @@ export default {
       cateDrawer: false, // 品名材质
       itemsDrawer: false,
       detailData: {
-        amount: {}
+        amount: {},
+        material_cates: [],
+        items: []
       },
       amount_costs: [],
       formData: {
@@ -212,7 +214,7 @@ export default {
     getData () {
       this.$api.cost.price.waybill.detail({ waybillId: this.waybillId }).then(res => {
         this.detailData = res.data
-        this.amount_costs = res.data.amount.surcharges
+        // this.amount_costs = res.data.amount.surcharges
       })
     },
     // 添加附加费
@@ -272,8 +274,9 @@ export default {
   line-height: 63px;
   box-shadow: 0px -2px 4px 0px rgba(0, 0, 0, 0.35);
   border-radius: 4px 4px 0px 0px;
-  border: 1px solid #E8E8E8;
+  border: 1px solid #e8e8e8;
   z-index: 999;
+  left: 201px;
   // text-align: right;
 }
 .box {

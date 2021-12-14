@@ -3,12 +3,12 @@
     <div class='main'>
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
-        <span class='text'>费用登记</span>
-        <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
+        <span class='text' style="height:50px;line-height:50px">费用登记</span>
+        <!-- <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
           <el-tab-pane label='全部' name='0'></el-tab-pane>
           <el-tab-pane label='未核单' name='1'></el-tab-pane>
           <el-tab-pane label='已核单' name='2'></el-tab-pane>
-        </el-tabs>
+        </el-tabs> -->
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
@@ -129,7 +129,6 @@ export default {
         total: 0
       },
       tableData: [
-        {}
       ],
       columns: [
         { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
@@ -182,7 +181,7 @@ export default {
   },
   mounted () {
     // 在页面加载前调用获取列表数据函数
-    // this.getData()
+    this.getData()
   },
   methods: {
     getData () {

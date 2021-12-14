@@ -133,18 +133,11 @@ export default {
         { prop: 'type', label: '运单类型', align: 'center', width: '200', formatter: this.formatter },
         { prop: 'channel_name', label: '渠道名称', width: '200', align: 'center' },
         { prop: 'cate', label: '渠道分类', width: '200', align: 'center', formatter: this.formatter },
-        // { prop: 'has_invoice', label: '是否制作发票', width: '200', align: 'center', formatter: this.formatter },
-        // { prop: 'is_irikura', label: '是否入仓', width: '100', align: 'center', formatter: this.formatter },
-        { prop: 'customer_bill_weight', width: '100', label: '结算重', align: 'center' },
-        { prop: 'customer_volume', width: '100', label: '体积', align: 'center', formatter: this.formatter },
-        { prop: 'customer_weight', width: '100', label: '重量', align: 'center' },
-        { prop: 'customer_volume_weight', width: '100', label: '材积', align: 'center' },
-        { prop: 'cost_weight', width: '100', label: '计费重', align: 'center' },
-        { prop: 'base_amount', width: '100', label: '运费', align: 'center' },
-        { prop: 'surcharge_amount', width: '100', label: '附加费', align: 'center' },
-        { prop: 'other_amount', width: '100', label: '其他费用', align: 'center' },
+        { prop: 'country', label: '国家', width: '200', align: 'center' },
         { prop: 'created_at', width: '200', label: '下单时间', align: 'center', formatter: this.formatter },
-        { prop: 'audit_status', width: '100', label: '审核状态', align: 'center', formatter: this.formatter }
+        { prop: 'customer_bill_weight', width: '100', label: '客户结算重', align: 'center' },
+        { prop: 'customer_cost_weight', width: '100', label: '客户计费重', align: 'center' },
+        { prop: 'agent_bill_weight', width: '100', label: '代理结算重', align: 'center' }
       ],
       searchForm: {
         forecastNo: '',

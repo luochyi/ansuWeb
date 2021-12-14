@@ -70,7 +70,7 @@
                 size="small"
                 >修改</el-button
               >
-              <el-button type="text" size="small" :disabled='scope.row.has_edit===false'>删除</el-button>
+              <el-button type="text" size="small" @click="del(scope.row)" :disabled='scope.row.has_edit===false'>删除</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -165,6 +165,7 @@ export default {
       },
       amount_costs: [],
       formData: {
+        costId: undefined,
         name: undefined,
         price: undefined,
         unit: undefined
@@ -217,23 +218,57 @@ export default {
     addFee () {
       this.addFeeDia = true
     },
+    edit (row) {
+      this.addFeeDia = true
+      this.formData.name = row.name
+      this.formData.price = row.price
+      this.formData.unit = row.unit
+      this.formData.costId = row.cost_id
+    },
+    del (row) {
+      this.$api.cost.price.amount.del({ waybillId: this.waybillId, costId: row.cost_id }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
     // 添加附加费
     submitForm () {
       this.$refs.elForm.validate(valid => {
         if (!valid) return
-        this.$api.cost.price.amount.add({
-          waybillId: this.waybillId,
-          name: this.formData.name,
-          price: this.formData.price,
-          unit: this.formData.unit
-        }).then(res => {
-          if (res.code === 0) {
-            this.$message.success(res.msg)
-            this.getData()
-          } else {
-            this.$message.error(res.msg)
-          }
-        })
+        if (this.formData.costId === undefined) {
+          this.$api.cost.price.amount.add({
+            waybillId: this.waybillId,
+            name: this.formData.name,
+            price: this.formData.price,
+            unit: this.formData.unit
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        } else {
+          this.$api.cost.price.amount.edit({
+            waybillId: this.waybillId,
+            costId: this.formData.costId,
+            name: this.formData.name,
+            price: this.formData.price,
+            unit: this.formData.unit
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        }
       })
     },
     diaClose () {

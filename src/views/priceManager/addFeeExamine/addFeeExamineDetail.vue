@@ -250,6 +250,17 @@
                 </button>
             </div>
       </commonDrawer>
+      <el-dialog
+          title="驳回原因"
+          :visible.sync="rejectShow"
+          width="30%"
+          >
+          <span><el-input type="textarea" v-model="rejectReason" :rows="5"></el-input></span>
+          <span slot="footer" class="dialog-footer">
+            <el-button @click="rejectShow = false">取 消</el-button>
+            <el-button type="primary" @click="rejectSubmit">确 定</el-button>
+          </span>
+        </el-dialog>
   </div>
 </template>
 
@@ -257,6 +268,8 @@
 export default {
   data () {
     return {
+      rejectShow: false,
+      rejectReason: '',
       select: '',
       input: '',
       explain: '',
@@ -330,7 +343,7 @@ export default {
       })
     },
     reject () {
-      this.dialog = true
+      this.rejectShow = true
     },
     rejectSubmit () {
       this.$api.cost.price.additional.examineReject({ waybillId: this.waybillId, rejectReason: this.rejectReason }).then(res => {

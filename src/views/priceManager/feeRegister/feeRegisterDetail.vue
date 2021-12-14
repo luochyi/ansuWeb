@@ -119,8 +119,6 @@
           border
           :header-cell-style="{ background: '#F5F5F6' }"
         >
-          <el-table-column fixed prop="type" label="类型" width="200">
-          </el-table-column>
           <el-table-column prop="name" label="费用名称" width="200">
           </el-table-column>
           <el-table-column prop="type" label="费用类型" width="120">
@@ -188,22 +186,26 @@
             <template slot-scope="scope">
               <el-button
                 @click="edit(scope.row)"
-                :disabled="scope.row.has_edit === false"
+
                 type="text"
                 size="small"
+                :disabled="scope.row.has_edit===false"
                 >修改</el-button
               >
               <el-button
                 type="text"
                 size="small"
-                :disabled="scope.row.has_edit === false"
+                :disabled="scope.row.has_edit===false"
+                @click="del(scope.row)"
                 >删除</el-button
               >
             </template>
           </el-table-column>
         </el-table>
         <el-col style="margin-bottom: 50px"
-          ><span style="color: #fb4702">附加费：</span> 2000元</el-col
+          >
+          <!-- <span style="color: #fb4702">附加费：</span> 2000元 -->
+          </el-col
         >
       </el-row>
     </div>
@@ -211,15 +213,15 @@
       <!-- <span>报价合计：</span>
       ￥ -->
       <div style="margin-left:400px">
-      <el-button class="orangeBtn">确认核单</el-button>
-      <el-button class="whiteBtn">取消</el-button>
+      <!-- <el-button class="orangeBtn">确认核单</el-button> -->
+      <el-button class="whiteBtn" @click="goback">返回</el-button>
       </div>
     </div>
     <!-- 查看材质 -->
     <commonDrawer :drawerVrisible="cateDrawer" drawerTitle="查看材质">
       <div class="dra-content" style="textalign: left; padding: 10px">
         <div class="table" style="margin-top: 16px">
-          <div v-if="detailData.material_cates.length === 0">无</div>
+          <div v-if="detailData.material_cates.length === 0">无<el-divider></el-divider></div>
           <div v-for="(item, index) in detailData.material_cates" :key="index">
             {{ detailData.material_cates[index] }} <el-divider></el-divider>
           </div>
@@ -236,7 +238,7 @@
     <commonDrawer :drawerVrisible="itemsDrawer" drawerTitle="查看品名">
       <div class="dra-content" style="textalign: left; padding: 10px">
         <div class="table" style="margin-top: 16px">
-          <div v-if="detailData.items.length === 0">无</div>
+          <div v-if="detailData.items.length === 0">无<el-divider></el-divider></div>
           <div v-for="(item, index) in detailData.items" :key="index">
             {{ detailData.items[index] }} <el-divider></el-divider>
           </div>
@@ -249,6 +251,43 @@
         </button>
       </div>
     </commonDrawer>
+    <el-dialog
+            title="添加费用"
+            :visible.sync="addFeeDia"
+            width="25%"
+            :before-close="diaClose">
+            <div style="text-align:left">
+                <el-form ref="elForm" :model="formData" :rules="rules" size="small" label-width="93px" label-position="top">
+                    <el-form-item label="费用名称" prop="name">
+                        <el-input v-model="formData.name" placeholder="请输入费用名称" clearable :style="{width: '60%'}">
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="单价" prop="price">
+                        <el-input v-model="formData.price" placeholder="请输入单价" clearable :style="{width: '60%'}"></el-input>
+                    </el-form-item>
+                    <el-form-item label="单位" prop="unit">
+                        <el-select v-model="formData.unit" placeholder="请选择单位" clearable :style="{width: '60%'}">
+                        <el-option v-for="(item, index) in unitOptions" :key="index" :label="item.label" :value="item.value"
+                            :disabled="item.disabled"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="公式" prop="formula">
+                        <el-input v-model="formData.formula" placeholder="请输入" clearable :style="{width: '60%'}">
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="结算对象" prop="billTarget">
+                        <el-select v-model="formData.billTarget" placeholder="请选择" clearable :style="{width: '60%'}">
+                        <el-option v-for="(item, index) in billTargetOptions" :key="index" :label="item.label" :value="item.value"
+                            :disabled="item.disabled"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item size="large">
+                        <el-button type="primary" @click="submitForm">提交</el-button>
+                        <el-button @click="resetForm">重置</el-button>
+                    </el-form-item>
+                    </el-form>
+            </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -258,51 +297,78 @@ export default {
     return {
       select: '',
       input: '',
+      addFeeDia: false,
+      rules: {
+        name: [{
+          required: true,
+          message: '请输入费用名称',
+          trigger: 'blur'
+        }],
+        price: [{
+          required: true,
+          message: '请输入单价',
+          trigger: 'blur'
+        }],
+        unit: [{
+          required: true,
+          message: '请选择单位',
+          trigger: 'change'
+        }],
+        formula: [{
+          required: true,
+          message: '请输入公式',
+          trigger: 'blur'
+        }],
+        billTarget: [{
+          required: true,
+          message: '请选择',
+          trigger: 'change'
+        }]
+      },
+      unitOptions: [
+        {
+          label: '结算重',
+          value: 1
+        },
+        {
+          label: '票',
+          value: 2
+        }
+      ],
+      billTargetOptions: [
+        {
+          label: '客户',
+          value: 1
+        },
+        {
+          label: '代理',
+          value: 2
+        }
+      ],
+      formData: {
+        costId: undefined,
+        name: undefined,
+        price: undefined,
+        unit: undefined,
+        formula: undefined,
+        billTarget: undefined
+      },
       waybillId: undefined,
       cateDrawer: false, // 品名材质
       itemsDrawer: false,
-      detailData: {},
+      detailData: {
+        amount_info: {}, material_cates: [], items: []
+      },
       amount_costs: [],
       tableData: [
-        {
-          name: '偏远地区附加费',
-          type: '附加费',
-          unitprice: '80元',
-          unit: '公斤',
-          num: '10',
-          price: '800元',
-          man: '张三'
-        },
-        {
-          name: '偏远地区附加费',
-          type: '附加费',
-          unitprice: '80元',
-          unit: '公斤',
-          num: '10',
-          price: '800元',
-          man: '张三'
-        },
-        {
-          name: '偏远地区附加费',
-          type: '附加费',
-          unitprice: '80元',
-          unit: '公斤',
-          num: '10',
-          price: '800元',
-          man: '张三'
-        },
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {},
-        {}
       ]
     }
   },
   mounted () {
+    if (this.$route.params.waybillId === undefined) {
+      this.goback()
+    }
+    this.waybillId = this.$route.params.waybillId
     this.getData()
   },
   methods: {
@@ -313,6 +379,81 @@ export default {
           this.detailData = res.data
           this.amount_costs = res.data.amount_info.amount_costs
         })
+    },
+    goback () {
+      this.$router.go(-1)
+    },
+    // 添加附加费
+    addFee () {
+      this.addFeeDia = true
+    },
+    edit (row) {
+      this.addFeeDia = true
+      this.formData.name = row.name
+      this.formData.price = row.price
+      this.formData.unit = row.unit
+      this.formData.costId = row.id
+      this.formData.formula = row.formula
+      this.formData.billTarget = row.bill_target
+      // formula
+      // billTarget
+    },
+    del (row) {
+      this.$api.cost.price.enrolment.del({ waybillId: this.waybillId, costId: row.id }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    // 添加附加费
+    submitForm () {
+      this.$refs.elForm.validate(valid => {
+        if (!valid) return
+        if (this.formData.costId === undefined) {
+          this.$api.cost.price.enrolment.add({
+            waybillId: this.waybillId,
+            name: this.formData.name,
+            price: this.formData.price,
+            unit: this.formData.unit,
+            formula: this.formData.formula,
+            billTarget: this.formData.billTarget
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        } else {
+          this.$api.cost.price.enrolment.edit({
+            waybillId: this.waybillId,
+            costId: this.formData.costId,
+            name: this.formData.name,
+            price: this.formData.price,
+            unit: this.formData.unit,
+            formula: this.formData.formula,
+            billTarget: this.formData.billTarget
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        }
+      })
+    },
+    diaClose () {
+      this.$refs.elForm.resetFields()
+      this.addFeeDia = false
+    },
+    resetForm () {
+      this.$refs.elForm.resetFields()
     }
   }
 }
@@ -329,6 +470,7 @@ export default {
   border-radius: 4px 4px 0px 0px;
   border: 1px solid #e8e8e8;
   z-index: 999;
+  left: 201px;
   // text-align: right;
 }
 .box {

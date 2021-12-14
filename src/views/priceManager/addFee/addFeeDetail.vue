@@ -113,7 +113,7 @@
           <el-table-column prop="bill_target" label="结算对象" width="130">
             <template slot-scope="scope">{{scope.row.bill_target===1?'客户':'代理'}}</template>
           </el-table-column>
-          <el-table-column prop="bill_target_name" label="结算对象姓名" width="130">
+          <el-table-column prop="bill_target_name" label="结算对象姓名" width="230">
           </el-table-column>
           <el-table-column prop="user_name" label="录价人" width="120">
           </el-table-column>
@@ -142,20 +142,21 @@
     </div>
     <div class="box">
       <el-row type="flex" justify="flex-start" class="title" align="middle">
-        <span class="text">申请追加费用</span>
+        <span class="text">追加费用</span>
       </el-row>
-      <el-button class="orangeBtn">添加追加费用</el-button>
+      <!-- <el-button class="orangeBtn" @click="addFee">添加追加费用</el-button> -->
       <el-table
-        :data="additionalAmount.costs"
-        style="width: 1000px"
+        :data="costs"
+        style="width: 1300px"
         border
         :header-cell-style="{ background: '#F5F5F6' }"
       >
         <el-table-column prop="name" label="费用名称" width="200">
         </el-table-column>
         <el-table-column prop="type" label="费用类型" width="120">
+          <template slot-scope="scope">{{scope.row.type===1?'基础运费':scope.row.type===2?'附加费':'其他'}}</template>
         </el-table-column>
-        <el-table-column prop="price" label="单价" width="100">
+        <el-table-column prop="price" label="单价">
         </el-table-column>
         <el-table-column prop="unit" label="单位" width="130">
           <template slot-scope="scope">{{scope.row.unit===1?'结算重':'票'}}</template>
@@ -166,8 +167,32 @@
           </el-table-column>
         <el-table-column prop="amount" label="金额" width="100">
         </el-table-column>
-        <el-table-column prop="bill_target_name" label="结算对象名称" width="120">
+        <el-table-column prop="bill_target_name" label="结算对象名称" width="320">
         </el-table-column>
+      </el-table>
+      <el-divider></el-divider>
+    </div>
+    <div class="box">
+      <el-row type="flex" justify="flex-start" class="title" align="middle">
+        <span class="text">申请追加费用</span>
+      </el-row>
+      <el-button class="orangeBtn" @click="addFee">添加追加费用</el-button>
+      <el-table
+        :data="newcosts"
+        style="width: 1000px"
+        border
+        :header-cell-style="{ background: '#F5F5F6' }"
+      >
+        <el-table-column prop="name" label="费用名称" width="200">
+        </el-table-column>
+        <el-table-column prop="price" label="单价" width="200">
+        </el-table-column>
+        <el-table-column prop="unit" label="单位" width="230">
+          <template slot-scope="scope">{{scope.row.unit===1?'结算重':'票'}}</template>
+        </el-table-column>
+        <el-table-column prop="bill_target" label="结算对象" >
+            <template slot-scope="scope">{{scope.row.bill_target===1?'客户':'代理'}}</template>
+          </el-table-column>
       </el-table>
       <el-divider></el-divider>
     </div>
@@ -261,6 +286,39 @@
                 </button>
             </div>
       </commonDrawer>
+      <el-dialog
+            title="添加费用"
+            :visible.sync="addFeeDia"
+            width="25%"
+            :before-close="diaClose">
+            <div style="text-align:left">
+                <el-form ref="elForm" :model="formData" :rules="rules" size="small" label-width="93px" label-position="top">
+                    <el-form-item label="费用名称" prop="name">
+                        <el-input v-model="formData.name" placeholder="请输入费用名称" clearable :style="{width: '60%'}">
+                        </el-input>
+                    </el-form-item>
+                    <el-form-item label="单价" prop="price">
+                        <el-input v-model="formData.price" placeholder="请输入单价" clearable :style="{width: '60%'}"></el-input>
+                    </el-form-item>
+                    <el-form-item label="单位" prop="unit">
+                        <el-select v-model="formData.unit" placeholder="请选择单位" clearable :style="{width: '60%'}">
+                        <el-option v-for="(item, index) in unitOptions" :key="index" :label="item.label" :value="item.value"
+                            :disabled="item.disabled"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="结算对象" prop="billTarget">
+                        <el-select v-model="formData.billTarget" placeholder="请选择" clearable :style="{width: '60%'}">
+                        <el-option v-for="(item, index) in billTargetOptions" :key="index" :label="item.label" :value="item.value"
+                            :disabled="item.disabled"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item size="large">
+                        <el-button type="primary" @click="submitForm">提交</el-button>
+                        <el-button @click="resetForm">重置</el-button>
+                    </el-form-item>
+                    </el-form>
+            </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -268,8 +326,7 @@
 export default {
   data () {
     return {
-      select: '',
-      input: '',
+      addFeeDia: false,
       explain: '',
       historyData: [],
       hisDrawer: false, // 历史审核抽屉
@@ -284,7 +341,58 @@ export default {
       },
       amountCosts: [],
       additionalAmount: {
-        costs: []
+
+      },
+      costs: [],
+      newcosts: [],
+      unitOptions: [
+        {
+          label: '结算重',
+          value: 1
+        },
+        {
+          label: '票',
+          value: 2
+        }
+      ],
+      billTargetOptions: [
+        {
+          label: '客户',
+          value: 1
+        },
+        {
+          label: '代理',
+          value: 2
+        }
+      ],
+      formData: {
+        name: undefined,
+        price: undefined,
+        unit: undefined,
+        billTarget: undefined
+      },
+      rules: {
+        name: [{
+          required: true,
+          message: '请输入费用名称',
+          trigger: 'blur'
+        }],
+        price: [{
+          required: true,
+          message: '请输入单价',
+          trigger: 'blur'
+        }],
+        unit: [{
+          required: true,
+          message: '请选择单位',
+          trigger: 'change'
+        }],
+        billTarget: [{
+          required: true,
+          message: '请选择对象',
+          trigger: 'change'
+        }]
+
       }
     }
   },
@@ -303,6 +411,11 @@ export default {
           this.detailData = res.data
           this.amountCosts = res.data.amount_costs
           this.additionalAmount = res.data.additional_amount
+          if (res.data.additional_amount.costs === null) {
+            this.costs = []
+          } else {
+            this.costs = res.data.additional_amount.costs
+          }
         })
     },
     goback () {
@@ -315,11 +428,18 @@ export default {
         this.hisDrawer = true
       })
     },
+    addFee () {
+      this.addFeeDia = true
+    },
+    diaClose () {
+      this.addFeeDia = false
+      this.resetForm()
+    },
     additionalAdd () {
       let params = {
         waybillId: this.waybillId,
         explain: this.explain,
-        costs: this.additionalAmount.costs
+        costs: this.newcosts
       }
       this.$api.cost.price.additional.add(params).then(res => {
         if (res.code === 0) {
@@ -329,6 +449,22 @@ export default {
           this.$message.error(res.msg)
         }
       })
+    },
+    submitForm () {
+      this.$refs.elForm.validate(valid => {
+        if (!valid) return
+        let obj = {
+          name: this.formData.name,
+          price: this.formData.price,
+          unit: this.formData.unit,
+          billTarget: this.formData.billTarget
+        }
+        this.newcosts.push(obj)
+        this.diaClose()
+      })
+    },
+    resetForm () {
+      this.$refs.elForm.resetFields()
     }
   }
 }
