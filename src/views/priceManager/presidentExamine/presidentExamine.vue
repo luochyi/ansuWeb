@@ -274,7 +274,7 @@ export default {
       this.getData()
     },
     detail (id) {
-      this.$router.push({ name: 'priceDetail', params: { waybillId: id } })
+      this.$router.push({ name: 'presidentExamineDetail', params: { waybillId: id } })
     },
     handleClick (tab, event) {
       console.log(tab, event)

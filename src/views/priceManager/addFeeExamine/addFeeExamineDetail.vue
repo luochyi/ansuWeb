@@ -174,9 +174,11 @@
     <div class="footer">
       <!-- <span>合计追加：</span>
       ￥ -->
-      <el-button class="orangeBtn" @click="adopt">通过</el-button>
-      <el-button class="whiteBtn" @click="reject">驳回</el-button>
-      <el-button class="batch" size="small" @click="goback">返回</el-button>
+      <div style="margin-left:400px">
+        <el-button class="orangeBtn" @click="adopt">通过</el-button>
+        <el-button class="whiteBtn" @click="reject">驳回</el-button>
+        <el-button class="batch" size="small" @click="goback">返回</el-button>
+      </div>
     </div>
     <!-- 查看材质 -->
     <commonDrawer :drawerVrisible="cateDrawer" drawerTitle="查看材质">

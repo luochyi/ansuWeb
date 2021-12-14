@@ -186,8 +186,10 @@
     <div class="footer">
       <!-- <span>合计追加：</span>
       ￥ -->
+      <div style="margin-left:400px">
       <el-button class="orangeBtn" @click="additionalAdd">追加费用</el-button>
       <el-button class="whiteBtn" @click="goback">取消</el-button>
+      </div>
     </div>
     <!-- 查看材质 -->
     <commonDrawer :drawerVrisible="cateDrawer" drawerTitle="查看材质">

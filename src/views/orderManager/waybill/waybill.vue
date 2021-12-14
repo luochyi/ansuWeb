@@ -489,6 +489,7 @@ export default {
       this.$api.Ordermanagement.waybillIrikura(params).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg)
+          this.getData()
           this.addClose()
         } else {
           this.$message.error(res.msg)

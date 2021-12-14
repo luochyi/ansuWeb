@@ -210,8 +210,10 @@
     <div class="footer">
       <!-- <span>报价合计：</span>
       ￥ -->
+      <div style="margin-left:400px">
       <el-button class="orangeBtn">确认核单</el-button>
       <el-button class="whiteBtn">取消</el-button>
+      </div>
     </div>
     <!-- 查看材质 -->
     <commonDrawer :drawerVrisible="cateDrawer" drawerTitle="查看材质">
