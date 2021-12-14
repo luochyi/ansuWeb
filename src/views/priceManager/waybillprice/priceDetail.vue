@@ -35,7 +35,8 @@
             <el-row type='flex' justify='flex-start' class='title' align='middle'>
                 <span class='text'>基础运价确认</span>
             </el-row>
-            <el-row style="line-height:50px;font-size:14px" v-if="detailData.offer.type===1&&!isSub">
+            <!-- 计价方式单价、未确认、未审核 -->
+            <el-row style="line-height:50px;font-size:14px" v-if="detailData.offer.type===1&&!isSub&&detailData.offer.audit_status===0">
                 <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
                     <el-col :span='10'>单价调整：<el-input placeholder="" v-model="adjust.adjustPrice" class="input-with-select">
                         <el-select v-model="adjust.adjustType" slot="prepend" placeholder="请选择" style="width:100px">
@@ -47,21 +48,30 @@
                     </el-col>
                 <el-col :span='6'><el-button class="orangeBtn" @click="submit()">确认</el-button></el-col>
             </el-row>
-            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type>1&&!isSub">
+            <!-- 计价方式非单价、未确认、未审核 -->
+            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type>1&&!isSub&&detailData.offer.audit_status===0">
                 <el-col :span='4'>运费模式：{{detailData.offer.type===2?'金额':'首续重'}}</el-col>
                 <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
                 <el-col :span='6'><el-button class="orangeBtn">确认</el-button></el-col>
-                <el-col>基础运费：元</el-col>
             </el-row>
-            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type===1&&isSub">
+            <!-- 计价方式单价，确认，未审核 -->
+            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type===1&&isSub&&detailData.offer.audit_status===0">
                 <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
                     <el-col :span='10'>单价调整：{{adjust.adjustType===1?'增加 ':'减少 '}}{{adjust.adjustPrice+'元/公斤'}}</el-col>
-                    <el-col>基础运费：</el-col>
             </el-row>
+            <!-- 计价方式单价，已审核 -->
+            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type===1&&detailData.offer.audit_status>0">
+                <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
+                    <el-col :span='10'>单价调整：{{detailData.offer.adjust_type===1?'增加 ':'减少 '}}{{detailData.offer.adjust_price+'元/公斤'}}</el-col>
+            </el-row>
+            <!-- 计价方式其他，已确认 -->
             <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type > 1&&isSub">
                 <el-col :span='4'>运费模式：{{detailData.offer.type===2?'金额':'首续重'}}</el-col>
                 <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
-                <el-col>基础运费：元</el-col>
+            </el-row>
+            <!-- 不可报价 -->
+            <el-row style="line-height:50px;font-size:14px" v-else>
+                <el-col>请先确认基础运价</el-col>
             </el-row>
         </div>
         <div class="box" style="margin-bottom:50px">
@@ -69,7 +79,7 @@
                 <span class='text'>附加费明细</span>
             </el-row>
             <el-row style="line-height:50px;font-size:14px">
-                <el-button class="orangeBtn" @click="addFee">
+                <el-button class="orangeBtn" @click="addFee" v-if="detailData.offer.audit_status===0">
                     添加附加费
                 </el-button>
                 <el-table :data="detailData.offer.surcharges">
@@ -85,10 +95,10 @@
             </el-row>
         </div>
         <div class="footer">
-            <span>报价合计：</span>
-            ￥
-            <el-button class="orangeBtn" @click="allSubmit">确认报价</el-button>
-            <el-button @click="back" class="whiteBtn">取消</el-button>
+            <!-- <span>报价合计：</span>
+            ￥ -->
+            <div style="margin-left:400px"><el-button class="orangeBtn" @click="allSubmit" v-if="detailData.offer.audit_status===0">确认报价</el-button>
+            <el-button @click="back" class="whiteBtn">返 回</el-button></div>
         </div>
         <!-- 查看审核历史 -->
          <commonDrawer
@@ -115,7 +125,7 @@
             >
             <div class="dra-content" style="textAlign:left;padding:10px">
                 <div class="table" style="margin-top:16px">
-                        <div v-if="detailData.material_cates.length===0">无</div>
+                        <div v-if="detailData.material_cates.length===0">无<el-divider></el-divider></div>
                         <div v-for="item,index in detailData.material_cates" :key="index">{{detailData.material_cates[index]}} <el-divider></el-divider></div>
                 </div>
             </div>
@@ -132,7 +142,7 @@
             >
             <div class="dra-content" style="textAlign:left;padding:10px">
                 <div class="table" style="margin-top:16px">
-                    <div v-if="detailData.items.length===0">无</div>
+                    <div v-if="detailData.items.length===0">无<el-divider></el-divider></div>
                     <div v-for="item,index in detailData.items" :key="index">{{detailData.items[index]}} <el-divider></el-divider></div>
                 </div>
             </div>
@@ -277,7 +287,7 @@ export default {
         this.surcharges.push(
           {
             name: this.formData.name,
-            price: this.formData.price,
+            price: Number(this.formData.price),
             unit: this.formData.unit
           }
         )
@@ -322,6 +332,7 @@ export default {
           }).then(res => {
             if (res.code === 0) {
               this.$message.success(res.msg)
+              this.back()
             } else {
               this.$message.error(res.msg)
             }
@@ -350,7 +361,7 @@ export default {
     height: 63px;
     width: 100%;
     line-height: 63px;
-    // text-align: right;
+    z-index: 999;
 }
 .box{
     margin-bottom: 10px;
