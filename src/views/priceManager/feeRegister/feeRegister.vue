@@ -22,21 +22,10 @@
               label-width="93px"
               label-position="top"
             >
-              <el-col :span="6">
-                <el-form-item label="预报单号" prop="forecastNo">
+            <el-col :span="6">
+                <el-form-item label="运单编号" prop="waybillNo">
                   <el-input
-                    v-model="searchForm.forecastNo"
-                    placeholder="请输入"
-                    clearable
-                    :style="{ width: '60%' }"
-                  >
-                  </el-input>
-                </el-form-item>
-              </el-col>
-              <el-col :span="6">
-                <el-form-item label="客户名称" prop="customerName">
-                  <el-input
-                    v-model="searchForm.customerName"
+                    v-model="searchForm.waybillNo"
                     placeholder="请输入"
                     clearable
                     :style="{ width: '60%' }"
@@ -56,9 +45,9 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="运单编号" prop="waybillNo">
+                <el-form-item label="客户名称" prop="customerName">
                   <el-input
-                    v-model="searchForm.waybillNo"
+                    v-model="searchForm.customerName"
                     placeholder="请输入"
                     clearable
                     :style="{ width: '60%' }"
@@ -296,6 +285,6 @@ export default {
 }
 .searchBtn{
   position: relative;
-  top: 30px;
+  top: 10px;
 }
 </style>

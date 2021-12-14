@@ -24,6 +24,17 @@
               label-position="top"
             >
               <el-col :span="6">
+                <el-form-item label="运单编号" prop="waybillNo">
+                  <el-input
+                    v-model="searchForm.waybillNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
                 <el-form-item label="客户编号" prop="customerCode">
                   <el-input
                     v-model="searchForm.customerCode"
@@ -45,17 +56,7 @@
                   </el-input>
                 </el-form-item>
               </el-col>
-              <el-col :span="6">
-                <el-form-item label="运单编号" prop="waybillNo">
-                  <el-input
-                    v-model="searchForm.waybillNo"
-                    placeholder="请输入"
-                    clearable
-                    :style="{ width: '60%' }"
-                  >
-                  </el-input>
-                </el-form-item>
-              </el-col>
+
               <el-col :span="6">
                 <!-- <el-form-item size="large"> -->
                   <div class="searchBtn">
