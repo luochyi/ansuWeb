@@ -102,6 +102,9 @@
             </el-tab-pane>
             <el-tab-pane label="业务员端" name="fourth">
               <el-checkbox v-model="formData.hasSales">业务员端</el-checkbox>
+              <div v-show="formData.hasSales">
+                <el-checkbox v-model="formData.sales.departmentData">部门数据</el-checkbox>
+              </div>
             </el-tab-pane>
           </el-tabs>
           <br />
@@ -211,7 +214,10 @@ export default {
           isManage: false
         },
         hasWarehouse: false,
-        hasSales: false
+        hasSales: false,
+        sales: {
+          departmentData: false
+        }
       },
       menus: [],
       formRole: {
