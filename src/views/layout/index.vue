@@ -364,68 +364,68 @@ export default {
           path: 'Financialexpenses',
           parentId: '0',
           children: [
-            {
-              name: 'Waybillfee',
-              meta: {
-                title: '运单费用',
-                icon: 'finance',
-                hidden: false
-              },
-              ID: 20,
-              menuId: '20',
-              path: 'Waybillfee',
-              parentId: '2',
-              children: [
-                {
-                  name: 'expenseConfirmation',
-                  meta: {
-                    title: '费用确认',
-                    icon: 'icon-inquiry-template',
-                    hidden: false
-                  },
-                  ID: 201,
-                  menuId: '201',
-                  path: 'expenseConfirmation',
-                  parentId: '20'
-                },
-                {
-                  name: 'expenseAudit',
-                  meta: {
-                    title: '费用审核',
-                    icon: 'icon-banzhengfuwu',
-                    hidden: false
-                  },
-                  ID: 202,
-                  menuId: '202',
-                  path: 'expenseAudit',
-                  parentId: '20'
-                },
-                {
-                  name: 'expenseConfirmationForm',
-                  meta: {
-                    title: '费用确认单',
-                    icon: 'icon-image-text',
-                    hidden: false
-                  },
-                  ID: 203,
-                  menuId: '203',
-                  path: 'expenseConfirmationForm',
-                  parentId: '20'
-                },
-                {
-                  name: 'expenseRegister',
-                  meta: {
-                    title: '费用登记',
-                    icon: 'icon-writing',
-                    hidden: false
-                  },
-                  ID: 204,
-                  menuId: '204',
-                  path: 'expenseRegister',
-                  parentId: '20'
-                }
-              ]
-            },
+            // {
+            //   name: 'Waybillfee',
+            //   meta: {
+            //     title: '运单费用',
+            //     icon: 'finance',
+            //     hidden: false
+            //   },
+            //   ID: 20,
+            //   menuId: '20',
+            //   path: 'Waybillfee',
+            //   parentId: '2',
+            //   children: [
+            //     {
+            //       name: 'expenseConfirmation',
+            //       meta: {
+            //         title: '费用确认',
+            //         icon: 'icon-inquiry-template',
+            //         hidden: false
+            //       },
+            //       ID: 201,
+            //       menuId: '201',
+            //       path: 'expenseConfirmation',
+            //       parentId: '20'
+            //     },
+            //     {
+            //       name: 'expenseAudit',
+            //       meta: {
+            //         title: '费用审核',
+            //         icon: 'icon-banzhengfuwu',
+            //         hidden: false
+            //       },
+            //       ID: 202,
+            //       menuId: '202',
+            //       path: 'expenseAudit',
+            //       parentId: '20'
+            //     },
+            //     {
+            //       name: 'expenseConfirmationForm',
+            //       meta: {
+            //         title: '费用确认单',
+            //         icon: 'icon-image-text',
+            //         hidden: false
+            //       },
+            //       ID: 203,
+            //       menuId: '203',
+            //       path: 'expenseConfirmationForm',
+            //       parentId: '20'
+            //     },
+            //     {
+            //       name: 'expenseRegister',
+            //       meta: {
+            //         title: '费用登记',
+            //         icon: 'icon-writing',
+            //         hidden: false
+            //       },
+            //       ID: 204,
+            //       menuId: '204',
+            //       path: 'expenseRegister',
+            //       parentId: '20'
+            //     }
+            //   ]
+            // },
             {
               name: 'Rmanagement',
               meta: {
