@@ -4,8 +4,8 @@
     :index='routerInfo.name'
     :route='{ name: routerInfo.name }'
   >
-    <i :class="'iconfont' + ' ' + routerInfo.meta.icon"></i>
-    <span slot='title' class='menufont'>{{ routerInfo.meta.title }}</span>
+    <i :class="'iconfont' + ' ' + routerInfo.icon"></i>
+    <span slot='title' class='menufont'>{{ routerInfo.title }}</span>
   </el-menu-item>
 </template>
 
