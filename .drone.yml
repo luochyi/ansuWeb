@@ -123,7 +123,7 @@ steps:
       password:
         from_secret: pro_pass
       port: 22
-      target: /data/docker/wwwroot/www.testmanage.szfba.cn
+      target: /data/docker/wwwroot/manage.ansuex.com
       source: dist/*
   - name: ssh
     image: appleboy/drone-ssh
@@ -135,7 +135,7 @@ steps:
         from_secret: pro_pass
       port: 22
       script:
-        - cd /data/docker/wwwroot/www.testmanage.szfba.cn
+        - cd /data/docker/wwwroot/manage.ansuex.com
         - chown -R www.www dist
         - \cp -rf dist/* ./
         - rm -rf dist
