@@ -180,6 +180,8 @@
 <script>
 // import { positionDelete } from '../../../api/configure'
 
+import { userMenu } from '../../../api/configure/menu'
+
 export default {
   data () {
     return {
@@ -404,7 +406,7 @@ export default {
       // 删除无接口
     },
     menu () {
-      this.$api.configure.menu.all().then(res => {
+      this.$api.configure.menu.userMenu().then(res => {
         this.menus = res.data
       })
     },
