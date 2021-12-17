@@ -9,7 +9,7 @@
       </el-tabs> -->
     </el-row>
     <el-row class="box-block flex">
-      <el-col :span="6" style="border: 1px solid #D9D9D9;border-top:none;height:750px;overflow:scroll">
+      <el-col style="border: 1px solid #D9D9D9;border-top:none;height:750px;overflow:scroll;width:280px;min-width:280px">
         <div style="background:#fff">
           <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
             <el-col :span="5" style="margin-top:-2px">
@@ -34,7 +34,7 @@
           </el-row>
         </div>
       </el-col>
-      <el-col :span="18">
+      <el-col style="overflow:scroll;height:750px;background:#ffffff">
         <!-- 主要内容 -->
     <div class='content'>
         <!-- 搜索栏 -->
@@ -105,15 +105,22 @@
         width="30%"
         :before-close="handleClose">
         <div>
-          <el-row>
-            仓库名<el-input v-model="form.name"></el-input>
-            邮编<el-input v-model="form.zipCode"></el-input>
-            地址<el-input v-model="form.address" type="textarea"></el-input>
-          </el-row>
+          <el-form ref="elForm" :model="form" :rules="rules" size="small" label-width="93px" label-position="top">
+            <el-form-item label="仓库名" prop="name">
+              <el-input v-model="form.name" placeholder="请输入仓库名" clearable :style="{width: '100%'}"></el-input>
+            </el-form-item>
+            <el-form-item label="邮编" prop="zipCode">
+              <el-input v-model="form.zipCode" placeholder="请输入邮编" clearable :style="{width: '100%'}"></el-input>
+            </el-form-item>
+            <el-form-item label="地址" prop="address">
+              <el-input v-model="form.address" type="textarea" placeholder="请输入地址"
+                :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
+            </el-form-item>
+          </el-form>
         </div>
         <span slot="footer" class="dialog-footer">
-          <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="addSubmit">确 定</el-button>
+          <el-button class="whiteBtn" @click="dialogVisible = false">取 消</el-button>
+          <el-button class="orangeBtn" @click="addSubmit">确 定</el-button>
         </span>
       </el-dialog>
 
@@ -173,6 +180,23 @@ export default {
         zipCode: '',
         address: ''
       },
+      rules: {
+        name: [{
+          required: true,
+          message: '请输入仓库名',
+          trigger: 'blur'
+        }],
+        zipCode: [{
+          required: true,
+          message: '请输入邮编',
+          trigger: 'blur'
+        }],
+        address: [{
+          required: true,
+          message: '请输入地址',
+          trigger: 'blur'
+        }]
+      },
       keyword: '',
       visible: false,
       red: null,
@@ -224,6 +248,7 @@ export default {
     },
     handleSelectionChange (arr) {},
     search () {
+      this.currentPage = 1
       this.getData()
     },
     reset () {
@@ -267,19 +292,22 @@ export default {
         return
       }
       if (this.diatitle === '新增FBA仓') {
-        this.$api.configure.FBA.add({
-          name: this.form.name,
-          address: this.form.address,
-          zipCode: this.form.zipCode,
-          countryId: this.countryId
-        }).then(res => {
-          if (res.code === 0) {
-            this.$message.success(res.msg)
-            this.getData()
-            this.handleClose()
-          } else {
-            this.$message.error(res.msg)
-          }
+        this.$refs.elForm.validate(valid => {
+          if (!valid) return
+          this.$api.configure.FBA.add({
+            name: this.form.name,
+            address: this.form.address,
+            zipCode: this.form.zipCode,
+            countryId: this.countryId
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+              this.handleClose()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
         })
       } else if (this.diatitle === '修改FBA仓') {
         this.$api.configure.FBA.edit({
@@ -507,5 +535,9 @@ export default {
     color: rgba(0, 0, 0, 0.65);
 
   }
+}
+::-webkit-scrollbar {
+/*隐藏滚轮*/
+display: none;
 }
 </style>

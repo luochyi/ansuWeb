@@ -1,54 +1,212 @@
 <template>
-    <div>
-        <el-row class="box">
-              <!-- 签收 -->
-                <el-row>
-                    <el-col :span="6" class="item">
-                        <span class="item-box">运单号&nbsp;&nbsp;</span>
-                        <el-input placeholder="请输入" class="input" v-model="code" size="small">
-                            <i slot="suffix" class="unit" @click="dialogPL = true" style="cursor:pointer">批量</i>
-                            <i slot="suffix" class="expend" @click="dialogPL = true" style="cursor:pointer">&#xe9cc;</i>
-                        </el-input>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-button size="small" class="orangeBtn" style="margin-right:10px">查 询</el-button>
-                        <el-button size="small" class="wuBtn" style="margin-right:10px">重 置</el-button>
-                    </el-col>
-                </el-row>
-                <el-row class="line"></el-row>
-            <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
-            <el-col :span='14' class="left">
-                <!-- <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button> -->
-            </el-col>
-            <el-col :span='10' class="right">
-            </el-col>
-            </el-row>
-            <!-- 表格 -->
-            <div class="table">
-              <commonTable
-                :columns="columns"
-                :selection="selection"
-                :data="tableData"
-                :pager="page"
-                @handleSizeChange="handleSizeChange"
-                @handleCurrentChange="handleCurrentChange"
+  <div>
+    <el-row class="box">
+      <!-- 签收 -->
+      <el-row :gutter="15">
+        <!-- <el-col :span="20"> -->
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+            <el-col :span="6">
+              <el-form-item label="预报单号" prop="forecastNo">
+                <el-input
+                  v-model="searchForm.forecastNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
                 >
-                <el-table-column
-                  slot="table_oper"
-                  align="center"
-                  fixed="right"
-                  label="操作"
-                  width="126"
-                  :resizable="false"
-                  >
-                  <template slot-scope="scope">
-                    <span @click="detail(scope.row)" class="blue">详情</span>
-                  </template>
-                </el-table-column>
-              </commonTable>
-            </div>
-        </el-row>
-    </div>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="客户编码" prop="customerCode">
+                <el-input
+                  v-model="searchForm.customerCode"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="客户名称" prop="customerName">
+                <el-input
+                  v-model="searchForm.customerName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+
+            <el-col :span="6">
+              <el-form-item label="业务员姓名" prop="salesmanName">
+                <el-input
+                  v-model="searchForm.salesmanName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="运单号" prop="waybillNo">
+                <el-input
+                  v-model="searchForm.waybillNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="渠道名称" prop="channelName">
+                <el-input
+                  v-model="searchForm.channelName"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <!-- <el-col :span="6">
+                      <el-form-item label="运单号批量搜索" prop="waybillNo">
+                        <el-input
+                          v-model="searchForm.waybillNo"
+                          placeholder="请输入"
+                          clearable
+                          :style="{ width: '60%' }"
+                        >
+                        </el-input>
+                      </el-form-item>
+                    </el-col> -->
+            <el-col :span="6">
+              <el-form-item label="运单类型" prop="type">
+                <el-select
+                  v-model="searchForm.type"
+                  placeholder="请选择"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                  <el-option
+                    v-for="item in typeOptions"
+                    :label="item.label"
+                    :value="item.value"
+                    :key="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="是否制作发票" prop="hasInvoice">
+                <el-select
+                  v-model="searchForm.hasInvoice"
+                  placeholder="请选择"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                  <el-option
+                    v-for="item in hasInvoiceOptions"
+                    :label="item.label"
+                    :value="item.value"
+                    :key="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="转单公司" prop="transshipCode">
+                <el-input
+                  v-model="searchForm.transshipCode"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="转单号" prop="transshipNo">
+                <el-input
+                  v-model="searchForm.transshipNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
+              <el-form-item label="提单号" prop="extractNo">
+                <el-input
+                  v-model="searchForm.extractNo"
+                  placeholder="请输入"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :span="4">
+          <el-form-item size="large">
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          </el-form-item>
+        </el-col>
+          </el-form>
+      </el-row>
+      <el-row class="line"></el-row>
+      <el-row
+        class="searchbox1"
+        type="flex"
+        justify="space-between"
+        align="middle"
+      >
+        <el-col :span="14" class="left">
+          <!-- <el-button class='stopBtn' @click="Export" size="small">批量导出Excel</el-button> -->
+        </el-col>
+        <el-col :span="10" class="right"> </el-col>
+      </el-row>
+      <!-- 表格 -->
+      <div class="table">
+        <commonTable
+          :columns="columns"
+          :selection="selection"
+          :data="tableData"
+          :pager="page"
+          @handleSizeChange="handleSizeChange"
+          @handleCurrentChange="handleCurrentChange"
+        >
+          <el-table-column
+            slot="table_oper"
+            align="center"
+            fixed="right"
+            label="操作"
+            width="126"
+            :resizable="false"
+          >
+            <template slot-scope="scope">
+              <span @click="detail(scope.row)" class="blue">详情</span>
+            </template>
+          </el-table-column>
+        </commonTable>
+      </div>
+    </el-row>
+  </div>
 </template>
 
 <script>
@@ -62,17 +220,66 @@ export default {
         channelServiceId: null
       },
       columns: [
-        { prop: 'type', label: '运单类型', align: 'center', width: '200', formatter: this.formatter },
-        { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
-        { prop: 'customer_code', label: '客户编码', width: '200', align: 'center' },
         { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
-        { prop: 'forecast_no', label: '预报单号', width: '200', align: 'center' },
-        { prop: 'channel_name', label: '渠道名称', width: '200', align: 'center' },
-        { prop: 'has_invoice', label: '是否制作发票', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'irikura_time', label: '入库时间', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'created_at', label: '下单时间', width: '200', align: 'center', formatter: this.formatter },
+        {
+          prop: 'forecast_no',
+          label: '预报单号',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'type',
+          label: '运单类型',
+          align: 'center',
+          width: '200',
+          formatter: this.formatter
+        },
+        {
+          prop: 'customer_name',
+          label: '客户名称',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'customer_code',
+          label: '客户编码',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'channel_name',
+          label: '渠道名称',
+          width: '200',
+          align: 'center'
+        },
+        {
+          prop: 'has_invoice',
+          label: '是否制作发票',
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
+        },
+        {
+          prop: 'irikura_time',
+          label: '入库时间',
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
+        },
+        {
+          prop: 'created_at',
+          label: '下单时间',
+          width: '200',
+          align: 'center',
+          formatter: this.formatter
+        },
         { prop: 'remark', label: '客户备注', width: '200', align: 'center' },
-        { prop: 'interior_remark', label: '内部备注', width: '200', align: 'center' }
+        {
+          prop: 'interior_remark',
+          label: '内部备注',
+          width: '200',
+          align: 'center'
+        }
       ],
       tableData: [],
       page: {
@@ -80,7 +287,40 @@ export default {
         total: 0,
         sizes: [1, 5, 10],
         pageNo: 1
-      }
+      },
+      searchForm: {
+        forecastNo: '',
+        customerCode: '',
+        customerName: '',
+        salesmanName: '',
+        waybillNo: '',
+        channelName: '',
+        type: null,
+        hasInvoice: null,
+        transshipCode: '',
+        transshipNo: '',
+        extractNo: ''
+      },
+      typeOptions: [
+        {
+          label: 'FBA运单',
+          value: 1
+        },
+        {
+          label: '非FBA运单',
+          value: 2
+        }
+      ],
+      hasInvoiceOptions: [
+        {
+          label: '未制作',
+          value: 0
+        },
+        {
+          label: '已制作',
+          value: 1
+        }
+      ]
     }
   },
   mounted () {
@@ -94,10 +334,32 @@ export default {
       // signLists
       // checkoutLists
       // Ejectlists
-      this.$api.Ordermanagement.signLists({ limit: this.page.limit, page: this.page.pageNo }).then(res => {
+      this.$api.Ordermanagement.signLists({
+        limit: this.page.limit,
+        page: this.page.pageNo,
+        forecastNo: this.searchForm.forecastNo,
+        customerName: this.searchForm.customerName,
+        customerCode: this.searchForm.customerCode,
+        salesmanName: this.searchForm.salesmanName,
+        waybillNo: this.searchForm.waybillNo,
+        type: this.searchForm.type,
+        hasInvoice: this.searchForm.hasInvoice,
+        channelName: this.searchForm.channelName,
+        transshipCode: this.searchForm.transshipCode,
+        transshipNo: this.searchForm.transshipNo,
+        extractNo: this.searchForm.extractNo
+      }).then((res) => {
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
+    },
+    search () {
+      this.page.pageNo = 1
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     detail (data) {
       this.$router.push({ name: 'waybillDetail', params: { id: data.id } })
@@ -130,48 +392,55 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.line{
-    height: 1px;
-    background: #E9E9E9;
-    margin: 18px 0;
+.line {
+  height: 1px;
+  background: #e9e9e9;
+  margin: 18px 0;
 }
-.input{
-    width: 70%;
-    display: flex;
-    align-items: center;
+.input {
+  width: 70%;
+  display: flex;
+  align-items: center;
 }
-.box{
-    background: #fff;
-    padding-top: 14px;
-    text-align: left;
+.box {
+  background: #fff;
+  padding-top: 14px;
+  text-align: left;
 }
-.item{
-    display: flex;
-    align-items: center;
+.item {
+  display: flex;
+  align-items: center;
 }
-.item-box{
-    text-align: right;
-    width: 80px;
-    font-size: 14px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: rgba(0, 0, 0, 0.65);
+.item-box {
+  text-align: right;
+  width: 80px;
+  font-size: 14px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.65);
 }
-.unit{
-    line-height: 32px;
-    font-size: 12px;
-    font-family: PingFangSC-Regular, PingFang SC;
-    font-weight: 400;
-    color: #FE822F;
-    margin-right: 10px;
+.unit {
+  line-height: 32px;
+  font-size: 12px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #fe822f;
+  margin-right: 10px;
 }
 .expend {
   font-family: "iconfont" !important;
   line-height: 32px;
   font-size: 14px;
   font-style: normal;
-  color: #FE822F;
+  color: #fe822f;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+.elForm {
+  text-align: left;
+}
+.searchBtn {
+  position: relative;
+  top: 30px;
 }
 </style>

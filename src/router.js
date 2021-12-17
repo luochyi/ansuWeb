@@ -7,6 +7,7 @@ import channel from '@/router/channel.js'
 import configureCenter from '@/router/configureCenter.js'
 import customerManage from '@/router/customerManage.js'
 import finance from '@/router/finance.js'
+import price from '@/router/price.js'
 Vue.use(Router)
 
 export default new Router({
@@ -27,7 +28,8 @@ export default new Router({
         ...channel,
         ...configureCenter,
         ...customerManage,
-        ...finance
+        ...finance,
+        ...price
       ]
     },
     {

@@ -6,8 +6,8 @@
     :index='routerInfo.name'
   >
     <template slot='title'>
-      <i :class="'el-icon-' + routerInfo.meta.icon"></i>
-      <span slot='title' class='menufont'>{{ routerInfo.meta.title }}</span>
+      <i :class="'el-icon-' + routerInfo.icon"></i>
+      <span slot='title' class='menufont'>{{ routerInfo.title }}</span>
     </template>
     <slot></slot>
   </el-submenu>

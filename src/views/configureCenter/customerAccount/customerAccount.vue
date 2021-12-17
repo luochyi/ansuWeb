@@ -11,30 +11,74 @@
     <!-- 主要内容 -->
     <div class="content">
       <!-- 搜索栏 -->
-      <div>
-        <el-row class="searchbox1">
-          <el-col :span="8" class="colbox">
-            <el-col :span="7">
-              <span class="text">客户名称</span>
-            </el-col>
-            <el-col :span="16">
-              <el-input v-model="input" placeholder="请输入"></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span="6" class="colbox">
-            <el-col :span="8">
-              <span class="text">客户编号</span>
-            </el-col>
-            <el-col :span="14">
-              <el-input v-model="customerCode" placeholder="请输入"></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span="8" class="colbox">
-            <el-button class="orangeBtn long1">查 询</el-button>
-            <el-button class="wuBtn long1">重 置</el-button>
-          </el-col>
-        </el-row>
-      </div>
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+             <el-col :span="6">
+                <el-form-item label="客户编码" prop="code">
+                  <el-input
+                    v-model="searchForm.code"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+                <el-form-item label="客户名称" prop="name">
+                  <el-input
+                    v-model="searchForm.name"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="登录名" prop="username">
+                  <el-input
+                    v-model="searchForm.username"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="业务员" prop="salesmanName">
+                  <el-input
+                    v-model="searchForm.salesmanName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
+        </el-col>
+          </el-form>
+        </el-col>
+      </el-row>
+      <el-divider></el-divider>
       <!-- 表格 -->
       <div>
         <el-row
@@ -64,7 +108,7 @@
             :resizable="false"
           >
             <template slot-scope="scope">
-              <el-button type="text" @click="addAccount(scope.row)"> 修改详情</el-button>
+              <el-button type="text" @click="detail(scope.row.id)"> 详情</el-button>
               <span style="color: #0084ff; margin: 0px 5px">|</span>
               <el-button type="text" @click="resetP(scope.row)">
                 重置密码
@@ -167,6 +211,12 @@ export default {
         limit: 10,
         sizes: [5, 10, 20],
         total: 0
+      },
+      searchForm: {
+        code: '',
+        name: '',
+        username: '',
+        salesmanName: ''
       }
     }
   },
@@ -181,15 +231,30 @@ export default {
       let params = {
         status: Number(this.activeName),
         page: this.page.pageNo,
-        limit: this.page.limit
+        limit: this.page.limit,
+        code: this.searchForm.code,
+        name: this.searchForm.name,
+        username: this.searchForm.username,
+        salesmanName: this.searchForm.salesmanName
       }
       this.$api.customer.customerLists(params).then((res) => {
         this.tableData = res.data.list
         this.page.total = res.data.total
       })
     },
+    search () {
+      this.page.pageNo = 1
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
+    },
     addAccount () {
       this.$router.push({ name: 'addAccount' })
+    },
+    detail (id) {
+      this.$router.push({ name: 'detailAccount', params: { id: id } })
     },
     handleClick (val) {
       console.log(val)
@@ -355,5 +420,12 @@ export default {
   height: 58px;
   font-size: 58px;
   color: #fb4702;
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  // top: 30px;
 }
 </style>

@@ -54,8 +54,8 @@ export default {
     return {
       selection: false,
       columns: [
-        { prop: 'name', label: '客户名称', align: 'center' },
         { prop: 'code', label: '客户编码', align: 'center' },
+        { prop: 'name', label: '客户名称', align: 'center' },
         { prop: 'bill_amount', label: '未核销账单', align: 'center' },
         { prop: 'amount', label: '账户余额', align: 'center' }
       ],

@@ -37,6 +37,7 @@ border-radius: 4px;
 html, body {
   height: 100%;
   margin: 0px;
+  min-width: 1300px;
 }
 .left {
   text-align: left;
@@ -53,6 +54,10 @@ html, body {
 .content{
   min-height: 590px;
   border-radius: 4px;
+}
+.text{
+  // min-width: 100px;
+  // width: 70px;
 }
 .orangeCricle{
   display: inline-block;

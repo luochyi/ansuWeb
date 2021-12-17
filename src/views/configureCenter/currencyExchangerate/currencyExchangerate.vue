@@ -41,8 +41,10 @@
       :visible.sync="dialogVisible"
       width="30%"
       :before-close="handleClose">
+      <span style="color:red">*</span>
       币种名称：
       <el-input v-model="formData.name"></el-input>
+      <span style="color:red">*</span>
       汇率：
       <el-input v-model="formData.exchangeRate" type="Number"></el-input>
       <span slot="footer" class="dialog-footer">
@@ -79,7 +81,7 @@ export default {
       },
       formData: {
         name: null,
-        exchangeRate: null
+        exchangeRate: 0
       }
 
     }
@@ -102,10 +104,7 @@ export default {
     //   })
     // },
     // 改变页面大小处理
-    handleSizeChange (val) {
-      this.page.limit = val
-      this.getData()
-    },
+
     edit (row) {
       this.dialogVisible = true
       this.dialogTitile = '修改货币'
@@ -172,6 +171,10 @@ export default {
     // 翻页处理
     handleCurrentChange (val) {
       this.page.pageNo = val
+      this.getData()
+    },
+    handleSizeChange (val) {
+      this.page.limit = val
       this.getData()
     },
     // 操作按钮列表

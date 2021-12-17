@@ -173,6 +173,7 @@ export default {
     reset  () {
       this.search.licensePlate = ''
       this.search.driveName = ''
+      this.getData()
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {

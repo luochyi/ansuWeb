@@ -9,20 +9,24 @@
       <el-row>
         <el-col :span="6" style="marginRight: 10px">
           <span class="sub_title">部门</span>
-          <el-button class="whiteBtn" size="mini" @click="department = true;digTitle='新增部门'" >新增部门</el-button>
+          <el-button class="whiteBtn" size="mini" @click="showAddDepartment" >新增部门</el-button>
           <el-tree
             :data="organizationList"
             accordion
             node-key="id"
+            :props="{label: 'name'}"
             :expand-on-click-node="false"
             @node-click="handleNodeClick"
           >
             <span class="custom-tree-node" slot-scope="{ node, data }">
               <span>{{ node.label }}</span>
               <span>
-                <el-button type="text" size="mini" @click="() => change(data)">
-                  修改名称
+                <el-button type="text" size="mini" @click="departmentChange(data)">
+                  修改
                 </el-button>
+                <el-popconfirm title="这是一段内容确定删除吗？" @confirm="departmentDel(data)" v-if="data.children === null">
+                  <el-button type="text" size="mini" slot="reference">删除</el-button>
+                </el-popconfirm>
               </span>
             </span>
           </el-tree>
@@ -46,8 +50,11 @@
               <span>{{ node.label }}</span>
               <span>
                 <el-button type="text" size="mini" @click="roleChange(data)">
-                  修改名称
+                  修改
                 </el-button>
+                <el-popconfirm title="这是一段内容确定删除吗？" @confirm="roleDel(data)" v-if="data.children === null">
+                  <el-button type="text" size="mini" slot="reference">删除</el-button>
+                </el-popconfirm>
                 <el-button
                   type="text"
                   size="mini"
@@ -95,6 +102,9 @@
             </el-tab-pane>
             <el-tab-pane label="业务员端" name="fourth">
               <el-checkbox v-model="formData.hasSales">业务员端</el-checkbox>
+              <div v-show="formData.hasSales">
+                <el-checkbox v-model="formData.sales.departmentData">部门数据</el-checkbox>
+              </div>
             </el-tab-pane>
           </el-tabs>
           <br />
@@ -102,24 +112,26 @@
       </div>
     </el-drawer>
     <!-- 新增部门 -->
-    <el-dialog :title="digTitle" :visible.sync="department" :before-close="departmentClose" width="30%">
+    <el-dialog :title="dialog.department.title" :visible.sync="dialog.department.visabled" :before-close="departmentClose" width="30%">
       <div class="input">
+        <span style="color:red">*</span>
         <span
           >部门名称<el-input
-            v-model="organizationName"
+            v-model="dialog.department.formData.name"
             style="width: 190px"
             placeholder="请输入部门名称"
           ></el-input
         ></span>
         <br />
         <br />
+        <span style="color:red">*</span>
         <span
-          >上级部门<el-cascader
+          >上级部门
+          <el-cascader
             filterable
-            :key="isResouceShow"
-            :options="organizationOptions"
-            v-model="parentId"
-            :props="{ checkStrictly: true }"
+            :options="organizationList"
+            v-model="dialog.department.formData.parentId"
+            :props="{ checkStrictly: true,expandTrigger: 'hover', value: 'id', label: 'name'}"
             @change="handleChange"
             clearable
           ></el-cascader
@@ -127,7 +139,7 @@
       </div>
       <span slot="footer" class="department-footer">
         <el-button @click="departmentClose" class="wuBtn">取 消</el-button>
-        <el-button type="primary" @click="addSubmit()" class="orangeBtn"
+        <el-button type="primary" @click="departmentSubmit" class="orangeBtn"
           >确 定</el-button
         >
       </span>
@@ -135,6 +147,7 @@
     <!-- 新增角色 -->
     <el-dialog :title="roleTitle" :visible.sync="toAdd" width="30%">
       <div class="input">
+        <span style="color:red">*</span>
         <span>角色名称
           <el-input
             v-model="formRole.name"
@@ -144,10 +157,10 @@
         </span>
         <br />
         <br />
+        <span style="color:red">*</span>
         <span>上级角色
           <el-cascader
             filterable
-            :key="isRoleShow"
             :options="roleList"
             v-model="formRole.parentId"
             :props="{ checkStrictly: true, expandTrigger: 'hover', value: 'id', label: 'name' }"
@@ -165,6 +178,8 @@
 </template>
 
 <script>
+// import { positionDelete } from '../../../api/configure'
+
 export default {
   data () {
     return {
@@ -176,14 +191,11 @@ export default {
       editId: null,
       roleId: null,
       department: false, // 新增部门
-      isResouceShow: 0,
-      isRoleShow: 0,
       toAdd: false, // 新增角色
       roleType: null,
+      departmentType: null,
       drawer: false,
       organizationList: [],
-      organizationOptions: [],
-      roleOptions: [],
       roleList: [],
       roleName: null,
       roleParentId: [],
@@ -202,13 +214,28 @@ export default {
           isManage: false
         },
         hasWarehouse: false,
-        hasSales: false
+        hasSales: false,
+        sales: {
+          departmentData: false
+        }
       },
       menus: [],
       formRole: {
         roleId: null,
         parentId: [],
         name: null
+      },
+      dialog: {
+        department: {
+          visabled: false,
+          title: null,
+          type: null,
+          formData: {
+            departmentId: null,
+            name: null,
+            parentId: null
+          }
+        }
       }
     }
   },
@@ -220,119 +247,19 @@ export default {
   methods: {
     getData () {
       this.organizationList = [] // el-tree的数据
-      this.organizationOptions = [] // 级联选择器的选项数据
       this.$api.configure.departmentAll().then((res) => {
-        console.log(res)
-        res.data &&
-          res.data.forEach((element) => {
-            let obj = {
-              value: element.id,
-              label: element.name,
-              parent_id: element.parent_id,
-              children: []
-            }
-            if (obj.value === element.id) {
-              element.children &&
-                element.children.forEach((item) => {
-                  let objs = {
-                    value: item.id,
-                    label: item.name,
-                    parent_id: item.parent_id,
-                    children: []
-                  }
-                  obj.children.push(objs)
-                  if (objs.value === item.id) {
-                    item.children &&
-                      item.children.forEach((e) => {
-                        let objss = {
-                          value: e.id,
-                          label: e.name,
-                          parent_id: e.parent_id
-                        }
-                        objs.children.push(objss)
-                      })
-                  }
-                })
-            }
-            this.organizationList.push(obj)
-            console.log(this.organizationList)
-          })
+        this.organizationList = res.data
       })
     },
     // 获取角色
     getRoleData () {
       this.roleList = [] // el-tree的数据
-      this.roleOptions = [] // 级联选择器的选项数据
       this.$api.configure.positionAll().then((res) => {
         this.roleList = res.data
       })
     },
-    // 新增部门
-    addSubmit () {
-      if (this.digTitle === '新增部门') {
-        let pid
-        if (this.parentId.length === 0) {
-          pid = 0
-        }
-        if (this.parentId.length === 1) {
-          pid = this.parentId[0]
-        }
-        if (this.parentId.length === 2) {
-          pid = this.parentId[1]
-        }
-        if (this.parentId.length === 3) {
-          pid = this.parentId[2]
-        }
-
-        let resData = {
-          name: this.organizationName,
-          parentId: pid
-        }
-        this.$api.configure.departmentAdd(resData).then((res) => {
-          console.log(res)
-          if (res.code === 0) {
-            this.$message.success(res.msg)
-            this.departmentClose()
-            this.getData()
-          } else {
-            this.$message.error(res.msg)
-          }
-        })
-      } else if (this.digTitle === '修改部门') {
-        let pid
-        if (this.parentId.length === 0) {
-          pid = 0
-        }
-        if (this.parentId.length === 1) {
-          pid = 0
-        }
-        if (this.parentId.length === 2) {
-          pid = this.parentId[0]
-        }
-        if (this.parentId.length === 3) {
-          pid = this.parentId[1]
-        }
-        let resData = {
-          departmentId: this.editId,
-          name: this.organizationName,
-          parentId: pid
-        }
-        this.$api.configure.departmentEdit(resData).then((res) => {
-          console.log(res)
-          if (res.code === 0) {
-            this.$message.success(res.msg)
-            this.departmentClose()
-            this.getData()
-          } else {
-            this.$message.error(res.msg)
-          }
-        })
-      }
-    },
     departmentClose () {
-      this.department = false
-      this.parentId = []
-      this.organizationName = null
+      this.dialog.department.visabled = false
     },
     toAddClose () {
       this.toAdd = false
@@ -375,55 +302,41 @@ export default {
           })
       }
     },
-    // 修改部门名称
-    change (data) {
-      this.parentId = []
-      console.log(data)
-      this.editId = data.value // 修改ID
-      if (data.parent_id === 0) {
-        this.parentId = [0]
-      } else {
-        // this.parentId = [0]
-        // this.parentId.push(data.parent_id)
-        let pid = data.parent_id
-        this.$api.configure.departmentAll().then((res) => {
-          console.log(res)
-          res.data && res.data.forEach(element => {
-            // 第一级
-            let first = {
-              value: element.id,
-              label: element.name,
-              parent_id: element.parent_id,
-              children: element.children
-            }
-            first.children && first.children.forEach(item => {
-              // 第二级
-              let second = {
-                value: item.id,
-                label: item.name,
-                parent_id: item.parent_id,
-                children: item.children
-              }
-              console.log(second)
-              if (second.value === pid) {
-                console.log(second.parent_id)
-                this.parentId.push(second.parent_id)
-                this.parentId.push(data.parent_id)
-                // 这是选中第三级时
-                console.log(this.parentId)
-              } else if (pid === second.parent_id) {
-                this.parentId = []
-                this.parentId.push(first.value)
-                console.log(this.parentId)
-              }
-            })
-          })
-        })
+    departmentSubmit () {
+      let parentId = 0
+      if (this.dialog.department.formData.parentId) {
+        parentId = Number(this.dialog.department.formData.parentId.slice(-1))
       }
-      console.log(this.parentId)
-      this.department = true
-      this.digTitle = '修改部门'
-      this.organizationName = data.label
+      switch (this.dialog.department.type) {
+        case 1:
+          this.$api.configure.departmentAdd({
+            name: this.dialog.department.formData.name,
+            parentId: parentId
+          }).then((res) => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+              this.departmentClose()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+          return
+        case 2:
+          this.$api.configure.departmentEdit({
+            departmentId: this.dialog.department.formData.departmentId,
+            name: this.dialog.department.formData.name,
+            parentId: parentId
+          }).then((res) => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+              this.departmentClose()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+      }
     },
     showAddRole () {
       this.formRole.name = null
@@ -433,6 +346,14 @@ export default {
       this.roleType = 1
       this.toAdd = true
     },
+    showAddDepartment () {
+      // department
+      this.dialog.department.formData.name = null
+      this.dialog.department.formData.parentId = null
+      this.dialog.department.title = '新增部门'
+      this.dialog.department.type = 1
+      this.dialog.department.visabled = true
+    },
     roleChange (data) {
       this.formRole.name = data.name
       this.formRole.roleId = data.id
@@ -440,6 +361,34 @@ export default {
       this.roleTitle = '修改角色'
       this.roleType = 2
       this.toAdd = true
+    },
+    departmentChange (data) {
+      this.dialog.department.formData.name = data.name
+      this.dialog.department.formData.departmentId = data.id
+      this.dialog.department.formData.parentId = this.cascaderData(this.organizationList, data.parent_id)
+      this.dialog.department.title = '修改角色'
+      this.dialog.department.type = 2
+      this.dialog.department.visabled = true
+    },
+    departmentDel (data) {
+      this.$api.configure.departmentDelete(data.id).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    roleDel (data) {
+      this.$api.configure.positionDelete(data.id).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.getRoleData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     handleChange (val) {
       console.log(val)
@@ -511,23 +460,6 @@ export default {
           this.$message.error(res.msg)
         }
       })
-    }
-  },
-  watch: {
-    // 解决级联选择器报错
-    organizationOptions: {
-      handler (newVal) {
-        if (newVal.length === 0) {
-          ++this.isResouceShow
-        }
-      }
-    },
-    roleOptions: {
-      handler (newVal) {
-        if (newVal.length === 0) {
-          ++this.isRoleShow
-        }
-      }
     }
   }
 }

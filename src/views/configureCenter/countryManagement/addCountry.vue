@@ -7,10 +7,15 @@
     </el-row>
     <!-- 内容 -->
     <div class="content">
-        <el-row>
-            <el-col :span="8">目的国名称<div><el-input class="elipt" v-model="name" size="mini"></el-input></div></el-col>
-            <el-col :span="8">目的国电话区号<div><el-input class="elipt" v-model="areaCode" size="mini"></el-input></div></el-col>
-        </el-row>
+        <el-form ref="elForm" :model="form" :rules="rules" size="small" label-width="93px" label-position="top">
+          <el-form-item label="目的国名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入目的国名称" clearable :style="{width: '100%'}"></el-input>
+          </el-form-item>
+          <el-form-item label="目的国电话区号" prop="areaCode">
+            <el-input v-model="form.areaCode" placeholder="请输入目的国电话区号" clearable :style="{width: '100%'}">
+            </el-input>
+          </el-form-item>
+        </el-form>
         <div class="item">
             <div style="margin:20px 0 10px 0">国家图标</div>
             <el-upload
@@ -21,7 +26,7 @@
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
                 :before-upload="beforeAvatarUpload">
-                <img v-if="icon" :src="ImgUrl(this.icon)" style="width:114px;height:76px" class="avatar">
+                <img v-if="form.icon" :src="ImgUrl(this.form.icon)" style="width:114px;height:76px" class="avatar">
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 </el-upload>
                 <div style="fontSize:14px;color:#000000A6;marginTop:10px">上传国家图标</div>
@@ -40,21 +45,35 @@ export default {
       uploadhead: {
         'Ansuex-Manage-Token': sessionStorage.getItem('token')
       },
-      name: null,
-      areaCode: null,
-      icon: null
+      form: {
+        name: null,
+        areaCode: null,
+        icon: null
+      },
+      rules: {
+        name: [{
+          required: true,
+          message: '请输入目的国名称',
+          trigger: 'blur'
+        }],
+        areaCode: [{
+          required: true,
+          message: '请输入目的国电话区号',
+          trigger: 'blur'
+        }]
+      }
     }
   },
   mounted () {
     this.editId = this.$route.params.id
-    this.name = this.$route.params.name
-    this.icon = this.$route.params.icon
-    this.areaCode = this.$route.params.area_code
+    this.form.name = this.$route.params.name
+    this.form.icon = this.$route.params.icon
+    this.form.areaCode = this.$route.params.area_code
     // countryId
   },
   methods: {
     handleAvatarSuccess (res, file) {
-      this.icon = res.data.path
+      this.form.icon = res.data.path
     },
     // 上传前的钩子函数，设置上传限制
     beforeAvatarUpload (file) {
@@ -72,26 +91,29 @@ export default {
     // 提交新增
     addSubmit () {
       if (this.editId === undefined) {
-        let params = {
-          name: this.name,
-          areaCode: Number(this.areaCode),
-          icon: this.icon
-        }
-        this.$api.configure.countryAdd(params).then(res => {
-          console.log(res)
-          if (res.code === 0) {
-            this.$message.success(res.msg)
-            this.$router.push({ name: 'countryManagement' })
-          } else {
-            this.$message.error(res.msg)
+        this.$refs.elForm.validate(valid => {
+          if (!valid) return
+          let params = {
+            name: this.form.name,
+            areaCode: Number(this.form.areaCode),
+            icon: this.form.icon
           }
+          this.$api.configure.countryAdd(params).then(res => {
+            console.log(res)
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.$router.push({ name: 'countryManagement' })
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
         })
       } else {
         let params = {
           countryId: this.editId,
-          name: this.name,
-          areaCode: Number(this.areaCode),
-          icon: this.icon
+          name: this.form.name,
+          areaCode: Number(this.form.areaCode),
+          icon: this.form.icon
         }
         this.$api.configure.countryEdit(params).then(res => {
           console.log(res)

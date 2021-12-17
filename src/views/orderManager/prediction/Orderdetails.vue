@@ -10,7 +10,9 @@
     <div class="top" >
          <el-row type='flex' justify='flex-start' class='titlea' align='middle'>
       <span style=" margin:25px" class='text'>预报订单：{{data.forecast_no}}  预报类型：{{data.type === 1 ? '计划下单' : '未建计划下单'}}</span>
-      <el-button class="orangeBtn" size="mini" @click="back">返回</el-button>
+      <el-button class="orangeBtn" size="mini" @click="back">返回
+
+      </el-button>
     </el-row>
          <el-descriptions title="客户信息">
          <el-descriptions-item label="客户名称">{{data.customer_name}}</el-descriptions-item>

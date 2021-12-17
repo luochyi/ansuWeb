@@ -118,6 +118,7 @@ export default {
     // 操作按钮列表
     editTableData (row) {},
     search () {
+      this.page.pageNo = 1
       this.getData()
     },
     toDetail (val) {

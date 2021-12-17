@@ -89,6 +89,13 @@ export const agentServiceAdd = (params) => {
     data: params
   })
 }
+export const agentServiceEdit = (params) => {
+  return axios({
+    url: '/setting/agent/service/edit',
+    method: 'post',
+    data: params
+  })
+}
 
 // setting/agent/service/price/add
 export const priceAdd = (params) => {
@@ -277,6 +284,126 @@ export const agentServicePlanPrice = planId => {
 export const agentSelectAddress = (params) => {
   return axios({
     url: '/setting/agent/select/address',
+    method: 'post',
+    data: params
+  })
+}
+// 渠道详情
+export const channelInfo = (params) => {
+  return axios({
+    url: '/setting/channel/info',
+    method: 'post',
+    data: params
+  })
+}
+// setting/channel/edit/describe
+export const channelEditDescribe = (params) => {
+  return axios({
+    url: '/setting/channel/edit/describe',
+    method: 'post',
+    data: params
+  })
+}
+// setting/channel/edit/other
+export const channelEditOther = (params) => {
+  return axios({
+    url: '/setting/channel/edit/other',
+    method: 'post',
+    data: params
+  })
+}
+
+export const channelAdditiveAll = (params) => {
+  return axios({
+    url: '/setting/channel/additive/all',
+    method: 'post',
+    data: params
+  })
+}
+
+export const channelAdditiveAdd = (params) => {
+  return axios({
+    url: '/setting/channel/additive/add',
+    method: 'post',
+    data: params
+  })
+}
+
+export const channelAdditiveEdit = (params) => {
+  return axios({
+    url: '/setting/channel/additive/edit',
+    method: 'post',
+    data: params
+  })
+}
+
+export const channelAdditiveDelete = (params) => {
+  return axios({
+    url: '/setting/channel/additive/delete',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentServiceAdditiveAll = (params) => {
+  return axios({
+    url: '/setting/agent/service/additive/all',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentServiceAdditiveAdd = (params) => {
+  return axios({
+    url: '/setting/agent/service/additive/add',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentServiceAdditiveEdit = (params) => {
+  return axios({
+    url: '/setting/agent/service/additive/edit',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentServiceAdditiveDelete = (params) => {
+  return axios({
+    url: '/setting/agent/service/additive/delete',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentAddressLists = (params) => {
+  return axios({
+    url: '/setting/agent/address/lists',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentAddressAdd = (params) => {
+  return axios({
+    url: '/setting/agent/address/add',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentAddressEdit = (params) => {
+  return axios({
+    url: '/setting/agent/address/edit',
+    method: 'post',
+    data: params
+  })
+}
+
+export const agentAddressDelete = (params) => {
+  return axios({
+    url: '/setting/agent/address/delete',
     method: 'post',
     data: params
   })

@@ -7,6 +7,42 @@
     <!-- 主要内容 -->
     <div class='content'>
       <!-- 搜索栏 -->
+       <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+             <el-col :span="6">
+                <el-form-item label="等级名称" prop="name">
+                  <el-input
+                    v-model="searchForm.name"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
+        </el-col>
+          </el-form>
+        </el-col>
+      </el-row>
+      <!-- 表格 -->
+      <el-divider></el-divider>
       <el-row  class='searchbox1'>
         <el-col :span='2' class='colboxx justify-center'>
           <el-button @click="addCustomerL" class='orangeBtn long3'> 新增客户等级</el-button>
@@ -41,6 +77,7 @@
     <el-dialog :title="digTitle" :visible.sync="diaShow" :before-close="addClose" width="30%">
       <div class="input">
         <el-row>
+          <span style="color:red">*</span>
           <span>客户名称&nbsp;<el-input
                             v-model="name"
                             style="width: 190px"
@@ -49,6 +86,7 @@
                         ></span>
         </el-row>
         <el-row style="marginTop:20px">
+          <span style="color:red">*</span>
           <span>提醒天数&nbsp;<el-input
                             v-model="warn_day"
                             style="width: 190px"
@@ -88,8 +126,10 @@ export default {
         limit: 10,
         sizes: [1, 5, 10],
         total: 0
+      },
+      searchForm: {
+        name: ''
       }
-
     }
   },
   mounted () {
@@ -102,7 +142,8 @@ export default {
       this.tableData = []
       let params = {
         page: this.page.pageNo,
-        limit: this.page.limit
+        limit: this.page.limit,
+        name: this.searchForm.name
       }
       this.$api.configure.customerLevelLists(params).then((res) => {
         console.log(res)
@@ -116,6 +157,14 @@ export default {
           this.page.total = res.data.total
         })
       })
+    },
+    search () {
+      this.page.pageNo = 1
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     // 新增
     addCustomerL () {
@@ -137,7 +186,7 @@ export default {
             this.addClose() // 关闭新增框
           } else {
             this.$message.error(res.msg)
-            this.addClose()
+            // this.addClose()
           }
         })
       } else if (this.digTitle === '修改客户等级') {
@@ -153,7 +202,7 @@ export default {
             this.addClose()
           } else {
             this.$message.error(res.msg)
-            this.addClose()
+            // this.addClose()
           }
         })
       }
@@ -293,5 +342,11 @@ export default {
 .colboxa {
 width: 200px;
 }
-
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
+}
 </style>

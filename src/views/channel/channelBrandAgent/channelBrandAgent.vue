@@ -5,8 +5,8 @@
       <span class='text'>代理配置</span>
     </el-row>
     <el-row class="box-block flex">
-      <el-col :span="6" style="border: 1px solid #D9D9D9;box-shadow: 8px 0px 0px -5px rgba(0, 0, 0, 0.9);border-top:none">
-        <div style="height:100%;background:#fff">
+      <el-col style="min-width:380px;width:380px;border: 1px solid #D9D9D9;border-top:none;padding-bottom:20px;background:#ffffff">
+        <div class="box">
           <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
             <el-col :span="3" style="margin-top:-2px">
             <span style="font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;font-weight: 500;color: #000000;">渠道</span>
@@ -304,6 +304,16 @@ export default {
 .active{
   border:3px solid #FB4702
 }
+.box{
+  background: #ffffff;
+  overflow: scroll;
+  height: 750px;
+}
+.content{
+  height: 730px;
+  width: calc(100% - 20px);
+  overflow: scroll;
+}
 .search-font{
   width: 60px;
   height: 36px;
@@ -462,5 +472,8 @@ export default {
     color: rgba(0, 0, 0, 0.65);
 
   }
+}::-webkit-scrollbar {
+/*隐藏滚轮*/
+display: none;
 }
 </style>

@@ -151,6 +151,17 @@ export default [
     },
     component: () => import('@/views/configureCenter/customerAccount/addAccount.vue')
   },
+  // detailAccount.vue
+  {
+    path: '/detailAccount',
+    name: 'detailAccount',
+    meta: {
+      title: '新建客户账户',
+      icon: 'addAccount',
+      hidden: true
+    },
+    component: () => import('@/views/configureCenter/customerAccount/detailAccount.vue')
+  },
   {
     path: '/Customerlevel',
     name: 'Customerlevel',
@@ -251,6 +262,16 @@ export default [
       hidden: false
     },
     component: () => import('@/views/configureCenter/materialCate/materialCate.vue')
+  },
+  {
+    path: '/productItem',
+    name: 'productItem',
+    meta: {
+      title: '品名',
+      icon: 'productItem',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/product/item.vue')
   },
   {
     path: '/countryManagement',

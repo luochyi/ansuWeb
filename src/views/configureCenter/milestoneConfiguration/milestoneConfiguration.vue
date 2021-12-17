@@ -33,29 +33,47 @@
           <!-- 主要内容 -->
           <div class="content">
             <!-- 搜索栏 -->
-            <div>
-              <el-row class="searchbox1">
-                <el-col :span="10" class="colbox">
+            <el-row :gutter="15">
+              <el-col>
+                <el-form
+                  class="elForm"
+                  ref="elForm"
+                  size="small"
+                  :model="searchForm"
+                  label-width="93px"
+                  label-position="top"
+                >
                   <el-col :span="6">
-                    <span class="text">客户编码</span>
-                  </el-col>
-                  <el-col :span="10">
-                    <el-input
-                      v-model="predictionNo"
-                      placeholder="请输入"
-                    ></el-input>
-                  </el-col>
-                </el-col>
-                <el-col :span="4" class="colbox">
-                  <el-button class="orangeBtn long1" @click="search"
-                    >查 询</el-button
+                      <el-form-item label="状态名称" prop="name">
+                        <el-input
+                          v-model="searchForm.name"
+                          placeholder="请输入"
+                          clearable
+                          :style="{ width: '60%' }"
+                        >
+                        </el-input>
+                      </el-form-item>
+                    </el-col>
+                  <el-col :span="6">
+                <!-- <el-form-item size="large"> -->
+                <div class="searchBtn">
+                  <el-button class="orangeBtn" @click="search">查询</el-button>
+                  <el-button class="whiteBtn" @click="resetForm('elForm')"
+                    >重置</el-button
                   >
-                </el-col>
-                <el-button @click="show = true" class="whiteBtn"
-                  >新建状态
-                </el-button>
-              </el-row>
-            </div>
+                </div>
+                <!-- </el-form-item> -->
+              </el-col>
+                </el-form>
+              </el-col>
+            </el-row>
+            <!-- 表格 -->
+            <el-divider></el-divider>
+            <el-row  class='searchbox1'>
+              <el-col :span='2' class='colboxx justify-center'>
+                <el-button @click="show=true" class='orangeBtn long3'> 新增状态</el-button>
+              </el-col>
+            </el-row>
             <!-- 表格 -->
             <commonTable
               :columns="columns"
@@ -76,7 +94,7 @@
                 <template slot-scope="scope">
                   <el-button
                     type="text"
-                    @click="modify = true"
+                    @click="edit(scope.row)"
                     :disabled="scope.row.type === 1"
                   >
                     修改</el-button
@@ -94,9 +112,9 @@
             </commonTable>
           </div>
           <!-- 新建状态 -->
-          <el-dialog title="新建状态" :visible.sync="show" width="30%">
-            <div class="input">
-              <span
+          <el-dialog :title="diaTitle" :visible.sync="show" width="30%">
+            <div>
+              <!-- <span
                 >名称&nbsp;<el-input
                   v-model="statusname"
                   style="width: 190px"
@@ -106,8 +124,14 @@
               <br />
               <br />
               <span
-                >状态&nbsp;<el-select
-                  v-model="status"
+                >状态&nbsp;</span> -->
+              <el-form ref="elForm" :model="form" :rules="rules" size="small" label-width="93px" label-position="top">
+                <el-form-item label="名称" prop="statusname">
+                  <el-input v-model="form.statusname" placeholder="请输入状态名称" clearable :style="{width: '100%'}"></el-input>
+                </el-form-item>
+                <el-form-item label="状态" prop="status">
+                 <el-select
+                  v-model="form.status"
                   size="small"
                   placeholder="请选择状态"
                 >
@@ -117,10 +141,12 @@
                     :label="item.label"
                     :value="item.value"
                   ></el-option> </el-select
-              ></span>
+              >
+                </el-form-item>
+              </el-form>
             </div>
             <span slot="footer" class="status-footer">
-              <el-button @click="show = false" class="wuBtn">取 消</el-button>
+              <el-button @click="close" class="wuBtn">取 消</el-button>
               <el-button type="primary" class="orangeBtn" @click="addSubmit"
                 >确 定</el-button
               >
@@ -189,6 +215,7 @@
 export default {
   data () {
     return {
+      diaTitle: '新增状态',
       selection: false,
       input: '',
       isRed: 0,
@@ -205,21 +232,38 @@ export default {
       ],
       a: 1,
       b: 9,
+      editId: null,
       show: false,
       statusname: '',
+      form: {
+        statusname: '',
+        status: 1
+      },
       name: '',
-      status: '1',
+      status: '',
+      rules: {
+        statusname: [{
+          required: true,
+          message: '请输入名称',
+          trigger: 'blur'
+        }],
+        status: [{
+          required: true,
+          message: '请选择',
+          trigger: 'blur'
+        }]
+      },
       statusOptions: [
         {
-          value: '1',
+          value: 1,
           label: '港前'
         },
         {
-          value: '2',
+          value: 2,
           label: '港后'
         },
         {
-          value: '3',
+          value: 3,
           label: '派件'
         }
       ],
@@ -239,6 +283,9 @@ export default {
         limit: 10,
         sizes: [1, 5, 10],
         total: 0
+      },
+      searchForm: {
+        name: ''
       }
     }
   },
@@ -252,7 +299,8 @@ export default {
         cate: this.isRed + 1,
         status: Number(this.activeName),
         page: this.page.pageNo,
-        limit: this.page.limit
+        limit: this.page.limit,
+        name: this.searchForm.name
       }
       if (this.activeName === '4') {
         // 全部
@@ -272,6 +320,10 @@ export default {
             this.page.total = res.data.total
           })
       })
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     handleSelectionChange (val) {
       console.log(val)
@@ -312,6 +364,7 @@ export default {
       console.log(data.id)
     },
     search () {
+      this.page.pageNo = 1
       this.getData()
     },
     // 重新渲染列
@@ -343,20 +396,54 @@ export default {
       this.getData()
     },
     addSubmit () {
-      let params = {
-        name: this.statusname,
-        status: Number(this.status),
-        cate: this.isRed + 1
-      }
-      this.$api.configure.milestone.add(params).then((res) => {
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.show = false
-          this.getData()
-        } else {
-          this.$message.error(res.msg)
+      if (this.diaTitle === '新增状态') {
+        let params = {
+          name: this.form.statusname,
+          status: Number(this.form.status),
+          cate: this.isRed + 1
         }
-      })
+        this.$refs.elForm.validate(valid => {
+          if (!valid) return
+          this.$api.configure.milestone.add(params).then((res) => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.close()
+              this.getData()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        })
+      } else {
+        this.$api.configure.milestone.edit({
+          milestoneId: this.editId,
+          status: this.form.status,
+          name: this.form.statusname
+        }).then((res) => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.close()
+            this.getData()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
+    },
+    edit (row) {
+      this.show = true
+      console.log(row)
+      this.diaTitle = '修改状态'
+      this.form.status = row.status
+      this.form.statusname = row.name
+      this.editId = row.id
+    },
+    close () {
+      this.show = false
+      this.form = {
+        statusname: '',
+        status: 1
+      }
     },
     // 操作按钮列表
     editTableData (row) {}
@@ -368,6 +455,10 @@ export default {
   cursor: pointer;
   margin-left: 10px;
   padding: 5px;
+}
+.content{
+  overflow: scroll;
+  height: 700px;
 }
 .active {
   border-left: 4px solid #fb4702;
@@ -427,7 +518,7 @@ export default {
 .right {
   // float: left;
   width: calc(100%-40px);
-  margin-left: 40px;
+  margin-left: 10px;
   background: #ffffff;
   border-radius: 4px;
   border: 1px solid #e8e8e8;
@@ -445,5 +536,16 @@ export default {
   border: 1px solid #e8e8e8;
   text-align: center;
   padding: 1px;
+}
+::-webkit-scrollbar {
+/*隐藏滚轮*/
+display: none;
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
 }
 </style>

@@ -12,6 +12,7 @@ import 'quill/dist/quill.snow.css'
 import commonTable from './components/table/table'
 import commonDrawer from './components/drawer/drawer'
 import commonDetail from './components/detail/detail'
+// import commonForm from './components/form/index'
 
 // echarts
 import echarts from 'echarts'
@@ -30,6 +31,7 @@ Vue.use(util)
 Vue.component('commonTable', commonTable)
 Vue.component('commonDrawer', commonDrawer)
 Vue.component('commonDetail', commonDetail)
+// Vue.component('commonForm', commonForm)
 let hasRegion = false
 // 路由判断登录 根据路由配置文件的参数
 router.beforeEach((to, from, next) => {
