@@ -17,7 +17,7 @@
           text-color='rgba(0,0,0,0.65)'
           unique-opened
         >
-          <template v-for='item in asyncRouters[num-1].children'>
+          <template v-for='item in asyncRouters[num].children'>
             <AsideComponent
               :key='item.name'
               :routerInfo='item'
@@ -50,7 +50,7 @@ export default {
     },
     num (val) {
       console.log(val)
-      console.log(this.asyncRouters[val - 1])
+      console.log(this.asyncRouters[val])
     }
   },
   mounted () {

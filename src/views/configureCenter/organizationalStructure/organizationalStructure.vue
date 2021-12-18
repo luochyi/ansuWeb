@@ -180,7 +180,7 @@
 <script>
 // import { positionDelete } from '../../../api/configure'
 
-import { userMenu } from '../../../api/configure/menu'
+// import { userMenu } from '../../../api/configure/menu'
 
 export default {
   data () {

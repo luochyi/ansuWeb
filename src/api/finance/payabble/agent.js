@@ -8,7 +8,13 @@ export const lists = (params) => {
     data: params
   })
 }
-
+export const verify = (params) => {
+  return axios({
+    url: '/finance/payabble/agent/verify',
+    method: 'post',
+    data: params
+  })
+}
 // 代理费用
 export const amount = (params) => {
   return axios({

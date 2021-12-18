@@ -101,6 +101,23 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
+    <commonDrawer :drawerVrisible="drawerVrisible" :drawerTitle="drawerTitle">
+      <div class="dra-content">
+        <!-- 内容区域 -->
+        <el-table>
+          <el-table-column></el-table-column>
+        </el-table>
+      </div>
+      <!-- 抽屉底部按钮 -->
+      <div slot="footer">
+        <button class="btn-orange" @click="submit()">
+          <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button>
+        <button class="btn-gray" @click="addClose">
+          <span>取消</span>
+        </button>
+      </div>
+    </commonDrawer>
   </div>
 </template>
 
@@ -108,11 +125,14 @@
 export default {
   data () {
     return {
+      drawerVrisible: true,
+      drawerTitle: '代理对账单检查',
       selection: false,
       uploadhead: {
         'Ansuex-Manage-Token': sessionStorage.getItem('token')
       },
       fileList: [],
+      errorArr: [],
       dialogVisible: false,
       columns: [
         { prop: 'pay_no', label: '应收账单号', width: '180', align: 'center' },
@@ -183,7 +203,13 @@ export default {
       this.formData.path = res.data.path // 上传成功的回调函数
     },
     submit () {
-      this.$router.push({ name: 'createAccountsReceivable', params: this.formData })
+      // this.$router.push({ name: 'createAccountsReceivable', params: this.formData })
+      this.drawerVrisible = true
+
+      this.$api.finance.payabble.agent.verify(this.formData).then(res => {
+        console.log(res)
+        this.errorArr = res.data.verify_errors
+      })
     },
     handleRemove (file, fileList) {
       console.log(file, fileList)
@@ -235,6 +261,9 @@ export default {
           this.$message.error(res.msg) // 错误提示
         }
       })
+    },
+    addClose () {
+      this.drawerVrisible = false
     }
   }
 }
