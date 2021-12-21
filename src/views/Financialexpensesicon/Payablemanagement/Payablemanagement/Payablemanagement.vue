@@ -1,31 +1,80 @@
 <template>
   <div>
     <div class="main">
-      <!--  标签页 -->
-      <el-row type="flex" justify="flex-start" class="title" align="middle">
-        <span class="text">应付账单</span>
+         <!--  标签页 -->
+      <el-row type='flex' justify='flex-start' class='title' align='middle'>
+        <span class='text'>应付账单</span>
+        <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
+          <el-tab-pane label='未处理' name='1'></el-tab-pane>
+          <el-tab-pane label='已处理' name='2'></el-tab-pane>
+          <el-tab-pane label='全部' name='0'></el-tab-pane>
+        </el-tabs>
       </el-row>
       <!-- 主要内容 -->
-      <div class="content">
-        <el-row class="searchbox1">
-          <el-col :span="6" class="colbox">
-            <el-col :span="6">
-              <span class="text">代理名称</span>
-            </el-col>
-            <el-col :span="13">
-              <el-input
-                placeholder="请输入"
-                v-model="search.agentName"
-              ></el-input>
-            </el-col>
-          </el-col>
-          <el-col :span="6" class="colbox">
-            <el-button class="orangeBtn long1" @click="getData"
-              >查 询</el-button
+      <div class='content'>
+        <el-row :gutter="15">
+          <el-col>
+            <el-form
+              class="elForm"
+              ref="elForm"
+              size="small"
+              :model="searchForm"
+              label-width="93px"
+              label-position="top"
             >
-            <el-button class="wuBtn long1" @click="searchReset"
-              >重 置</el-button
-            >
+              <el-col :span="6">
+                <el-form-item label="账单号" prop="payableNo">
+                  <el-input
+                    v-model="searchForm.payableNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="代理编码" prop="agentNo">
+                  <el-input
+                    v-model="searchForm.agentNo"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="代理名称" prop="agentName">
+                  <el-input
+                    v-model="searchForm.agentName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="对账人" prop="userName">
+                  <el-input
+                    v-model="searchForm.userName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <!-- <el-form-item size="large"> -->
+                  <div class="searchBtn">
+                    <el-button class="orangeBtn" @click="search">查询</el-button>
+                    <el-button class="whiteBtn" @click="resetForm('elForm')">重置</el-button>
+                  </div>
+                <!-- </el-form-item> -->
+            </el-col>
+            </el-form>
           </el-col>
         </el-row>
         <el-divider></el-divider>
@@ -59,6 +108,7 @@
             <template slot-scope="scope">
               <el-button
                 type="text"
+                :disabled='scope.row.status!==1'
                 @click="deal(scope.row.id)"
                 >处理对账结果</el-button
               >
@@ -175,6 +225,7 @@ export default {
     return {
       errorShow: false,
       checkFee: false,
+      activeName: '1',
       drawerTitle: '代理对账单检查',
       selection: false,
       uploadhead: {
@@ -184,6 +235,12 @@ export default {
       errorData: [],
       agentData: [],
       dialogVisible: false,
+      searchForm: {
+        payableNo: '',
+        agentNo: '',
+        agentName: '',
+        userName: ''
+      },
       columns: [
         { prop: 'payable_no', label: '账单号', width: '180', align: 'center' },
         {
@@ -250,10 +307,7 @@ export default {
         path: ''
       },
       billAgentIds: [],
-      templatePath: '',
-      search: {
-        agentName: null
-      }
+      templatePath: ''
     }
   },
   mounted () {
@@ -270,11 +324,16 @@ export default {
     },
     searchReset () {
       this.search.agentName = null
+      this.getData()
     },
     getData () {
       this.$api.finance.payabble.agent
         .lists({
-          agentName: this.search.agentName,
+          payableNo: this.searchForm.payableNo,
+          agentName: this.searchForm.agentName,
+          agentCode: this.searchForm.agentNo,
+          status: Number(this.activeName),
+          userName: this.searchForm.userName,
           page: this.page.pageNo,
           limit: this.page.limit
         })
@@ -350,8 +409,18 @@ export default {
     importBill () {
       this.dialogVisible = true
     },
-    handleClick (val) {
-      console.log(val)
+    handleClick (tab, event) {
+      console.log(tab, event)
+      this.activeName = tab.name
+      this.getData()
+    },
+    search () {
+      this.page.pageNo = 1
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
@@ -417,7 +486,7 @@ export default {
   text-align: left;
 }
 /deep/ .title {
-  height: 56px;
+  // height: 56px;
   font-size: 16px;
 }
 /deep/.el-upload {
@@ -437,5 +506,8 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+}
+.elForm{
+  text-align: left;
 }
 </style>
