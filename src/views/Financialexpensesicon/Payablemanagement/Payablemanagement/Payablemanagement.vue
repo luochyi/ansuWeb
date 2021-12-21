@@ -53,17 +53,14 @@
             align="center"
             fixed="right"
             label="操作"
-            width="314"
+            width="214"
             :resizable="false"
           >
-            <template slot-scope="scoped">
+            <template slot-scope="scope">
               <el-button
                 type="text"
-                @click="audit([scoped.row.id])"
-                v-if="
-                  scoped.row.audit_status === 0 || scoped.row.audit_status === 3
-                "
-                >申请付款</el-button
+                @click="deal(scope.row.id)"
+                >处理对账结果</el-button
               >
             </template>
           </el-table-column>
@@ -124,20 +121,48 @@
         <el-button type="primary" @click="submit">确 定</el-button>
       </span>
     </el-dialog>
-    <commonDrawer :drawerVrisible="drawerVrisible" :drawerTitle="drawerTitle">
-      <div class="dra-content">
+    <commonDrawer :drawerVrisible="errorShow" drawerSize='50%' :drawerTitle="drawerTitle">
+      <div class="dra-content" v-if="!checkFee">
         <!-- 内容区域 -->
-        <el-table>
-          <el-table-column></el-table-column>
+        <el-table :data='errorData' v-if="errorData.length">
+          <el-table-column prop="agent_waybill_no" label="代理单号"></el-table-column>
+          <el-table-column prop="waybill_no" label="安速单号"></el-table-column>
+          <el-table-column prop="error" label="错误说明"></el-table-column>
+        </el-table>
+        <el-table :data='agentData' v-else>
+          <el-table-column prop="agent_waybill_no" label="代理单号" width="120"></el-table-column>
+          <el-table-column prop="waybill_no" label="安速单号" width="170"></el-table-column>
+          <el-table-column prop="country" label="国家"></el-table-column>
+          <el-table-column prop="zip_code" label="邮编"></el-table-column>
+          <el-table-column prop="service_name" label="费用类型"></el-table-column>
+          <el-table-column prop="cargo_num" label="件数"></el-table-column>
+          <el-table-column prop="weight" label="重量"></el-table-column>
+          <el-table-column prop="unit_price" label="单价"></el-table-column>
+          <el-table-column prop="amount" label="金额"></el-table-column>
+          <el-table-column prop="channel_name" label="渠道名称"></el-table-column>
+          <el-table-column prop="agent_date" label="日期"></el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="180">
+            <template slot-scope="scope">
+              <el-button @click="check(scope.row)" type="text" size="small">查看费用</el-button>
+              <el-button type="text" @click="addFee()" size="small">追加费用</el-button>
+            </template>
+          </el-table-column>
         </el-table>
       </div>
+      <div v-else class="dra-content">11</div>
       <!-- 抽屉底部按钮 -->
       <div slot="footer">
-        <button class="btn-orange" @click="submit()">
+        <!-- <button class="btn-orange" @click="submit()">
           <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button> -->
+        <button class="btn-gray" @click="errorShow=false" v-if="checkFee===false">
+          <span>关闭</span>
         </button>
-        <button class="btn-gray" @click="addClose">
-          <span>取消</span>
+        <button class="btn-gray" @click="errClose" v-else>
+          <span>返回</span>
         </button>
       </div>
     </commonDrawer>
@@ -148,14 +173,16 @@
 export default {
   data () {
     return {
-      drawerVrisible: true,
+      errorShow: false,
+      checkFee: false,
       drawerTitle: '代理对账单检查',
       selection: false,
       uploadhead: {
         'Ansuex-Manage-Token': sessionStorage.getItem('token')
       },
       fileList: [],
-      errorArr: [],
+      errorData: [],
+      agentData: [],
       dialogVisible: false,
       columns: [
         { prop: 'payable_no', label: '账单号', width: '180', align: 'center' },
@@ -168,7 +195,7 @@ export default {
         {
           prop: 'agent_name',
           label: '代理名称',
-          width: '193',
+          width: '200',
           align: 'center'
         },
         {
@@ -181,7 +208,7 @@ export default {
         {
           prop: 'agent_bill_amount',
           label: '代理收费',
-          width: '193',
+          width: '200',
           align: 'center'
         },
         {
@@ -235,6 +262,7 @@ export default {
     this.getTemplate()
   },
   methods: {
+    // 获取代理
     getAgent () {
       this.$api.agent.select().then((res) => {
         this.agents = res.data
@@ -275,13 +303,34 @@ export default {
     },
     submit () {
       // this.$router.push({ name: 'createAccountsReceivable', params: this.formData })
-      this.drawerVrisible = true
-
       this.$api.finance.payabble.agent.verify(this.formData).then((res) => {
         console.log(res)
-        this.errorArr = res.data.verify_errors
+        if (res.data.verify_errors.length) {
+          this.errorData = res.data.verify_errors
+          this.errorShow = true
+        } else if (res.data.check_agent_data.length) {
+          this.agentData = res.data.check_agent_data
+          this.drawerTitle = '已对账运单'
+          this.errorShow = true
+        } else {
+          this.$router.push({
+            name: 'generateBill',
+            params: {
+              formData: this.formData
+
+            }
+          })
+        }
       })
     },
+    addFee () {
+      this.$router.push({ name: 'addFee' })
+    },
+    check (data) {
+      this.$api.finance.payabble.agent.diversityLists({})
+      this.checkFee = true
+    },
+    errClose () {},
     handleRemove (file, fileList) {
       console.log(file, fileList)
     },
@@ -331,19 +380,20 @@ export default {
     handleClose (done) {
       this.dialogVisible = false
     },
-    audit (billAgentIds) {
-      this.$api.finance.payabble.agent.audit(billAgentIds).then((res) => {
-        if (res.code === 0) {
-          this.$message.success(res.msg) // 成功提示
-          this.getData()
-        } else {
-          this.$message.error(res.msg) // 错误提示
-        }
-      })
-    },
-    addClose () {
-      this.drawerVrisible = false
+    // 处理对账单
+    deal (id) {
+      this.$router.push({ name: 'dealDiversity', params: { payableId: id } })
     }
+    // audit (billAgentIds) {
+    //   this.$api.finance.payabble.agent.audit(billAgentIds).then((res) => {
+    //     if (res.code === 0) {
+    //       this.$message.success(res.msg) // 成功提示
+    //       this.getData()
+    //     } else {
+    //       this.$message.error(res.msg) // 错误提示
+    //     }
+    //   })
+    // }
   }
 }
 </script>

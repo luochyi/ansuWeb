@@ -222,6 +222,28 @@ export default [
     },
     component: () => import('@/views/Financialexpensesicon/Payablemanagement/Payablemanagement/Payablemanagement.vue')
   },
+  // 生成账单
+  {
+    path: '/generateBill',
+    name: 'generateBill',
+    meta: {
+      title: '生成账单',
+      icon: 'generateBill',
+      hidden: true
+    },
+    component: () => import('@/views/Financialexpensesicon/Payablemanagement/Payablemanagement/generateBill.vue')
+  },
+  // dealDiversity
+  {
+    path: '/dealDiversity',
+    name: 'dealDiversity',
+    meta: {
+      title: '处理对账单',
+      icon: 'generateBill',
+      hidden: true
+    },
+    component: () => import('@/views/Financialexpensesicon/Payablemanagement/Payablemanagement/dealDiversity.vue')
+  },
   {
     path: '/Paymentapplication',
     name: 'Paymentapplication',
