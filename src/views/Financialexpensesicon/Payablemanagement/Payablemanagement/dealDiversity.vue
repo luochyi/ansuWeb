@@ -147,7 +147,11 @@
                         <span :class="{isred:scope.row.agent_bill_weight!==scope.row.bill_weight}">{{scope.row.agent_bill_weight}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="agent_bill_amount" label="代理收取费用" width="120"></el-table-column>
+                <el-table-column prop="agent_bill_amount" label="代理收取费用" width="120">
+                    <template slot-scope="scope">
+                        <span :class="{isred:scope.row.agent_bill_amount!==scope.row.bill_amount}">{{scope.row.agent_bill_amount}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="waybill_no" label="运单号" width="180"></el-table-column>
                 <el-table-column prop="country" label="目的国">
                     <template slot-scope="scope">
@@ -164,7 +168,11 @@
                         <span :class="{isred:scope.row.agent_bill_weight!==scope.row.bill_weight}">{{scope.row.bill_weight}}</span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="bill_amount" label="系统代理收取费用" width="140"></el-table-column>
+                <el-table-column prop="bill_amount" label="系统代理收取费用" width="140">
+                    <template slot-scope="scope">
+                        <span :class="{isred:scope.row.agent_bill_amount!==scope.row.bill_amount}">{{scope.row.bill_amount}}</span>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="customer_bill_weight" label="客户结算重" width="120"></el-table-column>
                 <el-table-column prop="customer_bill_amount" label="客户收取费用" width="120"></el-table-column>
                 <el-table-column prop="profit" label="利润">
@@ -395,13 +403,13 @@ export default {
       if (data.agent_channel_name !== data.channel_name) {
         this.errorData.push({ type: '渠道不一致' })
       }
+      if (data.agent_bill_amount !== data.bill_amount) {
+        this.errorData.push({ type: '费用不一致' })
+      }
       if (data.profit <= 0) {
         this.errorData.push({ type: '利润为负' })
       }
       this.errorShow = true
-    //   if (data.agent_bill_weight !== data.bill_weight) {
-    //     this.errorData.push({ type: '重量不一致' })
-    //   }
     }
   }
 }
