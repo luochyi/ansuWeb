@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import login from '@/views/Login.vue'
-import welcome from '@/views/welcome.vue'
+import wel from '@/router/wel.js'
 import order from '@/router/order.js'
 import channel from '@/router/channel.js'
 import configureCenter from '@/router/configureCenter.js'
@@ -23,6 +23,7 @@ export default new Router({
       redirect: '/login',
       component: () => import('./views/layout/index.vue'),
       children: [
+        ...wel,
         // 订单管理
         ...order,
         // 渠道管理
@@ -37,11 +38,6 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: login
-    },
-    {
-      path: '/welcome',
-      name: 'welcome',
-      component: welcome
     },
     {
       path: '*',
