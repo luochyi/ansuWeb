@@ -316,7 +316,7 @@ export default {
         path: this.formData.path,
         hidden: this.formData.hidden,
         component: this.formData.component,
-        sort: this.formData.sort,
+        sort: Number(this.formData.sort),
         type: this.formData.type,
         title: this.formData.title,
         menuCate: this.formData.menuCate,
