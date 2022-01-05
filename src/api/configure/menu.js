@@ -8,6 +8,14 @@ export const all = () => {
     data: { }
   })
 }
+// 用户菜单
+export const userMenu = () => {
+  return axios({
+    url: '/setting/menu/user',
+    method: 'post',
+    data: { }
+  })
+}
 // 添加菜单
 export const add = (params) => {
   return axios({

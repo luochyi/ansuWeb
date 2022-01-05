@@ -17,7 +17,7 @@
           text-color='rgba(0,0,0,0.65)'
           unique-opened
         >
-          <template v-for='item in asyncRouters[num-1].children'>
+          <template v-for='item in asyncRouters[indexs].children'>
             <AsideComponent
               :key='item.name'
               :routerInfo='item'
@@ -37,7 +37,9 @@ export default {
   data () {
     return {
       active: '',
-      isCollapse: false
+      isCollapse: false,
+      // arr: [],
+      indexs: undefined
     }
   },
   props: {
@@ -49,8 +51,14 @@ export default {
       this.active = arr
     },
     num (val) {
-      console.log(val)
-      console.log(this.asyncRouters[val - 1])
+      this.arr = []
+      // console.log(val)
+      // console.log(this.asyncRouters)
+      this.asyncRouters && this.asyncRouters.forEach((element, index) => {
+        if (element.sort === val) {
+          this.indexs = index
+        }
+      })
     }
   },
   mounted () {
@@ -61,8 +69,8 @@ export default {
   methods: {
     // ...mapMutations('router', ['addHistory']),
     select (key, keypath) {
-      console.log(key)
-      console.log(keypath)
+      // console.log(key)
+      // console.log(keypath)
     }
   },
   computed: {

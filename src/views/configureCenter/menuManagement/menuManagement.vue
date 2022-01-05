@@ -27,7 +27,9 @@
         </el-table-column>
         <el-table-column prop="path" label="路由path" width="180">
         </el-table-column>
-        <el-table-column prop="hidden" label="是否隐藏" width="180">
+        <el-table-column prop="hidden" :formatter="formatter" label="是否隐藏" width="180">
+        </el-table-column>
+        <el-table-column prop="menu_cate" :formatter="formatter" label="菜单类别" width="180">
         </el-table-column>
         <!-- <el-table-column prop="component" label="文件路径"></el-table-column> -->
         <el-table-column prop="type" label="类型">
@@ -155,7 +157,22 @@
                         </el-select
                         ></span>
                 </el-col>
-
+              <el-col :span="6">
+                    <span
+                    >菜单类别&nbsp;<el-select
+                        v-model="formData.menuCate"
+                        style="width: 190px"
+                        placeholder="菜单类别"
+                    >
+                            <el-option
+                                v-for="item in menuCateOptions"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                                </el-option>
+                        </el-select
+                        ></span>
+              </el-col>
             </el-row>
         <el-row>
           <el-col :span="24" style="margin:40px">
@@ -197,6 +214,10 @@ export default {
         { value: 0, label: '显示' },
         { value: 1, label: '隐藏' }
       ],
+      menuCateOptions: [
+        { value: 1, label: '系统' },
+        { value: 2, label: '用户' }
+      ],
       tableData: [],
       apis: [],
       formData: {
@@ -209,6 +230,7 @@ export default {
         sort: 100,
         type: 1,
         title: '',
+        menuCate: 2,
         icon: '',
         apis: []
       }
@@ -262,6 +284,7 @@ export default {
           this.formData.sort = res.data.sort
           this.formData.type = res.data.type
           this.formData.title = res.data.title
+          this.formData.menuCate = res.data.menu_cate
           this.formData.icon = res.data.icon
           this.formData.apis = res.data.apis
         } else {
@@ -296,6 +319,7 @@ export default {
         sort: this.formData.sort,
         type: this.formData.type,
         title: this.formData.title,
+        menuCate: this.formData.menuCate,
         icon: this.formData.icon,
         apis: this.formData.apis
       }).then(res => {
@@ -323,6 +347,7 @@ export default {
         sort: Number(this.formData.sort),
         type: this.formData.type,
         title: this.formData.title,
+        menuCate: this.formData.menuCate,
         icon: this.formData.icon,
         apis: this.formData.apis
       }).then(res => {
@@ -334,6 +359,22 @@ export default {
           this.$message.error(res.msg) // 错误提示
         }
       })
+    },
+    formatter (row, column) {
+      switch (column.property) {
+        case 'hidden':
+          return this.optionsLable(this.hiddenOptions, row.hidden)
+        case 'menu_cate':
+          return this.optionsLable(this.menuCateOptions, row.menu_cate)
+      }
+    },
+    optionsLable (data, value) {
+      for (let i in data) {
+        if (data[i].value === value) {
+          return data[i].label
+        }
+      }
+      return ''
     },
     close () { this.diaShow = false },
     cascaderData (val, id) {

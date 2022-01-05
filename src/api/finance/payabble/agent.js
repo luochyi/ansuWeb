@@ -8,7 +8,50 @@ export const lists = (params) => {
     data: params
   })
 }
-
+export const verify = (params) => {
+  return axios({
+    url: '/finance/payabble/agent/verify',
+    method: 'post',
+    data: params
+  })
+}
+// 开始对账
+export const start = (params) => {
+  return axios({
+    url: '/finance/payabble/agent/start',
+    method: 'post',
+    data: params
+  })
+}
+export const finish = (params) => {
+  return axios({
+    url: '/finance/payabble/agent/finish',
+    method: 'post',
+    data: params
+  })
+}
+// 差异列表
+export const diversityLists = (params) => {
+  return axios({
+    url: '/finance/payabble/diversity/lists',
+    method: 'post',
+    data: params
+  })
+}
+export const info = (params) => {
+  return axios({
+    url: '/finance/payabble/diversity/info',
+    method: 'post',
+    data: params
+  })
+}
+export const diversityConfirm = (params) => {
+  return axios({
+    url: '/finance/payabble/diversity/confirm',
+    method: 'post',
+    data: params
+  })
+}
 // 代理费用
 export const amount = (params) => {
   return axios({

@@ -47,10 +47,10 @@ export default {
   created () {
     const initHistorys = [
       {
-        name: 'prediction',
+        name: 'welcome',
         meta: {
-          title: '预报管理',
-          icon: 'predictionIcon',
+          title: '首页',
+          icon: 'welcome',
           hidden: false
         }
       }
@@ -87,15 +87,15 @@ export default {
     closeAll () {
       this.historys = [
         {
-          name: 'prediction',
+          name: 'welcome',
           meta: {
-            title: '预报管理',
-            icon: 'predictionIcon',
+            title: '首页',
+            icon: 'welcome',
             hidden: false
           }
         }
       ]
-      this.$router.push({ name: 'prediction' })
+      this.$router.push({ name: 'welcome' })
       this.contextMenuVisible = false
       sessionStorage.setItem('historys', JSON.stringify(this.historys))
     },
@@ -175,19 +175,19 @@ export default {
           console.log(123)
           this.historys = [
             {
-              name: 'prediction',
+              name: 'welcome',
               meta: {
-                title: '预报管理',
-                icon: 'predictionIcon',
+                title: '首页',
+                icon: 'welcome',
                 hidden: false
               }
             }
           ]
           this.contextMenuVisible = false
-          if (this.$route.name === 'prediction') {
+          if (this.$route.name === 'welcome') {
             location.reload()
           } else {
-            this.$router.push({ name: 'prediction' })
+            this.$router.push({ name: 'welcome' })
           }
           sessionStorage.setItem('historys', JSON.stringify(this.historys))
         } else {

@@ -354,14 +354,19 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.footer{
-    background: #ffffff;
-    position: fixed;
-    bottom: 0;
-    height: 63px;
-    width: 100%;
-    line-height: 63px;
-    z-index: 999;
+.footer {
+  background: #ffffff;
+  position: fixed;
+  bottom: 0;
+  height: 63px;
+  width: 100%;
+  line-height: 63px;
+  box-shadow: 0px -2px 4px 0px rgba(0, 0, 0, 0.35);
+  border-radius: 4px 4px 0px 0px;
+  border: 1px solid #e8e8e8;
+  z-index: 999;
+  left: 201px;
+  // text-align: right;
 }
 .box{
     margin-bottom: 10px;

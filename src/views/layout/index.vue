@@ -971,12 +971,11 @@ export default {
     let arr = this.$route.path.split('/')[1]
     this.$api.common.getMenu().then(res => {
       this.menu = res.data
-      // this.menu
-      console.log(this.$route.name)
-      console.log(this.menu)
+      // console.log(this.$route.name)
+      // console.log(this.menu)
       this.menu && this.menu.forEach((item, index) => {
         item.children && item.children.forEach(items => {
-          console.log(items.name)
+          // console.log(items.name)
           if (items.name === arr) {
             this.activeIndex = String(item.sort)
           }
@@ -994,6 +993,7 @@ export default {
     })
   },
   computed: {
+    // 根据排序重组菜单
     sortMenu: function () {
       return this.sortByKey(this.menu, 'sort')
     }
@@ -1032,6 +1032,7 @@ export default {
       console.log(this.sortMenu)
       this.setAsyncRouter(this.sortMenu)
     },
+    // 排序
     sortByKey (array, key) {
       return array.sort(function (a, b) {
         var x = a[key]
@@ -1039,6 +1040,7 @@ export default {
         return ((x < y) ? -1 : ((x > y) ? 1 : 0))
       })
     },
+    // 退出登录
     logout () {
       this.$api.common.logout().then(res => {
         console.log(res)

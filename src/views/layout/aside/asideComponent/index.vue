@@ -41,7 +41,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.routerInfo)
+    // console.log(this.routerInfo)
   },
   components: {
     MenuItem,

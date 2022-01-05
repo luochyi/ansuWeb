@@ -40,9 +40,9 @@ export default {
           sessionStorage.setItem('token', res.data.token)
           sessionStorage.setItem('id', res.data.personnel.id)
           sessionStorage.setItem('name', res.data.personnel.name)
-          this.$router.push({ name: 'orderManager' })
+          this.$router.push({ name: 'welcome' })
         } else {
-          this.$message.error('账号密码错误')
+          this.$message.error(res.msg)
         }
       })
     }
