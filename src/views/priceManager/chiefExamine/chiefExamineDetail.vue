@@ -197,7 +197,7 @@ export default {
   },
   methods: {
     getData () {
-      this.$api.cost.price.offer.detail({ waybillId: this.waybillId }).then(res => {
+      this.$api.cost.price.offer.directorDetail({ waybillId: this.waybillId }).then(res => {
         this.detailData = res.data
         this.surcharges = res.data.offer.surcharges
       })

@@ -285,7 +285,7 @@ export default {
       page: {
         limit: 10,
         total: 0,
-        sizes: [1, 5, 10],
+        sizes: [10, 20, 50, 100],
         pageNo: 1
       },
       searchForm: {

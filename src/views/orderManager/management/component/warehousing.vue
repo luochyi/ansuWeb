@@ -257,6 +257,7 @@ export default {
         { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
         {
           prop: 'forecast_no',
+          sortable: true,
           label: '预报单号',
           width: '200',
           align: 'center'
@@ -290,6 +291,7 @@ export default {
           prop: 'has_invoice',
           label: '是否制作发票',
           width: '200',
+          sortable: true,
           align: 'center',
           formatter: this.formatter
         },
@@ -319,7 +321,7 @@ export default {
       page: {
         limit: 10,
         total: 0,
-        sizes: [1, 5, 10],
+        sizes: [10, 20, 50, 100],
         pageNo: 1
       },
       searchForm: {

@@ -9,10 +9,32 @@ export const lists = (params) => {
     data: params
   })
 }
+
+export const subscript = (params) => {
+  return axios({
+    url: '/cost/offer/subscript',
+    method: 'post',
+    data: params
+  })
+}
 // 报价详情 waybillId
 export const detail = (params) => {
   return axios({
     url: '/cost/offer/detail',
+    method: 'post',
+    data: params
+  })
+}
+export const directorDetail = (params) => {
+  return axios({
+    url: '/cost/offer/examine/director/detail',
+    method: 'post',
+    data: params
+  })
+}
+export const managerDetail = (params) => {
+  return axios({
+    url: '/cost/offer/examine/manager/detail',
     method: 'post',
     data: params
   })

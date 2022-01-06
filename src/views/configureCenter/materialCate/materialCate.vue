@@ -76,7 +76,7 @@ export default {
       page: {
         pageNo: 1,
         limit: 10,
-        sizes: [1, 5, 10],
+        sizes: [10, 20, 50],
         total: 0
       }
 

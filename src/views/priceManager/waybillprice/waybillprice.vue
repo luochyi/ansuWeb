@@ -5,12 +5,12 @@
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
         <span class='text'>报价单</span>
         <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
-          <el-tab-pane label='全部' name='0'></el-tab-pane>
-          <el-tab-pane label='不可报价' name='1'></el-tab-pane>
-          <el-tab-pane label='未报价' name='2'></el-tab-pane>
-          <el-tab-pane label='审核中' name='3'></el-tab-pane>
-          <el-tab-pane label='审核通过' name='4'></el-tab-pane>
-          <el-tab-pane label='审核驳回' name='5'></el-tab-pane>
+          <el-tab-pane :label='" 未报价 "+subscript.not_offer' name='2'></el-tab-pane>
+          <el-tab-pane :label='" 不可报价 "+subscript.ban_offer' name='1'></el-tab-pane>
+          <el-tab-pane :label='" 审核中 "+subscript.audit_ing' name='3'></el-tab-pane>
+          <el-tab-pane :label='" 审核驳回 "+subscript.audit_fail' name='5'></el-tab-pane>
+          <el-tab-pane label=' 已报价 ' name='4'></el-tab-pane>
+          <el-tab-pane label=' 全部 ' name='0'></el-tab-pane>
         </el-tabs>
       </el-row>
       <!-- 主要内容 -->
@@ -157,11 +157,17 @@
 export default {
   data () {
     return {
-      activeName: '0',
+      subscript: {
+        ban_offer: 0,
+        not_offer: 0,
+        audit_ing: 0,
+        audit_fail: 0
+      },
+      activeName: '2',
       page: {
         pageNo: 1,
         limit: 10,
-        sizes: [10, 20, 50],
+        sizes: [10, 20, 50, 100],
         total: 0
       },
       tableData: [
@@ -177,7 +183,7 @@ export default {
         { prop: 'has_invoice', label: '是否制作发票', width: '200', align: 'center', formatter: this.formatter },
         { prop: 'is_irikura', label: '是否入仓', width: '100', align: 'center', formatter: this.formatter },
         { prop: 'customer_bill_weight', width: '100', label: '结算重', align: 'center' },
-        { prop: 'customer_volume', width: '100', label: '体积', align: 'center' },
+        { prop: 'customer_volume', width: '100', label: '方数', align: 'center', formatter: this.formatter },
         { prop: 'customer_weight', width: '100', label: '重量', align: 'center' },
         { prop: 'customer_volume_weight', width: '100', label: '材积', align: 'center' },
         { prop: 'cost_weight', width: '100', label: '计费重', align: 'center' },
@@ -221,6 +227,10 @@ export default {
     }
   },
   mounted () {
+    this.$api.cost.price.offer.subscript().then(res => {
+      console.log(res.data) // res是接口返回的结果
+      // this.subscript = res.data
+    })
     // 在页面加载前调用获取列表数据函数
     this.getData()
   },
@@ -268,6 +278,8 @@ export default {
           return this.formatDate(row.created_at, 'yyyy-MM-dd')
         case 'audit_status':
           return row.audit_status === 0 ? '未报价' : row.audit_status === 1 ? '审核中' : row.audit_status === 2 ? '审核通过' : row.audit_status === 3 ? '审核驳回' : ''
+        case 'customer_volume':
+          return (row.customer_volume / 1000000).toFixed(2) + 'm³'
       }
     },
     search () {

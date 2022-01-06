@@ -46,37 +46,37 @@
                 type="number"
                 clearable
                 :style="{ width: '100%' }"
-              ></el-input>
+              ><template slot="append">公斤</template></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="5">
             <el-form-item label="车辆大小：长" prop="long">
               <el-input
                 v-model="formData.long"
                 placeholder="请输入长"
                 type="number"
                 clearable
-              ></el-input>
+              ><template slot="append">米</template></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="5">
             <el-form-item label="宽" prop="wide">
               <el-input
                 v-model="formData.wide"
                 placeholder="请输入宽"
                 type="number"
                 clearable
-              ></el-input>
+              ><template slot="append">米</template></el-input>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="5">
             <el-form-item label="高" prop="high">
               <el-input
                 v-model="formData.high"
                 placeholder="请输入高"
                 type="number"
                 clearable
-              ></el-input>
+              ><template slot="append">米</template></el-input>
             </el-form-item>
           </el-col>
           <el-col :span="24">
@@ -247,4 +247,11 @@ export default {
     margin-bottom: 20px;
   }
 }
+    /deep/input::-webkit-outer-spin-button,
+    /deep/input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+    }
+    /deep/input[type="number"]{
+        -moz-appearance: textfield;
+    }
 </style>

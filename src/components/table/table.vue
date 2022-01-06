@@ -17,6 +17,7 @@
         <el-table-column
           v-if="item.type=='slot'"
           :key="index"
+          :sortable='item.sortable'
           :prop="item.prop"
           :label="item.label"
           :align="item.align ? item.align : 'center'"
@@ -30,6 +31,7 @@
         <el-table-column
           v-else
           :key="index"
+          :sortable='item.sortable'
           :prop="item.prop"
           :label="item.label"
           :align="item.align ? item.align : 'center'"
