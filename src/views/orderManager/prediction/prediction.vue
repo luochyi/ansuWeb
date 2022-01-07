@@ -7,7 +7,8 @@
         <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
           <el-tab-pane label='已下单' name='1'></el-tab-pane>
           <el-tab-pane label='已收货' name='2'></el-tab-pane>
-          <el-tab-pane label='已入库' name='3'></el-tab-pane>
+          <el-tab-pane label='全部' name='0'></el-tab-pane>
+          <!-- <el-tab-pane label='已入库' name='3'></el-tab-pane> -->
         </el-tabs>
       </el-row>
       <!-- 主要内容 -->

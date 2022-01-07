@@ -22,7 +22,7 @@
             label-position="top"
           >
              <el-col :span="6">
-                <el-form-item label="客户编码" prop="code">
+                <el-form-item label="客户简称" prop="code">
                   <el-input
                     v-model="searchForm.code"
                     placeholder="请输入"
@@ -108,6 +108,8 @@
             :resizable="false"
           >
             <template slot-scope="scope">
+              <el-button type="text" @click="edit(scope.row.id)"> 编辑</el-button>
+              <span style="color: #0084ff; margin: 0px 5px">|</span>
               <el-button type="text" @click="detail(scope.row.id)"> 详情</el-button>
               <span style="color: #0084ff; margin: 0px 5px">|</span>
               <el-button type="text" @click="resetP(scope.row)">
@@ -182,7 +184,7 @@ export default {
         { prop: 'name', label: '客户名称', width: '289', align: 'center' },
         {
           prop: 'code',
-          label: '客户编码',
+          label: '客户简称',
           width: '316',
           align: 'center'
         },
@@ -255,6 +257,9 @@ export default {
     },
     detail (id) {
       this.$router.push({ name: 'detailAccount', params: { id: id } })
+    },
+    edit (id) {
+      this.$router.push({ name: 'addAccount', params: { id: id } })
     },
     handleClick (val) {
       console.log(val)

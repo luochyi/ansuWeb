@@ -88,14 +88,9 @@
           drawerSize="50%"
           :drawerTitle="drawer.title"
       >
-        <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
-          <el-col :span='12' class="left">
-          </el-col>
-          <el-col :span='12' class="right">
-            <el-button class='whiteBtn' @click="toAdd">新增地址</el-button>
-          </el-col>
-        </el-row>
-        <commonTable
+        <div style='margin:13px;background:#fff;text-align:left'>
+          <el-button class='orangeBtn' style='margin:10px' @click="toAdd">新增地址</el-button>
+          <commonTable
             :columns="drawer.columns"
             :data="drawer.tableData"
             :pager="drawer.page"
@@ -120,6 +115,7 @@
             </template>
           </el-table-column>
         </commonTable>
+        </div>
         <!-- 抽屉底部按钮 -->
         <div slot="footer">
           <button class="btn-gray" @click="drawer.visabled=false">
@@ -128,15 +124,15 @@
         </div>
       </commonDrawer>
 
-      <el-dialog :visible.sync="dialog.visabled" :title="dialog.title">
+      <el-dialog :visible.sync="dialog.visabled" :title="dialog.title"  width="30%">
         <el-form ref="addressForm" :model="dialog.formData" :rules="dialog.rules" size="medium" label-width="100px">
           <el-form-item label="姓名" prop="name">
             <el-input v-model="dialog.formData.name" placeholder="请输入姓名"
-                      :style="{width: '100%'}"></el-input>
+                      :style="{width: '80%'}"></el-input>
           </el-form-item>
           <el-form-item label="手机号" prop="phone">
             <el-input v-model="dialog.formData.phone" placeholder="请输入手机号"
-                      :style="{width: '100%'}"></el-input>
+                      :style="{width: '80%'}"></el-input>
           </el-form-item>
           <el-form-item label="公司地址" prop="countyId">
             <el-cascader
@@ -145,11 +141,11 @@
                 :options="options"
                 clearable
                 :props="{value: 'id', label: 'name', expandTrigger: 'hover'}"
-                :style="{width: '100%'}"></el-cascader>
+                :style="{width: '80%'}"></el-cascader>
           </el-form-item>
           <el-form-item label="详细地址" prop="address">
             <el-input v-model="dialog.formData.address" type="textarea" placeholder="请输入详细地址"
-                      :autosize="{minRows: 4, maxRows: 4}" :style="{width: '100%'}"></el-input>
+                      :autosize="{minRows: 4, maxRows: 4}" :style="{width: '80%'}"></el-input>
           </el-form-item>
         </el-form>
         <div slot="footer">
@@ -460,5 +456,9 @@ export default {
 .searchBtn{
   position: relative;
   top: 30px;
+}
+.text{
+  line-height: 50px;
+  height: 50px;
 }
 </style>

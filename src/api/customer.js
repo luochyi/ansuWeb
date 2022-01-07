@@ -117,3 +117,31 @@ export const info = (params) => {
     data: params
   })
 }
+export const contactAdd = (params) => {
+  return axios({
+    url: '/customer/contact/add',
+    method: 'post',
+    data: params
+  })
+}
+export const contactDelete = (params) => {
+  return axios({
+    url: '/customer/contact/delete',
+    method: 'post',
+    data: params
+  })
+}
+export const contactEdit = (params) => {
+  return axios({
+    url: '/customer/contact/edit',
+    method: 'post',
+    data: params
+  })
+}
+export const base = (params) => {
+  return axios({
+    url: '/customer/base',
+    method: 'post',
+    data: params
+  })
+}

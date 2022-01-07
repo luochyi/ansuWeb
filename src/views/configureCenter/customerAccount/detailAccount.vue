@@ -7,9 +7,9 @@
           <div class="cont">
             <el-descriptions title="客户信息">
                 <template slot="extra">
-                  <el-button type="primary" @click="editInfo" size="small">修改</el-button>
+                  <!-- <el-button type="primary" @click="editInfo" size="small">修改</el-button> -->
                 </template>
-                <el-descriptions-item  label="客户编码">{{detail.code}}</el-descriptions-item>
+                <el-descriptions-item  label="客户简称">{{detail.code}}</el-descriptions-item>
                 <el-descriptions-item  label="客户名称">{{detail.name}}</el-descriptions-item>
                 <el-descriptions-item  label="登录账号">{{detail.username}}</el-descriptions-item>
                 <el-descriptions-item  label="地址">{{detail.full_address}}</el-descriptions-item>
@@ -21,6 +21,11 @@
                 <el-descriptions-item  label="小货类型">{{detail.small_goods_type===1?'增加':detail.small_goods_type===2?'减少':'乘以'}}</el-descriptions-item>
                 <el-descriptions-item  label="小货金额">{{detail.small_goods_amount}}</el-descriptions-item>
             </el-descriptions>
+            <div style='text-align:left'>
+              <div>
+                营业执照
+              </div>
+                    <img :src="ImgUrl(detail.certificate_photo)" style='width:300px;height:200px' alt=""></div>
             <el-descriptions title="联系人资料" :column="1">
                  <!-- <template slot="extra">
                   <el-button type="primary" @click="editContacts" size="small">修改</el-button>
@@ -45,6 +50,7 @@
                         width="100">
                         <template slot-scope="scope">
                           <el-button type="text" @click="editContact(scope.row)" size="small">编辑</el-button>
+                          <el-button type="text" @click="delContact(scope.row)" size="small">删除</el-button>
                         </template>
                       </el-table-column>
             </el-table>
@@ -55,9 +61,56 @@
          <el-dialog
           title="基本信息修改"
           :visible.sync="infoShow"
-          width="30%"
+          width="50%"
           :before-close="infoClose">
-          <span>这是一段信息</span>
+          <div style='margin:13px;text-align:left'>
+            <el-form ref="baseForm" :model="infoForm" :rules="inforules" size="medium" label-width="100px"
+              label-position="top">
+              <el-col :span="12">
+                <el-form-item label="客户简称" prop="code">
+                  <el-input v-model="infoForm.code" placeholder="请输入客户简称"
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="客户姓名" prop="name">
+                  <el-input v-model="infoForm.name" placeholder="请输入客户姓名"
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="客户姓名" prop="name">
+                  <el-input v-model="infoForm.name" placeholder="请输入客户姓名"
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="客户姓名" prop="name">
+                  <el-input v-model="infoForm.name" placeholder="请输入客户姓名"
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="客户姓名" prop="name">
+                  <el-input v-model="infoForm.name" placeholder="请输入客户姓名"
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="客户姓名" prop="name">
+                  <el-input v-model="infoForm.name" placeholder="请输入客户姓名"
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="客户姓名" prop="name">
+                  <el-input v-model="infoForm.name" placeholder="请输入客户姓名"
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+
+            </el-form>
+          </div>
           <span slot="footer" class="dialog-footer">
             <el-button @click="infoShow = false">取 消</el-button>
             <el-button type="primary" @click="infoShow = false">确 定</el-button>
@@ -65,14 +118,50 @@
         </el-dialog>
         <!-- 联系人 -->
         <el-dialog
-          title="联系人资料修改"
+          :title="contactsTitle"
           :visible.sync="contactsShow"
-          width="30%"
+          width="50%"
           :before-close="contactsClose">
-          <span>这是一段信息</span>
+          <div style='margin:13px;text-align:left;height:300px'>
+            <el-form ref="contForm" :model="contactsForm" :rules="contactsFormrules" size="medium" label-width="100px"
+              label-position="top">
+              <el-col :span="12">
+                <el-form-item label="姓名" prop="name">
+                  <el-input v-model="contactsForm.name" placeholder="请输入姓名" show-word-limit clearable
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="职位" prop="position">
+                  <el-select v-model="contactsForm.position" placeholder="请选择职位"
+                    :style="{width: '80%'}">
+                    <el-option v-for="item in contactOptions" :label="item.label" :value="item.value" :key="item.value"></el-option>
+                    </el-select>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="手机号" prop="phone">
+                  <el-input v-model="contactsForm.phone" placeholder="请输入手机号" show-word-limit clearable
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="微信" prop="wechat">
+                  <el-input v-model="contactsForm.wechat" placeholder="请输入微信" show-word-limit clearable
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="qq" prop="qq">
+                  <el-input v-model="contactsForm.qq" placeholder="请输入qq" show-word-limit clearable
+                    :style="{width: '80%'}"></el-input>
+                </el-form-item>
+              </el-col>
+            </el-form>
+          </div>
           <span slot="footer" class="dialog-footer">
-            <el-button @click="contactsShow = false">取 消</el-button>
-            <el-button type="primary" @click="contactsShow = false">确 定</el-button>
+            <el-button @click="contactsClose">取 消</el-button>
+            <el-button type="primary" @click="editContactSubmit()">确 定</el-button>
           </span>
         </el-dialog>
     </div>
@@ -86,7 +175,66 @@ export default {
       id: null,
       detail: { name: '' },
       contacts: [],
-      form: {}
+      contactsTitle: '',
+      contactsForm: {
+        customerId: null,
+        contactId: null,
+        name: '',
+        position: 0,
+        phone: '',
+        wechat: '',
+        qq: ''
+      },
+      contactOptions: [
+        {
+          value: 1, label: '财务'
+        },
+        {
+          value: 2, label: '业务'
+        },
+        {
+          value: 3, label: '发货'
+        }
+      ],
+      infoForm: {
+        customerId: null,
+        name: null,
+        code: null,
+        certificatePhoto: null,
+        countyId: null,
+        address: null,
+        levelId: null,
+        periodId: null,
+        personnelId: null,
+        bigGoodsType: null,
+        bigGoodsAmount: null,
+        smallGoodsType: null,
+        smallGoodsAmount: null
+      },
+      contactsFormrules: {
+        name: [{
+          required: true,
+          message: '请输入姓名',
+          trigger: 'blur'
+        }],
+        position: [{
+          required: true,
+          message: '请选择职位',
+          trigger: 'change'
+        }],
+        phone: [{
+          required: true,
+          message: '请输入姓名',
+          trigger: 'blur'
+        }]
+      },
+      inforules: {
+        name: [{
+          required: true,
+          message: '请输入姓名',
+          trigger: 'blur'
+        }]
+      }
     }
   },
   mounted () {
@@ -110,17 +258,89 @@ export default {
       this.infoShow = true
     },
     editContact (data) {
+      if (data.id === undefined) {
+        this.contactsTitle = '新增联系人'
+      } else {
+        this.contactsTitle = '修改联系人'
+      }
       this.contactsShow = true
-      console.log(data)
-      this.contact.id = data.id
-      this.contact.name = data.name
-      this.contact.phone = data.phone
-      this.contact.position = data.position
-      this.contact.wechat = data.wechat
-      this.contact.qq = data.qq
+      // console.log(data)
+      this.contactsForm.customerId = this.id
+      this.contactsForm.contactId = data.id
+      this.contactsForm.name = data.name
+      this.contactsForm.phone = data.phone
+      this.contactsForm.position = data.position
+      this.contactsForm.wechat = data.wechat
+      this.contactsForm.qq = data.qq
+    },
+    editContactSubmit () {
+      this.$refs.contForm.validate(valid => {
+        if (!valid) return
+        if (this.contactsForm.contactId != null) {
+          // TODO 提交表单
+          this.$api.customer.contactEdit({
+            customerId: this.id,
+            contactId: this.contactsForm.contactId,
+            name: this.contactsForm.name,
+            position: Number(this.contactsForm.position),
+            phone: this.contactsForm.phone,
+            wechat: this.contactsForm.wechat,
+            qq: this.contactsForm.qq
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+              this.contactsClose()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        } else {
+          this.$api.customer.contactAdd({
+            customerId: this.id,
+            contactId: this.contactsForm.contactId,
+            name: this.contactsForm.name,
+            position: Number(this.contactsForm.position),
+            phone: this.contactsForm.phone,
+            wechat: this.contactsForm.wechat,
+            qq: this.contactsForm.qq
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.getData()
+              this.contactsClose()
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        }
+      })
     },
     infoClose () {},
-    contactsClose () {}
+    contactsClose () {
+      this.$refs.contForm.resetFields()
+      this.contactsShow = false
+    },
+    delContact (data) {
+      this.$confirm('是否删除', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$api.customer.contactDelete({
+          customerId: this.id,
+          contactId: data.id
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }).catch(() => {
+      })
+    }
   }
 }
 </script>

@@ -2,7 +2,8 @@
   <div>
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
-      <span>新建客户账号</span>
+      <span v-if="editId===undefined">新建客户账号</span>
+      <span v-else>修改客户基础信息</span>
     </el-row>
     <!-- 内容 -->
     <div class="content">
@@ -14,15 +15,15 @@
         <!--  -->
         <el-row class="info">
           <el-col :span="6" class="flex  align-center">
-            <div class="name">客户编码</div>
+            <div class="name">客户简称</div>
             <el-col :span="16">
-              <el-input v-model="form.code" placeholder="请输入" ></el-input>
+              <el-input v-model="form.code" :disabled='editId!==undefined' placeholder="请输入" ></el-input>
             </el-col>
           </el-col>
           <el-col :span="6" class="flex align-center">
             <div class="name">客户名称</div>
             <el-col :span="16">
-              <el-input v-model="form.name" placeholder="请输入" ></el-input>
+              <el-input v-model="form.name" :disabled='editId!==undefined' placeholder="请输入" ></el-input>
             </el-col>
           </el-col>
           <el-col :span="6" class="flex align-center">
@@ -46,18 +47,12 @@
               <el-input v-model="form.username" placeholder="请输入" ></el-input>
             </el-col>
           </el-col>
-          <el-col :span="6" class="flex  align-center">
+          <el-col :span="6" class="flex  align-center" v-if="editId===undefined">
             <div class="name">登录密码</div>
             <el-col :span="16">
               <el-input v-model="form.password" placeholder="请输入" ></el-input>
             </el-col>
           </el-col>
-           <!-- <el-col :span="6" class="flex  align-center">
-            <div class="name">确认密码</div>
-            <el-col :span="16">
-              <el-input v-model="form.confirmPassword" placeholder="请输入" ></el-input>
-            </el-col>
-          </el-col> -->
         </el-row>
         <el-row class="info">
           <el-col :span="6" class="flex align-center">
@@ -103,7 +98,7 @@
         </el-row>
       </div>
       <!-- 代理联系人资料 -->
-      <div class="infoBox">
+      <div class="infoBox" v-if="editId===undefined">
         <el-row class="box_title left">
           联系资料
         </el-row>
@@ -264,6 +259,7 @@ export default {
       uploadhead: {
         'Ansuex-Manage-Token': sessionStorage.getItem('token')
       },
+      editId: null,
       form: {
         name: '',
         code: '',
@@ -336,6 +332,7 @@ export default {
     }
   },
   mounted () {
+    this.editId = this.$route.params.id
     // 区域筛选
     this.regiondata = this.$store.state.common.regiondata
     // 账期筛选
@@ -350,8 +347,29 @@ export default {
     this.$api.company.position.salesSelect().then(res => {
       this.salesOptions = res.data
     })
+    if (this.editId !== undefined) {
+      this.getData()
+    }
   },
   methods: {
+    getData () {
+      this.$api.customer.info({ customerId: this.editId }).then(res => {
+        this.form.name = res.data.name
+        this.form.code = res.data.code
+        this.form.username = res.data.username
+        this.form.password = res.data.password
+        this.form.certificatePhoto = res.data.certificate_photo
+        this.form.countyId = [res.data.province_id, res.data.city_id, res.data.county_id]
+        this.form.address = res.data.address
+        this.form.levelId = res.data.level_id
+        this.form.periodId = res.data.period_id
+        this.form.personnelId = res.data.personnel_id
+        this.form.bigGoodsType = res.data.big_goods_type
+        this.form.bigGoodsAmount = res.data.big_goods_amount
+        this.form.smallGoodsType = res.data.small_goods_type
+        this.form.smallGoodsAmount = res.data.small_goods_amount
+      })
+    },
     handleChange (val) {
       console.log(val)
     },
@@ -359,31 +377,58 @@ export default {
       this.$router.go(-1)
     },
     addSubmit () {
-      this.$api.customer.customerAdd({
-        name: this.form.name,
-        code: this.form.code,
-        username: this.form.username,
-        password: this.form.password,
-        confirmPassword: this.form.confirmPassword,
-        certificatePhoto: this.form.certificatePhoto,
-        countyId: this.form.countyId[2],
-        address: this.form.address,
-        levelId: this.form.levelId,
-        periodId: this.form.periodId,
-        personnelId: this.form.personnelId,
-        bigGoodsType: this.form.bigGoodsType,
-        bigGoodsAmount: this.form.bigGoodsAmount,
-        smallGoodsType: this.form.smallGoodsType,
-        smallGoodsAmount: this.form.smallGoodsAmount,
-        contacts: this.contactsData
-      }).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.$router.push({ name: 'customerAccount' })
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+      if (this.editId === undefined) {
+        this.$api.customer.customerAdd({
+          name: this.form.name,
+          code: this.form.code,
+          username: this.form.username,
+          password: this.form.password,
+          confirmPassword: this.form.confirmPassword,
+          certificatePhoto: this.form.certificatePhoto,
+          countyId: this.form.countyId[2],
+          address: this.form.address,
+          levelId: this.form.levelId,
+          periodId: this.form.periodId,
+          personnelId: this.form.personnelId,
+          bigGoodsType: this.form.bigGoodsType,
+          bigGoodsAmount: this.form.bigGoodsAmount,
+          smallGoodsType: this.form.smallGoodsType,
+          smallGoodsAmount: this.form.smallGoodsAmount,
+          contacts: this.contactsData
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.$router.push({ name: 'customerAccount' })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else {
+        this.$api.customer.base({
+          customerId: this.editId,
+          name: this.form.name,
+          code: this.form.code,
+          username: this.form.username,
+          password: this.form.password,
+          certificatePhoto: this.form.certificatePhoto,
+          countyId: this.form.countyId[2],
+          address: this.form.address,
+          levelId: this.form.levelId,
+          periodId: this.form.periodId,
+          personnelId: this.form.personnelId,
+          bigGoodsType: this.form.bigGoodsType,
+          bigGoodsAmount: this.form.bigGoodsAmount,
+          smallGoodsType: this.form.smallGoodsType,
+          smallGoodsAmount: this.form.smallGoodsAmount
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.$router.push({ name: 'customerAccount' })
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
     },
     handleAvatarSuccess (res, file) {
       this.form.certificatePhoto = res.data.path

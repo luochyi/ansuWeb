@@ -44,7 +44,7 @@ export default [
     path: '/waybill',
     name: 'waybill',
     meta: {
-      title: '预报运单',
+      title: '库户管理',
       icon: 'waybillIcon',
       hidden: false
     },

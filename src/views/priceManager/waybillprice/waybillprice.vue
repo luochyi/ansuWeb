@@ -229,7 +229,7 @@ export default {
   mounted () {
     this.$api.cost.price.offer.subscript().then(res => {
       console.log(res.data) // res是接口返回的结果
-      // this.subscript = res.data
+      this.subscript = res.data
     })
     // 在页面加载前调用获取列表数据函数
     this.getData()
