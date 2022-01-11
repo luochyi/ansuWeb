@@ -406,6 +406,7 @@ export default {
     },
     setProblem (row) {
       this.setDialog = true
+      this.problemId = row.problem_id
       // this.Id = row.id
       if (row) {
         this.req.waybillIds = [row.id]
@@ -440,6 +441,7 @@ export default {
     },
     setClose () {
       this.setDialog = false
+      this.problemId = null
     },
     search () {
       this.page.pageNo = 1
