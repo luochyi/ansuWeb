@@ -35,32 +35,8 @@
             <el-row type='flex' justify='flex-start' class='title' align='middle'>
                 <span class='text'>基础运价确认</span>
             </el-row>
-            <!-- 计价方式单价、未确认、未审核 -->
-            <el-row style="line-height:50px;font-size:14px" v-if="detailData.offer.type===1&&!isSub&&detailData.offer.audit_status===0">
-                <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
-                    <el-col :span='10'>单价调整：<el-input placeholder="" v-model="adjust.adjustPrice" class="input-with-select">
-                        <el-select v-model="adjust.adjustType" slot="prepend" placeholder="请选择" style="width:100px">
-                        <el-option label="增加" value="1"></el-option>
-                        <el-option label="减少" value="2"></el-option>
-                        </el-select>
-                        <template slot="append">元</template>
-                    </el-input>
-                    </el-col>
-                <el-col :span='6'><el-button class="orangeBtn" @click="submit()">确认</el-button></el-col>
-            </el-row>
-            <!-- 计价方式非单价、未确认、未审核 -->
-            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type>1&&!isSub&&detailData.offer.audit_status===0">
-                <el-col :span='4'>运费模式：{{detailData.offer.type===2?'金额':'首续重'}}</el-col>
-                <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
-                <el-col :span='6'><el-button class="orangeBtn">确认</el-button></el-col>
-            </el-row>
-            <!-- 计价方式单价，确认，未审核 -->
-            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type===1&&isSub&&detailData.offer.audit_status===0">
-                <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
-                    <el-col :span='10'>单价调整：{{adjust.adjustType===1?'增加 ':'减少 '}}{{adjust.adjustPrice+'元/公斤'}}</el-col>
-            </el-row>
             <!-- 计价方式单价，已审核 -->
-            <el-row style="line-height:50px;font-size:14px" v-else-if="detailData.offer.type===1&&detailData.offer.audit_status>0">
+            <el-row style="line-height:50px;font-size:14px" v-if="detailData.offer.type===1&&detailData.offer.audit_status>0">
                 <el-col :span='4'>运费单价：{{detailData.offer.price+'元/公斤'}}</el-col>
                     <el-col :span='10'>单价调整：{{detailData.offer.adjust_type===1?'增加 ':'减少 '}}{{detailData.offer.adjust_price+'元/公斤'}}</el-col>
             </el-row>
@@ -74,7 +50,7 @@
                 <el-col>请先确认基础运价</el-col>
             </el-row>
         </div>
-        <div class="box" style="margin-bottom:50px">
+        <div class="box">
             <el-row type='flex' justify='flex-start' class='title' align='middle'>
                 <span class='text'>附加费明细</span>
             </el-row>
@@ -91,9 +67,60 @@
                             <span v-else-if="scope.row.unit===2">票</span>
                         </template>
                     </el-table-column>
+                    <el-table-column prop="amount" label="合计金额"></el-table-column>
                 </el-table>
             </el-row>
         </div>
+        <!-- 单价 -->
+        <div class="box" style="margin-bottom:50px"  v-if="detailData.offer.type===1">
+            <el-row type='flex' justify='flex-start' class='title' align='middle'>
+                <span class='text'>报价合计：<span  style="color:#FB4E0C">{{Number(detailData.offer.amount)+Number(detailData.offer.surcharge_amount)+Number(detailData.offer.other_amount)}}元</span></span>
+            </el-row>
+            <el-row style="line-height:50px;font-size:14px">
+                <el-col>标准运价：（基础运价）{{detailData.offer.price}}*{{detailData.offer.cost_weight}}+（附加费）
+                  <span v-for="item,index in surcharges" :key="index">
+                    <span v-if="item.unit===1">
+                      {{item.price}}*{{detailData.offer.cost_weight}}+
+                    </span>
+                  </span>
+                  （其他费用）{{detailData.offer.other_amount}}</el-col>
+                <!-- 标准运价公式：运费单价*结算重（基础运价）+（附加费1+附加费2+…）*结算重/票+（其他费用1+其他费用2+…）（其他费用）=标准运价 -->
+                <el-col style="color:#FB4E0C"  v-if="detailData.offer.adjust_type===1">调整金额：+{{detailData.offer.adjust_price}}*{{detailData.offer.cost_weight}} = + {{detailData.offer.adjust_price*detailData.offer.cost_weight}}</el-col>
+                <el-col style="color:#FB4E0C" v-else-if="detailData.offer.adjust_type===2">调整金额：-{{detailData.offer.adjust_price}}*{{detailData.offer.cost_weight}} = - {{detailData.offer.adjust_price*detailData.offer.cost_weight}} </el-col>
+            </el-row>
+        </div>
+        <!-- 金额 -->
+        <div class="box" style="margin-bottom:50px"  v-else-if="detailData.offer.type===2">
+            <el-row type='flex' justify='flex-start' class='title' align='middle'>
+                <span class='text'>报价合计：<span  style="color:#FB4E0C">{{Number(detailData.offer.amount)+Number(detailData.offer.surcharge_amount)+Number(detailData.offer.other_amount)}}元</span></span>
+            </el-row>
+            <el-row style="line-height:50px;font-size:14px">
+                <el-col>标准运价：（基础运价）{{detailData.offer.amount}}+（附加费）
+                  <span v-for="item,index in surcharges" :key="index">
+                    <span v-if="item.unit===1">
+                      {{item.price}}*{{detailData.offer.cost_weight}}+
+                    </span>
+                  </span>
+                  （其他费用）{{detailData.offer.other_amount}}</el-col>
+            </el-row>
+        </div>
+        <!-- 首续重 -->
+        <div class="box" style="margin-bottom:50px"  v-else-if="detailData.offer.type===3">
+            <el-row type='flex' justify='flex-start' class='title' align='middle'>
+                <span class='text'>报价合计：<span  style="color:#FB4E0C">{{Number(detailData.offer.amount)+Number(detailData.offer.surcharge_amount)+Number(detailData.offer.other_amount)}}元</span></span>
+            </el-row>
+            <el-row style="line-height:50px;font-size:14px">
+                <el-col>标准运价：（基础运价）[ {{detailData.offer.first_weight_price}} + ( {{detailData.offer.cost_weight }} - {{detailData.offer.first_weight}} ) / {{detailData.offer.additional_weight}} * {{detailData.offer.additional_weight_price}} ]
+                  +（附加费）
+                  <span v-for="item,index in surcharges" :key="index">
+                    <span v-if="item.unit===1">
+                      {{item.price}}*{{detailData.offer.cost_weight}}+
+                    </span>
+                  </span>
+                  （其他费用）{{detailData.offer.other_amount}}</el-col>
+            </el-row>
+        </div>
+       <!-- 【首续重】        [首重价格+（结算重量-首重重量）/续重重量*续重价格]（基础运价）            firstWeightPrice+ (cost_weight  -  first_weight )/ additional_weight * additional_weight_price ]        -->
         <div class="footer">
             <!-- <span>报价合计：</span>
             ￥ -->

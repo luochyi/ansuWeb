@@ -147,8 +147,6 @@
           </el-table-column>
           <el-table-column prop="unit_num" label="单位数量" width="120">
           </el-table-column>
-          <el-table-column prop="formula" label="公式" width="120">
-          </el-table-column>
           <el-table-column prop="bill_amount" label="金额" width="120">
           </el-table-column>
           <el-table-column prop="bill_target" label="结算对象" width="120">
@@ -271,10 +269,6 @@
                             :disabled="item.disabled"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="公式" prop="formula">
-                        <el-input v-model="formData.formula" placeholder="请输入" clearable :style="{width: '60%'}">
-                        </el-input>
-                    </el-form-item>
                     <el-form-item label="结算对象" prop="billTarget">
                         <el-select v-model="formData.billTarget" placeholder="请选择" clearable :style="{width: '60%'}">
                         <el-option v-for="(item, index) in billTargetOptions" :key="index" :label="item.label" :value="item.value"
@@ -313,11 +307,6 @@ export default {
           required: true,
           message: '请选择单位',
           trigger: 'change'
-        }],
-        formula: [{
-          required: true,
-          message: '请输入公式',
-          trigger: 'blur'
         }],
         billTarget: [{
           required: true,
