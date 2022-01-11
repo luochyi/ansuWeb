@@ -370,7 +370,8 @@ export default {
         waybillNo: '',
         channelName: '',
         type: null,
-        hasInvoice: null
+        hasInvoice: null,
+        problemId: null
       },
       typeOptions: [
         {
@@ -421,7 +422,8 @@ export default {
         waybillNo: this.searchForm.waybillNo,
         type: this.searchForm.type,
         hasInvoice: this.searchForm.hasInvoice,
-        channelName: this.searchForm.channelName
+        channelName: this.searchForm.channelName,
+        problemId: this.searchForm.problemId
       }).then((res) => {
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list

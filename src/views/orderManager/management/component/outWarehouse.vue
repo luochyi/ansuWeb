@@ -501,7 +501,8 @@ export default {
         channelName: this.searchForm.channelName,
         transshipCode: this.searchForm.transshipCode,
         transshipNo: this.searchForm.transshipNo,
-        extractNo: this.searchForm.extractNo
+        extractNo: this.searchForm.extractNo,
+        problemId: this.searchForm.problemId
       }).then((res) => {
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
