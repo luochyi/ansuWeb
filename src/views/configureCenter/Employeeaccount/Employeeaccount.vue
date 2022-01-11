@@ -122,6 +122,12 @@
                   <el-form-item label="手机号">
                     <el-input v-model="form.phone"></el-input>
                   </el-form-item>
+                   <el-form-item label="职位" prop="positionId">
+                      <el-cascader v-model="form.positionId" :options="positions" placeholder="请选择职位"  :props="{value: 'id', label: 'name',checkStrictly: true}" clearable :style="{width: '100%'}">
+                        <!-- <el-option v-for="(item, index) in positions" :key="index" :label="item.name"
+                          :value="item.id" :disabled="item.disabled"></el-option> -->
+                      </el-cascader>
+                  </el-form-item>
                 </el-form>
               </div>
               <span slot="footer" class="dialog-footer">
@@ -145,11 +151,14 @@ export default {
         name: '', // 姓名
         phone: '' // 员工手机
       },
+      positions: [],
       // 弹框
       editShow: false,
       form: {
+        personnelId: null,
         name: '',
-        phone: ''
+        phone: '',
+        positionId: []
       },
       deactivation: false, // 批量停用弹框
       stopAgentis: false, // 停用账号
@@ -168,11 +177,28 @@ export default {
       },
       columns: [
         { prop: 'name', label: '姓名', width: '243', align: 'center' },
-        { prop: 'department', label: '部门', width: '157', align: 'center', formatter: this.formatter },
-        { prop: 'role', label: '角色', width: '258', align: 'center', formatter: this.formatter },
+        {
+          prop: 'department',
+          label: '部门',
+          width: '157',
+          align: 'center',
+          formatter: this.formatter
+        },
+        {
+          prop: 'role',
+          label: '角色',
+          width: '258',
+          align: 'center',
+          formatter: this.formatter
+        },
         { prop: 'account', label: '登陆账号', width: '230', align: 'center' },
         { prop: 'phone', label: '员工手机', width: '244', align: 'center' },
-        { prop: 'status', label: '账户状态', align: 'center', formatter: this.formatter }
+        {
+          prop: 'status',
+          label: '账户状态',
+          align: 'center',
+          formatter: this.formatter
+        }
       ],
       tableData: [],
       page: {
@@ -185,20 +211,53 @@ export default {
   },
   mounted () {
     this.getData()
+    this.position()
   },
   methods: {
+    position () {
+      this.$api.configure.positionAll().then(res => {
+        this.positions = res.data
+      })
+    },
     employeeaccounta () {
       this.$router.push({ name: 'employeeaccounta' })
     },
     edit (data) {
-      console.log(data)
-      this.form.personnelId = data.id
+      // console.log(data)
+      // console.log(this.form.positionId)
+      this.form.positionId = data.position_name
+      // console.log(this.positions)
+      this.positions.forEach(item => {
+        if (item.name === data.position_name) {
+          this.form.positionId = [item.id]
+        } else {
+          item.children.forEach(items => {
+            if (items.name === data.position_name) {
+              this.form.positionId = [item.id, items.id]
+            } else {
+              items.children && items.children.forEach(ele => {
+                if (ele.name === data.position_name) {
+                  this.form.positionId = [item.id, items.id, ele.id]
+                }
+              })
+            }
+          })
+        }
+      })
       this.form.name = data.name
       this.form.phone = data.phone
+      this.form.personnelId = data.id
       this.editShow = true
     },
     editSubmit () {
-      this.$api.configure.personnel.edit(this.form).then(res => {
+      // console.log(this.form.positionId)
+      // console.log(Number(this.form.positionId.slice(-1)))
+      this.$api.configure.personnel.edit({
+        positionId: Number(this.form.positionId.slice(-1)),
+        name: this.form.name,
+        phone: this.form.phone,
+        personnelId: this.form.personnelId
+      }).then((res) => {
         if (res.code === 0) {
           this.$message.success(res.msg)
           this.editClose()
@@ -221,7 +280,7 @@ export default {
       this.chooseAgent = val
       this.$router.push({
         name: 'stopAgent',
-        params: { }
+        params: {}
       })
     },
     resetPassword (val) {
@@ -232,10 +291,10 @@ export default {
     },
     into (done) {
       this.$confirm('确认转入')
-        .then(_ => {
+        .then((_) => {
           done()
         })
-        .catch(_ => {})
+        .catch((_) => {})
     },
     getData () {
       let params = {
@@ -274,9 +333,10 @@ export default {
     // 复选
     handleSelectionChange (val) {
       this.personnelIds = []
-      val && val.forEach((item) => {
-        this.personnelIds.push(item.id)
-      })
+      val &&
+        val.forEach((item) => {
+          this.personnelIds.push(item.id)
+        })
     },
     reset () {
       this.search.name = ''
@@ -290,20 +350,22 @@ export default {
         this.$message.error('密码不一致') // 错误提示
         return
       }
-      this.$api.configure.personnel.resetPassword({
-        personnelId: this.resetPass.personnelId,
-        password: this.resetPass.password
-      }).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg) // 成功提示
-          this.password = false
-        } else {
-          this.$message.error(res.msg) // 错误提示
-        }
-      })
+      this.$api.configure.personnel
+        .resetPassword({
+          personnelId: this.resetPass.personnelId,
+          password: this.resetPass.password
+        })
+        .then((res) => {
+          if (res.code === 0) {
+            this.$message.success(res.msg) // 成功提示
+            this.password = false
+          } else {
+            this.$message.error(res.msg) // 错误提示
+          }
+        })
     },
-    enabled  (val) {
-      api.configure.personnel.enabled(val).then(res => {
+    enabled (val) {
+      api.configure.personnel.enabled(val).then((res) => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.getData() // 刷新数据
@@ -312,8 +374,8 @@ export default {
         }
       })
     },
-    disabled  (val) {
-      api.configure.personnel.disabled(val).then(res => {
+    disabled (val) {
+      api.configure.personnel.disabled(val).then((res) => {
         if (res.code === 0) {
           this.$message.success(res.msg) // 成功提示
           this.getData() // 刷新数据
@@ -323,9 +385,7 @@ export default {
       })
     }
   }
-
 }
-
 </script>
 <style lang="scss" scoped>
 .adtitile {
@@ -345,12 +405,12 @@ export default {
   color: #ffbd32ff;
 }
 
-/deep/ .searchbox1{
-  .batch{
+/deep/ .searchbox1 {
+  .batch {
     height: 32px;
     line-height: 32px;
     padding: 0px 15px;
-    background: #FEF4E1;
+    background: #fef4e1;
     border-radius: 4px;
     font-size: 14px;
     font-family: PingFangSC-Regular, PingFang SC;
@@ -365,50 +425,48 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-/deep/ .el-dialog{
+/deep/ .el-dialog {
   position: absolute;
   margin: 0px !important;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  .el-dialog__header{
+  .el-dialog__header {
     font-size: 16px;
     font-family: PingFangSC-Medium, PingFang SC;
     font-weight: 500;
     color: rgba(0, 0, 0, 0.85);
   }
-
 }
-/deep/ .el-dialog{
+/deep/ .el-dialog {
   text-align: left;
 }
 //biankuang
 /deep/ .el-dialog__body {
-    padding: 10px 15px;
-    border-top:1px solid rgba(0, 0, 0, 0.06);
-    border-bottom:1px solid rgba(0, 0, 0, 0.06);
+  padding: 10px 15px;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 /deep/ .el-dialog__header {
-    padding: 10px 10px ;
+  padding: 10px 10px;
 }
-/deep/ .el-dialog__footer{
-  padding: 5px 10px ;
+/deep/ .el-dialog__footer {
+  padding: 5px 10px;
 }
-/deep/ .input{
+/deep/ .input {
   height: 90px;
 }
-/deep/ .inputa{
+/deep/ .inputa {
   height: 238px;
 }
-/deep/ .title{
- height: 56px;
- font-size: 16px;
+/deep/ .title {
+  height: 56px;
+  font-size: 16px;
 }
-.el-icon-circle-check{
+.el-icon-circle-check {
   width: 66px;
   height: 58px;
   font-size: 58px;
-  color: #FB4702;
+  color: #fb4702;
 }
-
 </style>

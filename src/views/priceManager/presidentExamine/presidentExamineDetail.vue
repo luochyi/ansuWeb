@@ -22,7 +22,7 @@
                 <el-descriptions-item label="是否有保险">{{detailData.have_safe===1?'购买':'不购买'}}</el-descriptions-item>
                 <el-descriptions-item label="品名"><el-button type="text" @click="itemsDrawer = true" size="mini">查看</el-button></el-descriptions-item>
                 <el-descriptions-item label="材质"><el-button type="text" @click="cateDrawer = true" size="mini">查看</el-button></el-descriptions-item>
-                <el-descriptions-item label="方数">{{detailData.volume}}</el-descriptions-item>
+                <el-descriptions-item label="方数">{{(detailData.volume / 1000000).toFixed(2) + 'm³'}}</el-descriptions-item>
                 <el-descriptions-item label="实重">{{detailData.weight}}</el-descriptions-item>
                 <el-descriptions-item label="材积重">{{detailData.volume_weight}}</el-descriptions-item>
                 <el-descriptions-item label="结算重">{{detailData.bill_weight}}</el-descriptions-item>

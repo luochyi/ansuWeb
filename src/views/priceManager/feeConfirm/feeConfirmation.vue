@@ -45,7 +45,7 @@
             <el-table-column label="长"></el-table-column>
             <el-table-column label="宽"></el-table-column>
             <el-table-column label="高"></el-table-column>
-            <el-table-column label="体积"></el-table-column>
+            <el-table-column label="方数"></el-table-column>
             <el-table-column label="实重"></el-table-column>
             <el-table-column label="材积重"></el-table-column>
             <el-table-column label="结算重"></el-table-column>

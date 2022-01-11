@@ -17,6 +17,14 @@ export const extract = params => {
     data: params
   })
 }
+// 设置问题件
+export const set = params => {
+  return axios({
+    url: '/order/waybill/problem',
+    method: 'post',
+    data: params
+  })
+}
 export {
   safe,
   cargoSpec

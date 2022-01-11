@@ -47,7 +47,7 @@
         <el-descriptions-item label="客户结算重">{{
           detailData.customer_bill_weight
         }}</el-descriptions-item>
-        <el-descriptions-item label="客户体积">{{
+        <el-descriptions-item label="客户方数">{{
           (detailData.customer_volume / 1000000).toFixed(2) + "m³"
         }}</el-descriptions-item>
         <el-descriptions-item label="客户重量">{{
@@ -62,7 +62,7 @@
         <el-descriptions-item label="代理结算重">{{
           detailData.agent_bill_weight
         }}</el-descriptions-item>
-        <el-descriptions-item label="代理体积">{{(detailData.agent_volume / 1000000).toFixed(2) + "m³"
+        <el-descriptions-item label="代理方数">{{(detailData.agent_volume / 1000000).toFixed(2) + "m³"
         }}</el-descriptions-item>
         <el-descriptions-item label="代理重量">{{
           detailData.agent_weight

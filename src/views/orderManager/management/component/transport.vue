@@ -156,6 +156,18 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
+              <el-form-item label="问题分类" prop="problemId">
+                <el-select
+                  v-model="searchForm.problemId"
+                  placeholder="请选择"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                  <el-option v-for="item in problemOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :span="6">
           <!-- <el-form-item size="large"> -->
           <div class="searchBtn">
             <el-button class="orangeBtn" @click="search">查询</el-button>
@@ -178,19 +190,29 @@
       >
         <el-col :span="14" class="left">
           <el-button class="orangeBtn" @click="updateRoad" size="small"
+          :disabled='this.waybillIds.length === 0'
             >批量更新轨迹</el-button
           >
           <el-button
             class="orangeBtn"
             @click="showTransships(waybillIds)"
+            :disabled='this.waybillIds.length === 0'
             size="small"
             >批量设置转单号</el-button
           >
           <el-button
             class="orangeBtn"
             @click="showExtracts(waybillIds)"
+            :disabled='this.waybillIds.length === 0'
             size="small"
             >批量设置提单号</el-button
+          >
+          <el-button
+            class="orangeBtn"
+            @click="setProblem(waybillIds)"
+            :disabled='this.waybillIds.length === 0'
+            size="small"
+            >批量设置问题件</el-button
           >
         </el-col>
         <el-col :span="10" class="right"> </el-col>
@@ -227,6 +249,9 @@
               >
               <el-button type="text" @click="showExtract(scope.row)"
                 >设置提单号</el-button
+              >
+              <el-button type="text" @click="setProblem(scope.row)"
+                >问题件</el-button
               >
             </template>
           </el-table-column>
@@ -357,6 +382,16 @@
         <el-button type="primary" @click="setExtract">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog :visible.sync="setDialog" title="设置问题件"  width="30%">
+       选择问题分类
+        <el-select  v-model="problemId">
+          <el-option v-for="item in problemOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
+        <div slot="footer">
+          <el-button @click="setDialog = false">取消</el-button>
+          <el-button type="primary" @click="setProblemSubmit()">确定</el-button>
+        </div>
+      </el-dialog>
   </div>
 </template>
 
@@ -365,6 +400,8 @@ export default {
   data () {
     return {
       code: '',
+      setDialog: false,
+      problemId: null,
       dialogVisible: false,
       drawerSize: '40%',
       drawerVrisible: false,
@@ -468,6 +505,12 @@ export default {
           align: 'center',
           formatter: this.formatter
         },
+        {
+          prop: 'problem_name',
+          label: '问题说明',
+          width: '200',
+          align: 'center'
+        },
         { prop: 'remark', label: '客户备注', width: '200', align: 'center' },
         {
           prop: 'interior_remark',
@@ -536,13 +579,15 @@ export default {
           label: '已制作',
           value: 1
         }
-      ]
+      ],
+      problemOptions: []
     }
   },
   mounted () {
     // 在页面加载前调用获取列表数据函数
     this.getData()
     this.getTransships()
+    this.problemSel()
   },
   methods: {
     // 获取列表数据
@@ -569,6 +614,40 @@ export default {
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
+    },
+    problemSel () {
+      this.$api.setting.problem.select().then(res => {
+        this.problemOptions = res.data
+      })
+    }, // 设置问题件
+    setProblem (row) {
+      this.setDialog = true
+      // this.Id = row.id
+      if (row) {
+        this.req.waybillIds = [row.id]
+      }
+    },
+    lotSet () {
+      if (this.waybillIds.length === 0) {
+        this.$message.error('请选择一条运单')
+      } else {
+        this.setDialog = true
+        this.req.waybillIds = this.waybillIds
+      }
+    },
+    setProblemSubmit () {
+      this.$api.order.waybill.set({ waybillIds: this.req.waybillIds, problemId: this.problemId }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.setClose()
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    setClose () {
+      this.setDialog = false
     },
     search () {
       this.page.pageNo = 1
@@ -830,6 +909,5 @@ export default {
 }
 .searchBtn {
   position: relative;
-  top: 30px;
 }
 </style>

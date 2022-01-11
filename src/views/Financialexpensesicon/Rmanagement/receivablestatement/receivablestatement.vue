@@ -4,6 +4,12 @@
       <!--  标签页 -->
       <el-row type='flex' justify='flex-start' class='title' align='middle'>
         <span class='text'>应收账单</span>
+        <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
+          <el-tab-pane label='未核销' name='1'></el-tab-pane>
+          <el-tab-pane label='已核销' name='2'></el-tab-pane>
+          <el-tab-pane label='部分核销' name='3'></el-tab-pane>
+          <el-tab-pane label='全部' name='0'></el-tab-pane>
+        </el-tabs>
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
@@ -159,6 +165,7 @@ export default {
   methods: {
     getData () {
       this.$api.finance.fare.bill.customer.lists({
+        status: Number(this.activeName),
         billNo: this.search.billNo,
         page: this.page.pageNo,
         limit: this.page.limit
@@ -172,6 +179,11 @@ export default {
     },
     detailspage (row) {
       this.$router.push({ name: 'expenseConfirmationForm', params: { billNo: row.bill_no } })
+    },
+    handleClick (tab, event) {
+      console.log(tab, event)
+      this.activeName = tab.name
+      this.getData()
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {

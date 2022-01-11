@@ -4,6 +4,7 @@ import * as currency from './setting/currency/currency'
 import * as template from './setting/template'
 import * as transship from './setting/transship'
 import * as product from './setting/product'
+import * as problem from './setting/problem/problem'
 
 export {
   warehouse, // 仓库管理
@@ -11,5 +12,6 @@ export {
   currency, // 币种
   template,
   transship,
-  product
+  product,
+  problem
 }

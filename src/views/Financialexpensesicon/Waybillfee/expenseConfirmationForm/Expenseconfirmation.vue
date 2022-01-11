@@ -101,7 +101,7 @@ export default {
         { prop: 'name', label: '长', width: '193', align: 'center', formatter: this.formatter },
         { prop: 'customerCode', label: '宽', width: '80', align: 'center', formatter: this.formatters },
         { prop: 'status', label: '高', width: '94', align: 'center' },
-        { prop: 'salesman', label: '体积', width: '106', align: 'center' },
+        { prop: 'salesman', label: '方数', width: '106', align: 'center' },
         { prop: 'Reviewer', label: '实重', width: '81', align: 'center' },
         { prop: 'Ordertype', label: '材积重', width: '101', align: 'center' },
         { prop: 'number', label: '结算重', width: '123', align: 'center' }

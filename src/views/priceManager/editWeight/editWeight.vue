@@ -147,7 +147,7 @@ export default {
         { prop: 'surcharge_amount', width: '100', label: '附加费', align: 'center' },
         { prop: 'other_amount', width: '100', label: '其他费用', align: 'center' },
         { prop: 'customer_bill_weight', width: '100', label: '结算重', align: 'center' },
-        { prop: 'customer_volume', width: '100', label: '体积', align: 'center', formatter: this.formatter },
+        { prop: 'customer_volume', width: '100', label: '方数', align: 'center', formatter: this.formatter },
         { prop: 'customer_weight', width: '100', label: '重量', align: 'center' },
         { prop: 'customer_volume_weight', width: '100', label: '材积', align: 'center' },
         { prop: 'customer_cost_weight', width: '100', label: '计费重', align: 'center' }

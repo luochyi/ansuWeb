@@ -173,7 +173,7 @@ export default {
         { prop: 'has_invoice', label: '是否制作发票', width: '200', align: 'center', formatter: this.formatter },
         { prop: 'is_irikura', label: '是否入仓', width: '100', align: 'center', formatter: this.formatter },
         { prop: 'customer_bill_weight', width: '100', label: '结算重', align: 'center' },
-        { prop: 'customer_volume', width: '100', label: '体积', align: 'center' },
+        { prop: 'customer_volume', width: '100', label: '方数', align: 'center', formatter: this.formatter },
         { prop: 'customer_weight', width: '100', label: '重量', align: 'center' },
         { prop: 'customer_volume_weight', width: '100', label: '材积', align: 'center' },
         { prop: 'cost_weight', width: '100', label: '计费重', align: 'center' },
@@ -263,6 +263,8 @@ export default {
           return this.formatDate(row.created_at, 'yyyy-MM-dd')
         case 'audit_status':
           return row.audit_status === 0 ? '未报价' : row.audit_status === 1 ? '审核中' : row.audit_status === 2 ? '审核通过' : row.audit_status === 3 ? '审核驳回' : ''
+        case 'customer_volume':
+          return (row.customer_volume / 1000000).toFixed(2) + 'm³'
       }
     },
     search () {

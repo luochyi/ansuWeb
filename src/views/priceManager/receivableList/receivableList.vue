@@ -174,7 +174,7 @@ export default {
         {
           prop: 'customer_volume',
           width: '100',
-          label: '体积',
+          label: '方数',
           align: 'center',
           formatter: this.formatter
         },

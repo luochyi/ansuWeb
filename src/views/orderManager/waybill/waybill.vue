@@ -3,7 +3,7 @@
     <div class="main">
       <!--  标签页 -->
       <el-row type="flex" justify="flex-start" class="title" align="middle">
-        <span class="text">库户管理</span>
+        <span class="text">入库管理</span>
         <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
           <el-tab-pane label="未入库" name="1"></el-tab-pane>
           <el-tab-pane label="已入库" name="2"></el-tab-pane>

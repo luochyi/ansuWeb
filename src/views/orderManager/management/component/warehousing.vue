@@ -125,6 +125,18 @@
                 </el-select>
               </el-form-item>
             </el-col>
+            <el-col :span="6">
+              <el-form-item label="问题分类" prop="problemId">
+                <el-select
+                  v-model="searchForm.problemId"
+                  placeholder="请选择"
+                  clearable
+                  :style="{ width: '60%' }"
+                >
+                  <el-option v-for="item in problemOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
              <el-col :span="6">
           <!-- <el-form-item size="large"> -->
           <div class="searchBtn">
@@ -152,6 +164,13 @@
             :disabled="this.table_row.length === 0"
             size="small"
             >批量出库</el-button
+          >
+          <el-button
+            class="orangeBtn"
+            @click="setProblem()"
+            :disabled="this.table_row.length === 0"
+            size="small"
+            >批量设置问题件</el-button
           >
         </el-col>
         <el-col :span="10" class="right"> </el-col>
@@ -182,6 +201,7 @@
                 >导出发票</el-button
               >
               <el-button type="text" @click="eject(scope.row)"> 出库</el-button>
+              <el-button type="text" @click="setProblem(scope.row)"> 问题件</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -232,6 +252,16 @@
         </button>
       </div>
     </commonDrawer>
+     <el-dialog :visible.sync="setDialog" title="设置问题件"  width="30%">
+       选择问题分类
+        <el-select  v-model="problemId">
+          <el-option v-for="item in problemOptions" :key="item.id" :label="item.name" :value="item.id"></el-option>
+        </el-select>
+        <div slot="footer">
+          <el-button @click="setDialog = false">取消</el-button>
+          <el-button type="primary" @click="setProblemSubmit()">确定</el-button>
+        </div>
+      </el-dialog>
   </div>
 </template>
 
@@ -240,12 +270,14 @@ export default {
   data () {
     return {
       drawerVrisible: false,
+      setDialog: false,
       table_row: [],
       drawerTitle: '出库',
       code: '',
       userName: '',
       orderCode: '',
       channelId: null,
+      problemId: null,
       agentChannelId: [],
       channelOption: [],
       agentChannelOption: [],
@@ -309,6 +341,12 @@ export default {
           align: 'center',
           formatter: this.formatter
         },
+        {
+          prop: 'problem_name',
+          label: '问题说明',
+          width: '200',
+          align: 'center'
+        },
         { prop: 'remark', label: '客户备注', width: '200', align: 'center' },
         {
           prop: 'interior_remark',
@@ -353,7 +391,8 @@ export default {
           label: '已制作',
           value: 1
         }
-      ]
+      ],
+      problemOptions: []
     }
   },
   mounted () {
@@ -363,6 +402,7 @@ export default {
     this.$api.agent.agentServiceAll().then((res) => {
       this.agentChannelOption = res.data
     })
+    this.problemSel()
   },
   methods: {
     // 获取列表数据
@@ -386,6 +426,35 @@ export default {
         this.page.total = res.data.total // 数据总量
         this.tableData = res.data.list
       })
+    },
+    problemSel () {
+      this.$api.setting.problem.select().then(res => {
+        this.problemOptions = res.data
+      })
+    },
+    // 设置问题件
+    setProblem (row) {
+      this.setDialog = true
+      // this.Id = row.id
+      if (row) {
+        this.req.waybillIds = [row.id]
+      } else {
+        this.req.waybillIds = this.table_row
+      }
+    },
+    setProblemSubmit () {
+      this.$api.order.waybill.set({ waybillIds: this.req.waybillIds, problemId: this.problemId }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.setClose()
+          this.getData()
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    setClose () {
+      this.setDialog = false
     },
     search () {
       this.page.pageNo = 1
@@ -548,6 +617,6 @@ export default {
 }
 .searchBtn {
   position: relative;
-  // top:30px;
+  top:40px;
 }
 </style>

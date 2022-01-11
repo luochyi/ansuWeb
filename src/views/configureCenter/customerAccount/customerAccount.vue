@@ -303,15 +303,19 @@ export default {
       }
     },
     resetP (data) {
-      this.$api.customer.resetpsw({ customerId: data.id }).then(res => {
-        if (res.code === 0) {
-          this.$message.success(res.msg)
-          this.password = true
-          this.randomPSW = res.data.password
-        } else {
-          this.$message.error(res.msg)
-        }
-      })
+      this.$confirm('确认重置密码？')
+        .then(_ => {
+          this.$api.customer.resetpsw({ customerId: data.id }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.password = true
+              this.randomPSW = res.data.password
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        })
+        .catch(_ => {})
     },
     copy () {
       const clipboard = new Clipboard('#copyBtn')

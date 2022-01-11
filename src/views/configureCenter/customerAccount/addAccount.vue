@@ -44,7 +44,7 @@
           <el-col :span="6" class="flex align-center">
             <div class="name">登录账号</div>
             <el-col :span="16">
-              <el-input v-model="form.username" placeholder="请输入" ></el-input>
+              <el-input v-model="form.username" :disabled='editId!==undefined' placeholder="请输入" ></el-input>
             </el-col>
           </el-col>
           <el-col :span="6" class="flex  align-center" v-if="editId===undefined">

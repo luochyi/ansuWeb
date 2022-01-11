@@ -264,6 +264,16 @@ export default [
     component: () => import('@/views/configureCenter/materialCate/materialCate.vue')
   },
   {
+    path: '/problem',
+    name: 'problem',
+    meta: {
+      title: '问题分类',
+      icon: 'materialCate',
+      hidden: false
+    },
+    component: () => import('@/views/configureCenter/problem/problem.vue')
+  },
+  {
     path: '/productItem',
     name: 'productItem',
     meta: {
