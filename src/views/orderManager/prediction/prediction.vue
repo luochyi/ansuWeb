@@ -36,7 +36,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="客户编码" prop="customerCode">
+                <el-form-item label="客户简称" prop="customerCode">
                   <el-input
                     v-model="searchForm.customerCode"
                     placeholder="请输入"
@@ -108,8 +108,8 @@
             </el-table-column>
              <!-- 客户名称 -->
             <el-table-column  prop='customer_name'  label='客户名称'  min-width='193'>  </el-table-column>
-            <!-- 客户编号 -->
-            <el-table-column  prop='customer_code'  label='客户编号'  min-width='118'>
+            <!-- 客户简称 -->
+            <el-table-column  prop='customer_code'  label='客户简称'  min-width='118'>
             </el-table-column>
             <!-- 收货司机 -->
             <el-table-column label='收货司机' min-width='107' prop='driver_name'>
@@ -286,7 +286,7 @@ export default {
       type: '', // 预报类型
       waybill_count: '', // 票数
       customer_name: '', // 客户名称
-      customer_code: '', // 客户编号
+      customer_code: '', // 客户简称
       receipt_type: '', // 收货类型
       driver_id: '', // 司机id
       driver_name: '', // 司机名称

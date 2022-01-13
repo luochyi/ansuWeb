@@ -39,7 +39,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="客户编码" prop="customerCode">
+                <el-form-item label="客户简称" prop="customerCode">
                   <el-input
                     v-model="searchForm.customerCode"
                     placeholder="请输入"
@@ -148,7 +148,7 @@ export default {
         { prop: 'type', label: '运单类型', width: '120', align: 'center', formatter: this.formatter },
         { prop: 'safe_amount', label: '保费', width: '120', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
-        { prop: 'customer_code', label: '客户编码', width: '200', align: 'center' },
+        { prop: 'customer_code', label: '客户简称', width: '200', align: 'center' },
         { prop: 'channel_name', label: '渠道名称', width: '200', align: 'center' },
         { prop: 'channel_cate', label: '渠道类型', width: '120', align: 'center' },
         { prop: 'country_name', label: '目的国', width: '120', align: 'center' },

@@ -17,7 +17,7 @@
                         <el-input placeholder="请输入" class="input" v-model="form.name" size="small"></el-input>
                     </el-col>
                     <el-col :span="6" class="item">
-                        <span class="item-box">客户编码&nbsp;&nbsp;</span>
+                        <span class="item-box">客户简称&nbsp;&nbsp;</span>
                         <el-input placeholder="请输入" class="input" v-model="form.customerNo" size="small"></el-input>
                     </el-col>
                     <el-col :span="6" class="item">
@@ -70,7 +70,7 @@
                         <el-input placeholder="请输入" class="input" v-model="form.name" size="small"></el-input>
                     </el-col>
                     <el-col :span="6" class="item">
-                        <span class="item-box">客户编码&nbsp;&nbsp;</span>
+                        <span class="item-box">客户简称&nbsp;&nbsp;</span>
                         <el-input placeholder="请输入" class="input" v-model="form.customerNo" size="small"></el-input>
                     </el-col>
                 </el-row>
@@ -199,7 +199,7 @@
                 <el-table-column type="selection" width="50" key="1"></el-table-column>
                 <el-table-column prop="orderType" label="订单类型" min-width="150" key="2"></el-table-column>
                 <el-table-column prop="name" label="客户名称" min-width="100" key="3"></el-table-column>
-                <el-table-column prop="customerNo" label="客户编号" min-width="80" key="4"></el-table-column>
+                <el-table-column prop="customerNo" label="客户简称" min-width="80" key="4"></el-table-column>
                 <el-table-column prop="driver" label="收货司机" min-width="150" key="5">
                     <template slot-scope="scope">
                         <div class="Flexcenter">
@@ -742,7 +742,7 @@ export default {
             id: '1-1'
           },
           {
-            label: '客户编码',
+            label: '客户简称',
             id: '1-2'
           }]
         },
@@ -789,7 +789,7 @@ export default {
           status: false
         },
         {
-          condition: '客户编码',
+          condition: '客户简称',
           listWidth: '20',
           status: false
         },
@@ -842,7 +842,7 @@ export default {
           status: false
         },
         {
-          condition: '客户编码',
+          condition: '客户简称',
           status: false
         },
         {
@@ -895,7 +895,7 @@ export default {
         // FORM === 1
         WayBillNo: '', // 运单号
         name: '', // 客户名称
-        customerNo: '', // 客户编码
+        customerNo: '', // 客户简称
         control: '', // 目的国
         destination: '', // 目的地
         orderType: '', // 订单类型

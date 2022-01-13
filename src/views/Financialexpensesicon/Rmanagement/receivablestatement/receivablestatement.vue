@@ -129,7 +129,7 @@ export default {
       activeName: '1',
       waybillNo: '', // 运单号
       customerName: '', // 客户名称
-      customerCode: '', // 客户编码
+      customerCode: '', // 客户简称
       predictionChannel: '', // 预报渠道
       destination: '', // 目的地
       zipcode: '', // 目的地邮编
@@ -142,7 +142,7 @@ export default {
       columns: [
         { prop: 'bill_no', label: '应收账单号', width: '155', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '193', align: 'center' },
-        { prop: 'customer_code', label: '客户编号', width: '218', align: 'center' },
+        { prop: 'customer_code', label: '客户简称', width: '218', align: 'center' },
         { prop: 'created_at', label: '账单日期', width: '282', align: 'center', formatter: this.formatter },
         { prop: 'wayill_count', label: '运单', width: '220', align: 'center', formatter: this.formatter },
         { prop: 'amount', label: '结算金额', align: 'center', formatter: this.formatter }

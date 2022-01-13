@@ -16,7 +16,7 @@
           </el-col>
          </el-col>
          <el-col :span='6' class='colbox'>
-           <span class='text'>客户编码</span>
+           <span class='text'>客户简称</span>
            <el-col :span='16'>
             <el-input v-model='agentName' placeholder='请输入'></el-input>
            </el-col>
@@ -37,7 +37,7 @@
             :header-cell-style="{background: '#F5F5F6'}">
              <el-table-column type="selection" width="55"></el-table-column>
              <el-table-column prop="name"  label="客户名称"  width="255"></el-table-column>
-             <el-table-column  prop="code" label="客户编码"  width="138"> </el-table-column>
+             <el-table-column  prop="code" label="客户简称"  width="138"> </el-table-column>
              <el-table-column  prop="contacts" label="客户联系人"  width="111"></el-table-column>
              <el-table-column  prop="number"  label="客户联系电话"  width="137"> </el-table-column>
              <el-table-column  prop="time"  label="上次下单时间"  width="159"></el-table-column>

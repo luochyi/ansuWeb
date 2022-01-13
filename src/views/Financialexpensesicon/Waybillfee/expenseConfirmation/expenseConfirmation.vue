@@ -26,7 +26,7 @@
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='7'>
-              <span class='text'>客户编码</span>
+              <span class='text'>客户简称</span>
             </el-col>
             <el-col :span='13'>
               <el-input v-model='search.customerCode' placeholder='请输入'></el-input>
@@ -86,7 +86,7 @@ export default {
       selection: false,
       waybillNo: '', // 运单号
       customerName: '', // 客户名称
-      customerCode: '', // 客户编号
+      customerCode: '', // 客户简称
       predictionChannel: '', // 预报渠道
       destination: '', // 目的地
       value: '',
@@ -95,7 +95,7 @@ export default {
       columns: [
         { prop: 'waybill_no', label: '安速单号', width: '200', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
-        { prop: 'customer_code', label: '客户编号', width: '200', align: 'center' },
+        { prop: 'customer_code', label: '客户简称', width: '200', align: 'center' },
         { prop: 'audit_status', label: '审核状态', width: '120', align: 'center', formatter: this.formatter },
         { prop: 'audit_user_name', label: '审核人', width: '106', align: 'center', formatter: this.formatter },
         { prop: 'type', label: '订单类型', width: '120', align: 'center', formatter: this.formatter },

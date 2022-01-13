@@ -24,7 +24,7 @@
               </el-form-item>
             </el-col>
             <el-col :span="6">
-              <el-form-item label="客户编码" prop="customerCode">
+              <el-form-item label="客户简称" prop="customerCode">
                 <el-input
                   v-model="searchForm.customerCode"
                   placeholder="请输入"
@@ -277,7 +277,7 @@ export default {
         },
         {
           prop: 'customer_code',
-          label: '客户编码',
+          label: '客户简称',
           width: '200',
           align: 'center'
         },

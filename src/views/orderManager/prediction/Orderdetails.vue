@@ -16,7 +16,7 @@
     </el-row>
          <el-descriptions title="客户信息">
          <el-descriptions-item label="客户名称">{{data.customer_name}}</el-descriptions-item>
-         <el-descriptions-item class='number' label="客户编号">{{data.customer_code}}</el-descriptions-item>
+         <el-descriptions-item class='number' label="客户简称">{{data.customer_code}}</el-descriptions-item>
          </el-descriptions>
     </div>
     <div class="en">

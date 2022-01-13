@@ -12,7 +12,7 @@
                     <el-input placeholder="请输入" class="input" v-model="form.name" size="small"></el-input>
                 </el-col>
                 <el-col :span="6" class="item">
-                    <span class="item-box">客户编码&nbsp;&nbsp;</span>
+                    <span class="item-box">客户简称&nbsp;&nbsp;</span>
                     <el-input placeholder="请输入" class="input" v-model="form.customerNo" size="small"></el-input>
                 </el-col>
                 <el-col :span="6" class="item">
@@ -60,7 +60,7 @@
                 <el-table-column prop="wayBillNo" label="运单号" min-width="150" key="2"></el-table-column>
                 <el-table-column prop="forecastNo" label="预报单号" min-width="100" key="3"></el-table-column>
                 <el-table-column prop="name" label="客户名称" min-width="100" key="4"></el-table-column>
-                <el-table-column prop="customerNo" label="客户编号" min-width="80" key="5"></el-table-column>
+                <el-table-column prop="customerNo" label="客户简称" min-width="80" key="5"></el-table-column>
                 <el-table-column prop="incoming" label="入库件数" min-width="80" key="6"></el-table-column>
                 <el-table-column prop="outgoing" label="出库件数" min-width="100" key="7"></el-table-column>
                 <el-table-column prop="goodsNum" label="收货件数" min-width="80" key="8"></el-table-column>
@@ -140,7 +140,7 @@ export default {
       form: {
         WayBillNo: '', // 运单号
         name: '', // 客户名称
-        customerNo: '', // 客户编码
+        customerNo: '', // 客户简称
         destination: '', // 目的地
         forecastChannel: '', // 预报渠道
         outletChannel: '', // 出仓渠道

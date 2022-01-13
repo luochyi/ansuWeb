@@ -17,7 +17,7 @@
         <span class="text">运单信息</span>
       </el-row>
       <el-descriptions :column="4">
-        <el-descriptions-item label="客户编码">SMJJ</el-descriptions-item>
+        <el-descriptions-item label="客户简称">SMJJ</el-descriptions-item>
         <el-descriptions-item label="客户名称">沙马</el-descriptions-item>
         <el-descriptions-item label="目的国">美国</el-descriptions-item>
         <el-descriptions-item label="目的国邮编">1111</el-descriptions-item>

@@ -34,7 +34,7 @@
                 </el-form-item>
               </el-col>
               <el-col :span="6">
-                <el-form-item label="客户编号" prop="customerCode">
+                <el-form-item label="客户简称" prop="customerCode">
                   <el-input
                     v-model="searchForm.customerCode"
                     placeholder="请输入"
@@ -169,7 +169,7 @@ export default {
       columns: [
         { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '200', align: 'center' },
-        { prop: 'customer_code', label: '客户编码', width: '200', align: 'center' },
+        { prop: 'customer_code', label: '客户简称', width: '200', align: 'center' },
         { prop: 'waybill_type', label: '运单类型', align: 'center', width: '200', formatter: this.formatter },
         { prop: 'created_at', width: '200', label: '下单时间', align: 'center', formatter: this.formatter },
         { prop: 'channel_name', label: '渠道名称', width: '200', align: 'center' },

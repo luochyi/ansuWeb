@@ -6,7 +6,7 @@
       </el-row>
       <div style="color:#FB4E0C;font-size:22px">{{detailData.waybill_no}}</div>
       <el-descriptions :column="4">
-        <el-descriptions-item label="客户编码">{{detailData.customer_code}}</el-descriptions-item>
+        <el-descriptions-item label="客户简称">{{detailData.customer_code}}</el-descriptions-item>
         <el-descriptions-item label="客户名称">{{detailData.customer_name}}</el-descriptions-item>
         <el-descriptions-item label="目的国">{{detailData.country_name}}</el-descriptions-item>
         <el-descriptions-item label="目的国邮编">{{detailData.zipcode}}</el-descriptions-item>

@@ -168,7 +168,7 @@ export default {
       name: '', // 客户名称
       input: '',
       selection: false,
-      code: '', // 客户编码
+      code: '', // 客户简称
       customerCode: '',
       username: '',
       userId: null,

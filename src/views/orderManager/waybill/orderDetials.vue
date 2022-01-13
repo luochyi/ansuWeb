@@ -38,7 +38,7 @@
                             <span class="item2">{{waybillInfo.customer_name}}</span>
                         </el-col>
                         <el-col :span="8">
-                            <span class="item1">客户编号：</span>
+                            <span class="item1">客户简称：</span>
                             <span class="item2">{{waybillInfo.customer_code}}</span>
                         </el-col>
                     </el-row>

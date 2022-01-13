@@ -18,7 +18,7 @@
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>客户编码</span>
+              <span class='text'>客户简称</span>
             </el-col>
             <el-col :span='13'>
               <el-input v-model='customerCode' placeholder='请输入'></el-input>
@@ -129,7 +129,7 @@ export default {
 
       activeName: '1',
       customerName: '', // 客户名称
-      customerCode: '', // 客户编号
+      customerCode: '', // 客户简称
       waybillNo: '', // 运单号
       channel: '', // 渠道
       value: '',
@@ -140,7 +140,7 @@ export default {
         { prop: 'Grossprofit', label: '单票毛利', width: '129', align: 'center' },
         { prop: 'deductionstatus', label: '扣毛利状态', width: '110', align: 'center' },
         { prop: 'customer', label: '客户', width: '198', align: 'center' },
-        { prop: 'Customercode', label: '客户编码', width: '118', align: 'center' },
+        { prop: 'Customercode', label: '客户简称', width: '118', align: 'center' },
         { prop: 'destination', label: '目的地', width: '81', align: 'center' },
         { prop: 'channel', label: '渠道', width: '148', align: 'center' },
         { prop: 'number', label: '件数', width: '81', align: 'center' },

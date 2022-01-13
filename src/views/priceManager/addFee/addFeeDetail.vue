@@ -18,7 +18,7 @@
         {{ detailData.waybill_no }}
       </div>
       <el-descriptions :column="4">
-        <el-descriptions-item label="客户编码">{{
+        <el-descriptions-item label="客户简称">{{
           detailData.customer_code
         }}</el-descriptions-item>
         <el-descriptions-item label="客户名称">{{

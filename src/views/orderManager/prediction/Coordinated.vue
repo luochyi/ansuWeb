@@ -13,7 +13,7 @@
     </el-row>
          <el-descriptions title="客户信息">
          <el-descriptions-item label="客户名称">深圳大成贸易科技有限公司</el-descriptions-item>
-         <el-descriptions-item class='tele' label="客户编号">DCMY大成贸易</el-descriptions-item>
+         <el-descriptions-item class='tele' label="客户简称">DCMY大成贸易</el-descriptions-item>
          </el-descriptions>
     </div>
     <div class="en">

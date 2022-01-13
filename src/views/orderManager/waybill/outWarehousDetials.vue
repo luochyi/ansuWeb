@@ -29,7 +29,7 @@
                             <span class="item2">{{name}}</span>
                         </el-col>
                         <el-col :span="8">
-                            <span class="item1">客户编号：</span>
+                            <span class="item1">客户简称：</span>
                             <span class="item2">{{customerCode}}</span>
                         </el-col>
                     </el-row>
@@ -588,7 +588,7 @@ export default {
       wayBill: 'AS202012120001', // 运单号
       customerInfo: '深圳大成亚马逊贸易科技有限公司', // 客户信息
       name: '深圳大成亚马逊贸易科技有限公司', // 客户名称
-      customerCode: 'DCYMX', // 客户编码
+      customerCode: 'DCYMX', // 客户简称
       forecastNo: 'YB202012120001' // 预报单号
     }
   },

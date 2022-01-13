@@ -26,7 +26,7 @@
           </el-col>
           <el-col :span='6' class='colbox'>
             <el-col :span='6'>
-              <span class='text'>客户编码</span>
+              <span class='text'>客户简称</span>
             </el-col>
             <el-col :span='13'>
               <el-input placeholder='请输入' v-model="search.customerCode"></el-input>
@@ -72,7 +72,7 @@ export default {
       columns: [
         { prop: 'waybill_no', label: '运单号', width: '212', align: 'center' },
         { prop: 'customer_name', label: '客户名称', width: '182', align: 'center' },
-        { prop: 'customer_code', label: '客户编码', width: '135', align: 'center' },
+        { prop: 'customer_code', label: '客户简称', width: '135', align: 'center' },
         { prop: 'channel_name', label: '渠道', width: '142', align: 'center' },
         { prop: 'cargoes_num', label: '件数', width: '95', align: 'center' },
         { prop: 'customer_bill_weight', label: '客户结算重', width: '129', align: 'center' },

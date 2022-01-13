@@ -69,7 +69,7 @@
     <el-descriptions-item label="客户名称">深圳沙马家具贸易有限公司</el-descriptions-item>
       </el-descriptions>
      <el-descriptions class="margin-top" column="4" :size="size">
-<el-descriptions-item label="客户编码">沙马家具SMJJFBAONTB</el-descriptions-item>
+<el-descriptions-item label="客户简称">沙马家具SMJJFBAONTB</el-descriptions-item>
     <el-descriptions-item label="订单类型">FBA订单</el-descriptions-item>
     <el-descriptions-item label="目的仓">ONTB</el-descriptions-item>
   </el-descriptions>
