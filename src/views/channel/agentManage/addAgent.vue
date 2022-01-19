@@ -219,11 +219,6 @@ export default {
           required: true,
           message: '请选择代理账期',
           trigger: 'change'
-        }],
-        remark: [{
-          required: true,
-          message: '请输入代理备注',
-          trigger: 'blur'
         }]
       },
       // 公司地址
@@ -422,28 +417,24 @@ export default {
       this.$refs.elForm.validate(valid => {
         if (!valid) return
         // TODO 提交表单
-        if (this.contactsData.length < 1) {
-          this.$message.error('至少有一个联系人')
-        } else {
-          let params = {
-            name: this.formData.agentName,
-            code: this.formData.agentCode,
-            countyId: this.formData.companyAddres[2],
-            address: this.formData.address,
-            periodId: this.formData.agentAccount,
-            remark: this.formData.remark,
-            contacts: this.contactsData
-            // agentAddresses: this.wareData
-          }
-          this.$api.agent.agentAdd(params).then(res => {
-            if (res.code === 0) {
-              this.$message.success(res.msg)
-              this.$router.push({ name: 'agentManage' })
-            } else {
-              this.$message.success(res.msg)
-            }
-          })
+        let params = {
+          name: this.formData.agentName,
+          code: this.formData.agentCode,
+          countyId: this.formData.companyAddres[2],
+          address: this.formData.address,
+          periodId: this.formData.agentAccount,
+          remark: this.formData.remark,
+          contacts: this.contactsData
+          // agentAddresses: this.wareData
         }
+        this.$api.agent.agentAdd(params).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.$router.push({ name: 'agentManage' })
+          } else {
+            this.$message.success(res.msg)
+          }
+        })
       })
     },
     back () {
