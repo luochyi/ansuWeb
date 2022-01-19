@@ -610,7 +610,7 @@ export default {
       selection: false,
       zoneType: null, // 派件类型 1快递 2卡派
       saveData: [],
-      control: 1,
+      control: 2,
       firstPrices: [], // 首续重
       amounts: [], // 金额
       unitPrices: [], // 单价
@@ -839,7 +839,7 @@ export default {
     },
     // 分区价格
     fqjg (data) {
-      console.log(data)
+      // console.log(data)
       this.tempData = {
         changePrice: false,
         zone: { zoneIndex: -1, name: '', areas: [] },
@@ -1166,20 +1166,20 @@ export default {
       this.chooseAgent = val
       if (this.activeName === '1') {
         this.dialogTitle = '停用服务'
-        console.log(this.chooseAgent)
+        // console.log(this.chooseAgent)
       } else if (this.activeName === '0') {
         this.dialogTitle = '启用服务'
       }
     },
     // 区域类型切换
     scopeTypechange (data) {
-      console.log(data)
+      // console.log(data)
       if (data === 1) {
         this.scopeType = false
-        console.log(this.scopeType)
+        // console.log(this.scopeType)
       } else if (data === 2) {
         this.scopeType = true
-        console.log(this.scopeType)
+        // console.log(this.scopeType)
       }
     },
     // 添加分区（子集菜单）
@@ -1215,7 +1215,7 @@ export default {
         this.saveData.push(obj)
         this.zoneData = []
         this.zonename = ''
-        console.log(this.saveData)
+        // console.log(this.saveData)
       })
       if (this.tempData.zone.zoneIndex !== -1) {
         this.formData.zones[this.tempData.zone.zoneIndex] = this.tempData.zone
@@ -1392,17 +1392,6 @@ export default {
       ]
       this.addTable = false
     },
-    // 重量提交
-    addWSubmit (data) {
-      console.log(data)
-      let obj = {
-        minWeight: data.minWeight,
-        maxWeight: data.maxWeight,
-        priceType: data.priceType
-      }
-      this.weights.push(obj)
-      this.cancl()
-    },
     // 取消新增重量
     cancl () {
       this.addweights = [ // 新增重量段
@@ -1466,7 +1455,7 @@ export default {
     },
     // 改变页面大小处理
     handleSizeChange (val) {
-      console.log(val)
+      this.getData()
     },
     // 翻页处理
     handleCurrentChange (val) {
@@ -1494,7 +1483,7 @@ export default {
     },
     // 查看
     check (val) {
-      console.log(val.data)
+      // console.log(val.data)
     },
     indexMethod (index) {
       return index * 2
@@ -1529,11 +1518,11 @@ export default {
         }
       })
       let string = arr.toString()
-      console.log(string)
+      // console.log(string)
       return string
     },
     countryformatter (row, col) {
-      console.log(row.countryId)
+      // console.log(row.countryId)
       for (let i = 0; i < this.countryOptions.length; i++) {
         if (this.countryOptions[i].id === row.countryId) {
           return this.countryOptions[i].name
@@ -1566,6 +1555,7 @@ export default {
     },
     weightSubmit (index) {
       let weight = this.tempData.weights[index]
+      console.log(weight)
       if (weight.minWeight === '' || weight.maxWeight === '') {
         this.$message.error('重量不能为空')
         return
@@ -1589,6 +1579,7 @@ export default {
         item.minWeight = Number(item.minWeight)
         item.maxWeight = Number(item.maxWeight)
         if (weight.maxWeight <= item.minWeight) {
+          // new max < item min
           this.formData.weights.splice(weightsKey, 0, {
             minWeight: weight.minWeight,
             maxWeight: weight.maxWeight,
@@ -1597,6 +1588,8 @@ export default {
           break
         }
         if (weight.minWeight >= item.minWeight && weight.minWeight < item.maxWeight) {
+          // new min > item min          new min < item max
+
           if (weight.minWeight > item.minWeight) {
             if (weight.maxWeight < item.maxWeight) {
               this.formData.weights.splice(weightsKey + 1, 0, {
@@ -1674,9 +1667,19 @@ export default {
             }
           }
           break
+        } else {
+          if (weight.maxWeight >= item.maxWeight) {
+            this.formData.weights.splice(weightsKey, 1, {
+              minWeight: item.minWeight,
+              maxWeight: weight.maxWeight,
+              priceType: weight.priceType
+            })
+          }
+          break
         }
       }
       if (this.formData.weights.length === 0) {
+        // 如果无已添加重量段
         this.formData.weights.push({
           minWeight: weight.minWeight,
           maxWeight: weight.maxWeight,
