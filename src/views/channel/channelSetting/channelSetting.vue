@@ -611,7 +611,7 @@ export default {
       selection: false,
       zoneType: null, // 派件类型 1快递 2卡派
       saveData: [],
-      control: 2,
+      control: 1,
       firstPrices: [], // 首续重
       amounts: [], // 金额
       unitPrices: [], // 单价
