@@ -607,10 +607,11 @@ export default {
         code: '',
         name: ''
       },
+      thatindex: null,
       selection: false,
       zoneType: null, // 派件类型 1快递 2卡派
       saveData: [],
-      control: 1,
+      control: 2,
       firstPrices: [], // 首续重
       amounts: [], // 金额
       unitPrices: [], // 单价
@@ -1668,14 +1669,22 @@ export default {
           }
           break
         } else {
-          if (weight.maxWeight >= item.maxWeight) {
-            this.formData.weights.splice(weightsKey, 1, {
-              minWeight: item.minWeight,
+          for (let i = 0; i < this.formData.weights.length; i++) {
+            if (this.formData.weights[i].minWeight === weight.minWeight) {
+              this.thatindex = i
+            } else {
+              this.thatindex = null
+            }
+          }
+          if (this.thatindex === null) {
+            this.formData.weights.push({
+              minWeight: weight.minWeight,
               maxWeight: weight.maxWeight,
               priceType: weight.priceType
             })
+          } else {
+            this.formData.weights[this.thatindex].maxWeight = weight.maxWeight
           }
-          break
         }
       }
       if (this.formData.weights.length === 0) {
