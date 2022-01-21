@@ -125,7 +125,7 @@
             </el-table-column>
             <el-table-column  label='发货状态'  min-width='118'>
               <template slot-scope="scope">
-                  {{ scope.row.box_count===scope.row.use_box_count?'已发货': scope.row.use_box_count===0?'未发货':'部分发货'}}
+                  {{ scope.row.box_count===scope.row.use_box_count?'全部发货': scope.row.use_box_count===0?'未发货':'部分发货'}}
               </template>
             </el-table-column>
             <!-- 收货司机 -->
@@ -332,7 +332,7 @@ export default {
           label: '部分发货', value: 2
         },
         {
-          label: '已发货', value: 3
+          label: '全部发货', value: 3
         }
       ],
       searchForm: {
