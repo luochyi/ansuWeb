@@ -7,9 +7,9 @@
         <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
           <el-tab-pane label='已下单' name='1'></el-tab-pane>
           <el-tab-pane label='已收货' name='2'></el-tab-pane>
+          <el-tab-pane label='已入库' name='3'></el-tab-pane>
           <el-tab-pane label='已取消' name='99'></el-tab-pane>
           <el-tab-pane label='全部' name='0'></el-tab-pane>
-          <!-- <el-tab-pane label='已入库' name='3'></el-tab-pane> -->
         </el-tabs>
       </el-row>
       <!-- 主要内容 -->
@@ -68,6 +68,18 @@
                   </el-input>
                 </el-form-item>
               </el-col>
+              <el-col :span="6">
+                <el-form-item label="发货状态" prop="deliveryStatus">
+                  <el-select
+                    v-model="searchForm.deliveryStatus"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                    <el-option v-for="item in deliveryOpt" :key='item.value' :label="item.label" :value="item.value"/>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-form>
             </el-col>
            <el-col :span="4">
@@ -110,6 +122,11 @@
             <el-table-column  prop='customer_name'  label='客户名称'  min-width='193'>  </el-table-column>
             <!-- 客户简称 -->
             <el-table-column  prop='customer_code'  label='客户简称'  min-width='118'>
+            </el-table-column>
+            <el-table-column  label='发货状态'  min-width='118'>
+              <template slot-scope="scope">
+                  {{ scope.row.box_count===scope.row.use_box_count?'已发货': scope.row.use_box_count===0?'未发货':'部分发货'}}
+              </template>
             </el-table-column>
             <!-- 收货司机 -->
             <el-table-column label='收货司机' min-width='107' prop='driver_name'>
@@ -307,11 +324,23 @@ export default {
       tableData: [
 
       ],
+      deliveryOpt: [
+        {
+          label: '未发货', value: 1
+        },
+        {
+          label: '部分发货', value: 2
+        },
+        {
+          label: '已发货', value: 3
+        }
+      ],
       searchForm: {
         forecastNo: '',
         customerCode: '',
         customerName: '',
-        salesmanName: ''
+        salesmanName: '',
+        deliveryStatus: ''
       }
     }
   },
@@ -330,7 +359,8 @@ export default {
         forecastNo: this.searchForm.forecastNo,
         customerCode: this.searchForm.customerCode,
         customerName: this.searchForm.customerName,
-        salesmanName: this.searchForm.salesmanName
+        salesmanName: this.searchForm.salesmanName,
+        deliveryStatus: this.searchForm.deliveryStatus
       }
       this.$api.Ordermanagement.forecastLists(params).then(res => {
         console.log(res.data) // res是接口返回的结果
