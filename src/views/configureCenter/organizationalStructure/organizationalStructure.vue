@@ -88,7 +88,7 @@
                 <el-checkbox v-model="formData.hasManage">web管理端</el-checkbox>
               </div>
               <div v-show="formData.hasManage">
-                <el-tree ref="menuTree" :data="menus" node-key="id" :props="{label: 'name'}" show-checkbox></el-tree>
+                <el-tree ref="menuTree" :data="menus" node-key="id" :props="{label: 'title'}" show-checkbox></el-tree>
               </div>
             </el-tab-pane>
             <el-tab-pane label="司机端" name="second">
