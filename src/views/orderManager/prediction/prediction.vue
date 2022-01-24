@@ -340,7 +340,7 @@ export default {
         customerCode: '',
         customerName: '',
         salesmanName: '',
-        deliveryStatus: ''
+        deliveryStatus: null
       }
     }
   },
