@@ -394,6 +394,7 @@ export default {
       }).then(res => {
         if (res.code === 0) {
           this.$message.success(res.msg)
+          this.getData()
         } else {
           this.$message.error(res.msg)
         }

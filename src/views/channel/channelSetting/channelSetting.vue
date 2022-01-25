@@ -574,14 +574,30 @@
           <el-input v-model="drawerData.additive.channelName" :disabled='true'
                     :style="{width: '100%'}"></el-input>
         </el-form-item>
-        <el-form-item label="品类" prop="materialCateId">
-          <el-select v-model="dialog.additive.formData.materialCateId" placeholder="请选择下拉选择下拉选择" filterable clearable :style="{width: '100%'}"
-            :disabled="dialog.additive.formData.additiveId"
-          >
-            <el-option v-for="(item, index) in options.material" :key="index" :label="item.name"
-                       :value="item.id"></el-option>
-          </el-select>
-        </el-form-item>
+        <el-form-item label="费用类型" prop="priceType">
+           <el-select v-model="dialog.additive.formData.priceType" placeholder="请选择下拉选择费用类型" filterable clearable :style="{width: '100%'}"
+                      :disabled="dialog.additive.formData.additiveId"
+           >
+             <el-option v-for="(item, index) in options.priceType" :key="index" :label="item.label"
+                        :value="item.value"></el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="费用" prop="itemId" v-if="dialog.additive.formData.priceType === 1">
+           <el-select v-model="dialog.additive.formData.itemId" placeholder="请选择下拉选择费用" filterable clearable :style="{width: '100%'}"
+                      :disabled="dialog.additive.formData.additiveId"
+           >
+             <el-option v-for="(item, index) in options.item" :key="index" :label="item.name"
+                        :value="item.id"></el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="费用" prop="materialId" v-else-if="dialog.additive.formData.priceType === 2">
+           <el-select v-model="dialog.additive.formData.materialId" placeholder="请选择下拉选择费用" filterable clearable :style="{width: '100%'}"
+                      :disabled="dialog.additive.formData.additiveId"
+           >
+             <el-option v-for="(item, index) in options.material" :key="index" :label="item.name"
+                        :value="item.id"></el-option>
+           </el-select>
+         </el-form-item>
         <el-form-item label="单价" prop="price">
           <el-input v-model="dialog.additive.formData.price" placeholder="请输入单价" clearable type="Number" min="0"
                     :style="{width: '100%'}">
@@ -606,6 +622,31 @@ export default {
       searchForm: {
         code: '',
         name: ''
+      },
+      options: {
+        status: [
+          { value: 0, label: '全部' },
+          { value: 1, label: '正常' },
+          { value: 2, label: '停用' }
+        ],
+        cate: [
+          { value: 1, label: '海运' },
+          { value: 2, label: '空运' },
+          { value: 3, label: '快递' },
+          { value: 4, label: '铁路' },
+          { value: 5, label: '专车' }
+        ],
+        type: [
+          { value: 1, label: '快递' },
+          { value: 2, label: '卡派' }
+        ],
+        priceType: [
+          { value: 1, label: '品名' },
+          { value: 2, label: '材质' }
+        ],
+        priceOptions: [],
+        material: [],
+        item: []
       },
       thatindex: null,
       selection: false,
@@ -788,6 +829,7 @@ export default {
           formData: {
             additiveId: null,
             materialCateId: null,
+            priceType: null,
             price: 0
           },
           rules: {
@@ -800,9 +842,6 @@ export default {
             ]
           }
         }
-      },
-      options: {
-        material: []
       }
     }
   },
@@ -814,6 +853,7 @@ export default {
     this.selectFba()
     // 品类
     this.getMaterial()
+    this.getItem()
   },
   methods: {
     getData () {
@@ -880,6 +920,11 @@ export default {
         this.options.material = res.data
       })
     },
+    getItem () {
+      this.$api.setting.product.item.select().then(res => {
+        this.options.item = res.data
+      })
+    },
     showAdditiveAdd () {
       this.dialog.additive.title = '添加附加费'
       this.dialog.additive.formData = {
@@ -890,10 +935,13 @@ export default {
       this.dialog.additive.visabled = true
     },
     showAdditiveEdit (row) {
+      console.log(row)
       this.dialog.additive.title = '编辑附加费'
       this.dialog.additive.formData = {
         additiveId: row.id,
-        materialCateId: row.material_cate_id,
+        priceType: row.price_type,
+        itemId: row.price_id,
+        materialId: row.price_id,
         price: row.price
       }
       this.dialog.additive.visabled = true
@@ -914,16 +962,26 @@ export default {
                 channelId: this.drawerData.additive.channelId
               }).then(res => {
                 this.drawerData.additive.data = res.data
+                this.dialog.additive.visabled = false
               })
-              this.dialog.additive.visabled = false
             } else {
               this.$message.error(res.msg)
             }
           })
         } else {
+          let priceId = 0
+          switch (this.dialog.additive.formData.priceType) {
+            case 1:
+              priceId = this.dialog.additive.formData.itemId
+              break
+            case 2:
+              priceId = this.dialog.additive.formData.materialId
+              break
+          }
           this.$api.agent.channelAdditiveAdd({
             channelId: this.drawerData.additive.channelId,
-            materialCateId: this.dialog.additive.formData.materialCateId,
+            priceType: this.dialog.additive.formData.priceType,
+            priceId: priceId,
             price: this.dialog.additive.formData.price
           }).then(res => {
             if (res.code === 0) {

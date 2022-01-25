@@ -6,7 +6,7 @@
     </el-row>
    <div class="content">
       <el-row class="box-block flex">
-      <el-col style="min-width:240px;width:240px;border-right: 1px solid #D9D9D9;border-top:none;padding-bottom:20px;background:#ffffff">
+      <el-col :span="6">
         <div class="box">
           <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
             <el-col :span="5" style="margin-top:-2px">
@@ -47,9 +47,8 @@
           </el-row>
         </div>
       </el-col>
-      <el-col>
       <!-- 主要内容 -->
-      <div class="content1">
+      <el-col span="18">
         <!-- 搜索栏 -->
         <el-row class="searchbox1">
           <!-- 代理名称 -->
@@ -79,18 +78,15 @@
           </el-col>
         </el-row>
         <!-- 表格 -->
-        <div class="form1">
           <el-row
-            class="searchbox1"
-            type="flex"
-            justify="space-between"
-            align="middle"
           >
-            <el-col :span="24" class="right">
+            <el-col class='right' style='padding-right:50px;padding-bottom:20px'>
               <el-button class="whiteBtn" @click="showChannelAdd">新增渠道</el-button>
             </el-col>
+
           </el-row>
-          <commonTable
+          <div style='width:95%'>
+            <commonTable
             :selection="false"
             :columns="columns"
             :data="tableData"
@@ -112,7 +108,7 @@
               align="left"
               fixed="right"
               label="操作"
-              width="350"
+              width="250"
               :resizable="false"
             >
               <template slot-scope="scope">
@@ -124,14 +120,14 @@
                 <span @click="showAdditive(scope.row)" class="blue"> | 附加费</span>
                 <!-- <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span> -->
                 <span  v-if="scope.row.status === 1" @click="stopAgent(scope.row)" class="blue"> | 停用</span>
-                <span v-else-if="scope.row.has_price === 1" @click="stopAgent(scope.row)" class="blue"> | 启用</span>
+                <span v-else-if="scope.row.status === 2" @click="stopAgent(scope.row)" class="blue"> | 启用</span>
                 <span @click="showChannelEdit(scope.row)" class="blue"> | 编辑</span>
               </template>
             </el-table-column>
           </commonTable>
-        </div>
-      </div>
-      </el-col>
+          </div>
+        </el-col>
+
     </el-row>
      <el-dialog
       :visible.sync="dialogStop"
@@ -1293,13 +1289,15 @@ export default {
     },
     // 停用
     stopAgent (val) {
+      console.log(val)
       this.dialogStop = true
       this.chooseAgent = val
-      if (this.activeName === '1') {
+      if (val.status === 1) {
         this.dialogTitle = '停用渠道'
-        console.log(this.chooseAgent)
-      } else if (this.activeName === '2') {
+        this.activeName = '1'
+      } else if (val.status === 2) {
         this.dialogTitle = '启用渠道'
+        this.activeName = '2'
       }
     },
     // 区域类型切换
@@ -1357,6 +1355,7 @@ export default {
     },
     // 停用启用
     stopOK () {
+      console.log(this.chooseArr)
       let obj = []
       if (this.chooseArr.length !== 0) {
         this.chooseArr && this.chooseArr.forEach(e => {
@@ -1365,6 +1364,7 @@ export default {
       } else {
         obj.push(this.chooseAgent.id)
       }
+      console.log(this.activeName)
       if (this.activeName === '1') {
         this.$api.agent.serviceDisabled({ agentServiceIds: obj }).then(res => {
           if (res.code === 0) {
@@ -1373,6 +1373,7 @@ export default {
             this.dialogStop = false
           } else {
             this.$message.error(res.msg)
+            this.dialogStop = false
           }
         })
       } else if (this.activeName === '2') {
@@ -1383,6 +1384,7 @@ export default {
             this.dialogStop = false
           } else {
             this.$message.error(res.msg)
+            this.dialogStop = false
           }
         })
       }
@@ -1949,10 +1951,5 @@ export default {
 .plantime{
   margin: 10px 0 10px 0;
 }
-.form1{
-  width: calc(100% - 20px);
-}
-.content1{
-  padding:20px 30px;
-}
+
 </style>

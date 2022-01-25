@@ -141,8 +141,8 @@
                 >
                 <template slot-scope="scope">
                 <!-- <el-button type="text" @click="detail(scope.row.id)"> 查看详情</el-button> -->
-                <el-button type="text" @click="affirm([scope.row.id])"> 确认</el-button>
-                <el-button type="text" @click="cancel([scope.row.id])"> 取消确认</el-button>
+                <el-button type="text" @click="affirm([scope.row.id])" v-if="scope.row.is_confirm===0"> 确认</el-button>
+                <el-button type="text" @click="cancel([scope.row.id])" v-else-if="scope.row.is_confirm===1"> 取消确认</el-button>
                 </template>
             </el-table-column>
         </commonTable>

@@ -17,7 +17,7 @@
           text-color='rgba(0,0,0,0.65)'
           unique-opened
         >
-          <template v-for='item in asyncRouters[indexs].children'>
+          <template v-for='item in newCol'>
             <AsideComponent
               :key='item.name'
               :routerInfo='item'
@@ -39,11 +39,19 @@ export default {
       active: '',
       isCollapse: false,
       // arr: [],
-      indexs: undefined
+      indexs: undefined,
+      col: undefined
     }
   },
   props: {
     num: Number
+  },
+  computed: {
+    newCol: function () {
+      return this.sortByKey(this.col, 'sort')
+      // this.col是原数组
+    },
+    ...mapGetters('router', ['asyncRouters'])
   },
   watch: {
     $route (to) {
@@ -53,12 +61,13 @@ export default {
     num (val) {
       this.arr = []
       // console.log(val)
-      // console.log(this.asyncRouters)
       this.asyncRouters && this.asyncRouters.forEach((element, index) => {
         if (element.sort === val) {
           this.indexs = index
+          this.col = this.asyncRouters[index].children
         }
       })
+      console.log(this.col)
     }
   },
   mounted () {
@@ -67,14 +76,18 @@ export default {
     this.active = arr[1]
   },
   methods: {
+    sortByKey (array, key) {
+      return array.sort(function (a, b) {
+        var x = a[key]
+        var y = b[key]
+        return x < y ? -1 : x > y ? 1 : 0
+      })
+    },
     // ...mapMutations('router', ['addHistory']),
     select (key, keypath) {
       // console.log(key)
       // console.log(keypath)
     }
-  },
-  computed: {
-    ...mapGetters('router', ['asyncRouters'])
   },
   components: {
     AsideComponent
