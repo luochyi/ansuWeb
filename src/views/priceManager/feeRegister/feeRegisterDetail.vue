@@ -114,6 +114,7 @@
       </el-row>
       <el-row style="line-height: 50px; font-size: 14px">
         <el-button class="orangeBtn" @click="addFee"> 添加费用 </el-button>
+        <el-button class="orangeBtn" @click="gen"> 生成费用确认单 </el-button>
         <el-table
           :data="amount_costs"
           border
@@ -386,6 +387,17 @@ export default {
       this.formData.billTarget = row.bill_target
       // formula
       // billTarget
+    },
+    gen () {
+      this.$api.cost.price.amount.gen({
+        waybillId: this.waybillId
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
     },
     del (row) {
       this.$api.cost.price.enrolment.del({ waybillId: this.waybillId, costId: row.id }).then(res => {

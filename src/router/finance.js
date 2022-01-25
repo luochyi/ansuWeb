@@ -8,7 +8,7 @@ export default [
       icon: 'Financialexpensesicon',
       hidden: false
     },
-    redirect: '/Waybillfee'
+    redirect: '/feeConfirm'
   },
   // 代理管理
   {
