@@ -309,7 +309,7 @@ export default {
     },
     gen (ids) {
       this.$api.finance.fare.bill.customer.gen({ confirmIds: ids }).then(res => {
-        if (res.code === 200) {
+        if (res.code === 0) {
           this.$message.success(res.msg)
         } else {
           this.$message.error(res.msg)
