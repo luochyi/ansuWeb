@@ -116,6 +116,7 @@
             <el-col :span='12' class='left'>
               <el-button class='batch' @click="affirm(ids)" :disabled='ids.length===0'>批量确认</el-button>
               <el-button class='batch' @click="cancel(ids)" :disabled='ids.length===0'>批量取消确认</el-button>
+              <el-button class='batch' @click="gen(ids)" :disabled='ids.length===0'>生成费用账单</el-button>
             </el-col>
             <el-col :span='20' class='right'>
               <!-- <el-button class='whiteBtn '></el-button> -->
@@ -303,6 +304,15 @@ export default {
           this.getData()
         } else {
           this.$message.console.error(res.msg)
+        }
+      })
+    },
+    gen (ids) {
+      this.$api.finance.fare.bill.customer.gen({ confirmIds: ids }).then(res => {
+        if (res.code === 200) {
+          this.$message.success(res.msg)
+        } else {
+          this.$message.error(res.msg)
         }
       })
     },
