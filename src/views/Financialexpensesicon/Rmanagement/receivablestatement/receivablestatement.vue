@@ -6,8 +6,8 @@
         <span class='text'>应收账单</span>
         <el-tabs v-model='activeName' type='card' @tab-click='handleClick'>
           <el-tab-pane label='未核销' name='1'></el-tab-pane>
-          <el-tab-pane label='已核销' name='2'></el-tab-pane>
-          <el-tab-pane label='部分核销' name='3'></el-tab-pane>
+          <el-tab-pane label='部分核销' name='2'></el-tab-pane>
+          <el-tab-pane label='已核销' name='3'></el-tab-pane>
           <el-tab-pane label='全部' name='0'></el-tab-pane>
         </el-tabs>
       </el-row>

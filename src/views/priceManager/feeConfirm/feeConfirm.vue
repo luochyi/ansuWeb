@@ -114,8 +114,8 @@
         <div class='table'>
           <el-row class='tableBtn'>
             <el-col :span='12' class='left'>
-              <el-button class='batch' @click="affirm(ids)" :disabled='ids.length===0'>批量确认</el-button>
-              <el-button class='batch' @click="cancel(ids)" :disabled='ids.length===0'>批量取消确认</el-button>
+              <el-button class='batch' @click="affirm(ids)" :disabled='ids.length===0' v-show="activeName==='1'">批量确认</el-button>
+              <el-button class='batch' @click="cancel(ids)" :disabled='ids.length===0' v-show="activeName==='2'">批量取消确认</el-button>
               <el-button class='batch' @click="gen(ids)" :disabled='ids.length===0'>生成费用账单</el-button>
             </el-col>
             <el-col :span='20' class='right'>
@@ -245,7 +245,6 @@ export default {
         writeOffStatus: this.searchForm.writeOffStatus
       }
       this.$api.cost.price.confirm.lists(params).then(res => {
-        console.log(res.data) // res是接口返回的结果
         this.tableData = res.data.list
         this.page.total = res.data.total
       })

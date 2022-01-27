@@ -78,7 +78,7 @@ border-radius: 2px;
     .el-menu {
       border-right-width: 0px;
       .el-submenu__title {
-        padding-left: 20px; 
+        // padding-left: 20px; 
         text-align: left;
       }
       .el-menu-item {
@@ -133,4 +133,10 @@ border-radius: 2px;
   /deep/  .el-main {
     width: 100px;
   }
+}
+/deep/.el-container .el-aside .el-menu .el-submenu__title{
+  margin-left: -25px;
+}
+/deep/.el-menu .el-menu--inline{
+  margin-left: -20px;
 }

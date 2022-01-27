@@ -44,3 +44,10 @@ export const history = params => {
     data: params
   })
 }
+export const costs = params => {
+  return axios({
+    url: '/finance/fare/write_off/customer/costs',
+    method: 'post',
+    data: params
+  })
+}

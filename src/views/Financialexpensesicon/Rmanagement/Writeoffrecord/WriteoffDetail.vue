@@ -28,11 +28,9 @@ export default {
     return {
       columns: [
         { prop: 'waybill_no', label: '运单号', width: '200', align: 'center' },
-        { prop: 'name', label: '费用名称', width: '200', align: 'center' },
-        { prop: 'type', label: '费用类型', width: '200', align: 'center', formatter: this.formatter },
-        { prop: 'amount', label: '应付金额', width: '220', align: 'center' },
-        { prop: 'bill_no', label: '所属账单', width: '200', align: 'center' },
-        { prop: 'is_write_off', label: '核销状态', align: 'center', formatter: this.formatter }
+        { prop: 'cost_name', label: '费用名称', width: '200', align: 'center' },
+        { prop: 'cost_bill_amount', label: '费用金额', width: '220', align: 'center' },
+        { prop: 'bill_no', label: '所属账单', width: '200', align: 'center' }
       ],
       tableData: [],
       page: {
@@ -43,17 +41,18 @@ export default {
       },
       customerId: 0,
       billIds: [],
+      writeOffId: undefined,
       cosIds: []
     }
   },
   mounted () {
-    this.billIds = this.$route.params.billIds
+    this.writeOffId = this.$route.params.id
     this.getData()
   },
   methods: {
     getData () {
-      this.$api.finance.fare.writeOff.customer.cost({
-        billIds: this.billIds,
+      this.$api.finance.fare.writeOff.customer.costs({
+        writeOffId: this.writeOffId,
         page: this.page.pageNo,
         limit: this.page.limit
       }).then(res => {
@@ -64,10 +63,8 @@ export default {
     // 重新渲染name列
     formatter (row, column, cellValue) {
       switch (column.property) {
-        case 'type':
-          return row.type === 1 ? '基础运费' : row.type === 2 ? '附加费' : '其他'
-        case 'is_write_off':
-          return row.is_write_off === 1 ? '已核销' : '未核销'
+        case 'cost_type':
+          return row.cost_type === 1 ? '基础运费' : row.cost_type === 2 ? '附加费' : '其他'
       }
     },
     // 改变页面大小处理

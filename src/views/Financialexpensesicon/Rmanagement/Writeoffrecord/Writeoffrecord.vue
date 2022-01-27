@@ -33,6 +33,18 @@
             @handleSizeChange="handleSizeChange"
             @handleCurrentChange="handleCurrentChange"
         >
+          <el-table-column
+              slot="table_oper"
+              align="center"
+              fixed="right"
+              label="操作"
+              width="156"
+              :resizable="false"
+          >
+            <template slot-scope="scoped">
+              <el-button type="text" @click="detailspage(scoped.row.id)"> 查看核销费用列表 </el-button>
+            </template>
+          </el-table-column>
         </commonTable>
       </div>
     </div>
@@ -66,13 +78,13 @@ export default {
   },
   methods: {
     getData () {
-      // this.$api.finance.fare.writeOff.customer.history({
-      //   page: this.page.pageNo,
-      //   limit: this.page.limit
-      // }).then(res => {
-      //   this.tableData = res.data.list
-      //   this.page.total = res.data.total
-      // })
+      this.$api.finance.fare.writeOff.customer.history({
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
     },
     // 重新渲染name列
     formatter (row, column, cellValue) {
@@ -85,8 +97,8 @@ export default {
           return this.formatDate(row.created_at, 'yyyy-MM-dd')
       }
     },
-    detailspage () {
-      this.$router.push({ name: 'WriteoffDetail' })
+    detailspage (id) {
+      this.$router.push({ name: 'WriteoffDetail', params: { id: id } })
     },
     // 改变页面大小处理
     handleSizeChange (val) {
