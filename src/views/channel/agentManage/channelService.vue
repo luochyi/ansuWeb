@@ -1,0 +1,1955 @@
+<template>
+  <div>
+    <!--  标签页 -->
+    <el-row type='flex' justify='flex-start' class='title' align='middle' style="padding:10px 0px">
+      <span class="text">代理渠道</span>
+    </el-row>
+   <div class="content">
+      <el-row class="box-block flex">
+      <el-col :span="6">
+        <div class="box">
+          <el-row style="padding:14px 34px 12px 34px;" type='flex' justify="space-between" align="middle">
+            <el-col :span="5" style="margin-top:-2px">
+              <span style="font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;font-weight: 500;color: #000000;">代理</span>
+            </el-col>
+            <el-col :span="14" type="flex">
+              <!-- <span style="font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;color: #000000;">分类：</span>
+              <el-select size="small" style="width:90px" v-model="Class">
+                <el-option
+                v-for="item in options"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+                </el-option>
+              </el-select> -->
+            </el-col>
+          </el-row>
+          <el-row class="search-box">
+            <!-- <span class="input-box">
+              <img alt class='logoimg' src='@/assets/search.png' style="width: 14px;height: 14px;" />
+              <el-input class="elin" size="small" placeholder="请输入渠道名或编码" style="border:0" v-model="searchInput"></el-input>
+            </span>
+            <span class="search-font" style="">搜索</span> -->
+          </el-row>
+          <el-row style="padding:0px 10px 12px 10px;display:flex;align-items:center;"  v-for="item, index in agents" :key="index" @click.native="changeAgent(item.id, index)">
+            <el-row :class="index===red?'active':''" style="padding:12px;margin-bottom:20px;background: #F9F9F9;
+          border-radius: 3px;width: 88%;height: 68px;font-size: 14px;font-family: PingFangSC-Medium, PingFang SC;
+          font-weight: 500;color: rgba(0, 0, 0, 0.8);cursor: pointer;">
+              <div style="display:flex;align-items:center;margin-bottom:4px" >
+                <span>代理：</span><span>{{item.name}}</span>
+              </div>
+              <div style="display:flex;align-items:center;font-size: 14px;font-family: PingFangSC-Regular, PingFang SC;font-weight: 400;
+          color: rgba(0, 0, 0, 0.45);justify-content:space-between">
+                <span >编码：<span>{{item.code}}</span></span>
+                <!-- <span class="num">{{num}}家代理</span> -->
+              </div>
+            </el-row>
+          </el-row>
+        </div>
+      </el-col>
+      <!-- 主要内容 -->
+      <el-col span="18">
+        <!-- 搜索栏 -->
+        <el-row class="searchbox1">
+          <!-- 代理名称 -->
+          <el-col :span="6" class="colbox">
+            <span class="text">渠道名称</span>
+            <el-col :span="16">
+              <el-input v-model="serviceName" placeholder="请输入"></el-input>
+            </el-col>
+          </el-col>
+          <el-col :span="6" class="colbox">
+            <span class="text">渠道状态</span>
+            <el-col :span="16">
+              <el-select v-model="search.status" placeholder="请选择">
+                <el-option
+                    v-for="item in options.status"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+            </el-col>
+          </el-col>
+          <!--  -->
+          <el-col :span="6" class="colbox justify-center">
+            <el-button class="orangeBtn long1" @click="getData">查 询</el-button>
+            <el-button class="wuBtn long1" @click="reset">重 置</el-button>
+          </el-col>
+        </el-row>
+        <!-- 表格 -->
+          <el-row
+          >
+            <el-col class='right' style='padding-right:50px;padding-bottom:20px'>
+              <el-button class="whiteBtn" @click="showChannelAdd">新增渠道</el-button>
+            </el-col>
+
+          </el-row>
+          <div style='width:95%'>
+            <commonTable
+            :selection="false"
+            :columns="columns"
+            :data="tableData"
+            :pager="page"
+            @handleSizeChange="handleSizeChange"
+            @handleCurrentChange="handleCurrentChange"
+          >
+            <!-- slot -->
+            <template v-slot:chakan="slotData">
+              {{ slotData.data.info }}<span
+                style="color: #0084FF; cursor: pointer"
+                @click="check(slotData)"
+                >查看</span
+              >
+            </template>
+            <!-- 操作 -->
+            <el-table-column
+              slot="table_oper"
+              align="left"
+              fixed="right"
+              label="操作"
+              width="250"
+              :resizable="false"
+            >
+              <template slot-scope="scope">
+                <!-- <span @click="editZone(scope.row)" class="blue" v-if="fenquzhongliang">修改分区重量<span style="margin:0px 5px 0px">|</span></span> -->
+                <span @click="price(scope.row)" class="blue" v-if="scope.row.has_price > 0">查看价格</span>
+                <span @click="plan(scope.row)" class="blue" v-if="scope.row.has_price > 0"> | 价格记录</span>
+                <span @click="fqjg(scope.row)" class="blue" v-if="scope.row.has_price === 0">分区价格</span>
+                <span @click="priceEdit(scope.row)" class="blue" v-if="scope.row.has_price === 1"> | 价格修改</span>
+                <span @click="showAdditive(scope.row)" class="blue"> | 附加费</span>
+                <!-- <span @click="additional(scope.row)" class="blue">附加费<span style="margin:0px 5px 0px">|</span></span> -->
+                <span  v-if="scope.row.status === 1" @click="stopAgent(scope.row)" class="blue"> | 停用</span>
+                <span v-else-if="scope.row.status === 2" @click="stopAgent(scope.row)" class="blue"> | 启用</span>
+                <span @click="showChannelEdit(scope.row)" class="blue"> | 编辑</span>
+              </template>
+            </el-table-column>
+          </commonTable>
+          </div>
+        </el-col>
+
+    </el-row>
+     <el-dialog
+      :visible.sync="dialogStop"
+      width="30%"
+      :before-close="handleClose">
+      <div slot="title" class="left">
+        {{dialogTitle}}
+      </div>
+      <div class="flex align-center">
+        <div class="iconfont" style="font-size: 58px; color: #FB4702;margin-right: 20px">
+          &#xe77d;
+        </div>
+        <div v-if="dialogTitle === '停用渠道'" class="left">
+          <el-row>你是否确认停用</el-row>
+          <el-row>代理'{{chooseAgent.name}}'</el-row>
+        </div>
+        <div v-else-if="dialogTitle === '启用渠道'" class="left">
+          <el-row>你是否确认启用</el-row>
+          <el-row>代理'{{chooseAgent.name}}'</el-row>
+        </div>
+        <div v-else>
+          <span v-if="activeName==='1'">你是否确认停用这{{chooseArr.length}}个代理</span>
+          <span v-else>你是否确认启用这{{chooseArr.length}}个代理</span>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button class="wuBtn" @click="dialogStop = false">取 消</el-button>
+        <el-button class="orangeBtn" @click="stopOK">确 定</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog :visible.sync="dialog.channel.visable" :title="dialog.channel.title" width="30%">
+      <el-form ref="channelForm" :model="dialog.channel.formData" :rules="dialog.channel.rules" size="medium" label-width="100px">
+        <el-form-item label="代理" prop="agentId">
+          <el-select v-model="dialog.channel.formData.agentId" placeholder="请选择代理" :disabled='dialog.channel.formData.agentChannelId' clearable :style="{width: '100%'}">
+            <el-option v-for="(item, index) in agents" :key="index" :label="item.name"
+                       :value="item.id"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="渠道名称" prop="name">
+          <el-input v-model="dialog.channel.formData.name" placeholder="请输入渠道名称" clearable :style="{width: '100%'}">
+          </el-input>
+        </el-form-item>
+        <el-form-item label="渠道分类" prop="cate">
+          <el-select v-model="dialog.channel.formData.cate" placeholder="请选择渠道分类" clearable :style="{width: '100%'}">
+            <el-option v-for="(item, index) in options.cate" :key="index" :label="item.label"
+                       :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="派件类型" prop="type">
+          <el-select v-model="dialog.channel.formData.type" placeholder="请选择派件类型" :disabled='dialog.channel.formData.agentChannelId' clearable :style="{width: '100%'}">
+            <el-option v-for="(item, index) in options.type" :key="index" :label="item.label"
+                       :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+      </el-form>
+      <div slot="footer">
+        <el-button @click="dialog.channel.visable = false">取消</el-button>
+        <el-button type="primary" @click="channelSubmit">确定</el-button>
+      </div>
+    </el-dialog>
+
+    <commonDrawer :drawerVrisible="drawerVrisible" :drawerSize="drawerSize" :drawerTitle="drawerTitle" @click="check(slotData)">
+      <div class="dra-content">
+        <!-- 内容区域 -->
+        <div class="circleBox">
+          <el-row style="display:flex;align-items:center">
+            <el-col :span="3" style="display:flex;">
+              <div style="display:flex;flex-direction: column;align-items:center">
+                <div class="circle">1</div>
+                <div>渠道分区</div>
+              </div>
+            </el-col>
+            <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control !== 2 && control !== 3">
+              <div class="circle1">2</div>
+              <div>重量段设置</div>
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control === 2 || control === 3">
+              <div class="circle">2</div>
+              <div>重量段设置</div>
+            </el-col>
+             <el-col :span="2">
+              <img src="@/assets/jiantou.png" alt="">
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control !== 3">
+              <div class="circle1">3</div>
+              <div>价格维护</div>
+            </el-col>
+            <el-col :span="4" style="display:flex;align-items:center;flex-direction: column;" v-if="control === 3">
+              <div class="circle">3</div>
+              <div>价格维护</div>
+            </el-col>
+          </el-row>
+        </div>
+        <el-row style="marginTop:10px;textAlign:left">
+          <!-- <el-col :span="6">代理:{{agentName}}</el-col>
+          <del-col :span="6">渠道渠道:{{agentServiceName}}</del-col> -->
+        </el-row>
+        <div v-if="inhere&&control===1">
+          <el-table :data="formData.zones" :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column label="国家/分区" prop="name"></el-table-column>
+              <el-table-column label="操作" width="150" fixed="right">
+              <template slot-scope="scope">
+                <el-button type="text" @click="zoneEdit(scope.$index)">修改</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click.native.prevent="zoneDel(scope.$index)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button @click="zoneAdd()" style="marginTop:10px;float:left" class="orangeBtn">新建分区</el-button>
+        </div>
+        <div v-else-if="!inhere">
+        <el-row style="marginTop:10px;textAlign:left;" >国家/分区名称：<el-input size="mini" style="width:200px" v-model="tempData.zone.name"></el-input></el-row>
+         <el-row style="marginTop:10px;textAlign:left" v-if="control===1">
+   <!-- 新增分区 -->
+          <el-table :data="tempData.zone.areas" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column label="国家" prop="countryId" min-width="80"  :formatter="countryformatter"></el-table-column>
+            <el-table-column label="区域类型" prop="scopeType" min-width="90" >
+              <template slot-scope="scope">
+                <span v-if="scope.row.scopeType===1">按国家</span>
+                <span v-else-if="scope.row.scopeType===2">按区域</span>
+              </template>
+            </el-table-column>
+            <el-table-column label="邮编前缀" prop="prefixes" v-if="zoneType===1" min-width="200">
+              <template slot-scope="scope">
+                <span> {{ scope.row.prefixes.join(',') }} </span>
+              </template>
+            </el-table-column>
+            <el-table-column label="fba仓库" prop="fbaIds" v-else min-width="200" :formatter="fbaformatter">
+            </el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template slot-scope="scope">
+<!--                <el-button type="text" @click="areaEdit(scope.$index)">修改</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+                <el-button type="text" @click.native.prevent="areaDel(scope.$index)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+            <!-- 添加 -->
+          <el-table :data="addZone" v-if="addTable" border style="width: 100%"  :show-header="false">
+            <el-table-column label="国家" min-width="80">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.countryId">
+                  <el-option v-for="item in countryOptions" :key="item.value" :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="区域类型" min-width="90">
+              <template slot-scope="scope">
+                <el-select v-model="scope.row.scopeType" @change='scopeTypechange'>
+                  <el-option v-for="item in areaOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="邮编前缀" min-width="200" v-if="zoneType===1&&scopeType">
+              <template slot-scope="scope">
+                  <el-select
+                  v-model="scope.row.prefixes"
+                  multiple
+                  filterable
+                  allow-create
+                  default-first-option
+                  placeholder="请输入邮编前缀">
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="fba仓库" min-width="200" v-else-if="zoneType===2&&scopeType">
+               <template slot-scope="scope">
+                  <el-select
+                  v-model="scope.row.fbaIds"
+                  multiple
+                  placeholder="请选择fba仓">
+                  <el-option v-for="item in FbaOptions[scope.row.countryId]" :key='item.id' :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="fba仓库" min-width="200" v-else>
+               <template slot-scope="scope">
+                  <el-select
+                  disabled
+                  v-model="scope.row.fbaIds"
+                  multiple
+                  placeholder="按国家">
+                  <el-option v-for="item in FbaOptions[scope.row.countryId]" :key='item.id' :value="item.id" :label="item.name"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template v-slot="scope">
+                <el-button @click="addZoneSubmit(scope.row)" type="text">确认</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click="cancl1(scope.row)">取消</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button @click="addTable=true" style="marginTop:10px" class="orangeBtn">新建分区信息</el-button>
+        </el-row>
+        </div>
+  <!-- 设置重量区间 -->
+        <el-row style="marginTop:10px;textAlign:left" v-if="control===2">
+          <el-table :data="formData.weights" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column label="序号" min-width="80">
+              <template slot-scope="scope">
+                区间{{scope.$index+1}}
+              </template>
+            </el-table-column>
+            <el-table-column label="最小重量" prop="minWeight" min-width="80" ></el-table-column>
+            <el-table-column label="最大重量" prop="maxWeight" min-width="90" :formatter="columnFormat"></el-table-column>
+            <el-table-column label="计价方式" prop="priceType" min-width="200" :formatter="columnFormat"></el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template slot-scope="scope">
+<!--                 <el-button type="text" @click="weightEdit(scope.$index)">修改</el-button>
+                 <span style="color: #0084FF; margin: 0px 5px">|</span>-->
+                <el-button type="text" @click.native.prevent="weightDel(scope.$index)">删除</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+            <!-- 添加 -->
+          <el-table :data="tempData.weights" v-if="addweightsTable" border style="width: 100%"  :show-header="false">
+            <el-table-column label="区间" min-width="80">新区间</el-table-column>
+            <el-table-column label="最低重量" min-width="90">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.minWeight" type="Number" min="0" max="99999999"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column label="最高重量" min-width="90">
+              <template slot-scope="scope">
+                <el-autocomplete
+                    class="inline-input"
+                    v-model="scope.row.maxWeight"
+                    :fetch-suggestions="querySearch"
+                    placeholder="请输入内容"
+                ></el-autocomplete>
+              </template>
+            </el-table-column>
+            <el-table-column label="计价方式" min-width="200">
+              <template slot-scope="scope">
+                  <el-select
+                  v-model="scope.row.priceType"
+                  placeholder="请输入计价方式">
+                  <el-option v-for="item in priceTypeOptions" :key="item.value" :value="item.value" :label="item.label"></el-option>
+                </el-select>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="150" fixed="right">
+              <template v-slot="scope">
+                <el-button @click="weightSubmit(scope.$index)" type="text">确认</el-button>
+                <span style="color: #0084FF; margin: 0px 5px">|</span>
+                <el-button type="text" @click="cancl(scope.row)">取消</el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-button @click="weightAdd" style="marginTop:10px" class="orangeBtn">新建重量段</el-button>
+        </el-row>
+ <!-- 价格维护 -->
+        <el-row style="marginTop:10px;textAlign:left" v-if="control===3">
+          <span class="tips" v-show="tempData.unitPrices.length > 0">价格按金额</span>
+          <el-table :data="tempData.unitPrices" v-show="tempData.unitPrices.length > 0" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column  min-width="100" prop="name" :formatter="columnFormat"></el-table-column>
+            <el-table-column v-for="(item, index) in tempData.unitWeights" :key="index" :label="item.weight.minWeight+'-'+(item.weight.maxWeight === 99999999 ? 'MAX' : item.weight.maxWeight)+'公斤'" min-width="150" >
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.cols[item.weightIndex].price"></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
+          <span class="tips" v-show="tempData.firstPrices.length > 0">价格首续重</span>
+          <el-table :data="tempData.firstPrices" v-show="tempData.firstPrices.length > 0" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column  min-width="100" prop="name" :formatter="columnFormat"></el-table-column>
+            <el-table-column v-for="(item,index) in tempData.firstWeights" :key="index" :label="item.weight.minWeight+'-'+(item.weight.maxWeight === 99999999 ? 'MAX' : item.weight.maxWeight)+'公斤'" min-width="150" >
+              <el-table-column label="首重重量">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.cols[item.weightIndex].firstWeight"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="首重价格">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.cols[item.weightIndex].firstWeightPrice"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="续重重量">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.cols[item.weightIndex].additionalWeight"></el-input>
+                </template>
+              </el-table-column>
+              <el-table-column label="续重价格">
+                <template slot-scope="scope">
+                  <el-input v-model="scope.row.cols[item.weightIndex].additionalWeightPrice"></el-input>
+                </template>
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+          <span class="tips" v-show="tempData.amountPrices.length > 0">价格按单价</span>
+          <el-table :data="tempData.amountPrices" v-show="tempData.amountPrices.length > 0" border style="width: 100%"   :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column  min-width="100" prop="name" :formatter="columnFormat"></el-table-column>
+            <el-table-column v-for="(item,index) in tempData.amountWeights" :key="index" :label="item.weight.minWeight+'-'+(item.weight.maxWeight === 99999999 ? 'MAX' : item.weight.maxWeight)+'公斤'" min-width="150" >
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.cols[item.weightIndex].price"></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div class="plantime">
+            <span class="tips" v-if="!formData.isFirst">生效时间&nbsp;</span>
+          <el-date-picker v-if="!formData.isFirst"
+              v-model="formData.planTime"
+              type="datetime"
+              size="mini"
+              value-format="yyyy-MM-dd HH:mm:ss"
+              placeholder="选择日期时间">
+          </el-date-picker>
+          </div>
+        </el-row>
+      </div>
+      <!-- 抽屉底部按钮 -->
+      <div slot="footer">
+        <button class="btn-orange" @click="nextPrev(1)" v-if="control===1&&inhere">
+          下一步
+        </button>
+        <button class="btn-orange" @click="submitfenqu" v-else-if="!inhere">
+          确定
+        </button>
+        <button class="btn-orange" @click="nextPrev(1)" v-else-if="control===2">
+          下一步
+        </button>
+        <button class="btn-orange" @click="submit()" v-else-if="control===3">
+          <span> <i class="el-icon-circle-check"></i>提交</span>
+        </button>
+        <button class="whiteBtn" @click="nextPrev(-1)" v-if="control!==1" style="marginRight:10px">
+          上一步
+        </button>
+        <button class="btn-gray" @click="addClose" v-if="inhere">
+          <span>取消</span>
+        </button>
+        <button class="btn-gray" @click="addCancl" v-else>
+          <span>取消</span>
+        </button>
+      </div>
+    </commonDrawer>
+    <!-- 查看分区价格 -->
+    <commonDrawer :drawerVrisible="drawer" :drawerSize="drawerSize" @handleClose='priceClose' drawerTitle="查看分区价格">
+      <div class="dra-content">
+        <div><span style="font-size:14px">生效时间：{{drawerData.startTime}}&nbsp;——&nbsp;{{drawerData.endTime}}</span></div>
+        <div class="dra-content" v-if="drawerData.price.wightCol.unitWeights.length > 0">
+          <span class="tips">单价计价&nbsp;</span>
+          <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column>
+              <template slot-scope="scope">
+                <el-popover
+                    placement="top-start"
+                    trigger="hover">
+                  <el-table :data="scope.row.areas">
+                    <el-table-column property="country_name" label="国家"></el-table-column>
+                    <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
+                    <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
+                    <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
+                  </el-table>
+                  <div slot="reference">{{ scope.row.name }}</div>
+                </el-popover>
+              </template>
+            </el-table-column>
+            <el-table-column v-for="(item,index) in drawerData.price.wightCol.unitWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
+              <template slot-scope="scope">
+                {{ getDrawerPriceData(drawerData.price.unit_prices, scope.row.id, item.id, 'price') }}
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="dra-content" v-if="drawerData.price.wightCol.amountWeights.length > 0">
+          <span class="tips">金额计价&nbsp;</span>
+          <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="name">
+              <template slot-scope="scope">
+                <el-popover
+                    placement="top-start"
+                    trigger="hover">
+                  <el-table :data="scope.row.areas">
+                    <el-table-column property="country_name" label="国家"></el-table-column>
+                    <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
+                    <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
+                    <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
+                  </el-table>
+                  <div slot="reference">{{ scope.row.name }}</div>
+                </el-popover>
+              </template>
+            </el-table-column>
+            <el-table-column v-for="(item,index) in drawerData.price.wightCol.amountWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
+              <template slot-scope="scope">
+                {{ getDrawerPriceData(drawerData.price.amounts, scope.row.id, item.id, 'price') }}
+              </template>
+            </el-table-column>
+          </el-table>
+        </div>
+        <div class="dra-content" v-if="drawerData.price.wightCol.firstWeights.length > 0">
+          <span class="tips"> 首续重计价&nbsp;</span>
+          <el-table :data="drawerData.price.zones" border :header-cell-style="{background: '#F5F5F6'}">
+            <el-table-column prop="name">
+              <template slot-scope="scope">
+                <el-popover
+                    placement="top-start"
+                    trigger="hover">
+                  <el-table :data="scope.row.areas">
+                    <el-table-column property="country_name" label="国家"></el-table-column>
+                    <el-table-column property="scope_type" label="区域类型" :formatter="formatterPlan"></el-table-column>
+                    <el-table-column property="areaOther" label="FBA仓库" :formatter="formatterPlan" v-if="drawerData.price.type === 2"></el-table-column>
+                    <el-table-column property="areaOther" label="邮编前缀" :formatter="formatterPlan" v-else></el-table-column>
+                  </el-table>
+                  <div slot="reference">{{ scope.row.name }}</div>
+                </el-popover>
+              </template>
+            </el-table-column>
+            <el-table-column v-for="(item,index) in drawerData.price.wightCol.firstWeights" :key="index" :label="item.min_weight+'-'+(Number(item.max_weight) === 99999999 ? 'MAX' : item.max_weight)+'公斤'" min-width="150" >
+              <el-table-column label="首重重量">
+                <template slot-scope="scope">
+                  {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'first_weight') }}
+                </template>
+              </el-table-column>
+              <el-table-column label="首重价格">
+                <template slot-scope="scope">
+                  {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'first_weight_price') }}
+                </template>
+              </el-table-column>
+              <el-table-column label="续重重量">
+                <template slot-scope="scope">
+                  {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'additional_weight') }}
+                </template>
+              </el-table-column>
+              <el-table-column label="续重价格">
+                <template slot-scope="scope">
+                  {{ getDrawerPriceData(drawerData.price.first_prices, scope.row.id, item.id, 'additional_weight_price') }}
+                </template>
+              </el-table-column>
+            </el-table-column>
+          </el-table>
+        </div>
+      </div>
+      <div slot="footer">
+        <button class="btn-gray" @click="priceClose">
+          <span>关闭</span>
+        </button>
+      </div>
+    </commonDrawer>
+    <commonDrawer :drawerVrisible="drawerData.plan.visabled" :drawerSize="drawerData.plan.size" @handleClose='drawerData.plan.visabled = false' drawerTitle="历史价格">
+      <div class="dra-content">
+        <el-table :data="drawerData.plan.data" >
+          <el-table-column prop="time" :formatter="formatterPlan" label="时间"></el-table-column>
+          <el-table-column prop="user_name" label="录价人" width="100"></el-table-column>
+          <el-table-column label="操作" width="100">
+            <template slot-scope="scope">
+               <span @click="showPrice(scope.row)" class="blue">查看</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div slot="footer">
+        <button class="btn-gray" @click="drawerData.plan.visabled=false">
+          <span>关闭</span>
+        </button>
+      </div>
+    </commonDrawer>
+     <!-- 附加费 -->
+     <commonDrawer :drawerVrisible="drawerData.additive.visabled" :drawerSize="drawerData.additive.size" @handleClose='drawerData.additive.visabled = false' drawerTitle="附加费">
+       <div class="dra-content">
+         <el-button class="orangeBtn" @click="showAdditiveAdd">添加</el-button>
+         <el-table :data="drawerData.additive.data" >
+           <el-table-column prop="name" label="名称"></el-table-column>
+           <el-table-column prop="price_type" label="类型" :formatter="formatter"></el-table-column>
+           <el-table-column prop="price" label="加价"></el-table-column>
+           <el-table-column label="操作" width="100">
+             <template slot-scope="scope">
+               <span @click="showAdditiveEdit(scope.row)" class="blue">编辑</span>
+               <el-popconfirm title="确认删除该费用？" @confirm="additiveDelete(scope.row)">
+                 <span class="blue" slot="reference"> 删除</span>
+               </el-popconfirm>
+             </template>
+           </el-table-column>
+         </el-table>
+       </div>
+       <div slot="footer">
+         <button class="btn-gray" @click="drawerData.additive.visabled=false">
+           <span>关闭</span>
+         </button>
+       </div>
+     </commonDrawer>
+
+     <el-dialog :visible.sync="dialog.additive.visabled" :title="dialog.additive.title">
+       <el-form ref="additiveForm" :model="dialog.additive.formData" :rules="dialog.additive.rules" size="medium" label-width="100px">
+         <el-form-item label="代理渠道" prop="channelName">
+           <el-input v-model="drawerData.additive.channelName" :disabled='true'
+                     :style="{width: '100%'}"></el-input>
+         </el-form-item>
+         <el-form-item label="费用类型" prop="priceType">
+           <el-select v-model="dialog.additive.formData.priceType" placeholder="请选择下拉选择费用类型" filterable clearable :style="{width: '100%'}"
+                      :disabled="dialog.additive.formData.additiveId"
+           >
+             <el-option v-for="(item, index) in options.priceType" :key="index" :label="item.label"
+                        :value="item.value"></el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="费用" prop="itemId" v-if="dialog.additive.formData.priceType === 1">
+           <el-select v-model="dialog.additive.formData.itemId" placeholder="请选择下拉选择费用" filterable clearable :style="{width: '100%'}"
+                      :disabled="dialog.additive.formData.additiveId"
+           >
+             <el-option v-for="(item, index) in options.item" :key="index" :label="item.name"
+                        :value="item.id"></el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="费用" prop="materialId" v-else-if="dialog.additive.formData.priceType === 2">
+           <el-select v-model="dialog.additive.formData.materialId" placeholder="请选择下拉选择费用" filterable clearable :style="{width: '100%'}"
+                      :disabled="dialog.additive.formData.additiveId"
+           >
+             <el-option v-for="(item, index) in options.material" :key="index" :label="item.name"
+                        :value="item.id"></el-option>
+           </el-select>
+         </el-form-item>
+         <el-form-item label="单价" prop="price">
+           <el-input v-model="dialog.additive.formData.price" placeholder="请输入单价" clearable type="Number" min="0"
+                     :style="{width: '100%'}">
+             <template slot="append">元每公斤（结算重）</template>
+           </el-input>
+         </el-form-item>
+       </el-form>
+       <div slot="footer">
+         <el-button @click="dialog.additive.visabled = false">取消</el-button>
+         <el-button type="primary" @click="additiveSubmit">确定</el-button>
+       </div>
+     </el-dialog>
+   </div>
+  </div>
+</template>
+
+<script>
+
+export default {
+  data () {
+    return {
+      drawer: false,
+      priceList: [],
+      agentId: 0,
+      red: 0,
+      zoneType: null, // 派件类型 1快递 2卡派
+      saveData: [],
+      control: 1,
+      firstPrices: [], // 首续重
+      amounts: [], // 金额
+      unitPrices: [], // 单价
+      inhere: true,
+      addTable: false,
+      drawerSize: '50%',
+      drawerVrisible: false,
+      drawerTitle: '设置分区',
+      agentName: '',
+      agentServiceName: '',
+      fenquData: [], // 分区
+      search: {
+        status: 0
+      },
+      options: {
+        status: [
+          { value: 0, label: '全部' },
+          { value: 1, label: '正常' },
+          { value: 2, label: '停用' }
+        ],
+        cate: [
+          { value: 1, label: '海运' },
+          { value: 2, label: '空运' },
+          { value: 3, label: '快递' },
+          { value: 4, label: '铁路' },
+          { value: 5, label: '专车' }
+        ],
+        type: [
+          { value: 1, label: '快递' },
+          { value: 2, label: '卡派' }
+        ],
+        priceType: [
+          { value: 1, label: '品名' },
+          { value: 2, label: '材质' }
+        ],
+        priceOptions: [],
+        material: [],
+        item: []
+      },
+      priceTypeOptions: [
+        // 计价方式
+        {
+          value: 1,
+          label: '单价'
+        },
+        {
+          value: 2,
+          label: '金额'
+        }, {
+          value: 3,
+          label: '首续重'
+        }
+      ],
+      zoneData: [],
+      weights: [], // 重量数组
+      addweights: [ // 新增重量段
+        { minWeight: '', maxWeight: '', priceType: null }
+      ],
+      addweightsTable: false,
+      addZone: [
+        {
+          countryId: '',
+          scopeType: null,
+          prefixes: [],
+          fbaIds: []
+        }
+      ],
+      countryOptions: [],
+      FbaOptions: [],
+      areaOptions: [
+        {
+          value: 1,
+          label: '按国家'
+        },
+        {
+          value: 2,
+          label: '按区域'
+        }
+      ],
+      id: null,
+      scopeType: true,
+      zonename: '',
+      dialog: {
+        channel: {
+          visable: false,
+          title: '',
+          formData: {
+            agentChannelId: undefined,
+            agentId: undefined,
+            name: undefined,
+            cate: undefined,
+            type: undefined
+          },
+          rules: {
+            agentId: [{ required: true, message: '请选择代理', trigger: 'change' }],
+            name: [{ required: true, message: '请输入渠道名称', trigger: 'change' }],
+            cate: [{ required: true, message: '渠道分类', trigger: 'change' }],
+            type: [{ required: true, message: '派件类型', trigger: 'change' }]
+          }
+        },
+        additive: {
+          visabled: false,
+          title: undefined,
+          formData: {
+            additiveId: null,
+            priceType: null,
+            itemId: null,
+            materialId: null,
+            price: 0
+          },
+          rules: {
+            priceType: [
+              { required: true, message: '请选择费用类型', trigger: 'blur' }
+            ],
+            itemId: [
+              { required: true, message: '请选择费用', trigger: 'blur' }
+            ],
+            materialId: [
+              { required: true, message: '请选择费用', trigger: 'blur' }
+            ],
+            price: [
+              { required: true, message: '请输入单价', trigger: 'blur' },
+              { min: 0.01, message: '单价不能小于0.01', trigger: 'blur' }
+            ]
+          }
+        }
+      },
+      dialogStop: false,
+      dialogTitle: '停用代理',
+      activeName: '1', // 标签绑定
+      serviceName: null,
+      fenquzhongliang: true,
+      chooseAgent: [], // 选择停用的 代理
+      chooseArr: [], // 选中的代理
+      agents: [],
+      columns: [
+        { prop: 'agent_code', label: '代理编码', align: 'center' },
+        { prop: 'status', label: '渠道状态', width: '80', align: 'center', formatter: this.formatter },
+        { prop: 'name', label: '渠道名称', width: '200', align: 'center' },
+        { prop: 'agent_name', label: '代理名称', width: '160', align: 'center' },
+        { prop: 'cate', label: '代理分类', width: '80', align: 'center', formatter: this.formatter },
+        { prop: 'type', label: '派送类型', width: '80', align: 'center', formatter: this.formatters }
+      ],
+      tableData: [],
+      page: {
+        pageNo: 1,
+        limit: 10,
+        sizes: [10, 20, 50],
+        total: 0
+      },
+      tempData: {
+        changePrice: false,
+        zone: { zoneIndex: -1, name: '', areas: [] },
+        weights: [{}],
+        unitWeights: [],
+        unitPrices: [],
+        amountWeights: [],
+        amountPrices: [],
+        firstWeights: [],
+        firstPrices: []
+      },
+      formData: {
+        isFirst: true,
+        agentServiceId: 1,
+        zones: [],
+        weights: [],
+        unitPrices: [],
+        amounts: [],
+        firstPrices: [],
+        planTime: ''
+      },
+      drawerData: {
+        price: {
+          type: null,
+          wightCol: {
+            unitWeights: [],
+            amountWeights: [],
+            firstWeights: []
+          },
+          zones: [],
+          unit_prices: [],
+          amounts: [],
+          first_prices: []
+        },
+        data: {},
+        plan: {
+          visabled: false,
+          size: '50%',
+          data: [],
+          page: {
+            pageNo: 1,
+            limit: 10,
+            sizes: [10, 50, 100],
+            total: 0
+          }
+        },
+        startTime: '',
+        endTime: '',
+        additive: {
+          channelId: undefined,
+          channelName: undefined,
+          visabled: false,
+          size: '50%',
+          data: []
+        }
+      }
+    }
+  },
+  created () {
+    this.getData()
+    // 国家
+    this.selectFba()
+    this.getAgents()
+    // 材质
+    this.getMaterial()
+    // 品名
+    this.getItem()
+  },
+  methods: {
+    getAgents () {
+      this.$api.agent.select().then(res => {
+        this.agents = res.data
+      })
+    },
+    getData () {
+      let params = {
+        agentId: this.agentId,
+        name: this.serviceName,
+        status: this.search.status,
+        page: this.page.pageNo,
+        limit: this.page.limit
+      }
+      this.$api.agent.agentServiceLists(params).then(res => {
+        this.tableData = res.data.list
+        this.page.total = res.data.total
+      })
+    },
+    price (data) {
+      this.$api.agent.agentServicePrice(data.id).then(res => {
+        this.priceDetail(res)
+      })
+    },
+    getMaterial () {
+      this.$api.setting.material.select().then(res => {
+        this.options.material = res.data
+      })
+    },
+    getItem () {
+      this.$api.setting.product.item.select().then(res => {
+        this.options.item = res.data
+      })
+    },
+    showAdditiveAdd () {
+      this.dialog.additive.title = '添加附加费'
+      this.dialog.additive.formData = {
+        additiveId: null,
+        priceType: null,
+        itemId: null,
+        materialId: null,
+        price: 0
+      }
+      this.dialog.additive.visabled = true
+    },
+    showAdditiveEdit (row) {
+      this.dialog.additive.title = '编辑附加费'
+      this.dialog.additive.formData = {
+        additiveId: row.id,
+        priceType: row.price_type,
+        itemId: row.price_id,
+        materialId: row.price_id,
+        price: row.price
+      }
+      this.dialog.additive.visabled = true
+    },
+    additiveSubmit () {
+      this.$refs.additiveForm.validate(valid => {
+        if (!valid) {
+          return
+        }
+        if (this.dialog.additive.formData.additiveId) {
+          this.$api.agent.agentServiceAdditiveEdit({
+            additiveId: this.dialog.additive.formData.additiveId,
+            price: this.dialog.additive.formData.price
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.$api.agent.agentServiceAdditiveAll({
+                agentServiceId: this.drawerData.additive.channelId
+              }).then(res => {
+                this.drawerData.additive.data = res.data
+              })
+              this.dialog.additive.visabled = false
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        } else {
+          let priceId = 0
+          switch (this.dialog.additive.formData.priceType) {
+            case 1:
+              priceId = this.dialog.additive.formData.itemId
+              break
+            case 2:
+              priceId = this.dialog.additive.formData.materialId
+              break
+          }
+          this.$api.agent.agentServiceAdditiveAdd({
+            agentServiceId: this.drawerData.additive.channelId,
+            priceType: this.dialog.additive.formData.priceType,
+            priceId: priceId,
+            price: this.dialog.additive.formData.price
+          }).then(res => {
+            if (res.code === 0) {
+              this.$message.success(res.msg)
+              this.$api.agent.agentServiceAdditiveAll({
+                agentServiceId: this.drawerData.additive.channelId
+              }).then(res => {
+                this.drawerData.additive.data = res.data
+              })
+              this.dialog.additive.visabled = false
+            } else {
+              this.$message.error(res.msg)
+            }
+          })
+        }
+      })
+    },
+    additiveDelete (row) {
+      this.$api.agent.agentServiceAdditiveDelete({
+        additiveId: row.id
+      }).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg)
+          this.$api.agent.agentServiceAdditiveAll({
+            agentServiceId: this.drawerData.additive.channelId
+          }).then(res => {
+            this.drawerData.additive.data = res.data
+          })
+        } else {
+          this.$message.error(res.msg)
+        }
+      })
+    },
+    showAdditive (row) {
+      this.$api.agent.agentServiceAdditiveAll({
+        agentServiceId: row.id
+      }).then(res => {
+        this.drawerData.additive.channelId = row.id
+        this.drawerData.additive.channelName = row.name
+        this.drawerData.additive.data = res.data
+        this.drawerData.additive.visabled = true
+      })
+    },
+    showChannelAdd () {
+      this.dialog.channel.formData = {
+        agentChannelId: undefined,
+        agentId: undefined,
+        name: undefined,
+        cate: undefined,
+        type: undefined
+      }
+      if (this.agentId > 0) {
+        this.dialog.channel.formData.agentId = this.agentId
+      }
+      this.dialog.channel.title = '添加代理渠道'
+      this.dialog.channel.visable = true
+    },
+    showChannelEdit (row) {
+      this.dialog.channel.formData = {
+        agentChannelId: row.id,
+        agentId: row.agent_id,
+        name: row.name,
+        cate: row.cate,
+        type: row.type
+      }
+      this.dialog.channel.title = '编辑代理渠道'
+      this.dialog.channel.visable = true
+    },
+    channelSubmit () {
+      this.$refs.channelForm.validate(valid => {
+        if (!valid) {
+          return false
+        }
+      })
+      if (!this.dialog.channel.formData.agentChannelId) {
+        this.$api.agent.agentServiceAdd({
+          agentId: this.dialog.channel.formData.agentId,
+          name: this.dialog.channel.formData.name,
+          cate: this.dialog.channel.formData.cate,
+          type: this.dialog.channel.formData.type
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialog.channel.visable = false
+          } else {
+            this.$message.success(res.msg)
+          }
+        })
+      } else {
+        this.$api.agent.agentServiceEdit({
+          agentServiceId: this.dialog.channel.formData.agentChannelId,
+          name: this.dialog.channel.formData.name,
+          cate: this.dialog.channel.formData.cate
+        }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialog.channel.visable = false
+          } else {
+            this.$message.success(res.msg)
+          }
+        })
+      }
+    },
+    getDrawerPriceData (data, zoneId, weightId, type) {
+      for (let i in data) {
+        if (data[i].zone_id === zoneId && data[i].weight_id === weightId) {
+          return data[i][type]
+        }
+      }
+    },
+    priceDetail (res) {
+      this.drawerData.price.unit_prices = res.data.unit_prices
+      this.drawerData.price.amounts = res.data.amounts
+      this.drawerData.price.first_prices = res.data.first_prices
+      this.drawerData.price.zones = res.data.zones
+      this.drawerData.price.type = res.data.type
+      this.startTime = this.formatDate(res.data.start_time, 'yyyy-MM-dd hh:mm:ss')
+      this.endTime = this.formatDate(res.data.end_time, 'yyyy-MM-dd hh:mm:ss')
+      this.drawerData.price.wightCol.unitWeights = []
+      this.drawerData.price.wightCol.amountWeights = []
+      this.drawerData.price.wightCol.firstWeights = []
+      res.data.weights.forEach(item => {
+        switch (item.type) {
+          case 1:// 单价
+            this.drawerData.price.wightCol.unitWeights.push(item)
+            break
+          case 2:// 金额
+            this.drawerData.price.wightCol.amountWeights.push(item)
+            break
+          case 3:// 首续重
+            this.drawerData.price.wightCol.firstWeights.push(item)
+            break
+        }
+      })
+      this.priceList = res.data
+      this.drawer = true
+    },
+    plan (row) {
+      this.$api.agent.agentServicePlanLists({
+        agentServiceId: row.id,
+        page: this.drawerData.plan.page.pageNo,
+        limit: this.drawerData.plan.page.limit
+      }).then(res => {
+        this.drawerData.plan.data = res.data.list
+        this.drawerData.plan.page.total = res.data.total
+      })
+      this.drawerData.plan.visabled = true
+    },
+    // 分区价格
+    fqjg (data) {
+      console.log(data)
+      this.tempData = {
+        changePrice: false,
+        zone: { zoneIndex: -1, name: '', areas: [] },
+        weights: [{}],
+        unitWeights: [],
+        unitPrices: [],
+        amountWeights: [],
+        amountPrices: [],
+        firstWeights: [],
+        firstPrices: []
+      }
+      this.formData = {
+        isFirst: true,
+        agentServiceId: 1,
+        zones: [],
+        weights: [],
+        unitPrices: [],
+        amounts: [],
+        firstPrices: [],
+        planTime: ''
+      }
+      this.formData.agentServiceId = data.id
+      this.drawerVrisible = true
+      if (data.type === 1) {
+        this.zoneType = 1
+      } else if (data.type === 2) {
+        this.zoneType = 2
+      }
+    },
+    priceEdit (data) {
+      this.$api.agent.agentServicePrice(data.id).then(res => {
+        this.formData.zones = []
+        res.data.zones.forEach(zone => {
+          let zoneItem = {
+            id: zone.id,
+            name: zone.name,
+            areas: []
+          }
+          zone.areas.forEach(area => {
+            let areaItem = {
+              countryId: area.country_id,
+              countryName: area.country_name,
+              scopeType: area.scope_type,
+              fbaIds: [],
+              prefixes: area.prefixes
+            }
+            area.fbas.forEach(fba => {
+              areaItem.fbaIds.push(fba.fba_id)
+            })
+            zoneItem.areas.push(areaItem)
+          })
+          this.formData.zones.push(zoneItem)
+        })
+        this.formData.weights = []
+        res.data.weights.forEach(weight => {
+          this.formData.weights.push({ id: weight.id, minWeight: weight.min_weight, maxWeight: weight.max_weight, priceType: weight.type })
+        })
+        this.tempData.unitWeights = []
+        this.tempData.amountWeights = []
+        this.tempData.firstWeights = []
+        this.formData.weights.forEach((weight, weightIndex) => {
+          switch (weight.priceType) {
+            case 1: // 单价
+              this.tempData.unitWeights.push({ weightIndex: weightIndex, weight: weight })
+              break
+            case 2: // 金额
+              this.tempData.amountWeights.push({ weightIndex: weightIndex, weight: weight })
+              break
+            case 3: // 首续重
+              this.tempData.firstWeights.push({ weightIndex: weightIndex, weight: weight })
+              break
+          }
+        })
+
+        this.tempData.unitPrices = []
+        this.tempData.amountPrices = []
+        this.tempData.firstPrices = []
+        this.formData.zones.forEach((zone, zoneIndex) => {
+          if (this.tempData.unitWeights.length > 0) {
+            let cols = {}
+            this.tempData.unitWeights.forEach(item => {
+              let col = { price: null }
+              for (let key in res.data.unit_prices) {
+                let priceItem = res.data.unit_prices[key]
+                if (zone.id === priceItem.zone_id && item.weight.id === priceItem.weight_id) {
+                  col.price = priceItem.price
+                }
+              }
+              cols[item.weightIndex] = col
+            })
+            this.tempData.unitPrices.push({ zoneIndex: zoneIndex, cols: cols })
+          }
+          if (this.tempData.amountWeights.length > 0) {
+            let cols = {}
+            this.tempData.amountWeights.forEach(item => {
+              let col = { price: null }
+              for (let key in res.data.amounts) {
+                let priceItem = res.data.amounts[key]
+                if (zone.id === priceItem.zone_id && item.weight.id === priceItem.weight_id) {
+                  col.price = priceItem.price
+                }
+              }
+              cols[item.weightIndex] = col
+            })
+            this.tempData.amountPrices.push({ zoneIndex: zoneIndex, cols: cols })
+          }
+          if (this.tempData.firstWeights.length > 0) {
+            let cols = {}
+            this.tempData.firstWeights.forEach(item => {
+              let col = { firstWeight: null, firstWeightPrice: null, additionalWeight: null, additionalWeightPrice: null }
+              for (let key in res.data.first_prices) {
+                let priceItem = res.data.first_prices[key]
+                if (zone.id === priceItem.zone_id && item.weight.id === priceItem.weight_id) {
+                  col.firstWeight = priceItem.first_weight
+                  col.firstWeightPrice = priceItem.first_weight_price
+                  col.additionalWeight = priceItem.additional_weight
+                  col.additionalWeightPrice = priceItem.additional_weight_price
+                }
+              }
+              cols[item.weightIndex] = col
+            })
+            this.tempData.firstPrices.push({ zoneIndex: zoneIndex, cols: cols })
+          }
+        })
+        this.tempData.changePrice = false
+        this.formData.isFirst = false
+      })
+      this.formData.agentServiceId = data.id
+      if (data.type === 1) {
+        this.zoneType = 1
+      } else if (data.type === 2) {
+        this.zoneType = 2
+      }
+      this.drawerVrisible = true
+    },
+    // 停用
+    batchStop () {
+      if (this.chooseArr.length < 1) {
+        return this.$message({
+          message: '选中的代理不能为空',
+          customClass: 'message_reject',
+          center: true,
+          iconClass: 'icons'
+        })
+      }
+      if (this.activeName === '1') {
+        this.dialogTitle = '批量停用代理'
+      } else {
+        this.dialogTitle = '批量启用代理'
+      }
+      this.dialogStop = true
+    },
+    // 停用
+    stopAgent (val) {
+      console.log(val)
+      this.dialogStop = true
+      this.chooseAgent = val
+      if (val.status === 1) {
+        this.dialogTitle = '停用渠道'
+        this.activeName = '1'
+      } else if (val.status === 2) {
+        this.dialogTitle = '启用渠道'
+        this.activeName = '2'
+      }
+    },
+    // 区域类型切换
+    scopeTypechange (data) {
+      console.log(data)
+      if (data === 1) {
+        this.scopeType = false
+        console.log(this.scopeType)
+      } else if (data === 2) {
+        this.scopeType = true
+        console.log(this.scopeType)
+      }
+    },
+    // 添加分区（子集菜单）
+    addfenqu () {
+      this.inhere = false
+    },
+    // 添加分区
+    submitfenqu () {
+      if (this.tempData.zone.name === '') {
+        this.$message.error('分区名称不能为空') // 错误提示
+        return
+      }
+      if (this.tempData.zone.areas.length === 0) {
+        this.$message.error('分区信息不能为空') // 错误提示
+        return
+      }
+      this.fenquData.push({ fenqu: this.zonename })
+      this.addZone = [
+        {
+          countryId: '',
+          scopeType: null,
+          prefixes: [],
+          fbaIds: []
+        }
+      ]
+      this.zoneData.forEach(ele => {
+        let obj = {
+          countryId: ele.countryId,
+          scopeType: ele.scopeType,
+          prefixes: ele.prefixes,
+          fbaIds: ele.fbaIds
+        }
+        this.saveData.push(obj)
+        this.zoneData = []
+        this.zonename = ''
+      })
+      if (this.tempData.zone.zoneIndex !== -1) {
+        this.formData.zones[this.tempData.zone.zoneIndex] = this.tempData.zone
+      } else {
+        this.tempData.changePrice = true
+        this.formData.zones.push(this.tempData.zone)
+      }
+      this.inhere = true
+    },
+    // 停用启用
+    stopOK () {
+      console.log(this.chooseArr)
+      let obj = []
+      if (this.chooseArr.length !== 0) {
+        this.chooseArr && this.chooseArr.forEach(e => {
+          obj.push(e.id)
+        })
+      } else {
+        obj.push(this.chooseAgent.id)
+      }
+      console.log(this.activeName)
+      if (this.activeName === '1') {
+        this.$api.agent.serviceDisabled({ agentServiceIds: obj }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialogStop = false
+          } else {
+            this.$message.error(res.msg)
+            this.dialogStop = false
+          }
+        })
+      } else if (this.activeName === '2') {
+        this.$api.agent.serviceEnabled({ agentServiceIds: obj }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialogStop = false
+          } else {
+            this.$message.error(res.msg)
+            this.dialogStop = false
+          }
+        })
+      }
+    },
+    // 下一步
+    nextPrev (data) {
+      this.control += data
+      if (this.control === 2) {
+        if (this.formData.zones.length === 0) {
+          this.$message.error('分区不能为空')
+          this.control -= data
+          return
+        }
+      }
+      if (this.control === 3) {
+        if (this.formData.weights.length === 0) {
+          this.$message.error('重量段不能为空')
+          this.control -= data
+          return
+        }
+        if (this.tempData.changePrice) {
+          this.tempData.changePrice = false
+          this.amounts = []
+          this.firstPrices = []
+          this.unitPrices = []
+          for (let i = 0; i < this.weights.length; i++) {
+            this.fenquData.forEach(ele => {
+              let obj = {
+                fenqu: ele.fenqu,
+                price: '',
+                minWeight: ele.minWeight,
+                maxWeight: ele.maxWeight
+              }
+              if (this.weights[i].priceType === 1) {
+                this.unitPrices.push(obj)
+              } else if (this.weights[i].priceType === 2) {
+                this.amounts.push(obj)
+              } else if (this.weights[i].priceType === 3) {
+                this.firstPrices.push(obj)
+              }
+            })
+          }
+
+          this.tempData.unitWeights = []
+          this.tempData.amountWeights = []
+          this.tempData.firstWeights = []
+          this.formData.weights.forEach((weight, weightIndex) => {
+            switch (weight.priceType) {
+              case 1: // 单价
+                this.tempData.unitWeights.push({ weightIndex: weightIndex, weight: weight })
+                break
+              case 2: // 金额
+                this.tempData.amountWeights.push({ weightIndex: weightIndex, weight: weight })
+                break
+              case 3: // 首续重
+                this.tempData.firstWeights.push({ weightIndex: weightIndex, weight: weight })
+                break
+            }
+          })
+
+          this.tempData.unitPrices = []
+          this.tempData.amountPrices = []
+          this.tempData.firstPrices = []
+          this.formData.zones.forEach((zone, zoneIndex) => {
+            if (this.tempData.unitWeights.length > 0) {
+              let cols = {}
+              this.tempData.unitWeights.forEach(item => {
+                cols[item.weightIndex] = { price: null }
+              })
+              this.tempData.unitPrices.push({ zoneIndex: zoneIndex, cols: cols })
+            }
+            if (this.tempData.amountWeights.length > 0) {
+              let cols = {}
+              this.tempData.amountWeights.forEach(item => {
+                cols[item.weightIndex] = { price: null }
+              })
+              this.tempData.amountPrices.push({ zoneIndex: zoneIndex, cols: cols })
+            }
+            if (this.tempData.firstWeights.length > 0) {
+              let cols = {}
+              this.tempData.firstWeights.forEach(item => {
+                cols[item.weightIndex] = { firstWeight: null, firstWeightPrice: null, additionalWeight: null, additionalWeightPrice: null }
+              })
+              this.tempData.firstPrices.push({ zoneIndex: zoneIndex, cols: cols })
+            }
+          })
+        }
+      }
+    },
+    toAdd () {
+      this.$router.push({ name: 'addAgentService' })
+    },
+    // 国家id类型 只传国家和区域类型
+    addZoneSubmit (data) {
+      if (data.countryId === '') {
+        this.$message.error('国家不能为空') // 错误提示
+        return
+      }
+      if (data.scopeType === null) {
+        this.$message.error('请选择区域类型') // 错误提示
+        return
+      }
+      if (Number(data.scopeType) === 2) {
+        if (this.zoneType === 1 && data.prefixes.length === 0) {
+          this.$message.error('请填写邮编前缀') // 错误提示
+          return
+        }
+        if (this.zoneType === 2 && data.fbaIds.length === 0) {
+          this.$message.error('请选择FBA仓库') // 错误提示
+          return
+        }
+      }
+      let obj = {
+        countryId: data.countryId,
+        scopeType: data.scopeType,
+        prefixes: data.prefixes,
+        fbaIds: data.fbaIds
+      }
+      this.zoneData.push(obj)
+      this.tempData.zone.areas.push(obj)
+      this.cancl1()
+    },
+    addCancl () {
+      this.inhere = true
+      this.cancl1()
+      this.zoneData = []
+    },
+    // 取消
+    cancl1 () {
+      this.addZone = [
+        {
+          countryId: '',
+          scopeType: null,
+          prefixes: [],
+          fbaIds: []
+        }
+      ]
+      this.addTable = false
+    },
+    // 重量提交
+    addWSubmit (data) {
+      console.log(data)
+      let obj = {
+        minWeight: data.minWeight,
+        maxWeight: data.maxWeight,
+        priceType: data.priceType
+      }
+      this.weights.push(obj)
+      this.cancl()
+    },
+    // 取消新增重量
+    cancl () {
+      this.addweights = [ // 新增重量段
+        { minWeight: '', maxWeight: '', priceType: null }
+      ]
+      this.addweightsTable = false
+    },
+    // 重新渲染name列
+    formatter (row, column, cellValue) {
+      switch (column.property) {
+        case 'cate':
+          switch (row.cate) {
+            case 1:
+              return '海运'
+            case 2:
+              return '空运'
+            case 3:
+              return '快递'
+            case 4:
+              return '铁路'
+            case 5:
+              return '专车'
+            default:
+              break
+          }
+          break
+        case 'status':
+          return row.status === 1 ? '正常' : '停用'
+        case 'price_type':
+          return row.price_type === 1 ? '品名' : '材质'
+      }
+    },
+    // 重新渲染name列
+    formatterPlan (row, column, cellValue) {
+      switch (column.property) {
+        case 'time':
+          return this.formatDate(row.start_time, 'yyyy年MM月dd日 hh:mm') + ' —— ' + this.formatDate(row.end_time, 'yyyy年MM月dd日 hh:mm')
+        case 'scope_type':
+          return row.scope_type === 1 ? '按国家' : '区域'
+        case 'areaOther':
+          if (row.fba_only === 1) {
+            let fbaName = []
+            row.fbas.forEach(item => {
+              fbaName.push(item.fba_name)
+            })
+            return fbaName.join(',')
+          } else {
+            return row.prefixes.join(',')
+          }
+      }
+    },
+    showPrice (row) {
+      this.$api.agent.agentServicePlanPrice(row.id).then(res => {
+        this.priceDetail(res)
+      })
+    },
+    reset () {
+      this.serviceName = ''
+      this.search.status = 0
+      this.getData()
+    },
+    formatters (row, column, cellValue) {
+      switch (row.type) {
+        case 1:
+          return '快递'
+        case 2:
+          return '卡派'
+        default:
+          break
+      }
+    },
+    selectFba () {
+      this.$api.agent.fbaSelect().then(res => {
+        this.countryOptions = []
+        res.data.forEach(item => {
+          this.FbaOptions[item.id] = []
+          item.fbas.forEach(fba => {
+            this.FbaOptions[item.id].push({
+              id: fba.id,
+              name: fba.name
+            })
+          })
+          this.countryOptions.push({
+            id: item.id,
+            name: item.name
+          })
+        })
+      })
+    },
+    // 改变页面大小处理
+    handleSizeChange (val) {
+      console.log(val)
+    },
+    // 翻页处理
+    handleCurrentChange (val) {
+      this.getData()
+    },
+    deleteRowe (index, rows) {
+      rows.splice(index, 1)
+    },
+    deleteRowa (index, rows) {
+      rows.splice(index, 1)
+    },
+    columnFormat (row, col) {
+      switch (col.property) {
+        case 'maxWeight':
+          return Number(row.maxWeight) === 99999999 ? 'MAX' : row.maxWeight
+        case 'priceType':
+          return row.priceType === 1 ? '单价' : row.priceType === 2 ? '金额' : '首续重'
+        case 'name':
+          return this.formData.zones[row.zoneIndex].name
+      }
+    },
+    // 查看
+    check (val) {
+      console.log(val.data)
+    },
+    indexMethod (index) {
+      return index * 2
+    },
+    // 操作按钮列表
+    editTableData (row) {},
+    priceClose () {
+      this.drawer = false
+    },
+    // 关闭抽屉
+    addClose () {
+      this.drawerVrisible = false
+      this.control = 1
+      this.zoneData = []
+      this.inhere = true
+      this.zonename = ''
+      this.saveData = []
+      this.fenquData = []
+    },
+    handleClose () {
+      this.dialogStop = false
+    },
+    handleClick (val) {
+      // this.activeName = val
+      this.getData()
+    },
+    fbaformatter (row, col) {
+      console.log(row.fbaIds)
+      let arr = []
+      row.fbaIds.forEach(element => {
+        for (let i = 0; i < this.FbaOptions[row.countryId].length; i++) {
+          if (this.FbaOptions[row.countryId][i].id === element) {
+            arr.push(this.FbaOptions[row.countryId][i].name)
+          }
+        }
+      })
+      let string = arr.toString()
+      console.log(string)
+      return string
+    },
+    countryformatter (row, col) {
+      console.log(row.countryId)
+      for (let i = 0; i < this.countryOptions.length; i++) {
+        if (this.countryOptions[i].id === row.countryId) {
+          return this.countryOptions[i].name
+        }
+      }
+    },
+    zoneAdd () {
+      this.inhere = false
+      this.tempData.zone = { zoneIndex: -1, name: '', areas: [] }
+    },
+    zoneDel (index) {
+      this.tempData.changePrice = true
+      this.formData.zones.splice(index, 1)
+    },
+    zoneEdit (index) {
+      this.inhere = false
+      this.tempData.zone = this.formData.zones[index]
+      this.tempData.zone.zoneIndex = index
+    },
+    areaDel (index) {
+      this.tempData.zone.areas.splice(index, 1)
+    },
+    weightDel (index) {
+      this.formData.weights.splice(index, 1)
+      this.tempData.changePrice = true
+    },
+    weightAdd () {
+      this.addweightsTable = true
+      this.tempData.weight = [{ weightIndex: -1, maxWeight: 0, priceType: null }]
+    },
+    weightSubmit (index) {
+      let weight = this.tempData.weights[index]
+      if (weight.minWeight === '' || weight.maxWeight === '') {
+        this.$message.error('重量不能为空')
+        return
+      }
+      weight.minWeight = Number(weight.minWeight)
+      weight.maxWeight = Number(weight.maxWeight)
+      if (weight.maxWeight <= weight.minWeight) {
+        this.$message.error('最小重量必须小于最大重量')
+        return
+      }
+      if (weight.minWeight < 0) {
+        this.$message.error('重量不能小于0')
+        return
+      }
+      if (weight.maxWeight > 99999999) {
+        this.$message.error('超出最大重量')
+        return
+      }
+      for (let weightsKey in this.formData.weights) {
+        let item = this.formData.weights[weightsKey]
+        item.minWeight = Number(item.minWeight)
+        item.maxWeight = Number(item.maxWeight)
+        if (weight.maxWeight <= item.minWeight) {
+          this.formData.weights.splice(weightsKey, 0, {
+            minWeight: weight.minWeight,
+            maxWeight: weight.maxWeight,
+            priceType: weight.priceType
+          })
+          break
+        }
+        if (weight.minWeight >= item.minWeight && weight.minWeight < item.maxWeight) {
+          if (weight.minWeight > item.minWeight) {
+            if (weight.maxWeight < item.maxWeight) {
+              this.formData.weights.splice(weightsKey + 1, 0, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              }, {
+                minWeight: weight.maxWeight,
+                maxWeight: item.maxWeight,
+                priceType: item.priceType
+              })
+              this.formData.weights[weightsKey].maxWeight = weight.minWeight
+            } else if (weight.maxWeight === item.maxWeight) {
+              this.formData.weights.splice(weightsKey + 1, 0, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+              this.formData.weights[weightsKey].maxWeight = weight.minWeight
+            } else {
+              let delCount = 0
+              for (let i = weightsKey; i < this.formData.weights.length; i++) {
+                if (weight.maxWeight > this.formData.weights[i].maxWeight) {
+                  delCount++
+                } else if (weight.maxWeight === this.formData.weights[i].maxWeight) {
+                  delCount++
+                  break
+                } else {
+                  this.formData.weights[weightsKey].minWeight = weight.minWeight
+                  break
+                }
+              }
+              this.formData.weights.splice(weightsKey + 1, delCount, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+              item.maxWeight = weight.minWeight
+              weightsKey++
+              break
+            }
+          }
+          if (weight.minWeight === item.minWeight) {
+            if (weight.maxWeight < item.maxWeight) {
+              item.minWeight = weight.maxWeight
+              this.formData.weights.splice(weightsKey, 0, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+            } else if (weight.maxWeight === item.maxWeight) {
+              this.formData.weights.splice(weightsKey, 1, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+            } else {
+              let delCount = 0
+              for (let i = weightsKey; i < this.formData.weights.length; i++) {
+                if (weight.maxWeight > this.formData.weights[i].maxWeight) {
+                  delCount++
+                } else if (weight.maxWeight === this.formData.weights[i].maxWeight) {
+                  delCount++
+                  break
+                } else {
+                  this.formData.weights[i].minWeight = weight.maxWeight
+                  break
+                }
+              }
+              this.formData.weights.splice(weightsKey, delCount, {
+                minWeight: weight.minWeight,
+                maxWeight: weight.maxWeight,
+                priceType: weight.priceType
+              })
+            }
+          }
+          break
+        }
+      }
+      if (this.formData.weights.length === 0) {
+        this.formData.weights.push({
+          minWeight: weight.minWeight,
+          maxWeight: weight.maxWeight,
+          priceType: weight.priceType
+        })
+      }
+      this.addweightsTable = false
+      this.tempData.changePrice = true
+      this.tempData.weights = [{}]
+    },
+    changeAgent (id, index) {
+      this.red = index
+      this.agentId = id
+      this.getData()
+    },
+    submit () {
+      this.formData.unitPrices = []
+      if (this.tempData.unitPrices.length > 0) {
+        this.tempData.unitPrices.forEach(item => {
+          for (let weightIndex in item.cols) {
+            this.formData.unitPrices.push({ zoneIndex: item.zoneIndex, weightIndex: Number(weightIndex), price: item.cols[weightIndex].price })
+          }
+        })
+      }
+      this.formData.amounts = []
+      if (this.tempData.amountPrices.length > 0) {
+        this.tempData.amountPrices.forEach(item => {
+          for (let weightIndex in item.cols) {
+            this.formData.amounts.push({ zoneIndex: item.zoneIndex, weightIndex: Number(weightIndex), price: item.cols[weightIndex].price })
+          }
+        })
+      }
+      this.formData.firstPrices = []
+      if (this.tempData.firstPrices.length > 0) {
+        this.tempData.firstPrices.forEach(item => {
+          for (let weightIndex in item.cols) {
+            this.formData.firstPrices.push({ zoneIndex: item.zoneIndex, weightIndex: Number(weightIndex), firstWeight: item.cols[weightIndex].firstWeight, firstWeightPrice: item.cols[weightIndex].firstWeightPrice, additionalWeight: item.cols[weightIndex].additionalWeight, additionalWeightPrice: item.cols[weightIndex].additionalWeightPrice })
+          }
+        })
+      }
+      this.$api.agent.priceAdd(this.formData).then(res => {
+        if (res.code === 0) {
+          this.$message.success(res.msg) // 成功提示
+          this.drawerVrisible = false
+          this.getData()
+        } else {
+          this.$message.error(res.msg) // 错误提示
+        }
+      })
+    },
+    querySearch (queryString, cb) {
+      let result = [{ value: '99999999' }]
+      cb(result)
+    }
+  }
+}
+</script>
+<style lang="scss" scoped>
+.active{
+  border:3px solid #FB4702
+}
+.dra-content{
+  padding:5px ;
+  text-align: left;
+}
+.blue{
+    color: #0084FFFF;
+    font-size: 14px;
+    cursor: pointer;
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.circleBox{
+  margin: 20px 0 0 10px;
+  padding-bottom: 30px;
+  border-bottom:1px solid #E8EBF2;
+}
+.circle1{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid rgba(0, 0, 0, 0.35);
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: rgba(0, 0, 0, 0.35);
+}
+.circle{
+  margin-bottom: 10px;
+  width: 34px;
+  height: 34px;
+  background: #FB4702;
+  border-radius: 50%;
+  text-align:center;
+  line-height:34px;
+  font-size: 18px;
+  font-family: PingFangSC-Regular, PingFang SC;
+  font-weight: 400;
+  color: #FFFFFF;
+}
+.tips{
+  color:#FB6024;
+  font-size: 14px;
+}
+.plantime{
+  margin: 10px 0 10px 0;
+}
+
+</style>

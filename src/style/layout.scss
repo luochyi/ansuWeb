@@ -11,6 +11,7 @@ font-weight: 500;
 color: rgba(0, 0, 0, 0.85);
 }
 @mixin whitebtn {
+  
 padding: 0px 16px;
 border-radius: 2px;
 height: 32px;
@@ -26,6 +27,10 @@ border-radius: 2px;
 }
 
 /deep/ .head{
+  position: fixed;
+  z-index: 10;
+  width: 100%;
+  min-width: 1000px;
   background: #fff;
   box-shadow: 0px 2px 4px 0px rgba(224, 224, 224, 0.5);
   .tilte{
@@ -46,6 +51,7 @@ border-radius: 2px;
 }
 
 /deep/ .el-container{
+  height: 100%;
   .aside{
     .el-scrollbar {
       .el-scrollbar__view {
@@ -54,6 +60,10 @@ border-radius: 2px;
     }
   }
   .el-aside {
+    position: fixed;
+    // top:61px;
+    padding-top: 61px;
+    z-index: 9;
     overflow-x: hidden;
     box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.2);
     // .menufont{
@@ -68,7 +78,7 @@ border-radius: 2px;
     .el-menu {
       border-right-width: 0px;
       .el-submenu__title {
-        padding-left: 20px; 
+        // padding-left: 20px; 
         text-align: left;
       }
       .el-menu-item {
@@ -107,7 +117,7 @@ border-radius: 2px;
       }
     }
     .el-menu-vertical {
-      height: calc(100vh - 64px) !important;
+      height: calc(100vh - 50px) !important;
       visibility: auto;
       // &:not(.el-menu--collapse) {
       //   width: 220px;
@@ -115,6 +125,18 @@ border-radius: 2px;
     }
   }
   .el-main {
-    padding: 0px;
+    padding-top: 110px;
+    padding-left: 200px;
+    position: relative;
+    
   }
+  /deep/  .el-main {
+    width: 100px;
+  }
+}
+/deep/.el-container .el-aside .el-menu .el-submenu__title{
+  margin-left: -25px;
+}
+/deep/.el-menu .el-menu--inline{
+  margin-left: -20px;
 }

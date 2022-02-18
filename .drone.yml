@@ -1,0 +1,151 @@
+kind: pipeline
+type: docker
+name: test
+steps:
+  - name: restore-cache
+    image: meltwater/drone-cache
+    settings:
+      backend: filesystem
+      restore: true
+      cache_key: node_modules-taskvue
+      archive_format: gzip
+      filesystem_cache_root: "/var/lib/cache"
+      mount:
+        - node_modules
+    volumes:
+      - name: cache
+        path: "/var/lib/cache"
+  # Do stuff..
+  - name: install
+    image: node:14
+    commands:
+      - npm install
+  - name: rebuild-cache
+    image: meltwater/drone-cache
+    settings:
+      backend: filesystem
+      rebuild: true
+      cache_key: node_modules-taskvue
+      archive_format: gzip
+      filesystem_cache_root: "/var/lib/cache"
+      mount:
+        - 'node_modules'
+    volumes:
+      - name: cache
+        path: "/var/lib/cache"
+  # Do stuff..
+  - name: build
+    image: node:14
+    commands:
+      - npm run build-test
+  - name: scp files
+    image: appleboy/drone-scp
+    settings:
+      host: 121.41.13.10
+      username:
+        from_secret: test_user
+      password:
+        from_secret: test_pass
+      port: 22
+      target: /data/data/wwwroot/manage.ansuex.oa00.com
+      source: dist/*
+  - name: ssh
+    image: appleboy/drone-ssh
+    settings:
+      host: 121.41.13.10
+      username:
+        from_secret: test_user
+      password:
+        from_secret: test_pass
+      port: 22
+      script:
+        - cd /data/data/wwwroot/manage.ansuex.oa00.com
+        - chown -R www.www dist
+        - \cp -rf dist/* ./
+        - rm -rf dist
+volumes:
+  - name: cache
+    host:
+      path: "/tmp/cache"
+trigger:
+  branch:
+    - test
+  event:
+    - push
+    - merge
+---
+kind: pipeline
+type: docker
+name: master
+steps:
+  - name: restore-cache
+    image: meltwater/drone-cache
+    settings:
+      backend: filesystem
+      restore: true
+      cache_key: node_modules-taskvue
+      archive_format: gzip
+      filesystem_cache_root: "/var/lib/cache"
+      mount:
+        - node_modules
+    volumes:
+      - name: cache
+        path: "/var/lib/cache"
+  # Do stuff..
+  - name: install
+    image: node:14
+    commands:
+      - npm install
+  - name: rebuild-cache
+    image: meltwater/drone-cache
+    settings:
+      backend: filesystem
+      rebuild: true
+      cache_key: node_modules-taskvue
+      archive_format: gzip
+      filesystem_cache_root: "/var/lib/cache"
+      mount:
+        - 'node_modules'
+    volumes:
+      - name: cache
+        path: "/var/lib/cache"
+  # Do stuff..
+  - name: build
+    image: node:14
+    commands:
+      - npm run build
+  - name: scp files
+    image: appleboy/drone-scp
+    settings:
+      host: 42.192.165.163
+      username:
+        from_secret: pro_user
+      password:
+        from_secret: pro_pass
+      port: 22
+      target: /data/docker/wwwroot/manage.ansuex.com
+      source: dist/*
+  - name: ssh
+    image: appleboy/drone-ssh
+    settings:
+      host: 42.192.165.163
+      username:
+        from_secret: pro_user
+      password:
+        from_secret: pro_pass
+      port: 22
+      script:
+        - cd /data/docker/wwwroot/manage.ansuex.com
+        - chown -R www.www dist
+        - \cp -rf dist/* ./
+        - rm -rf dist
+volumes:
+  - name: cache
+    host:
+      path: "/tmp/cache"
+trigger:
+  branch:
+    - master
+  event:
+    - push
+    - merge

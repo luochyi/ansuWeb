@@ -22,14 +22,54 @@ export default [
     component: () => import('@/views/channel/agentManage/agentManage')
   },
   {
+    path: '/agentManage/agentDetails',
+    name: 'agentDetails',
+    meta: {
+      title: '代理详情',
+      icon: 'agentDetails',
+      hidden: false
+    },
+    component: () => import('@/views/channel/agentManage/agentDetails.vue')
+  },
+  {
     path: '/agentManage/addAgent',
     name: 'addAgent',
     meta: {
       title: '添加代理',
       icon: 'addAgent',
-      hidden: false
+      hidden: true
     },
     component: () => import('@/views/channel/agentManage/addAgent.vue')
+  },
+  {
+    path: '/agentAddress',
+    name: 'agentAddress',
+    meta: {
+      title: '代理地址',
+      icon: 'agentAddress',
+      hidden: false
+    },
+    component: () => import('@/views/channel/agentManage/agentAddress.vue')
+  },
+  {
+    path: '/channelService',
+    name: 'channelService',
+    meta: {
+      title: '代理渠道',
+      icon: 'channelService',
+      hidden: false
+    },
+    component: () => import('@/views/channel/agentManage/channelService.vue')
+  },
+  {
+    path: '/agentManage/addAgentService',
+    name: 'addAgentService',
+    meta: {
+      title: '添加代理服务',
+      icon: 'addAgentService',
+      hidden: true
+    },
+    component: () => import('@/views/channel/agentManage/addAgentService.vue')
   },
   // 渠道设置
   {
@@ -43,6 +83,18 @@ export default [
     component: () =>
       import('@/views/channel/channelSetting/channelSetting')
   },
+  // channelDetail
+  {
+    path: '/channelDetail',
+    name: 'channelDetail',
+    meta: {
+      title: '渠道设置',
+      icon: 'channelDetail',
+      hidden: true
+    },
+    component: () =>
+      import('@/views/channel/channelSetting/channelDetail')
+  },
   // 渠道设置--新增渠道
   {
     path: '/channelSetting/addChannel',
@@ -50,7 +102,7 @@ export default [
     meta: {
       title: '渠道设置',
       icon: 'addChannel',
-      hidden: false
+      hidden: true
     },
     component: () =>
       import('@/views/channel/channelSetting/addChannel')

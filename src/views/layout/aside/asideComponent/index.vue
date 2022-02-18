@@ -40,9 +40,9 @@ export default {
       type: Object
     }
   },
-  // mounted() {
-  //   console.log(this.routerInfo);
-  // },
+  mounted () {
+    // console.log(this.routerInfo)
+  },
   components: {
     MenuItem,
     AsyncSubmenu

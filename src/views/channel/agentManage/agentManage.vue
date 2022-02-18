@@ -3,51 +3,80 @@
     <!--  标签页 -->
     <el-row type='flex' justify='flex-start' class='title' align='middle'>
       <span class='text'>代理管理</span>
-      <el-tabs v-model='activeName' type='card'>
+      <el-tabs v-model='activeName' type='card'  @tab-click="handleClick">
         <el-tab-pane label='启用代理' name='1'></el-tab-pane>
         <el-tab-pane label='停用代理' name='2'></el-tab-pane>
       </el-tabs>
     </el-row>
     <!-- 主要内容 -->
     <div class='content'>
-      <!-- 搜索栏 -->
-      <el-row class='searchbox1'>
-        <!-- 代理名称 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>代理名称</span>
-          <el-col :span='16'>
-            <el-input v-model='agentName' placeholder='请输入'></el-input>
-          </el-col>
+      <el-row :gutter="15">
+        <el-col>
+          <el-form
+            class="elForm"
+            ref="elForm"
+            size="small"
+            :model="searchForm"
+            label-width="93px"
+            label-position="top"
+          >
+             <el-col :span="6">
+                <el-form-item label="代理编码" prop="code">
+                  <el-input
+                    v-model="searchForm.code"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+                <el-form-item label="代理名称" prop="name">
+                  <el-input
+                    v-model="searchForm.name"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+              <el-col :span="6">
+                <el-form-item label="账期" prop="periodName">
+                  <el-input
+                    v-model="searchForm.periodName"
+                    placeholder="请输入"
+                    clearable
+                    :style="{ width: '60%' }"
+                  >
+                  </el-input>
+                </el-form-item>
+              </el-col>
+             <el-col :span="6">
+          <!-- <el-form-item size="large"> -->
+          <div class="searchBtn">
+            <el-button class="orangeBtn" @click="search">查询</el-button>
+            <el-button class="whiteBtn" @click="resetForm('elForm')"
+              >重置</el-button
+            >
+          </div>
+          <!-- </el-form-item> -->
         </el-col>
-        <!-- 代理编码 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>代理编码</span>
-          <el-col :span='16'>
-            <el-input v-model='agentCode' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!-- 代理账期 -->
-        <el-col :span='6' class='colbox'>
-          <span class='text'>代理账期</span>
-          <el-col :span='16'>
-            <el-input v-model='agentAccount' placeholder='请输入'></el-input>
-          </el-col>
-        </el-col>
-        <!--  -->
-        <el-col :span='6' class='colbox justify-center'>
-          <el-button class='orangeBtn long1'>查 询</el-button>
-          <el-button class='wuBtn long1'>重 置</el-button>
+          </el-form>
         </el-col>
       </el-row>
+      <el-divider></el-divider>
       <!-- 表格 -->
       <div>
         <el-row class='searchbox1' type='flex' justify='space-between' align='middle'>
           <el-col :span='12' class="left">
-            <el-button class='stopBtn' @click="batchStop">批量停用</el-button>
+            <el-button class='stopBtn' v-if="activeName==='1'" @click="batchStop">批量停用</el-button>
+            <el-button class='stopBtn' v-else @click="batchStop">批量启用</el-button>
           </el-col>
           <el-col :span='12' class="right">
-            <el-button class='whiteBtn' @click="toAdd">新增渠道</el-button>
-            <el-button class='whiteBtn'>列表显示设置</el-button>
+            <el-button class='whiteBtn' @click="toAdd">新增代理</el-button>
+            <!-- <el-button class='whiteBtn'>列表显示设置</el-button> -->
           </el-col>
         </el-row>
 
@@ -55,20 +84,22 @@
           <el-table ref="multipleTable" :data="tableData" border  tooltip-effect="dark" style="width: 100%" @selection-change="handleSelectionChange"
             :header-cell-style="{background: '#F5F5F6'}">
             <el-table-column type="selection" width="50"></el-table-column>
-            <el-table-column prop="agentName" label="代理名称" min-width="200"></el-table-column>
-            <el-table-column prop="agentCode" label="代理编码" min-width="200"></el-table-column>
-            <el-table-column prop="agentAccount" label="结算账期" min-width="200"></el-table-column>
+            <el-table-column prop="code" label="代理编码" min-width="200"></el-table-column>
+            <el-table-column prop="name" label="代理名称" min-width="200"></el-table-column>
+            <el-table-column prop="period_name" label="结算账期" min-width="200"></el-table-column>
             <el-table-column fixed="right" label="操作" min-width="150">
               <template slot-scope="scope">
                 <el-button type="text" @click="toDetail(scope.row.id)">
                   查看详情
                 </el-button>
-                <span style="color: #0084FF; margin: 0px 5px">|</span>
+<!--                <el-button v-if="activeName === '1'" type="text" @click="channelService(scope.row)">-->
+<!--                  |&nbsp; 代理渠道-->
+<!--                </el-button>-->
                 <el-button v-if="activeName === '1'" type="text" @click="stopAgent(scope.row)">
-                  停用代理
+                  |&nbsp; 停用代理
                 </el-button>
-                <el-button v-if="activeName === '2'" type="text">
-                  启用代理
+                <el-button v-if="activeName === '2'" @click="stopAgent(scope.row)" type="text">
+                  |&nbsp; 启用代理
                 </el-button>
               </template>
             </el-table-column>
@@ -78,6 +109,8 @@
           <div class='block'>
             <el-pagination
               :current-page.sync='currentPage'
+              @size-change='sizechange'
+              @current-change='currentchange'
               :pager-count='9'
               :page-size='pageSize'
               :page-sizes='[10, 20, 50, 100]'
@@ -103,15 +136,20 @@
         </div>
         <div v-if="dialogTitle === '停用代理'" class="left">
           <el-row>你是否确认停用</el-row>
-          <el-row>代理'{{chooseAgent.agentName}}'</el-row>
+          <el-row>代理'{{chooseAgent.name}}'</el-row>
+        </div>
+        <div v-else-if="dialogTitle === '启用代理'" class="left">
+          <el-row>你是否确认启用</el-row>
+          <el-row>代理'{{chooseAgent.name}}'</el-row>
         </div>
         <div v-else>
-          你是否确认停用这{{chooseArr.length}}个代理
+          <span v-if="activeName==='1'">你是否确认停用这{{chooseArr.length}}个代理</span>
+          <span v-else>你是否确认启用这{{chooseArr.length}}个代理</span>
         </div>
       </div>
       <span slot="footer" class="dialog-footer">
         <el-button class="wuBtn" @click="dialogStop = false">取 消</el-button>
-        <el-button class="orangeBtn" @click="dialogStop = false">确 定</el-button>
+        <el-button class="orangeBtn" @click="stopOK">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -125,36 +163,29 @@ export default {
 
       pageSize: 10,
       currentPage: 1,
-      total: 50,
+      total: 0,
 
       agentName: '', // 代理名称
       agentCode: '', // 代理编码
       agentAccount: '', // 代理账期
       tableData: [
+      ],
+      searchForm: {
+        code: '',
+        name: '',
+        periodName: ''
+      },
+      typeOptions: [
         {
-          agentName: '天图供应链',
-          agentCode: 'TTGYL',
-          agentAccount: '半月结'
-        },
-        {
-          agentName: '安信国际',
-          agentCode: 'AXGJ',
-          agentAccount: '月结'
-        },
-        {
-          agentName: '宝昌国际货运',
-          agentCode: 'BCGJ',
-          agentAccount: '月结'
-        },
-        {
-          agentName: '百科国际',
-          agentCode: 'BKGJ',
-          agentAccount: '月结'
+          label: 'FBA运单',
+          value: 1
+        }, {
+          label: '非FBA运单',
+          value: 2
         }
       ],
-
       dialogTitle: '停用代理',
-      chooseAgent: {}, // 选择停用的 代理
+      chooseAgent: [], // 选择停用的 代理
       chooseArr: [], // 选中的代理
       dialogStop: false // 停用弹窗
     }
@@ -168,12 +199,32 @@ export default {
         status: Number(this.activeName),
         page: this.currentPage,
         limit: this.pageSize,
-        name: this.agentName,
-        code: this.agentCode
+        name: this.searchForm.name,
+        code: this.searchForm.code,
+        periodName: this.searchForm.periodName
       }
       this.$api.agent.settingAgentLists(params).then((res) => {
         console.log(res)
+        this.tableData = []
+        res.data.list && res.data.list.forEach(item => {
+          let obj = {
+            id: item.id,
+            code: item.code,
+            name: item.name,
+            period_name: item.period_name
+          }
+          this.tableData.push(obj)
+          this.total = res.data.total
+        })
       })
+    },
+    search () {
+      this.currentPage = 1
+      this.getData()
+    },
+    resetForm (formName) {
+      this.$refs[formName].resetFields()
+      this.getData()
     },
     handleSelectionChange (val) {
       console.log(val)
@@ -191,24 +242,83 @@ export default {
           iconClass: 'icons'
         })
       }
+      if (this.activeName === '1') {
+        this.dialogTitle = '批量停用代理'
+      } else {
+        this.dialogTitle = '批量启用代理'
+      }
       this.dialogStop = true
-      this.dialogTitle = '批量停用代理'
     },
     stopAgent (val) {
       this.dialogStop = true
       this.chooseAgent = val
-      this.dialogTitle = '停用代理'
+      if (this.activeName === '1') {
+        this.dialogTitle = '停用代理'
+        console.log(this.chooseAgent)
+      } else if (this.activeName === '2') {
+        this.dialogTitle = '启用代理'
+      }
+    },
+    stopOK () {
+      let obj = []
+      if (this.chooseArr.length !== 0) {
+        this.chooseArr && this.chooseArr.forEach(e => {
+          obj.push(e.id)
+        })
+      } else {
+        obj.push(this.chooseAgent.id)
+      }
+      if (this.activeName === '1') {
+        this.$api.agent.disabled({ agentIds: obj }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialogStop = false
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      } else if (this.activeName === '2') {
+        this.$api.agent.enabled({ agentIds: obj }).then(res => {
+          if (res.code === 0) {
+            this.$message.success(res.msg)
+            this.getData()
+            this.dialogStop = false
+          } else {
+            this.$message.error(res.msg)
+          }
+        })
+      }
     },
     toAdd () {
       this.$router.push({ name: 'addAgent' })
     },
+    channelService (val) {
+      // 根据id查询代理服务
+      sessionStorage.setItem('agentId', val.id)
+      this.$router.push({ name: 'channelService' })
+    },
     toDetail (val) {
       console.log(val)
+      this.$router.push({ name: 'agentDetails', params: { id: val } })
     },
     handleClose () {
       this.dialogStop = false
+    },
+    handleClick (val) {
+      this.status = val
+      this.getData()
+    },
+    sizechange (val) {
+      this.pageSize = val
+      this.getData()
+    },
+    currentchange (val) {
+      this.currentPage = val
+      this.getData()
     }
   }
+
 }
 </script>
 
@@ -253,5 +363,12 @@ export default {
     font-weight: 400;
     color: rgba(0, 0, 0, 0.65);
   }
+}
+.elForm{
+  text-align: left;
+}
+.searchBtn{
+  position: relative;
+  top: 30px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-scrollbar style='height: calc( - 60px)'>
+    <el-scrollbar style='height: calc( - 30px)'>
       <transition
         :duration='{ enter: 800, leave: 100 }'
         mode='out-in'
@@ -17,11 +17,10 @@
           text-color='rgba(0,0,0,0.65)'
           unique-opened
         >
-          <template v-for='item in asyncRouters[num].children'>
+          <template v-for='item in newCol'>
             <AsideComponent
               :key='item.name'
               :routerInfo='item'
-              v-if='!item.hidden'
             />
           </template>
         </el-menu>
@@ -38,11 +37,21 @@ export default {
   data () {
     return {
       active: '',
-      isCollapse: false
+      isCollapse: false,
+      // arr: [],
+      indexs: undefined,
+      col: undefined
     }
   },
   props: {
     num: Number
+  },
+  computed: {
+    newCol: function () {
+      return this.sortByKey(this.col, 'sort')
+      // this.col是原数组
+    },
+    ...mapGetters('router', ['asyncRouters'])
   },
   watch: {
     $route (to) {
@@ -50,7 +59,15 @@ export default {
       this.active = arr
     },
     num (val) {
-      console.log(val)
+      this.arr = []
+      // console.log(val)
+      this.asyncRouters && this.asyncRouters.forEach((element, index) => {
+        if (element.sort === val) {
+          this.indexs = index
+          this.col = this.asyncRouters[index].children
+        }
+      })
+      console.log(this.col)
     }
   },
   mounted () {
@@ -59,14 +76,18 @@ export default {
     this.active = arr[1]
   },
   methods: {
+    sortByKey (array, key) {
+      return array.sort(function (a, b) {
+        var x = a[key]
+        var y = b[key]
+        return x < y ? -1 : x > y ? 1 : 0
+      })
+    },
     // ...mapMutations('router', ['addHistory']),
     select (key, keypath) {
-      console.log(key)
-      console.log(keypath)
+      // console.log(key)
+      // console.log(keypath)
     }
-  },
-  computed: {
-    ...mapGetters('router', ['asyncRouters'])
   },
   components: {
     AsideComponent
@@ -74,7 +95,7 @@ export default {
 }
 </script>
 
-<style lang='scss'>
+<style lang="scss" scoped>
 .el-scrollbar {
   .el-scrollbar__view {
     height: 100%;

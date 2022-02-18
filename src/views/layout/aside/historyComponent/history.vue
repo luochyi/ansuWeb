@@ -47,10 +47,10 @@ export default {
   created () {
     const initHistorys = [
       {
-        name: 'prediction',
+        name: 'welcome',
         meta: {
-          title: '预报管理',
-          icon: 'predictionIcon',
+          title: '首页',
+          icon: 'welcome',
           hidden: false
         }
       }
@@ -79,23 +79,23 @@ export default {
         // if (this.isMobile) {
         //   width = 0
         // }
-        this.left = e.clientX
-        this.top = e.clientY + 10
+        this.left = e.clientX - 200
+        this.top = e.clientY - 40
         this.rightActive = e.srcElement.id.split('-')[1]
       }
     },
     closeAll () {
       this.historys = [
         {
-          name: 'prediction',
+          name: 'welcome',
           meta: {
-            title: '预报管理',
-            icon: 'predictionIcon',
+            title: '首页',
+            icon: 'welcome',
             hidden: false
           }
         }
       ]
-      this.$router.push({ name: 'prediction' })
+      this.$router.push({ name: 'welcome' })
       this.contextMenuVisible = false
       sessionStorage.setItem('historys', JSON.stringify(this.historys))
     },
@@ -145,6 +145,10 @@ export default {
       sessionStorage.setItem('historys', JSON.stringify(this.historys))
     },
     setTab (route) {
+      console.log(route)
+      if (route.meta.hidden === true) {
+        return
+      }
       if (!this.historys.some(item => item.name === route.name)) {
         const obj = {}
         obj.name = route.name
@@ -171,19 +175,19 @@ export default {
           console.log(123)
           this.historys = [
             {
-              name: 'prediction',
+              name: 'welcome',
               meta: {
-                title: '预报管理',
-                icon: 'predictionIcon',
+                title: '首页',
+                icon: 'welcome',
                 hidden: false
               }
             }
           ]
           this.contextMenuVisible = false
-          if (this.$route.name === 'prediction') {
+          if (this.$route.name === 'welcome') {
             location.reload()
           } else {
-            this.$router.push({ name: 'prediction' })
+            this.$router.push({ name: 'welcome' })
           }
           sessionStorage.setItem('historys', JSON.stringify(this.historys))
         } else {
@@ -228,6 +232,11 @@ export default {
 
 <style lang='scss' scoped>
 .routerHistory {
+  position: fixed;
+  top: 61px;
+  height: 40px;
+  z-index: 9;
+  width: 100%;
   background: #fff;
   /deep/ .el-tabs {
     border-top: 1px solid #f2f2f2;
