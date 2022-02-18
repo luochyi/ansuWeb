@@ -39,7 +39,7 @@
               :resizable="false"
           >
             <template slot-scope="scoped">
-              <el-button type="text" @click="bill(scoped.row.id)"> 核销账单</el-button>
+              <el-button type="text" @click="bill(scoped.row)"> 核销账单</el-button>
             </template>
           </el-table-column>
         </commonTable>
@@ -88,8 +88,9 @@ export default {
     searchReset () {
       this.search.customerName = null
     },
-    bill (customerId) {
-      this.$router.push({ name: 'bill', params: { customerId: customerId } })
+    bill (data) {
+      console.log(data)
+      this.$router.push({ name: 'bill', params: { customerId: data.id, customerName: data.name } })
     },
     // 改变页面大小处理
     handleSizeChange (val) {

@@ -7,13 +7,6 @@
       </el-row>
       <!-- 主要内容 -->
       <div class='content'>
-        <el-row class="infobox">
-          <el-col :span="6">应付金额：<span>{{amountPayable}}元</span></el-col>
-          <el-col :span="6">账户余额：<span>{{balance}}元</span></el-col>
-          <el-col :span="6">
-            <el-button class="orangeBtn" @click="handle">核 销</el-button>
-          </el-col>
-        </el-row>
         <el-row class='searchbox1'>
           <el-col :span='4' class='colbox'>
             <el-col :span='6'>
@@ -61,6 +54,7 @@
             <el-button class='wuBtn long1'>重 置</el-button>
           </el-col>
         </el-row>
+        <el-row style='text-align:left;margin-bottom:20px'><el-button class="orangeBtn" @click="handle">核 销</el-button></el-row>
         <!-- 组件 -->
         <commonTable
             :columns="columns"

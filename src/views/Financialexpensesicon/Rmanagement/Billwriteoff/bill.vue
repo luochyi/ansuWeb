@@ -8,7 +8,7 @@
       <!-- 主要内容 -->
       <div class='content'>
         <el-col>
-          <span class='text' style="float: left;">深圳莱茵宝宝贸易有限公司</span>
+          <span class='text' style="float: left;margin-bottom:20px">客户名称：{{customerName}}</span>
         </el-col>
         <el-row class='searchbox1'>
           <el-col :span='6' class='colbox'>
@@ -96,6 +96,7 @@ export default {
       value: '',
       options: [],
       destination: '',
+      customerName: '',
       columns: [
         { prop: 'bill_no', label: '账单号', align: 'center' },
         { prop: 'write_off_status', label: '核销状态', align: 'center', formatter: this.formatter },
@@ -116,6 +117,7 @@ export default {
   },
   mounted () {
     this.customerId = this.$route.params.customerId
+    this.customerName = this.$route.params.customerName
     this.getData()
   },
   methods: {
